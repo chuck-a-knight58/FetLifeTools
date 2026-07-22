@@ -52,6 +52,9 @@ class FetLifeClient:
         if self.config.user_agent:
             self.session.headers["User-Agent"] = self.config.user_agent
         self._last_request = 0.0
+        # Count of HTTP requests actually sent (includes retries) — surfaced in
+        # the discover progress display so the user can gauge crawl volume.
+        self.requests = 0
         self._authenticated = False
         # Optional hook: on_retry(status, wait_seconds, attempt, max_attempts).
         self.on_retry = None
@@ -149,6 +152,7 @@ class FetLifeClient:
         for attempt in range(attempts):
             self._throttle()
             resp = self.session.request(method, url, allow_redirects=True, **kwargs)
+            self.requests += 1
             status = resp.status_code
 
             if status == 429 or status >= 500:

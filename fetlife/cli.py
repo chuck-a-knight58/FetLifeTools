@@ -282,16 +282,11 @@ def discover(ctx, center, radius, units, seed, ds_only, active_within, max_visit
         f"{config.rate_limit_min:g}-{config.rate_limit_max:g}s/request[/dim]"
     )
 
-    def on_progress(p: crawl.Progress) -> None:
-        status_console.print(
-            f"[dim]visited {p.visited}/{max_visits} · queued {p.queued} · "
-            f"found {p.found}[/dim]",
-            end="\r",
-        )
-
+    # Leading "\n" ends any pending progress line (printed with end="\r") on its
+    # own row, so a mid-crawl status message doesn't overwrite / mangle it.
     def on_retry(status, wait, attempt, max_attempts):
         status_console.print(
-            f"[yellow]HTTP {status}; backing off {wait:.0f}s "
+            f"\n[yellow]HTTP {status}; backing off {wait:.0f}s "
             f"(retry {attempt}/{max_attempts})…[/yellow]"
         )
 
@@ -302,6 +297,13 @@ def discover(ctx, center, radius, units, seed, ds_only, active_within, max_visit
     stopped_reason = None  # None -> ran to completion
     try:
         with _client(ctx) as fl:
+            def on_progress(p: crawl.Progress) -> None:
+                status_console.print(
+                    f"[dim]visited {p.visited}/{max_visits} · queued {p.queued} · "
+                    f"found {p.found} · requests {fl.requests}[/dim]",
+                    end="\r",
+                )
+
             fl.on_retry = on_retry
             for disc in crawl.discover(
                 fl, geocoder, center_coord, radius, units=units, seed=seed,
@@ -319,7 +321,7 @@ def discover(ctx, center, radius, units, seed, ds_only, active_within, max_visit
         stopped_reason = "interrupted"
     except RateLimitedError as exc:
         stopped_reason = "rate-limited"
-        status_console.print(f"[red]{exc}[/red]")
+        status_console.print(f"\n[red]{exc}[/red]")
 
     status_console.print()  # end the progress line
     if stopped_reason or state.queue:
