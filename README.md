@@ -450,7 +450,7 @@ FETLIFE_RATE_LIMIT_MIN=0.5 FETLIFE_RATE_LIMIT_MAX=1.5 \
   fetlife discover --seed JohnDoe --radius 25 --max-visits 100 --max-pages 1
 
 # My example
-fetlife discover --seed Knight_of_Xanadu --center "Washington, NJ" --radius 1000 --ds-only --active-within "4 weeks"
+fetlife discover --seed Knight_of_Xanadu --center "Washington, NJ" --radius 100 --ds-only --active-within any
 center 'Washington, NJ' -> 40.758,-74.979 | radius 1000.0mi | streaming results; ~2s/request
 
 ds   fet_name            age  gender   role              location                gps                       last_active  url
