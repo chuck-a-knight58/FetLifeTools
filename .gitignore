@@ -1,0 +1,35 @@
+# Environment / secrets
+.env
+*.env
+!.env.example
+
+# Session / cache
+.fetlife/
+*.cookies
+*.session
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+
+# Testing / tooling
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+.venv/
+
+*.txt
