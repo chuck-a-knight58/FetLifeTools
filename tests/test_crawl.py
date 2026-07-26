@@ -1,10 +1,12 @@
 """Tests for the BFS crawl using in-memory stubs (fully offline)."""
 
+import json
 from datetime import datetime, timedelta, timezone
 
 import pytest
 
 from fetlife import crawl, geo
+from fetlife.exceptions import FetLifeError, RateLimitedError
 from fetlife.models import Member, Relationship
 
 NOW = datetime(2026, 7, 1, tzinfo=timezone.utc)
@@ -129,6 +131,94 @@ def test_max_visits_caps_crawl():
                                ds_only=False, max_visits=1, max_pages=2))
     # Only one candidate is visited, so at most one row is produced.
     assert len(rows) <= 1
+
+
+class _FailingListClient(StubClient):
+    """A client whose friends list fails for one member."""
+
+    def __init__(self, members, friends, fail_for, exc):
+        super().__init__(members, friends)
+        self.fail_for = fail_for
+        self.exc = exc
+
+    def get_friends(self, ident, page=1):
+        if ident == self.fail_for:
+            raise self.exc("boom")
+        return super().get_friends(ident, page)
+
+
+def _failing_crawl(exc):
+    client, gc = _build()
+    failing = _FailingListClient(client.members, client.friends, "alice", exc)
+    return failing, gc
+
+
+def test_rate_limit_during_expansion_halts_the_crawl():
+    # The friends/followers fetches are most of the crawl's traffic; a 429 there
+    # must stop the run, not be mistaken for "end of list" (which would keep
+    # hammering the site and silently truncate the frontier).
+    failing, gc = _failing_crawl(RateLimitedError)
+    with pytest.raises(RateLimitedError):
+        list(crawl.discover(failing, gc, CENTER, 50.0, seed="seed", ds_only=False,
+                            active_within=None, now=NOW, max_pages=2))
+
+
+def test_rate_limited_candidate_stays_resumable(tmp_path):
+    path = tmp_path / "state.json"
+    st = crawl.CrawlState(path, params={"center": list(CENTER), "radius": 50,
+                                        "units": "mi", "seed": "seed"})
+    failing, gc = _failing_crawl(RateLimitedError)
+    with pytest.raises(RateLimitedError):
+        list(crawl.discover(failing, gc, CENTER, 50.0, seed="seed", ds_only=False,
+                            active_within=None, now=NOW, max_pages=2, state=st))
+    # State is persisted only after a member is fully expanded, so the member we
+    # were throttled on is still queued on disk and gets retried on --resume.
+    reloaded = crawl.CrawlState.load(path)
+    assert "alice" in [c.key for c in reloaded.queue]
+    assert "alice" not in reloaded.visited
+
+
+def test_other_errors_during_expansion_are_still_skipped():
+    # An unreadable/deleted list is not a throttle signal — keep crawling.
+    failing, gc = _failing_crawl(FetLifeError)
+    rows = list(crawl.discover(failing, gc, CENTER, 50.0, seed="seed", ds_only=False,
+                               active_within=None, now=NOW, max_pages=2))
+    names = {r.fet_name for r in rows}
+    assert "alice" in names   # alice herself is still reported
+    assert "dave" not in names  # ...but reached only via her unavailable list
+
+
+def test_max_visits_is_cumulative_across_resumes(tmp_path):
+    path = tmp_path / "state.json"
+    c1, g1 = _build()
+    st = crawl.CrawlState(path, params={"center": list(CENTER), "radius": 50,
+                                        "units": "mi", "seed": "seed"})
+    list(crawl.discover(c1, g1, CENTER, 50.0, seed="seed", ds_only=False,
+                        active_within=None, now=NOW, max_pages=2, max_visits=2,
+                        state=st))
+    assert st.visits == 2 and st.queue
+
+    c2, g2 = _build()
+    resumed = crawl.CrawlState.load(path)
+    assert resumed.visits == 2  # the budget survives the round trip to disk
+    rows = list(crawl.discover(c2, g2, CENTER, 50.0, seed="seed", ds_only=False,
+                               active_within=None, now=NOW, max_pages=2,
+                               max_visits=2, state=resumed))
+    # Budget already spent -> the resume visits nobody instead of granting
+    # itself a fresh allowance of 2 (which made total volume unbounded).
+    assert rows == []
+    assert resumed.visits == 2 and resumed.queue
+
+
+def test_legacy_state_without_visits_counts_prior_progress(tmp_path):
+    path = tmp_path / "legacy.json"
+    path.write_text(json.dumps({
+        "params": {}, "visited": ["seed", "a", "b"],
+        "queue": [{"key": "c", "nickname": "c", "id": None, "url": None,
+                   "location_str": "NearCity"}],
+    }), encoding="utf-8")
+    # 3 visited entries minus the seed -> 2 profiles already spent.
+    assert crawl.CrawlState.load(path).visits == 2
 
 
 def test_active_within_filters_stale_and_unknown():

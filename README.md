@@ -49,6 +49,7 @@ Configuration is read from environment variables (a `.env` file is loaded automa
 | `FETLIFE_MAX_RETRIES` | `4` | Retries on HTTP 429/5xx before failing |
 | `FETLIFE_RETRY_BACKOFF` | `5.0` | Base seconds for exponential backoff (honors `Retry-After`) |
 | `FETLIFE_SESSION_PATH` | `~/.fetlife/session.cookies` | Cached session cookies |
+| `FETLIFE_THROTTLE_STATE_PATH` | `~/.fetlife/throttle.json` | Remembers the delay learned from past 429s (see [Rate limiting](#rate-limiting)) |
 | `FETLIFE_IMPERSONATE` | `chrome` | Browser profile curl_cffi impersonates (Cloudflare) |
 | `FETLIFE_USER_AGENT` | _(unset)_ | Override the UA — leave unset; a custom UA re-triggers Cloudflare |
 | `FETLIFE_GEOCODE_CACHE_PATH` | `~/.fetlife/geocode.json` | Cache for `discover`'s geocoding |
@@ -344,11 +345,12 @@ Distance is checked on the cheap list *string* first, so a full profile is fetch
 | `--seed TEXT` | you (`whoami`) | Member whose friends/followers seed the crawl. |
 | `--ds-only / --all` | `--all` | `--ds-only` shows only members with a D/s relationship. Default `--all` shows everyone in-area (the `ds` column marks who is D/s). Never changes what gets expanded. |
 | `--active-within TEXT` | `"1 month"` | Hide members whose most recent activity is older than this. Accepts `"1 month"`, `"2 weeks"`, `"90 days"`, `30d`, `6m`, `1y`, `48h`, …; `any`/`none`/`0`/`off` disables the filter. |
-| `--max-visits INTEGER` | `300` | Hard cap on profiles fetched (safety valve; the crawl is slow at ~2s/request). |
-| `--max-pages INTEGER` | `3` | Pages of each friends/followers list to expand (each page ≈ 10 members). |
+| `--max-visits INTEGER` | `300` | Hard cap on profiles fetched **for the whole search**, including profiles visited by earlier `--resume` runs. |
+| `--max-pages INTEGER` | `1` | Pages of each friends/followers list to expand (each page ≈ 10 members). Each page costs one request *per list*, so raising this multiplies request volume — and your odds of being rate-limited. |
 | `--max-results INTEGER` | `0` | Stop after N displayed rows (`0` = unlimited). |
 | `--state PATH` | temp file | Where the resumable frontier + visited set is stored. |
 | `--resume / --fresh` | `--fresh` | `--resume` continues a suspended crawl from `--state`; `--fresh` (default) starts over. |
+| `--cooldown FLOAT` | `3.0` | Refuse to start within this many hours of the last HTTP 429. `0` disables the check. |
 | `-j, --json` | off | Stream JSON Lines (one object per line) instead of a text table. |
 
 ### Streaming & resume
@@ -365,9 +367,15 @@ The crawl's **frontier and visited set are persisted** to `--state` (a temp file
 - **Resume** — a crawl stopped by `Ctrl-C`, `--max-visits`, or a crash can be continued:
 
   ```bash
-  fetlife discover --seed JohnDoe --radius 40 --max-visits 50      # first chunk
-  fetlife discover --resume --max-visits 50                        # next 50, and so on
+  fetlife discover --seed JohnDoe --radius 40 --max-visits 50      # first 50 profiles
+  fetlife discover --resume --max-visits 150                       # 50 more, and so on
   ```
+
+  `--max-visits` is a budget for the **entire search**, not per run — the count is stored
+  in the state file, so each `--resume` must raise it to buy more visits. (The frontier
+  grows far faster than it drains: every in-area member adds dozens of candidates and
+  consumes one. A per-run cap would make total request volume unbounded across resumes,
+  which is exactly what trips FetLife's rate limit.)
 
   On resume the original geometry (`--center`/`--radius`/`--units`) is read back from the
   state file. When the frontier is exhausted the state file is removed (search complete);
@@ -417,11 +425,62 @@ To keep runs bounded and fast:
 - Cap the work with `--max-visits` and `--max-pages`.
 - Use a tight `--radius` and a well-connected `--seed`.
 
-If FetLife throttles you (HTTP 429), requests **retry with exponential backoff**
-(`FETLIFE_MAX_RETRIES` / `FETLIFE_RETRY_BACKOFF`, honoring `Retry-After`). If it's still
-throttling after the retries, the crawl **stops without losing progress** — the member
-being fetched stays on the frontier — so just wait and `--resume`. Raising
-`FETLIFE_RATE_LIMIT_MIN`/`MAX` makes throttling less likely on the next run.
+### Rate limiting
+
+A single in-area member costs **up to 4 requests** at `--max-pages 1` (profile, activity
+feed, friends page, followers page) and 2 more for every extra page of each list.
+Out-of-area members cost nothing — they're rejected on the list *string* alone.
+
+If FetLife throttles you (HTTP 429), three things happen:
+
+1. The request **retries with exponential backoff** (`FETLIFE_MAX_RETRIES` /
+   `FETLIFE_RETRY_BACKOFF`, honoring `Retry-After`).
+2. The client then **stays slower for the rest of the run** — every 429 doubles the
+   inter-request delay (up to 8×), and it only eases back down after 25 consecutive
+   clean requests. A short backoff alone isn't enough: the limit is a *rolling window*,
+   so resuming at the old cadence just re-trips it a few requests later.
+3. If it's *still* throttling after the retries, the crawl **stops without losing
+   progress** — the member being fetched stays on the frontier — so wait and `--resume`.
+
+**Widening `FETLIFE_RATE_LIMIT_MIN`/`MAX` is usually the wrong lever.** It changes the
+spacing between requests, not how many you make; if the cap is per hour or per day,
+a slower crawl reaches it just as surely, only later. Reach for `--max-pages 1`, a tighter
+`--radius`, `--active-within any` (drops one request per displayed member), and a lower
+`--max-visits` instead — those reduce the actual request count.
+
+#### Throttle memory
+
+The learned delay outlives the process, in `~/.fetlife/throttle.json`
+(`FETLIFE_THROTTLE_STATE_PATH`), because FetLife's limit outlives it too — otherwise
+every run rediscovers the wall by walking into it. On start-up:
+
+- A record older than 24h is discarded — one bad afternoon shouldn't slow you forever.
+- Otherwise the client resumes at **half** the remembered factor: fast enough to benefit
+  if the window has cleared, cautious enough not to re-trip it immediately (and if it is
+  still blocked, the first 429 puts the factor straight back).
+- `discover` refuses to start within `--cooldown` hours (default 3) of the last 429,
+  before sending a single request. `--cooldown 0` overrides it.
+
+#### Exit codes
+
+| Code | Meaning |
+|---|---|
+| `0` | Ran to completion (frontier exhausted, or stopped cleanly at `--max-results`). |
+| `75` | Rate-limited or inside `--cooldown` — **retryable**; state is intact, resume later. |
+| `1` | A real error (bad credentials, unparseable page, bad arguments). |
+| `130` | Interrupted with `Ctrl-C`. |
+
+`75` is `EX_TEMPFAIL` from `sysexits(3)`, so a wrapper can tell a temporary block apart
+from a genuine failure. [`go.sh`](go.sh) does exactly that — it resumes the crawl, sleeps
+`RETRY_HOURS` (default 4) whenever it sees `75`, and gives up on anything else:
+
+```bash
+./go.sh                                    # up to 6 attempts, 4h apart
+RETRY_HOURS=8 MAX_ATTEMPTS=3 ./go.sh       # more patient, fewer tries
+```
+
+Keep `RETRY_HOURS` at or above `--cooldown`, or the next attempt is refused by the
+cooldown guard before it reaches the network.
 
 Live progress (`visited / queued / found`) streams to **stderr**; the results stream to
 **stdout**, so you can redirect just the data cleanly: `fetlife discover … --json > out.jsonl`
@@ -438,8 +497,9 @@ fetlife discover --seed VirginiaSunshine --center "Lancaster, PA" \
   --radius 40 --ds-only --active-within "2 weeks"
 
 # Chunked crawl you can stop and continue: 50 profiles at a time
+# (--max-visits is the running total, so raise it on each resume)
 fetlife discover --seed JohnDoe --radius 40 --max-visits 50
-fetlife discover --resume --max-visits 50
+fetlife discover --resume --max-visits 100
 
 # Everyone within 30 km of explicit coordinates, ignore activity, JSONL to a file
 fetlife discover --center "40.759,-74.979" --units km --radius 30 \

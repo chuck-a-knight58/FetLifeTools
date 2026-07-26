@@ -26,6 +26,26 @@ from .exceptions import (
 from .models import Event, Group, Member, Relationship
 from . import parsers
 
+# Adaptive throttling. FetLife's rate limit is a *rolling window*, so backing
+# off for a few seconds and then resuming at the old cadence just re-trips it a
+# handful of requests later — the client has to stay slower afterwards. Each
+# 429 multiplies the inter-request delay (up to _FACTOR_MAX), and the delay only
+# relaxes again after a long clean streak. This is AIMD: quick to slow down,
+# slow to speed up.
+THROTTLE_FACTOR_MAX = 8.0
+THROTTLE_FACTOR_STEP = 2.0
+# Consecutive throttle-free requests before easing the delay back down.
+THROTTLE_DECAY_AFTER = 25
+THROTTLE_DECAY_STEP = 0.5
+# The learned factor is persisted, because the rate limit outlives the process
+# that tripped it. A remembered factor older than this is treated as stale and
+# discarded — otherwise one bad afternoon would slow every run for good.
+THROTTLE_STATE_TTL_HOURS = 24.0
+# Each new process gets one halving of the remembered factor back: it starts
+# cautious rather than at full speed, and if the window hasn't cleared it
+# re-escalates on the first 429 anyway.
+THROTTLE_RESUME_RELIEF = 2.0
+
 
 class FetLifeClient:
     """A logged-in session against FetLife.
@@ -56,9 +76,21 @@ class FetLifeClient:
         # the discover progress display so the user can gauge crawl volume.
         self.requests = 0
         self._authenticated = False
+        # Multiplier applied to the configured delay, raised on every 429 and
+        # lowered only after THROTTLE_DECAY_AFTER clean requests. Persists for
+        # the life of the client, which is the point — see the constants above.
+        self._throttle_factor = 1.0
+        self._clean_streak = 0
+        # Wall-clock (not monotonic) epoch of the last 429, so it stays
+        # meaningful after the process exits and is reloaded next run.
+        self._last_429: float | None = None
         # Optional hook: on_retry(status, wait_seconds, attempt, max_attempts).
         self.on_retry = None
+        # Optional hook: on_slowdown(factor, delay_min, delay_max) — fired
+        # whenever the adaptive delay changes, up or down.
+        self.on_slowdown = None
         self._load_cookies()
+        self._load_throttle_state()
 
     # ------------------------------------------------------------------ #
     # Construction / lifecycle
@@ -120,17 +152,102 @@ class FetLifeClient:
             pass
 
     # ------------------------------------------------------------------ #
+    # Throttle memory (survives the process)
+    # ------------------------------------------------------------------ #
+    def _load_throttle_state(self) -> None:
+        """Restore the learned delay from a previous run, if it's still fresh."""
+        try:
+            data = json.loads(
+                self.config.throttle_state_path.read_bytes().decode("utf-8")
+            )
+            last = float(data["last_429"])
+            factor = float(data["factor"])
+        except (OSError, ValueError, KeyError, TypeError):
+            return  # missing or unreadable -> start at full speed
+        if time.time() - last > THROTTLE_STATE_TTL_HOURS * 3600:
+            return  # stale: the window has long since cleared
+        self._last_429 = last
+        self._throttle_factor = min(
+            max(1.0, factor / THROTTLE_RESUME_RELIEF), THROTTLE_FACTOR_MAX
+        )
+
+    def _save_throttle_state(self) -> None:
+        path = self.config.throttle_state_path
+        if self._last_429 is None:
+            return
+        try:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(json.dumps(
+                {"factor": self._throttle_factor, "last_429": self._last_429}
+            ))
+        except OSError:
+            pass
+
+    @property
+    def throttle_factor(self) -> float:
+        """Current multiplier on the configured delay (1.0 = no slowdown)."""
+        return self._throttle_factor
+
+    @property
+    def seconds_since_throttled(self) -> float | None:
+        """Seconds since the last recorded 429, or None if there isn't one."""
+        if self._last_429 is None:
+            return None
+        return max(0.0, time.time() - self._last_429)
+
+    def cooldown_remaining(self, hours: float) -> float:
+        """Seconds left before *hours* have passed since the last 429 (0 if clear)."""
+        if hours <= 0:
+            return 0.0
+        since = self.seconds_since_throttled
+        if since is None:
+            return 0.0
+        return max(0.0, hours * 3600 - since)
+
+    # ------------------------------------------------------------------ #
     # Low-level request helper
     # ------------------------------------------------------------------ #
+    @property
+    def delay_range(self) -> tuple[float, float]:
+        """Current inter-request delay bounds, after adaptive scaling."""
+        factor = self._throttle_factor
+        return (self.config.rate_limit_min * factor,
+                self.config.rate_limit_max * factor)
+
     def _throttle(self) -> None:
         # Random interval in [min, max] since the last request — jitter is less
         # bot-like (and less throttle-prone) than a fixed cadence.
-        target = random.uniform(self.config.rate_limit_min, self.config.rate_limit_max)
+        target = random.uniform(*self.delay_range)
         elapsed = time.monotonic() - self._last_request
         wait = target - elapsed
         if wait > 0:
             time.sleep(wait)
         self._last_request = time.monotonic()
+
+    def _register_throttled(self) -> None:
+        """Record a 429 and slow the client down for the rest of its life."""
+        self._clean_streak = 0
+        self._last_429 = time.time()
+        if self._throttle_factor < THROTTLE_FACTOR_MAX:
+            self._throttle_factor = min(
+                self._throttle_factor * THROTTLE_FACTOR_STEP, THROTTLE_FACTOR_MAX
+            )
+            if self.on_slowdown:
+                self.on_slowdown(self._throttle_factor, *self.delay_range)
+        self._save_throttle_state()
+
+    def _register_clean(self) -> None:
+        """Ease the adaptive delay back down after a long throttle-free run."""
+        if self._throttle_factor <= 1.0:
+            return
+        self._clean_streak += 1
+        if self._clean_streak < THROTTLE_DECAY_AFTER:
+            return
+        self._clean_streak = 0
+        self._throttle_factor = max(1.0, self._throttle_factor - THROTTLE_DECAY_STEP)
+        self._save_throttle_state()
+        if self.on_slowdown:
+            self.on_slowdown(self._throttle_factor, *self.delay_range)
 
     def _url(self, path: str) -> str:
         return urljoin(self.config.base_url + "/", path.lstrip("/"))
@@ -156,6 +273,10 @@ class FetLifeClient:
             status = resp.status_code
 
             if status == 429 or status >= 500:
+                if status == 429:
+                    # Slow down permanently, not just for this retry — the
+                    # backoff below alone would leave the cadence unchanged.
+                    self._register_throttled()
                 if attempt < attempts - 1:
                     wait = self._retry_wait(resp, attempt)
                     if self.on_retry:
@@ -163,14 +284,19 @@ class FetLifeClient:
                     time.sleep(wait)
                     continue
                 if status == 429:
+                    lo, hi = self.delay_range
                     raise RateLimitedError(
                         "FetLife returned HTTP 429 (Too Many Requests) after "
-                        f"{attempts - 1} retries. Raise FETLIFE_RATE_LIMIT_MIN/"
-                        "MAX and try again later (resume with `discover --resume`)."
+                        f"{attempts - 1} retries, even at {lo:g}-{hi:g}s between "
+                        "requests. The limit is a rolling window, so wait a few "
+                        "hours before resuming (`discover --resume`) rather than "
+                        "just widening the delay; --max-pages 1 cuts the requests "
+                        "per profile roughly in half."
                     )
                 raise FetLifeError(f"Server error {status} for {url}")
             if status == 404:
                 raise NotFoundError(f"Not found: {url}")
+            self._register_clean()
             break
         return resp
 

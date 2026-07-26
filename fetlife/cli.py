@@ -22,6 +22,11 @@ console = Console()
 err_console = Console(stderr=True, style="bold red")
 status_console = Console(stderr=True)
 
+# Distinct exit code for "FetLife is throttling us, try again later" so wrapper
+# scripts can tell a temporary block apart from a real failure or a finished
+# crawl. 75 is EX_TEMPFAIL from sysexits(3), which means exactly that.
+EXIT_RATE_LIMITED = 75
+
 
 def json_option(fn):
     """Add a per-command --json/-j flag (works after the subcommand too)."""
@@ -220,19 +225,25 @@ def _discover_row_text(disc) -> str:
               help="Only show members active within this window "
                    "(e.g. '1 month', '2 weeks', '90d'); 'any' disables the filter.")
 @click.option("--max-visits", default=300, show_default=True,
-              help="Cap on profiles fetched (the crawl is slow; ~seconds/request).")
-@click.option("--max-pages", default=3, show_default=True,
-              help="Pages of each friends/followers list to expand.")
+              help="Cap on profiles fetched for the whole search, including "
+                   "profiles visited by earlier --resume runs.")
+@click.option("--max-pages", default=1, show_default=True,
+              help="Pages of each friends/followers list to expand. Each page "
+                   "costs a request per list, so raising this multiplies your "
+                   "request volume and your odds of being rate-limited.")
 @click.option("--max-results", default=0, show_default=True,
               help="Stop after N displayed rows (0 = unlimited).")
 @click.option("--state", "state_path", default=crawl.DEFAULT_STATE_PATH, show_default=True,
               help="File holding the resumable frontier + visited set.")
 @click.option("--resume/--fresh", default=False, show_default=True,
               help="Resume a previously suspended crawl from --state (else start fresh).")
+@click.option("--cooldown", default=3.0, show_default=True,
+              help="Refuse to start within this many hours of the last HTTP 429 "
+                   "(FetLife's limit is a rolling window). 0 disables the check.")
 @json_option
 @click.pass_context
 def discover(ctx, center, radius, units, seed, ds_only, active_within, max_visits,
-             max_pages, max_results, state_path, resume, json_local):
+             max_pages, max_results, state_path, resume, cooldown, json_local):
     """Find members near a location by crawling the friends/followers graph.
 
     Walks outward from SEED (default: you), keeping members within --radius of
@@ -258,6 +269,25 @@ def discover(ctx, center, radius, units, seed, ds_only, active_within, max_visit
     state = crawl.CrawlState.resume_or_new(state_path, resume)
     if resume and state.is_fresh:
         raise FetLifeError(f"No resumable crawl state at {state_path!r}.")
+    if resume and state.visits >= max_visits:
+        raise FetLifeError(
+            f"This search has already visited {state.visits} profiles, which meets "
+            f"--max-visits {max_visits}. Raise --max-visits to continue it, or "
+            "start over with --fresh."
+        )
+
+    # Fail fast, before any network or geocoding work: FetLife's limit is a
+    # rolling window, so starting inside it only re-trips it on request one.
+    fl = _client(ctx)
+    remaining = fl.cooldown_remaining(cooldown)
+    if remaining > 0:
+        fl.close()
+        raise RateLimitedError(
+            f"FetLife rate-limited this account {fl.seconds_since_throttled / 3600:.1f}h "
+            f"ago and --cooldown is {cooldown:g}h, so there is "
+            f"{remaining / 3600:.1f}h left to wait. Retry later, or pass "
+            "--cooldown 0 to try anyway."
+        )
 
     if state.is_fresh:
         # New search: resolve the center and stamp the crawl-defining params.
@@ -276,11 +306,18 @@ def discover(ctx, center, radius, units, seed, ds_only, active_within, max_visit
         status_console.print(f"[dim]resuming crawl from {state_path} "
                              f"({len(state.visited)} visited, {len(state.queue)} queued)[/dim]")
 
+    delay_lo, delay_hi = fl.delay_range
     status_console.print(
         f"[dim]center {center!r} -> {center_coord[0]:.3f},{center_coord[1]:.3f} "
         f"| radius {radius}{units} | streaming results; "
-        f"{config.rate_limit_min:g}-{config.rate_limit_max:g}s/request[/dim]"
+        f"{delay_lo:g}-{delay_hi:g}s/request[/dim]"
     )
+    if fl.throttle_factor > 1.0:
+        status_console.print(
+            f"[yellow]starting at {fl.throttle_factor:g}× the configured delay — "
+            f"carried over from a throttle "
+            f"{fl.seconds_since_throttled / 3600:.1f}h ago[/yellow]"
+        )
 
     # Leading "\n" ends any pending progress line (printed with end="\r") on its
     # own row, so a mid-crawl status message doesn't overwrite / mangle it.
@@ -290,13 +327,20 @@ def discover(ctx, center, radius, units, seed, ds_only, active_within, max_visit
             f"(retry {attempt}/{max_attempts})…[/yellow]"
         )
 
+    def on_slowdown(factor, lo, hi):
+        verb = "slowing to" if factor > 1.0 else "easing back to"
+        status_console.print(
+            f"\n[yellow]{verb} {lo:g}-{hi:g}s/request ({factor:g}× the "
+            f"configured delay)[/yellow]"
+        )
+
     if not as_json:
         _discover_header()
 
     found = 0
     stopped_reason = None  # None -> ran to completion
     try:
-        with _client(ctx) as fl:
+        with fl:
             def on_progress(p: crawl.Progress) -> None:
                 status_console.print(
                     f"[dim]visited {p.visited}/{max_visits} · queued {p.queued} · "
@@ -305,6 +349,7 @@ def discover(ctx, center, radius, units, seed, ds_only, active_within, max_visit
                 )
 
             fl.on_retry = on_retry
+            fl.on_slowdown = on_slowdown
             for disc in crawl.discover(
                 fl, geocoder, center_coord, radius, units=units, seed=seed,
                 ds_only=ds_only, active_within=active_delta, max_visits=max_visits,
@@ -326,11 +371,19 @@ def discover(ctx, center, radius, units, seed, ds_only, active_within, max_visit
     status_console.print()  # end the progress line
     if stopped_reason or state.queue:
         # More frontier remains -> keep the state file so it can be resumed.
+        if stopped_reason is None and state.visits >= max_visits:
+            stopped_reason = f"reached --max-visits {max_visits} ({state.visits} visited)"
         why = stopped_reason or "stopped"
+        resume_cmd = f"fetlife discover --resume --state {state_path}"
+        if stopped_reason == "rate-limited":
+            resume_cmd += "  (wait a few hours first)"
         status_console.print(
             f"[dim]{why}; {len(state.queue)} still queued. Resume with: "
-            f"fetlife discover --resume --state {state_path}[/dim]"
+            f"{resume_cmd}[/dim]"
         )
+        if stopped_reason == "rate-limited":
+            # Retryable, not a failure — let wrapper scripts tell the difference.
+            ctx.exit(EXIT_RATE_LIMITED)
     else:
         state.remove()  # frontier exhausted -> search complete
         status_console.print(f"[dim]crawl complete; {found} shown.[/dim]")
@@ -417,6 +470,11 @@ def raw(ctx: click.Context, path: str) -> None:
 def main() -> None:
     try:
         cli(obj={})
+    except RateLimitedError as exc:
+        # Checked before FetLifeError (its base class) so throttling keeps its
+        # own retryable exit code instead of looking like a hard failure.
+        err_console.print(f"Error: {exc}")
+        sys.exit(EXIT_RATE_LIMITED)
     except FetLifeError as exc:
         err_console.print(f"Error: {exc}")
         sys.exit(1)

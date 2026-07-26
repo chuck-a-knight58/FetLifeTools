@@ -112,6 +112,9 @@ class CrawlState:
         self.queue: deque[Candidate] = deque()
         self.visited: set[str] = set()
         self._queued: set[str] = set()  # keys currently in queue (dedup)
+        # Profiles actually crawled, excluding the seed. Persisted so --max-visits
+        # caps the whole search rather than resetting to 0 on every --resume.
+        self.visits = 0
 
     @property
     def is_fresh(self) -> bool:
@@ -137,6 +140,7 @@ class CrawlState:
             return
         data = {
             "params": self.params,
+            "visits": self.visits,
             "visited": sorted(self.visited),
             "queue": [asdict(c) for c in self.queue],
         }
@@ -162,6 +166,9 @@ class CrawlState:
             data = json.load(fh)
         state = cls(path, data.get("params") or {})
         state.visited = set(data.get("visited") or [])
+        # State written before `visits` existed: the visited set (minus the
+        # seed) is the same number, so use it rather than restarting the budget.
+        state.visits = data.get("visits", max(0, len(state.visited) - 1))
         for c in data.get("queue") or []:
             cand = Candidate(**c)
             state.queue.append(cand)
@@ -215,6 +222,12 @@ def _connections(client, ident: str, max_pages: int) -> list[Candidate]:
         for page in range(1, max_pages + 1):
             try:
                 members = fetch(ident, page=page)
+            except RateLimitedError:
+                # These list fetches are most of the crawl's traffic, so a 429
+                # here must halt it. Treating one as "end of list" (which the
+                # FetLifeError branch below would do) silently truncates the
+                # frontier AND keeps hammering a site that just asked us to stop.
+                raise
             except FetLifeError:
                 break
             if not members:
@@ -236,7 +249,7 @@ def discover(
     ds_only: bool = False,
     active_within: Optional[timedelta] = None,
     max_visits: int = 300,
-    max_pages: int = 3,
+    max_pages: int = 1,
     on_progress: Optional[Callable[[Progress], None]] = None,
     now: Optional[datetime] = None,
     state: Optional[CrawlState] = None,
@@ -254,6 +267,12 @@ def discover(
     :class:`CrawlState` to make the crawl cycle-safe across runs and resumable.
     A fresh (empty) state is seeded from *seed*'s connections; a resumed one
     continues where it left off without re-seeding.
+
+    *max_visits* is a budget for the whole search, not for one run: a resumed
+    crawl counts the profiles earlier runs already visited. The frontier grows
+    far faster than it drains (each in-area member adds dozens of candidates and
+    consumes one), so a per-run cap would make total request volume unbounded
+    across resumes — which is exactly what trips FetLife's rolling-window limit.
     """
     if state is None:
         state = CrawlState(path=None)
@@ -266,6 +285,7 @@ def discover(
         for cand in _connections(client, seed_ident, max_pages):
             state.enqueue(cand)
         state.save()
+    progress.visited = state.visits  # what earlier runs already spent
     progress.queued = len(state.queue)
 
     def _emit_progress() -> None:
@@ -279,6 +299,7 @@ def discover(
         if not cand.key or cand.key in state.visited:
             continue
         state.mark_visited(cand.key)
+        state.visits += 1
         progress.visited += 1
 
         ident = cand.id or cand.nickname

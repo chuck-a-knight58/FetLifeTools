@@ -24,6 +24,10 @@ DEFAULT_RATE_LIMIT_MAX = 5.0
 DEFAULT_MAX_RETRIES = 4
 DEFAULT_RETRY_BACKOFF = 5.0
 DEFAULT_SESSION_PATH = "~/.fetlife/session.cookies"
+# Where the client remembers being throttled. FetLife's rate limit outlives the
+# process that tripped it, so the learned delay has to outlive it too — without
+# this every run rediscovers the wall by walking into it.
+DEFAULT_THROTTLE_STATE_PATH = "~/.fetlife/throttle.json"
 # Browser profile curl_cffi impersonates to clear Cloudflare's TLS fingerprint
 # check. See curl_cffi docs for the full list (chrome, safari, edge, ...).
 DEFAULT_IMPERSONATE = "chrome"
@@ -53,6 +57,7 @@ class Config:
     rate_limit_min: float = DEFAULT_RATE_LIMIT_MIN
     rate_limit_max: float = DEFAULT_RATE_LIMIT_MAX
     session_path: Path = Path(DEFAULT_SESSION_PATH).expanduser()
+    throttle_state_path: Path = Path(DEFAULT_THROTTLE_STATE_PATH).expanduser()
     user_agent: str | None = DEFAULT_USER_AGENT
     impersonate: str = DEFAULT_IMPERSONATE
     geocode_cache_path: Path = Path(DEFAULT_GEOCODE_CACHE_PATH).expanduser()
@@ -83,6 +88,9 @@ class Config:
             rate_limit_min=rate_min,
             rate_limit_max=rate_max,
             session_path=Path(session_path).expanduser(),
+            throttle_state_path=Path(
+                os.getenv("FETLIFE_THROTTLE_STATE_PATH", DEFAULT_THROTTLE_STATE_PATH)
+            ).expanduser(),
             user_agent=os.getenv("FETLIFE_USER_AGENT") or DEFAULT_USER_AGENT,
             impersonate=os.getenv("FETLIFE_IMPERSONATE", DEFAULT_IMPERSONATE),
             geocode_cache_path=Path(
