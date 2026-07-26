@@ -33,3 +33,6 @@ htmlcov/
 .venv/
 
 *.txt
+
+# Wrapper-script logs (go.sh)
+*.log
