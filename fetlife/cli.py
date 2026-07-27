@@ -327,8 +327,14 @@ def discover(ctx, center, radius, units, seed, ds_only, active_within, max_visit
             f"(retry {attempt}/{max_attempts})…[/yellow]"
         )
 
+    # The hook fires in both directions, so the verb has to come from the change
+    # itself — keying it off "factor > 1" reports the AIMD decay easing 4x -> 3.5x
+    # as a slowdown, which reads like an escalation when it's the recovery.
+    prev_factor = [fl.throttle_factor]
+
     def on_slowdown(factor, lo, hi):
-        verb = "slowing to" if factor > 1.0 else "easing back to"
+        verb = "slowing to" if factor > prev_factor[0] else "easing back to"
+        prev_factor[0] = factor
         status_console.print(
             f"\n[yellow]{verb} {lo:g}-{hi:g}s/request ({factor:g}× the "
             f"configured delay)[/yellow]"
