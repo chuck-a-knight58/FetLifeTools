@@ -348,7 +348,7 @@ Distance is checked on the cheap list *string* first, so a full profile is fetch
 | `--max-visits INTEGER` | `300` | Hard cap on profiles fetched **for the whole search**, including profiles visited by earlier `--resume` runs. |
 | `--max-pages INTEGER` | `1` | Pages of each friends/followers list to expand (each page ≈ 10 members). Each page costs one request *per list*, so raising this multiplies request volume — and your odds of being rate-limited. |
 | `--max-results INTEGER` | `0` | Stop after N displayed rows (`0` = unlimited). |
-| `--state PATH` | temp file | Where the resumable frontier + visited set is stored. |
+| `--state PATH` | `~/.fetlife/discover_state.json` | Where the resumable frontier + visited set is stored. |
 | `--resume / --fresh` | `--fresh` | `--resume` continues a suspended crawl from `--state`; `--fresh` (default) starts over. |
 | `--cooldown FLOAT` | `3.0` | Refuse to start within this many hours of the last HTTP 429. `0` disables the check. |
 | `-j, --json` | off | Stream JSON Lines (one object per line) instead of a text table. |
@@ -361,7 +361,7 @@ Results are **streamed as they're found** — each match is printed and flushed 
 fetlife discover --seed JohnDoe --json | tee found.jsonl | jq -c '{fet_name, gps}'
 ```
 
-The crawl's **frontier and visited set are persisted** to `--state` (a temp file by default) after every visit. This gives two things:
+The crawl's **frontier and visited set are persisted** to `--state` (`~/.fetlife/discover_state.json` by default) after every visit. This gives two things:
 
 - **Cycle safety** — a member is never processed twice, even across runs.
 - **Resume** — a crawl stopped by `Ctrl-C`, `--max-visits`, or a crash can be continued:

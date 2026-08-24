@@ -1,7 +1,9 @@
 """Tests for the BFS crawl using in-memory stubs (fully offline)."""
 
 import json
+import tempfile
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
 
 import pytest
 
@@ -259,6 +261,19 @@ def test_parse_duration_disabled(text):
 def test_parse_duration_invalid():
     with pytest.raises(ValueError):
         crawl.parse_duration("soon")
+
+
+def test_default_state_path_survives_temp_dir_reaping():
+    """The default state must not live in the system temp dir.
+
+    A geo-bounded crawl spans days of --resume attempts; macOS reaps
+    /var/folders well inside that window, and a vanished state file restarts
+    the whole search from scratch instead of resuming it.
+    """
+    default = Path(crawl.DEFAULT_STATE_PATH)
+    assert default.is_absolute()
+    assert Path(tempfile.gettempdir()) not in default.parents
+    assert default.parent == Path.home() / ".fetlife"
 
 
 def test_crawl_state_roundtrip_and_dedup(tmp_path):

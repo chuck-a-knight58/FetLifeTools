@@ -15,7 +15,6 @@ from __future__ import annotations
 import json
 import os
 import re
-import tempfile
 from collections import deque
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timedelta, timezone
@@ -26,8 +25,12 @@ from . import geo
 from .exceptions import FetLifeError, RateLimitedError
 from .geo import Coord
 
-# Default location for the resumable crawl state (a temp file).
-DEFAULT_STATE_PATH = os.path.join(tempfile.gettempdir(), "fetlife_discover_state.json")
+# Default location for the resumable crawl state. This lives under ~/.fetlife
+# with the session cookies and throttle state, NOT in the system temp dir: a
+# geo-bounded crawl runs for days across many --resume attempts, and macOS (and
+# systemd-tmpfiles) reap temp files well inside that window — losing the state
+# file silently restarts the whole search.
+DEFAULT_STATE_PATH = os.path.expanduser("~/.fetlife/discover_state.json")
 
 # Duration units, in days, for --active-within ("1 month", "30d", "2 weeks"...).
 _DURATION_UNITS = {
