@@ -283,30 +283,82 @@ def member_from_core(payload: dict, base_url: str = "") -> Member:
     )
 
 
-def members_from_user_list(payload: dict, base_url: str = "") -> list[Member]:
-    """Parse a ``{users, page, no_more}`` list into Members.
+_RELATION_ID_RE = re.compile(r"^relation_user_(\d+)$")
+# A profile href, as opposed to a sub-page like /<nick>/pictures.
+_PROFILE_HREF_RE = re.compile(r"^/[^/?#]+$")
+# The bold line under a nickname: age glued to a gender abbreviation, then an
+# optional role — "49M", "56W Villain", "38F Submissive".
+_AGE_GENDER_RE = re.compile(r"^(\d+)([A-Za-z]*)$")
 
-    Shared by friends / followers / following — all three endpoints return the
-    same shape, with age/gender/role inline, so no per-member fetch is needed.
+
+def _age_gender_role(text: str | None) -> tuple[int | None, str | None, str | None]:
+    """Split a list entry's "49M Sadist" line into age, gender, role."""
+    if not text:
+        return None, None, None
+    first, _, rest = text.partition(" ")
+    m = _AGE_GENDER_RE.match(first)
+    if not m:
+        # No age shown: the whole line is the role (gender is glued to the age,
+        # so without one there is nothing to read a gender from).
+        return None, None, _clean(text)
+    return int(m.group(1)), (m.group(2) or None), _clean(rest)
+
+
+def members_from_relations_html(html: str, base_url: str = "") -> list[Member]:
+    """Parse a server-rendered friends/followers/following page into Members.
+
+    FetLife serves these lists as HTML only — the JSON variant these endpoints
+    used to answer (``Accept: application/json``) now 404s. Each entry is a
+    ``<div id="relation_user_ID">`` carrying nickname, age/gender/role and the
+    location string, which is everything the crawl filters on, so no per-member
+    fetch is needed here either.
     """
     out: list[Member] = []
-    for u in payload.get("users", []):
-        if not isinstance(u, dict):
+    for block in _soup(html).select("div[id^='relation_user_']"):
+        m = _RELATION_ID_RE.match(block.get("id", ""))
+        link = block.select_one("a.font-bold[href]") or block.find(
+            "a", href=_PROFILE_HREF_RE
+        )
+        if link is None:
             continue
-        url = u.get("url")
+        href = link.get("href", "")
+        nickname = _clean(link.get_text()) or href.lstrip("/")
+        name_line = link.find_parent("div")
+        # The bold span, specifically: a supporter/verified badge can sit in an
+        # unstyled span between the nickname and the age/gender line.
+        stats = name_line.select_one("span.font-bold") if name_line else None
+        age, gender, role = _age_gender_role(_clean(stats.get_text()) if stats else None)
+        img = block.find("img")
         out.append(
             Member(
-                id=str(u["id"]) if u.get("id") is not None else None,
-                nickname=u.get("nickname", ""),
-                age=u.get("age"),
-                gender=u.get("gender"),
-                role=u.get("role"),
-                location=_location_names(u.get("location")),
-                url=urljoin(base_url + "/", url.lstrip("/")) if url else None,
-                avatar_url=u.get("large_avatar_url") or u.get("avatar_url"),
+                id=m.group(1) if m else None,
+                nickname=nickname,
+                age=age,
+                gender=gender,
+                role=role,
+                location=_relation_location(name_line),
+                url=urljoin(base_url + "/", href.lstrip("/")) if href else None,
+                avatar_url=img.get("src") if img else None,
             )
         )
     return out
+
+
+def _relation_location(name_line) -> str | None:
+    """The location line of a list entry: the first text-only div after the name.
+
+    The divs that follow the name are location, then a stats row of links ("32
+    pics", "1 writing"), so "has no link in it" is what distinguishes them.
+    """
+    if name_line is None:
+        return None
+    for sib in name_line.find_next_siblings("div"):
+        if sib.find("a"):
+            continue
+        text = _clean(sib.get_text(" "))
+        if text:
+            return text
+    return None
 
 
 def _parse_iso(text) -> datetime | None:

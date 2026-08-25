@@ -443,11 +443,20 @@ class FetLifeClient:
             )
 
     def _member_list(self, nickname_or_id: str, section: str, page: int) -> list[Member]:
-        """Fetch a friends/followers/following list (all share one JSON shape)."""
+        """Fetch a friends/followers/following list (all share one page shape).
+
+        These are read from the server-rendered page, not the JSON API: FetLife
+        answers ``Accept: application/json`` on the list endpoints with a 404,
+        for any member including yourself. The HTML carries the same per-entry
+        age/gender/role/location the JSON did, so nothing is lost — but it costs
+        one request either way, so there is no fallback to try.
+        """
         self._ensure_auth()
         path = self._profile_path(nickname_or_id) + f"/{section}"
-        data = self.get_json(path, params={"page": page})
-        return parsers.members_from_user_list(data, base_url=self.config.base_url)
+        resp = self.get(path, params={"page": page})
+        return parsers.members_from_relations_html(
+            resp.text, base_url=self.config.base_url
+        )
 
     def get_friends(self, nickname_or_id: str, page: int = 1) -> list[Member]:
         """List a member's friends (entries include age/gender/role/location)."""

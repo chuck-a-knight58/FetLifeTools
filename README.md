@@ -304,10 +304,12 @@ header:
 |---|---|---|
 | Profile card | `GET /<nickname>` → `{core, currentUserRelation}` | `get_member` / `profile` |
 | Relationships | `GET /<nickname>` → `core.relationships` + `core.dsRelationships` | `get_relationships` / `relationships` |
-| Friends | `GET /<nickname>/friends?page=N` | `get_friends` / `friends` |
-| Followers / following | `GET /<nickname>/{followers,following}?page=N` | `get_followers` `get_following` / `followers` `following` |
+| Friends | `GET /<nickname>/friends?page=N` **(HTML)** | `get_friends` / `friends` |
+| Followers / following | `GET /<nickname>/{followers,following}?page=N` **(HTML)** | `get_followers` `get_following` / `followers` `following` |
 | Activity / last-active | `GET /<nickname>/activity?accurate_per_page=N` (newest `created_at`) | `get_last_active` |
 | Pictures | `GET /<nickname>/pictures` | *(easy to add)* |
+
+The three relation lists are the exception: FetLife 404s the JSON variant of those (for any member, your own profile included), so they are read from the server-rendered page by `members_from_relations_html`. The markup carries the same per-entry age/gender/role/location the JSON did, at the same one request per page.
 
 These are **plain cookie-authenticated GETs** — no CSRF token, no request signing — so they replay directly from our `curl_cffi` session (which also clears Cloudflare). This is why full data is available for *any* member, not just the logged-in viewer. See `get_json` in `client.py`; adding the remaining endpoints is a few lines each following `get_friends`.
 

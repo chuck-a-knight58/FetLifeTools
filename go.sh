@@ -7,13 +7,14 @@
 # means the search finished, and anything else is a real error that sleeping
 # won't fix.
 #
-# The first attempt starts a fresh search (CENTER/RADIUS/UNITS); every attempt
+# The first attempt starts a fresh search (SEED/CENTER/RADIUS/UNITS); every attempt
 # after it resumes, because the crawl writes its frontier to STATE as it goes.
 # The script decides which by looking for STATE, so it bootstraps a new crawl
 # and continues an existing one with the same invocation — rerun it after an
 # interruption and it picks up where it left off.
 #
 # Tunables (environment):
+#   SEED           member the fresh crawl walks out from  (default Knight_of_Xanadu)
 #   CENTER         circle center for a fresh crawl        (default Washington, NJ)
 #   RADIUS         circle radius for a fresh crawl        (default 100)
 #   UNITS          mi or km                               (default mi)
@@ -35,11 +36,18 @@
 # roughly doubles the requests per profile and, on a crawl this size, buys more
 # throttling than reach.
 #
+# SEED only applies to a fresh crawl: the seed's connections are what fill the
+# initial frontier, so once STATE exists the crawl resumes from that frontier and
+# changing SEED does nothing. Reseed by deleting STATE (which restarts the whole
+# search). The seed must be well connected to the target area — an unconnected
+# seed yields nothing.
+#
 # Keep RETRY_HOURS at or above `discover --cooldown` (default 3h), or the next
 # attempt is refused by the cooldown guard before it sends a single request.
 
 set -uo pipefail
 
+SEED="${SEED:-Knight_of_Xanadu}"
 CENTER="${CENTER:-Washington, NJ}"
 RADIUS="${RADIUS:-100}"
 UNITS="${UNITS:-mi}"
@@ -64,8 +72,8 @@ for ((attempt = 1; attempt <= MAX_ATTEMPTS; attempt++)); do
     if [[ -f "$STATE" ]]; then
         args=(--resume)
     else
-        log "no state at ${STATE}; starting a fresh crawl of ${RADIUS}${UNITS} around '${CENTER}'."
-        args=(--center "$CENTER" --radius "$RADIUS" --units "$UNITS")
+        log "no state at ${STATE}; starting a fresh crawl of ${RADIUS}${UNITS} around '${CENTER}', seeded from '${SEED}'."
+        args=(--seed "$SEED" --center "$CENTER" --radius "$RADIUS" --units "$UNITS")
     fi
 
     # Login is cheap (cached cookies) but can itself be throttled, so it shares

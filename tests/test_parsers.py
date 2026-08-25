@@ -216,23 +216,56 @@ def test_last_active_from_activity_empty():
     assert parsers.last_active_from_activity({}) is None
 
 
-def test_members_from_user_list():
-    payload = {
-        "users": [
-            {"id": 7878605, "nickname": "Miss__Lynne", "url": "/Miss__Lynne",
-             "age": 51, "gender": "W", "role": "Switch",
-             "location": [{"name": "Denver"}, {"name": "Colorado"}],
-             "large_avatar_url": "https://x/big.jpg"},
-        ],
-        "page": 1, "no_more": True,
-    }
-    friends = parsers.members_from_user_list(payload, base_url="https://fetlife.com")
-    assert len(friends) == 1
+RELATIONS_HTML = """
+<div id="relations_items">
+  <div class="min-w-0" id="relation_user_7878605">
+    <div onclick="openLink(event, '/Miss__Lynne')">
+      <a href="/Miss__Lynne" title="Miss__Lynne"><img src="https://x/big.jpg" alt=""></a>
+      <div class="relative flex-auto">
+        <div class="leading-normal truncate">
+          <a href="/Miss__Lynne" class="link text-base font-bold text-red-500">Miss__Lynne</a>
+          <span class="relative top-px"><a href="/support" title="FetLife Supporter"></a></span>
+          <span class="text-sm font-bold text-gray-300">51W Switch</span>
+        </div>
+        <div class="text-sm truncate">Denver, Colorado</div>
+        <div class="text-sm text-gray-500"><a href="/Miss__Lynne/pictures">32 pics</a></div>
+      </div>
+    </div>
+  </div>
+  <div class="min-w-0" id="relation_user_16294">
+    <div>
+      <div class="relative flex-auto">
+        <div class="leading-normal truncate">
+          <a href="/no_age" class="link text-base font-bold text-red-500">no_age</a>
+        </div>
+        <div class="text-sm truncate">New Jersey</div>
+      </div>
+    </div>
+  </div>
+</div>
+"""
+
+
+def test_members_from_relations_html():
+    friends = parsers.members_from_relations_html(
+        RELATIONS_HTML, base_url="https://fetlife.com"
+    )
+    assert len(friends) == 2
     f = friends[0]
-    assert f.nickname == "Miss__Lynne" and f.age == 51 and f.role == "Switch"
-    assert f.location == "Denver, Colorado"
+    assert f.id == "7878605"
+    # The supporter badge sits between the nickname and the age/gender line.
+    assert f.nickname == "Miss__Lynne" and f.age == 51 and f.gender == "W"
+    assert f.role == "Switch"
+    assert f.location == "Denver, Colorado"  # not the "32 pics" stats line
     assert f.url == "https://fetlife.com/Miss__Lynne"
     assert f.avatar_url == "https://x/big.jpg"
+
+
+def test_members_from_relations_html_without_age():
+    """A hidden age hides the gender with it — they share one glued token."""
+    f = parsers.members_from_relations_html(RELATIONS_HTML)[1]
+    assert f.nickname == "no_age" and f.age is None and f.gender is None
+    assert f.location == "New Jersey"
 
 
 def test_parse_member_requires_nickname():
