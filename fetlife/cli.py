@@ -409,9 +409,13 @@ def discover(ctx, center, radius, units, seed, ds_only, active_within, max_visit
               help="Directory holding each member's last-scan date.")
 @click.option("--no-save", is_flag=True, default=False,
               help="Don't record this run as the member's last scan.")
+@click.option("--csv", "as_csv", is_flag=True, default=False,
+              help="Write the rows to stdout as CSV instead of a table "
+                   "(same rows as --all/--strangers, plus the post URLs).")
 @json_option
 @click.pass_context
-def engagement_cmd(ctx, nickname_or_id, since, show_all, state_dir, no_save, json_local):
+def engagement_cmd(ctx, nickname_or_id, since, show_all, state_dir, no_save, as_csv,
+                   json_local):
     """Find who engages with NICKNAME_OR_ID's posts without being connected to them.
 
     Gathers the member's friends, followers and following, then every love and
@@ -476,6 +480,9 @@ def engagement_cmd(ctx, nickname_or_id, since, show_all, state_dir, no_save, jso
         + (f" · {report.skipped} posts unreadable" if report.skipped else "") + "[/dim]"
     )
     rows = report.engagers if show_all else report.strangers
+    if as_csv:
+        engagement.write_csv(rows, sys.stdout)
+        return
     columns = ["nickname", "loves", "comments", "posts", "url"]
     if show_all:
         columns.insert(4, "relation")

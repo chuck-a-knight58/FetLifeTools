@@ -574,6 +574,7 @@ Members are matched by nickname (case-insensitive) — the loves grid exposes no
 | `--all` / `--strangers` | `--strangers` | `--all` lists every engager with a `relation` column (`friend`, `follower`, `following`, or combinations); `--strangers` lists only those not connected. |
 | `--state-dir PATH` | `~/.fetlife/engagement` | Where each member's last-scan date is kept (`<nickname>.json`). |
 | `--no-save` | off | Don't record this run as the member's last scan. |
+| `--csv` | off | Write the rows to stdout as CSV (header + one row per engager) instead of a table. |
 | `-j, --json` | off | Emit the full report as JSON. |
 
 ### The last-scan date
@@ -601,6 +602,12 @@ Note the window is on the **post's creation date**: a love or comment left *toda
 | `relation` | (`--all` only) which of the member's lists they're in. |
 
 A summary line goes to stderr: list sizes, posts scanned, engagers found, how many are not connected, and any posts whose loves/comments couldn't be read.
+
+`--csv` writes the same rows the table would show (`--strangers` or `--all`) as CSV to stdout, with the columns `nickname,loves,comments,posts,connected,relation,url,post_urls` — `post_urls` is the space-separated list of posts engaged with. The summary line still goes to stderr, so redirecting stdout gives a clean file:
+
+```bash
+fetlife engagement JohnDoe --all --csv > johndoe-engagers.csv
+```
 
 `--json` emits one object: `target`, `since`, `scanned_at`, the three list sizes, `posts`, `skipped`, `engagers` (everyone, each with `loves`, `comments`, the `posts` URLs, `connected`, `relation`) and `strangers` (the not-connected subset):
 

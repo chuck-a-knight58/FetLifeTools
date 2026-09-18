@@ -1,5 +1,7 @@
 """Tests for the engagement scan using an in-memory stub client (offline)."""
 
+import csv
+import io
 import json
 from datetime import datetime, timedelta, timezone
 
@@ -192,3 +194,22 @@ def test_scan_state_ignores_corrupt_file(tmp_path):
     (tmp_path / "x.json").write_text("{not json")
     assert engagement.ScanState(tmp_path, "X").last_scan is None
     assert engagement.ScanState(None, "X").last_scan is None
+
+
+def test_write_csv():
+    client = _build()
+    report = engagement.scan(client, TARGET, NOW - timedelta(days=30), now=NOW)
+    out = io.StringIO()
+    engagement.write_csv(report.strangers, out)
+    rows = list(csv.DictReader(io.StringIO(out.getvalue())))
+    assert [r["nickname"] for r in rows] == ["Eve", "frank"]
+    eve = rows[0]
+    assert (eve["loves"], eve["comments"], eve["posts"]) == ("1", "1", "1")
+    assert eve["connected"] == "no" and eve["relation"] == ""
+    assert eve["url"] == "https://fetlife.com/Eve"
+    assert eve["post_urls"] == "https://fetlife.com/Xanadu_Kink/pictures/p1"
+
+    out = io.StringIO()
+    engagement.write_csv(report.engagers, out)
+    alice = next(r for r in csv.DictReader(io.StringIO(out.getvalue())) if r["nickname"] == "alice")
+    assert alice["connected"] == "yes" and alice["relation"] == "friend"

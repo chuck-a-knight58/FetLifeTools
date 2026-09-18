@@ -11,6 +11,7 @@ Like :mod:`fetlife.crawl`, this is pure orchestration over a
 
 from __future__ import annotations
 
+import csv
 import json
 import os
 from dataclasses import asdict, dataclass, field
@@ -52,6 +53,24 @@ class Engager:
     @property
     def total(self) -> int:
         return self.loves + self.comments
+
+
+# One row per engager. `posts` is the count; the URLs follow, space-separated,
+# so a spreadsheet can still get to them without a second file.
+CSV_COLUMNS = ["nickname", "loves", "comments", "posts", "connected", "relation",
+               "url", "post_urls"]
+
+
+def write_csv(engagers: list[Engager], fh) -> None:
+    """Write *engagers* to *fh* as CSV with a header row (see CSV_COLUMNS)."""
+    writer = csv.writer(fh, lineterminator="\n")
+    writer.writerow(CSV_COLUMNS)
+    for e in engagers:
+        writer.writerow([
+            e.nickname, e.loves, e.comments, len(e.posts),
+            "yes" if e.connected else "no", e.relation or "",
+            e.url or "", " ".join(e.posts),
+        ])
 
 
 @dataclass
