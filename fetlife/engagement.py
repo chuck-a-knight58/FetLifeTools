@@ -1,6 +1,6 @@
 """Who engages with a member's posts without being connected to them.
 
-Given a member, gather their friends, followers and following; then walk the
+Given a member, gather their friends and followers; then walk the
 posts they made since the last scan and collect everyone who loved or
 commented on them. The people in the second set who are not in the first are
 the interesting ones — an audience the member has no tie to.
@@ -29,9 +29,12 @@ DEFAULT_STATE_DIR = os.path.expanduser("~/.fetlife/engagement")
 # Window for a member's very first scan, when there is no last-scan date yet.
 DEFAULT_LOOKBACK = timedelta(days=30)
 
-RELATION_SECTIONS = ("friends", "followers", "following")
+# Only the lists of people who reached out to the member: their own
+# "following" list is who *they* chose, and someone the member follows but who
+# never friended or followed back is still a stranger to this report.
+RELATION_SECTIONS = ("friends", "followers")
 # How each list reads from the scanned member's point of view.
-_RELATION_LABELS = {"friends": "friend", "followers": "follower", "following": "following"}
+_RELATION_LABELS = {"friends": "friend", "followers": "follower"}
 RELATION_LABELS = tuple(_RELATION_LABELS[s] for s in RELATION_SECTIONS)
 
 
@@ -81,7 +84,7 @@ def gather_connections(
 
 
 def count_relations(connections: dict[str, Connection]) -> dict[str, int]:
-    """``{"friends": n, "followers": n, "following": n}`` over *connections*."""
+    """``{"friends": n, "followers": n}`` over *connections*."""
     return {
         section: sum(1 for c in connections.values() if label in c.relations)
         for section, label in _RELATION_LABELS.items()
@@ -148,7 +151,7 @@ class Engager:
     # Post URLs engaged with, in feed order (newest first), each once.
     posts: list[str] = field(default_factory=list)
     connected: bool = False
-    # "friend", "follower", "following" — every list they appear in, joined
+    # "friend", "follower" — every list they appear in, joined
     # with ", "; None when not connected.
     relation: Optional[str] = None
 
@@ -185,7 +188,6 @@ class Report:
     scanned_at: str
     friends: int = 0
     followers: int = 0
-    following: int = 0
     # "live" when fetched during the scan, else the connections file used.
     connections_source: str = "live"
     posts: int = 0
@@ -195,7 +197,7 @@ class Report:
 
     @property
     def strangers(self) -> list[Engager]:
-        """Engagers who are neither friends, followers nor followed."""
+        """Engagers who are neither friends nor followers."""
         return [e for e in self.engagers if not e.connected]
 
     def to_dict(self) -> dict:

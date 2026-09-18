@@ -17,8 +17,8 @@ FetLife sits behind Cloudflare, which blocks plain HTTP clients. To get through,
 - `relationships` — a member's vanilla and D/s relationships (and who they're with).
 - `followers` / `following` — who follows a member, and who they follow.
 - `discover` — crawl the friends/followers graph to find members near a location (D/s flag + activity filter).
-- `connections` — save a member's complete friends/followers/following to a CSV file.
-- `engagement` — who loves/comments on a member's posts without being a friend, follower or followed.
+- `connections` — save a member's complete friends and followers to a CSV file.
+- `engagement` — who loves/comments on a member's posts without being a friend or follower.
 - `search` — keyword member search _(experimental — see notes)_.
 - `events` / `event` — list events or fetch one by id _(experimental — partial data)_.
 - `group` — fetch a group by id (name + member count).
@@ -70,7 +70,7 @@ fetlife followers JohnDoe           # who follows them
 fetlife following JohnDoe           # who they follow
 fetlife discover --seed JohnDoe --center "Washington, NJ" --radius 50 --ds-only
 fetlife discover --seed JohnDoe --active-within "2 weeks"   # activity filter (default 1 month)
-fetlife connections JohnDoe         # friends + followers + following -> friends.csv
+fetlife connections JohnDoe         # friends + followers -> friends.csv
 fetlife engagement JohnDoe --connections friends.csv   # engagers since the last scan who aren't connected
 fetlife engagement JohnDoe --since "2 weeks" --all     # every engager, fetching the lists live
 fetlife search "rope portland"
@@ -229,16 +229,16 @@ fetlife discover --seed JohnDoe --center "Washington, NJ" --radius 50 --ds-only
 
 ### `connections`
 
-Save a member's complete friends, followers and following lists to one CSV file (default `friends.csv`; `--out -` for stdout).
+Save a member's complete friends and followers lists to one CSV file (default `friends.csv`; `--out -` for stdout).
 
 ```bash
 fetlife connections JohnDoe
 fetlife connections JohnDoe --out johndoe-connections.csv
 ```
 ```
-nickname,id,friend,follower,following,age,gender,role,location,url
-RopeBunny,12345,yes,yes,no,33,W,submissive,"Newark, New Jersey",https://fetlife.com/RopeBunny
-SwitchKate,67890,no,yes,no,29,W,Switch,Philadelphia,https://fetlife.com/SwitchKate
+nickname,id,friend,follower,age,gender,role,location,url
+RopeBunny,12345,yes,yes,33,W,submissive,"Newark, New Jersey",https://fetlife.com/RopeBunny
+SwitchKate,67890,no,yes,29,W,Switch,Philadelphia,https://fetlife.com/SwitchKate
 ```
 
 One row per member, sorted by nickname, with a yes/no column per list. This is the same gathering step `engagement` performs; pass the file to `engagement --connections` to skip it. See [`connections` and `engagement`](#engagement--who-engages-without-being-connected) below.
@@ -569,7 +569,9 @@ fetlife discover --seed JohnDoe --ds-only --json | jq -c '{fet_name, gps, last_a
 
 ## `engagement` — who engages without being connected
 
-Given a member, `engagement` answers: *who loves or comments on their posts but isn't a friend, a follower, or someone they follow?*
+Given a member, `engagement` answers: *who loves or comments on their posts but isn't a friend or a follower?*
+
+The member's own *following* list is deliberately left out: it's who **they** chose, so someone they follow who never friended or followed back is still a stranger from the audience's side.
 
 ```bash
 fetlife engagement [OPTIONS] NICKNAME_OR_ID
@@ -577,10 +579,10 @@ fetlife engagement [OPTIONS] NICKNAME_OR_ID
 
 ### How it works
 
-1. **Connections.** Pulls the member's complete **friends**, **followers** and **following** lists (every page) — or reads them from a file written by `fetlife connections` (`--connections friends.csv`).
+1. **Connections.** Pulls the member's complete **friends** and **followers** lists (every page) — or reads them from a file written by `fetlife connections` (`--connections friends.csv`).
 2. **Posts.** Walks the member's *All Posts* feed — pictures, writings, statuses, videos — newest first, stopping at the first post older than `--since`. Posts by other members that show up in the feed (shares, tags) are ignored.
 3. **Engagers.** For each post, fetches who **loved** it and who **commented** on it. Posts the feed reports with zero loves (or zero comments) skip that fetch.
-4. **Diff.** Everyone from step 3 who appears in none of the step-1 lists is listed, most engaged first. The member's own loves and comments on their posts are ignored.
+4. **Diff.** Everyone from step 3 who appears in neither step-1 list is listed, most engaged first. The member's own loves and comments on their posts are ignored.
 
 Members are matched by nickname (case-insensitive) — the loves grid exposes nothing else.
 
@@ -589,19 +591,19 @@ Members are matched by nickname (case-insensitive) — the loves grid exposes no
 | Option | Default | Description |
 |---|---|---|
 | `--since TEXT` | last scan, else 30 days | Only posts created after this. An ISO date/time (`2026-09-01`, `2026-09-01T12:00Z`) or a duration back from now (`"2 weeks"`, `30d`, `6m`). |
-| `--all` / `--strangers` | `--strangers` | `--all` lists every engager with a `relation` column (`friend`, `follower`, `following`, or combinations); `--strangers` lists only those not connected. |
+| `--all` / `--strangers` | `--strangers` | `--all` lists every engager with a `relation` column (`friend`, `follower`, or `friend, follower`); `--strangers` lists only those not connected. |
 | `--state-dir PATH` | `~/.fetlife/engagement` | Where each member's last-scan date is kept (`<nickname>.json`). |
 | `--no-save` | off | Don't record this run as the member's last scan. |
-| `--connections FILE` | _(fetch live)_ | Read the three lists from a CSV written by `fetlife connections` instead of fetching them. |
+| `--connections FILE` | _(fetch live)_ | Read the two lists from a CSV written by `fetlife connections` instead of fetching them. |
 | `--csv` | off | Write the rows to stdout as CSV (header + one row per engager) instead of a table. |
 | `-j, --json` | off | Emit the full report as JSON. |
 
 ### Reusing the connection lists
 
-The three lists cost one request per 20 members and change slowly, while posts change daily — so for a member with many connections, fetch the lists once and reuse them:
+The two lists cost one request per 20 members and change slowly, while posts change daily — so for a member with many connections, fetch the lists once and reuse them:
 
 ```bash
-fetlife connections JohnDoe                          # ~45 requests for ~900 members -> friends.csv
+fetlife connections JohnDoe                          # ~40 requests for ~750 members -> friends.csv
 fetlife engagement JohnDoe --connections friends.csv # only the posts, loves and comments are fetched
 ```
 
@@ -639,7 +641,7 @@ A summary line goes to stderr: list sizes, posts scanned, engagers found, how ma
 fetlife engagement JohnDoe --all --csv > johndoe-engagers.csv
 ```
 
-`--json` emits one object: `target`, `since`, `scanned_at`, the three list sizes, `posts`, `skipped`, `engagers` (everyone, each with `loves`, `comments`, the `posts` URLs, `connected`, `relation`) and `strangers` (the not-connected subset):
+`--json` emits one object: `target`, `since`, `scanned_at`, the two list sizes, `posts`, `skipped`, `engagers` (everyone, each with `loves`, `comments`, the `posts` URLs, `connected`, `relation`) and `strangers` (the not-connected subset):
 
 ```bash
 fetlife engagement JohnDoe --json | jq -r '.strangers[] | "\(.nickname)\t\(.loves)\t\(.comments)"'

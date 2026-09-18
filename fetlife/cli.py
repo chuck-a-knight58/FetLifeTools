@@ -412,7 +412,7 @@ def _report_retry(status, wait, attempt, max_attempts):
               help="CSV file to write ('-' for stdout).")
 @click.pass_context
 def connections_cmd(ctx, nickname_or_id, out_path):
-    """Save NICKNAME_OR_ID's friends, followers and following to a CSV file.
+    """Save NICKNAME_OR_ID's friends and followers to a CSV file.
 
     One row per member with yes/no columns for each list, plus the
     age/gender/role/location the lists show. Hand the file to
@@ -439,8 +439,8 @@ def connections_cmd(ctx, nickname_or_id, out_path):
             engagement.write_connections_csv(found, fh)
     counts = engagement.count_relations(found)
     status_console.print(
-        f"[dim]{target.nickname}: {counts['friends']} friends, {counts['followers']} followers, "
-        f"{counts['following']} following · {len(found)} members"
+        f"[dim]{target.nickname}: {counts['friends']} friends, {counts['followers']} followers "
+        f"· {len(found)} members"
         + ("" if out_path == "-" else f" → {out_path}") + "[/dim]"
     )
 
@@ -453,7 +453,7 @@ def connections_cmd(ctx, nickname_or_id, out_path):
                    "or 30 days on a first scan.")
 @click.option("--all/--strangers", "show_all", default=False, show_default=True,
               help="--all lists every engager (with how they're connected); "
-                   "--strangers only those who are not a friend, follower or followed.")
+                   "--strangers only those who are not a friend or follower.")
 @click.option("--state-dir", default=engagement.DEFAULT_STATE_DIR, show_default=True,
               help="Directory holding each member's last-scan date.")
 @click.option("--no-save", is_flag=True, default=False,
@@ -463,15 +463,15 @@ def connections_cmd(ctx, nickname_or_id, out_path):
                    "(same rows as --all/--strangers, plus the post URLs).")
 @click.option("--connections", "connections_path", default=None,
               type=click.Path(exists=True, dir_okay=False),
-              help="Read the friends/followers/following from this CSV (written by "
+              help="Read the friends/followers from this CSV (written by "
                    "`fetlife connections`) instead of fetching them.")
 @json_option
 @click.pass_context
 def engagement_cmd(ctx, nickname_or_id, since, show_all, state_dir, no_save, as_csv,
                    connections_path, json_local):
-    """Find who engages with NICKNAME_OR_ID's posts without being connected to them.
+    """Find who engages with NICKNAME_OR_ID's posts without being a friend or follower.
 
-    Gathers the member's friends, followers and following, then every love and
+    Gathers the member's friends and followers, then every love and
     comment on the posts they made since --since, and lists the engagers who
     appear in none of those lists. Each successful run records its start time
     as the member's last scan, so the next run picks up where it left off.
@@ -539,8 +539,8 @@ def engagement_cmd(ctx, nickname_or_id, since, show_all, state_dir, no_save, as_
         return
 
     status_console.print(
-        f"[dim]{report.target}: {report.friends} friends, {report.followers} followers, "
-        f"{report.following} following · {report.posts} posts · "
+        f"[dim]{report.target}: {report.friends} friends, {report.followers} followers "
+        f"· {report.posts} posts · "
         f"{len(report.engagers)} engagers, {len(report.strangers)} not connected"
         + (f" · {report.skipped} posts unreadable" if report.skipped else "") + "[/dim]"
     )

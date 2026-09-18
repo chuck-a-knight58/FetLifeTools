@@ -63,7 +63,6 @@ def _build():
     relations = {
         "friends": [_m("alice", "1"), _m("bob", "2")],
         "followers": [_m("carol", "3"), _m("Bob", "2")],   # bob both friend + follower
-        "following": [_m("dave", "4")],
     }
     posts = [
         _post("p1", 1, loves=3, comments=2),
@@ -86,7 +85,7 @@ def test_scan_partitions_engagers_by_connection():
     report = engagement.scan(client, TARGET, NOW - timedelta(days=30), now=NOW)
 
     assert report.target == "Xanadu_Kink"
-    assert (report.friends, report.followers, report.following) == (2, 2, 1)
+    assert (report.friends, report.followers) == (2, 2)
     assert report.posts == 2       # p1 and p2; the shared post and p3 excluded
     assert report.skipped == 0
 
@@ -218,11 +217,11 @@ def test_write_csv():
 def test_gather_connections_merges_lists():
     client = _build()
     found = engagement.gather_connections(client, "Xanadu_Kink")
-    assert set(found) == {"alice", "bob", "carol", "dave"}
+    assert set(found) == {"alice", "bob", "carol"}
     assert found["bob"].relations == ["friend", "follower"]
     assert found["bob"].relation == "friend, follower"
     assert found["bob"].nickname == "bob"          # first spelling seen wins
-    assert engagement.count_relations(found) == {"friends": 2, "followers": 2, "following": 1}
+    assert engagement.count_relations(found) == {"friends": 2, "followers": 2}
 
 
 def test_connections_csv_round_trip():
@@ -236,9 +235,10 @@ def test_connections_csv_round_trip():
     engagement.write_connections_csv(found, out)
 
     rows = list(csv.DictReader(io.StringIO(out.getvalue())))
-    assert [r["nickname"] for r in rows] == ["alice", "bob", "carol", "dave"]
+    assert [r["nickname"] for r in rows] == ["alice", "bob", "carol"]
     bob = rows[1]
-    assert (bob["friend"], bob["follower"], bob["following"]) == ("yes", "yes", "no")
+    assert (bob["friend"], bob["follower"]) == ("yes", "yes")
+    assert "following" not in bob
     assert rows[0]["location"] == "Newark, New Jersey" and rows[0]["age"] == "33"
 
     back = engagement.read_connections_csv(io.StringIO(out.getvalue()))
@@ -257,7 +257,7 @@ def test_scan_uses_supplied_connections_without_fetching():
                              connections=supplied, connections_source="friends.csv", now=NOW)
     assert not [c for c in client.calls if c[0] == "members"]
     assert report.connections_source == "friends.csv"
-    assert (report.friends, report.followers, report.following) == (0, 1, 0)
+    assert (report.friends, report.followers) == (0, 1)
     by_name = {e.nickname.lower(): e for e in report.engagers}
     assert by_name["eve"].connected and by_name["eve"].relation == "follower"
     assert not by_name["alice"].connected     # alice isn't in the supplied file
