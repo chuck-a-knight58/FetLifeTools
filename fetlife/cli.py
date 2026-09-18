@@ -16,7 +16,7 @@ import click
 from rich.console import Console
 from rich.table import Table
 
-from . import __version__, crawl, engagement, geo
+from . import __version__, crawl, engagement, friending, geo
 from .client import FetLifeClient
 from .config import Config
 from .exceptions import FetLifeError, RateLimitedError
@@ -558,6 +558,69 @@ def engagement_cmd(ctx, nickname_or_id, since, show_all, state_dir, no_save, as_
         [dataclasses.replace(e, posts=len(e.posts)) for e in rows],
         False, columns, title,
     )
+
+
+@cli.command("friend-requests")
+@click.argument("csv_file", type=click.File("r", encoding="utf-8"))
+@click.option("--limit", default=friending.DEFAULT_LIMIT, show_default=True,
+              help="Most requests to send in this run.")
+@click.option("--pause", default=friending.DEFAULT_PAUSE, show_default=True,
+              help="Seconds to wait between two sends (on top of the request delay).")
+@click.option("--dry-run", is_flag=True, default=False,
+              help="Check every profile and report what would be sent; send nothing.")
+@click.option("--yes", "-y", is_flag=True, default=False,
+              help="Skip the confirmation prompt.")
+@click.option("--resend", is_flag=True, default=False,
+              help="Don't skip members this tool has already requested (per --log).")
+@click.option("--log", "log_path", default=friending.DEFAULT_LOG_PATH, show_default=True,
+              help="Record of every request sent; reruns skip the members in it.")
+@click.pass_context
+def friend_requests(ctx, csv_file, limit, pause, dry_run, yes, resend, log_path):
+    """Send a friend request to each member listed in CSV_FILE.
+
+    CSV_FILE needs a `nickname` column (e.g. the output of `engagement --csv`
+    or `connections`); a headerless one-name-per-line file also works. Each
+    profile is checked first and a request is sent only where FetLife itself
+    offers "Add as Friend" — existing friends and pending requests are
+    skipped, as is anyone already in --log. At most --limit go out per run,
+    --pause seconds apart. Try --dry-run first.
+    """
+    nicknames = friending.read_nicknames(csv_file)
+    if not nicknames:
+        raise FetLifeError(f"No nicknames found in {csv_file.name}.")
+    log = friending.RequestLog(log_path)
+    already = sum(1 for n in nicknames if n.lower() in log.sent)
+
+    fl = _client(ctx)
+    fl.on_retry = _report_retry
+    with fl:
+        me = fl.whoami()
+        status_console.print(
+            f"[dim]{len(nicknames)} nicknames in {csv_file.name}"
+            + (f", {already} already requested (see {log_path})" if already and not resend else "")
+            + f" · sending as {me.nickname} · limit {limit}, pause {pause:g}s"
+            + (" · DRY RUN" if dry_run else "") + "[/dim]"
+        )
+        if not dry_run and not yes:
+            click.confirm(
+                f"Send up to {limit} friend request(s) from {me.nickname}?",
+                abort=True, err=True,
+            )
+
+        header = f"{'action':<11} {'nickname':<24} reason"
+        _stream_write(header)
+        _stream_write("-" * len(header))
+        counts: dict[str, int] = {}
+        try:
+            for o in friending.run(fl, nicknames, log, limit=limit, pause=pause,
+                                   dry_run=dry_run, resend=resend):
+                counts[o.action] = counts.get(o.action, 0) + 1
+                _stream_write(f"{o.action:<11} {o.nickname:<24} {o.reason}")
+        except RateLimitedError as exc:
+            status_console.print(f"[red]{exc}[/red]")
+            status_console.print("[dim]stopping; the log is intact — rerun later to continue.[/dim]")
+            ctx.exit(EXIT_RATE_LIMITED)
+    status_console.print("[dim]" + " · ".join(f"{v} {k}" for k, v in counts.items()) + "[/dim]")
 
 
 @cli.command()

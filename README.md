@@ -19,6 +19,7 @@ FetLife sits behind Cloudflare, which blocks plain HTTP clients. To get through,
 - `discover` — crawl the friends/followers graph to find members near a location (D/s flag + activity filter).
 - `connections` — save a member's complete friends and followers to a CSV file.
 - `engagement` — who loves/comments on a member's posts without being a friend or follower.
+- `friend-requests` — send friend requests to the members listed in a CSV, with caps, a dry run and a log.
 - `search` — keyword member search _(experimental — see notes)_.
 - `events` / `event` — list events or fetch one by id _(experimental — partial data)_.
 - `group` — fetch a group by id (name + member count).
@@ -73,6 +74,7 @@ fetlife discover --seed JohnDoe --active-within "2 weeks"   # activity filter (d
 fetlife connections JohnDoe         # friends + followers -> friends.csv
 fetlife engagement JohnDoe --connections friends.csv   # engagers since the last scan who aren't connected
 fetlife engagement JohnDoe --since "2 weeks" --all     # every engager, fetching the lists live
+fetlife friend-requests strangers.csv --dry-run       # who would get a request; then drop --dry-run
 fetlife search "rope portland"
 fetlife events --place 123
 fetlife event 5551234
@@ -95,7 +97,7 @@ Global options (before the subcommand):
 
 Every command accepts `--json` (or `-j` after the subcommand). Table output uses [rich](https://github.com/Textualize/rich); JSON output is a list of objects (or a single object for one-item results) suitable for `jq`. Outputs below are **illustrative** (nicknames/values are examples).
 
-> **Command status.** `whoami`, `profile`, `friends`, `relationships`, `followers`, `following`, `discover`, `connections`, `engagement`, `group`, `login`, and `raw` use FetLife's JSON API (or stable server-rendered fields) and return full data. `search`, `events`, and `event` are **experimental** — see notes on each; they were scaffolded against older markup and are awaiting the JSON endpoints the SPA now uses.
+> **Command status.** `whoami`, `profile`, `friends`, `relationships`, `followers`, `following`, `discover`, `connections`, `engagement`, `friend-requests`, `group`, `login`, and `raw` use FetLife's JSON API (or stable server-rendered fields) and return full data. `search`, `events`, and `event` are **experimental** — see notes on each; they were scaffolded against older markup and are awaiting the JSON endpoints the SPA now uses.
 
 ### `login`
 
@@ -251,6 +253,15 @@ Who engages with a member's posts without being connected to them. **See the ded
 fetlife engagement JohnDoe --since "2 weeks"
 ```
 
+### `friend-requests`
+
+Send a friend request to each member in a CSV file. **See the dedicated [`friend-requests` section](#friend-requests--send-friend-requests-from-a-list) below** — this one writes to FetLife.
+
+```bash
+fetlife friend-requests strangers.csv --dry-run
+fetlife friend-requests strangers.csv --limit 5
+```
+
 ### `group`
 
 Fetch a group by numeric id (name + member count).
@@ -317,6 +328,7 @@ fetlife/
   parsers.py    All HTML/JSON parsing (the part that changes when FetLife does)
   crawl.py      Geo-bounded BFS over friends/followers (the `discover` command)
   engagement.py Connections vs. post engagers (`connections` + `engagement`)
+  friending.py  Checked, capped, logged friend requests (`friend-requests`)
   geo.py        Haversine + Nominatim geocoder (cached)
   models.py     Member / Relationship / Event / Group dataclasses
   config.py     Env/.env credential + settings loading
@@ -340,14 +352,15 @@ header:
 | Last-active | newest `<time datetime>` on `GET /<nickname>/activity` | `get_last_active` |
 | Loves on a post | `GET /loves/story/<uid>?content_type=Story` | `get_story_lovers` |
 | Comments on a post | `GET /comments.turbo_stream?order=oldest&story_uid=<uid>[&cursor=C]` | `iter_story_commenters` |
+| Relation button | `GET /<nickname>` **(HTML)** → `profile_relation_button_<id>` frame | `get_profile_relation` |
+| Friend request | `POST /requests?user_id=<id>` with the page's CSRF token | `send_friend_request` |
 | Pictures | `GET /<nickname>/pictures` | *(easy to add)* |
 
 The relation lists and the activity feed are the exceptions: FetLife answers the JSON variant of those with a 404/406 (for any member, your own profile included), so they are read from the server-rendered page — `members_from_relations_html` and `stories_from_activity_html`. The markup carries the same data the JSON did, at the same one request per page. The feed, loves and comments are all [Hotwire](https://hotwired.dev) pages: the first page is plain HTML and each later page is the Turbo Stream that the page's lazy pagination `<turbo-frame>` would load, addressed by the `marker`/`cursor` in that frame's `src`. Every post in the feed carries a **story uid** (on its love button) that keys the loves and comments endpoints.
 
 These are **plain cookie-authenticated GETs** — no CSRF token, no request signing — so they replay directly from our `curl_cffi` session (which also clears Cloudflare). This is why full data is available for *any* member, not just the logged-in viewer. See `get_json` in `client.py`; adding the remaining endpoints is a few lines each following `get_friends`.
 
-`whoami` is the one thing that still reads the server-embedded
-`window.FL.user` blob, since it needs no nickname to identify "you".
+`whoami` is the one thing that still reads the server-embedded viewer blob (now passed to `<script id="page-data">`, formerly `window.FL.user`), since it needs no nickname to identify "you".
 
 ## `discover` — find members near a location
 
@@ -650,6 +663,55 @@ fetlife engagement JohnDoe --json | jq -r '.strangers[] | "\(.nickname)\t\(.love
 ### Cost
 
 One request per 20 connections, one per 20 posts, and per post one for the loves plus one per page of comments (pages are large; a post with a handful of comments is one request, plus one empty trailing page FetLife always serves). A member with ~900 connections and a dozen posts is about 70 requests — a few minutes at the default delay. The connection lists dominate for a member with many connections and few posts; `--connections` (above) removes them from the run entirely, leaving one request for the profile plus the posts. Throttling stops the run with exit code 75 like `discover`; wait a few hours and rerun.
+
+## `friend-requests` — send friend requests from a list
+
+The one command that **writes** to FetLife. Given a CSV of nicknames — `engagement --csv` output, a `connections` file, or a hand-made list — it sends each member a friend request, the same way the profile page's "Add as Friend" does.
+
+```bash
+fetlife friend-requests [OPTIONS] CSV_FILE
+```
+
+> FetLife's own "Add as Friend" confirm says *"If you are not friends with X we recommend you first send them a message."* A burst of requests to people who don't know the account is exactly what gets one flagged. The defaults here are deliberately conservative; keep them that way.
+
+### How it works
+
+For each nickname, in file order:
+
+1. **Skip** if this tool already sent them a request (per `--log`), unless `--resend`.
+2. **Fetch the profile** and read its relation button. A request goes out only if the page offers **Add as Friend**; otherwise the member is skipped with the state the page shows (e.g. `Friends`, or a pending request).
+3. **Send** `POST /requests?user_id=…` with the page's CSRF token, then check the button the response renders back no longer offers the request.
+4. **Log** the outcome, and **pause** `--pause` seconds before the next send. Checks and skips don't pause.
+
+At most `--limit` requests go out per run; anything past that is reported as skipped so you can see what a second run would cover. Throttling (HTTP 429) stops the run with exit code 75; the log is intact, so rerunning later continues where it stopped.
+
+### Options
+
+| Option | Default | Description |
+|---|---|---|
+| `CSV_FILE` | — | A CSV with a `nickname` column (other columns are ignored), or a headerless one-name-per-line file. |
+| `--limit N` | `10` | Most requests to send in this run. |
+| `--pause SECONDS` | `30` | Wait between two sends, on top of the normal per-request delay. |
+| `--dry-run` | off | Check every profile and print what *would* be sent; send nothing. Eligible members still count against `--limit`, so a dry run previews exactly the run that would follow. |
+| `-y`, `--yes` | off | Skip the confirmation prompt (the prompt names the sending account and the cap). |
+| `--resend` | off | Don't skip members already in the log. |
+| `--log PATH` | `~/.fetlife/friend_requests.jsonl` | Append-only record of every outcome; the `sent` entries are what reruns skip. |
+
+### Output
+
+One line per nickname as it's processed:
+
+```
+action      nickname                 reason
+-------------------------------------------
+sent        RopeCurious
+skipped     QuietFan_22              no 'Add as Friend' (Friends, Unfollow)
+skipped     Gone_Member              profile not found
+skipped     Extra_One                over --limit 10
+failed      Odd_One                  still offers 'Add as Friend' after posting
+```
+
+`action` is `sent`, `would send` (dry run), `skipped` or `failed`. The log holds the same fields as JSON, one object per line, with the user id, URL and timestamp.
 
 ## Development
 

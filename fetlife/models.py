@@ -83,6 +83,18 @@ class Story:
 
 
 @dataclass
+class ProfileRelation:
+    """The viewer's standing with a profile, as its relation button shows it."""
+
+    user_id: str
+    can_friend_request: bool = False
+    request_path: str | None = None
+    following: bool = False
+    # Visible button/menu labels ("Follow", "Add as Friend", "Message"...).
+    labels: list[str] = field(default_factory=list)
+
+
+@dataclass
 class Event:
     """A FetLife event listing."""
 

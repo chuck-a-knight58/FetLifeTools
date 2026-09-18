@@ -473,3 +473,91 @@ def test_parse_group():
     assert g.name == "Rope Enthusiasts"
     assert g.id == "88"
     assert g.member_count == 1234
+
+
+PAGE_DATA_HTML = """
+<html><head>
+<script id="page-data" data-request-id="x">(function refreshPageData(data) {
+  mergePageData(window.FL ||= {}, data)
+})
+({"user":{"id":1065304737,"gender":"Male","role":"Mad Scientist","age":27,
+  "nickname":"Hammerbacher","profileUrl":"/Hammerbacher","avatarUrls":{"c50":"https://x/c50.jpg"}},
+  "firebase":{"api_key":"k"}});</script>
+</head><body></body></html>
+"""
+
+# The relation button on a profile the viewer can friend-request (and follow).
+RELATION_OPEN_HTML = """
+<turbo-frame id="profile_relation_button_2678009_mobile">
+  <form method="post" action="/Errrp/follow?source=profile"><button><span>Follow</span></button></form>
+  <div data-dropdown-target="menu">
+    <a href="/requests?source=profile&amp;user_id=2678009" data-controller="dropdown-menu-entry"
+       data-dropdown-menu-entry-method-value="POST"
+       data-dropdown-menu-entry-href-value="/requests?source=profile&amp;user_id=2678009">
+      <span>Add as Friend</span></a>
+  </div>
+</turbo-frame>
+<turbo-frame id="profile_relation_button_2678009_aside"></turbo-frame>
+"""
+
+# Already following; the request is still offered, plus an unfollow entry.
+RELATION_FOLLOWING_HTML = """
+<turbo-frame id="profile_relation_button_21621264_aside">
+  <button><span>Following</span></button>
+  <a data-dropdown-menu-entry-method-value="POST"
+     data-dropdown-menu-entry-href-value="/favorite_members?target_user_id=21621264"><span>Add to Favorites</span></a>
+  <a data-dropdown-menu-entry-method-value="POST"
+     data-dropdown-menu-entry-href-value="/requests?source=profile&amp;user_id=21621264"><span>Add as Friend</span></a>
+  <a data-dropdown-menu-entry-method-value="DELETE"
+     data-dropdown-menu-entry-href-value="/Xanadu_Kink/follow?source=profile"><span>Unfollow</span></a>
+</turbo-frame>
+"""
+
+# No request offered (already friends, or one is pending).
+RELATION_CLOSED_HTML = """
+<turbo-frame id="profile_relation_button_555_aside">
+  <button><span>Friends</span></button>
+  <a data-dropdown-menu-entry-method-value="DELETE"
+     data-dropdown-menu-entry-href-value="/Pal/follow"><span>Unfollow</span></a>
+</turbo-frame>
+"""
+
+
+def test_extract_bootstrap_user_from_page_data_script():
+    user = parsers.extract_bootstrap_user(PAGE_DATA_HTML)
+    assert user["nickname"] == "Hammerbacher" and user["id"] == 1065304737
+    m = parsers.member_from_bootstrap(user, base_url="https://fetlife.com")
+    assert m.url == "https://fetlife.com/Hammerbacher" and m.age == 27
+
+
+def test_extract_bootstrap_user_legacy_assignment_still_works():
+    html = '<script>window.FL.user = {"id": 1, "nickname": "Old"};</script>'
+    assert parsers.extract_bootstrap_user(html)["nickname"] == "Old"
+
+
+def test_profile_relation_open():
+    rel = parsers.profile_relation_from_html(RELATION_OPEN_HTML)
+    assert rel.user_id == "2678009"
+    assert rel.can_friend_request is True
+    assert rel.request_path == "/requests?source=profile&user_id=2678009"
+    assert rel.following is False
+    assert rel.labels == ["Follow", "Add as Friend"]
+
+
+def test_profile_relation_following_but_not_friends():
+    rel = parsers.profile_relation_from_html(RELATION_FOLLOWING_HTML)
+    assert rel.user_id == "21621264"
+    assert rel.can_friend_request and rel.following
+    assert "Unfollow" in rel.labels
+
+
+def test_profile_relation_closed():
+    rel = parsers.profile_relation_from_html(RELATION_CLOSED_HTML)
+    assert rel.user_id == "555"
+    assert rel.can_friend_request is False and rel.request_path is None
+    assert rel.labels == ["Friends", "Unfollow"]
+
+
+def test_profile_relation_missing_raises():
+    with pytest.raises(ParseError):
+        parsers.profile_relation_from_html("<html><body>nothing</body></html>")

@@ -24,7 +24,7 @@ from .exceptions import (
     ParseError,
     RateLimitedError,
 )
-from .models import Event, Group, Member, Relationship, Story
+from .models import Event, Group, Member, ProfileRelation, Relationship, Story
 from . import parsers
 
 # Adaptive throttling. FetLife's rate limit is a *rolling window*, so backing
@@ -568,6 +568,50 @@ class FetLifeClient:
         except FetLifeError:
             return None
         return parsers.last_active_from_activity(resp.text)
+
+    def get_profile_relation(self, nickname_or_id: str) -> tuple[ProfileRelation, str | None]:
+        """The viewer's standing with a profile, plus the page's CSRF token.
+
+        Read from the profile HTML's relation button (the JSON profile now
+        answers 406). The token is what a write against that profile — a
+        friend request, a follow — has to carry.
+        """
+        self._ensure_auth()
+        resp = self.get(self._profile_path(nickname_or_id))
+        return (
+            parsers.profile_relation_from_html(resp.text),
+            parsers.extract_csrf_token(resp.text),
+        )
+
+    def send_friend_request(self, relation: ProfileRelation, csrf_token: str | None) -> ProfileRelation | None:
+        """Send the friend request *relation* offers (its ``request_path``).
+
+        Mirrors the site's own "Add as Friend" menu entry: a Turbo POST with
+        the page's CSRF token. Returns the relation button the response
+        rendered back, so the caller can see the "Add as Friend" entry is gone
+        (None if the response carried no button to read).
+        """
+        if not relation.can_friend_request or not relation.request_path:
+            raise FetLifeError(f"Profile {relation.user_id} offers no friend request to send.")
+        self._ensure_auth()
+        headers = {
+            "Accept": "text/vnd.turbo-stream.html, text/html, application/xhtml+xml",
+            "Referer": self._url(f"/users/{relation.user_id}"),
+            "Origin": self.config.base_url,
+        }
+        data = {}
+        if csrf_token:
+            headers["X-CSRF-Token"] = csrf_token
+            data["authenticity_token"] = csrf_token
+        resp = self.request("POST", relation.request_path, headers=headers, data=data)
+        if resp.status_code >= 400:
+            raise FetLifeError(
+                f"Friend request to {relation.user_id} was refused (HTTP {resp.status_code})."
+            )
+        try:
+            return parsers.profile_relation_from_html(resp.text)
+        except ParseError:
+            return None
 
     def get_relationships(self, nickname_or_id: str) -> list["Relationship"]:
         """List a member's relationships (vanilla and D/s).

@@ -22,7 +22,7 @@ from urllib.parse import parse_qs, urljoin, urlsplit
 from bs4 import BeautifulSoup
 
 from .exceptions import ParseError
-from .models import Event, Group, Member, Relationship, Story
+from .models import Event, Group, Member, ProfileRelation, Relationship, Story
 
 _PARSER = "lxml"
 
@@ -153,21 +153,30 @@ def _id_from_url(url: str | None, keyword: str) -> str | None:
 # --------------------------------------------------------------------------- #
 # Member parsing
 # --------------------------------------------------------------------------- #
-# FetLife's profile UI is a client-rendered SPA, but every page embeds the
-# *current logged-in user* server-side as `window.FL.user = {...}`. That's the
-# one profile we can read reliably over plain HTTP.
+# Every page embeds the *current logged-in user* server-side. Older pages
+# assigned it directly (`window.FL.user = {...}`); current ones pass a
+# `{"user": {...}}` blob to a merge function in `<script id="page-data">`.
 _FL_USER_RE = re.compile(r"FL\.user\s*=\s*(\{.*?\})\s*;", re.DOTALL)
+_PAGE_DATA_RE = re.compile(
+    r'<script[^>]*id="page-data"[^>]*>.*?\(\s*(\{"user":.*?\})\s*\)\s*;?\s*</script>',
+    re.DOTALL,
+)
 
 
 def extract_bootstrap_user(html: str) -> dict | None:
-    """Return the ``window.FL.user`` object (the logged-in viewer), if present."""
-    m = _FL_USER_RE.search(html)
-    if not m:
-        return None
-    try:
-        return json.loads(m.group(1))
-    except json.JSONDecodeError:
-        return None
+    """Return the logged-in viewer's bootstrap object, if the page has one."""
+    for pattern in (_FL_USER_RE, _PAGE_DATA_RE):
+        m = pattern.search(html)
+        if not m:
+            continue
+        try:
+            data = json.loads(m.group(1))
+        except json.JSONDecodeError:
+            continue
+        user = data.get("user") if pattern is _PAGE_DATA_RE else data
+        if isinstance(user, dict):
+            return user
+    return None
 
 
 def _avatar_from_bootstrap(user: dict) -> str | None:
@@ -565,6 +574,52 @@ def parse_member(
                 "the rest of this profile client-side. See README (SPA profiles)."
             )
         },
+    )
+
+
+_RELATION_FRAME_RE = re.compile(r"^profile_relation_button_(\d+)")
+_FRIEND_REQUEST_HREF_RE = re.compile(r"^/requests\b")
+
+
+def profile_relation_from_html(html: str) -> ProfileRelation:
+    """How the viewer stands to the profile on this page, from its relation button.
+
+    The profile header carries a ``profile_relation_button_<id>`` frame (one per
+    layout) whose dropdown offers the actions still open to the viewer. An
+    "Add as Friend" entry (``POST /requests?user_id=<id>``) means a request can
+    be sent; its absence means they are already friends, a request is pending,
+    or the profile is otherwise closed to one. The visible labels are kept so a
+    skip can say why.
+    """
+    soup = _soup(html)
+    frame = soup.find("turbo-frame", id=_RELATION_FRAME_RE)
+    if frame is None:
+        raise ParseError(
+            "No relation button on the profile page — the profile parser in "
+            "fetlife/parsers.py likely needs updating."
+        )
+    user_id = _RELATION_FRAME_RE.match(frame["id"]).group(1)
+    request = None
+    for entry in frame.select("a[data-dropdown-menu-entry-href-value]"):
+        href = entry.get("data-dropdown-menu-entry-href-value", "")
+        method = (entry.get("data-dropdown-menu-entry-method-value") or "").upper()
+        if _FRIEND_REQUEST_HREF_RE.match(href) and method == "POST":
+            request = href
+            break
+    labels: list[str] = []
+    for node in frame.select("a, button"):
+        text = _clean(node.get_text(" "))
+        if text and len(text) <= 40 and text not in labels:
+            labels.append(text)
+    following = any(a.get("data-dropdown-menu-entry-method-value", "").upper() == "DELETE"
+                    and "/follow" in a.get("data-dropdown-menu-entry-href-value", "")
+                    for a in frame.select("a[data-dropdown-menu-entry-href-value]"))
+    return ProfileRelation(
+        user_id=user_id,
+        can_friend_request=request is not None,
+        request_path=request,
+        following=following,
+        labels=labels,
     )
 
 
