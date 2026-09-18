@@ -17,6 +17,7 @@ FetLife sits behind Cloudflare, which blocks plain HTTP clients. To get through,
 - `relationships` — a member's vanilla and D/s relationships (and who they're with).
 - `followers` / `following` — who follows a member, and who they follow.
 - `discover` — crawl the friends/followers graph to find members near a location (D/s flag + activity filter).
+- `connections` — save a member's complete friends/followers/following to a CSV file.
 - `engagement` — who loves/comments on a member's posts without being a friend, follower or followed.
 - `search` — keyword member search _(experimental — see notes)_.
 - `events` / `event` — list events or fetch one by id _(experimental — partial data)_.
@@ -69,8 +70,9 @@ fetlife followers JohnDoe           # who follows them
 fetlife following JohnDoe           # who they follow
 fetlife discover --seed JohnDoe --center "Washington, NJ" --radius 50 --ds-only
 fetlife discover --seed JohnDoe --active-within "2 weeks"   # activity filter (default 1 month)
-fetlife engagement JohnDoe          # engagers on their posts since the last scan who aren't connected
-fetlife engagement JohnDoe --since "2 weeks" --all   # every engager, with how they're connected
+fetlife connections JohnDoe         # friends + followers + following -> friends.csv
+fetlife engagement JohnDoe --connections friends.csv   # engagers since the last scan who aren't connected
+fetlife engagement JohnDoe --since "2 weeks" --all     # every engager, fetching the lists live
 fetlife search "rope portland"
 fetlife events --place 123
 fetlife event 5551234
@@ -93,7 +95,7 @@ Global options (before the subcommand):
 
 Every command accepts `--json` (or `-j` after the subcommand). Table output uses [rich](https://github.com/Textualize/rich); JSON output is a list of objects (or a single object for one-item results) suitable for `jq`. Outputs below are **illustrative** (nicknames/values are examples).
 
-> **Command status.** `whoami`, `profile`, `friends`, `relationships`, `followers`, `following`, `discover`, `engagement`, `group`, `login`, and `raw` use FetLife's JSON API (or stable server-rendered fields) and return full data. `search`, `events`, and `event` are **experimental** — see notes on each; they were scaffolded against older markup and are awaiting the JSON endpoints the SPA now uses.
+> **Command status.** `whoami`, `profile`, `friends`, `relationships`, `followers`, `following`, `discover`, `connections`, `engagement`, `group`, `login`, and `raw` use FetLife's JSON API (or stable server-rendered fields) and return full data. `search`, `events`, and `event` are **experimental** — see notes on each; they were scaffolded against older markup and are awaiting the JSON endpoints the SPA now uses.
 
 ### `login`
 
@@ -225,6 +227,22 @@ Find members near a location by crawling the friends/followers graph, with dista
 fetlife discover --seed JohnDoe --center "Washington, NJ" --radius 50 --ds-only
 ```
 
+### `connections`
+
+Save a member's complete friends, followers and following lists to one CSV file (default `friends.csv`; `--out -` for stdout).
+
+```bash
+fetlife connections JohnDoe
+fetlife connections JohnDoe --out johndoe-connections.csv
+```
+```
+nickname,id,friend,follower,following,age,gender,role,location,url
+RopeBunny,12345,yes,yes,no,33,W,submissive,"Newark, New Jersey",https://fetlife.com/RopeBunny
+SwitchKate,67890,no,yes,no,29,W,Switch,Philadelphia,https://fetlife.com/SwitchKate
+```
+
+One row per member, sorted by nickname, with a yes/no column per list. This is the same gathering step `engagement` performs; pass the file to `engagement --connections` to skip it. See [`connections` and `engagement`](#engagement--who-engages-without-being-connected) below.
+
 ### `engagement`
 
 Who engages with a member's posts without being connected to them. **See the dedicated [`engagement` section](#engagement--who-engages-without-being-connected) below.**
@@ -298,7 +316,7 @@ fetlife/
   client.py     FetLifeClient — session, login (CSRF), rate limiting, queries
   parsers.py    All HTML/JSON parsing (the part that changes when FetLife does)
   crawl.py      Geo-bounded BFS over friends/followers (the `discover` command)
-  engagement.py Connections vs. post engagers (the `engagement` command)
+  engagement.py Connections vs. post engagers (`connections` + `engagement`)
   geo.py        Haversine + Nominatim geocoder (cached)
   models.py     Member / Relationship / Event / Group dataclasses
   config.py     Env/.env credential + settings loading
@@ -559,7 +577,7 @@ fetlife engagement [OPTIONS] NICKNAME_OR_ID
 
 ### How it works
 
-1. **Connections.** Pulls the member's complete **friends**, **followers** and **following** lists (every page).
+1. **Connections.** Pulls the member's complete **friends**, **followers** and **following** lists (every page) — or reads them from a file written by `fetlife connections` (`--connections friends.csv`).
 2. **Posts.** Walks the member's *All Posts* feed — pictures, writings, statuses, videos — newest first, stopping at the first post older than `--since`. Posts by other members that show up in the feed (shares, tags) are ignored.
 3. **Engagers.** For each post, fetches who **loved** it and who **commented** on it. Posts the feed reports with zero loves (or zero comments) skip that fetch.
 4. **Diff.** Everyone from step 3 who appears in none of the step-1 lists is listed, most engaged first. The member's own loves and comments on their posts are ignored.
@@ -574,8 +592,20 @@ Members are matched by nickname (case-insensitive) — the loves grid exposes no
 | `--all` / `--strangers` | `--strangers` | `--all` lists every engager with a `relation` column (`friend`, `follower`, `following`, or combinations); `--strangers` lists only those not connected. |
 | `--state-dir PATH` | `~/.fetlife/engagement` | Where each member's last-scan date is kept (`<nickname>.json`). |
 | `--no-save` | off | Don't record this run as the member's last scan. |
+| `--connections FILE` | _(fetch live)_ | Read the three lists from a CSV written by `fetlife connections` instead of fetching them. |
 | `--csv` | off | Write the rows to stdout as CSV (header + one row per engager) instead of a table. |
 | `-j, --json` | off | Emit the full report as JSON. |
+
+### Reusing the connection lists
+
+The three lists cost one request per 20 members and change slowly, while posts change daily — so for a member with many connections, fetch the lists once and reuse them:
+
+```bash
+fetlife connections JohnDoe                          # ~45 requests for ~900 members -> friends.csv
+fetlife engagement JohnDoe --connections friends.csv # only the posts, loves and comments are fetched
+```
+
+`engagement` reports how old the file is (by its modification time) and the run's JSON carries the path in `connections_source`. Anyone who connected *after* the file was written will show up as not connected, so refresh the file now and then — `fetlife connections` simply overwrites it.
 
 ### The last-scan date
 
@@ -617,7 +647,7 @@ fetlife engagement JohnDoe --json | jq -r '.strangers[] | "\(.nickname)\t\(.love
 
 ### Cost
 
-One request per 20 connections, one per 20 posts, and per post one for the loves plus one per page of comments (pages are large; a post with a handful of comments is one request, plus one empty trailing page FetLife always serves). A member with ~900 connections and a dozen posts is about 70 requests — a few minutes at the default delay. The connection lists are re-fetched on every run, so they dominate for a member with many connections and few posts. Throttling stops the run with exit code 75 like `discover`; wait a few hours and rerun.
+One request per 20 connections, one per 20 posts, and per post one for the loves plus one per page of comments (pages are large; a post with a handful of comments is one request, plus one empty trailing page FetLife always serves). A member with ~900 connections and a dozen posts is about 70 requests — a few minutes at the default delay. The connection lists dominate for a member with many connections and few posts; `--connections` (above) removes them from the run entirely, leaving one request for the profile plus the posts. Throttling stops the run with exit code 75 like `discover`; wait a few hours and rerun.
 
 ## Development
 

@@ -32,6 +32,108 @@ DEFAULT_LOOKBACK = timedelta(days=30)
 RELATION_SECTIONS = ("friends", "followers", "following")
 # How each list reads from the scanned member's point of view.
 _RELATION_LABELS = {"friends": "friend", "followers": "follower", "following": "following"}
+RELATION_LABELS = tuple(_RELATION_LABELS[s] for s in RELATION_SECTIONS)
+
+
+@dataclass
+class Connection:
+    """A member on one or more of the scanned member's lists."""
+
+    nickname: str
+    id: Optional[str] = None
+    url: Optional[str] = None
+    age: Optional[int] = None
+    gender: Optional[str] = None
+    role: Optional[str] = None
+    location: Optional[str] = None
+    # Subset of RELATION_LABELS, in that order.
+    relations: list[str] = field(default_factory=list)
+
+    @property
+    def relation(self) -> str:
+        return ", ".join(self.relations)
+
+
+def gather_connections(
+    client, nickname: str, on_progress: Optional[Callable[["Progress"], None]] = None
+) -> dict[str, Connection]:
+    """Fetch every page of the member's three lists, keyed by lowercase nickname."""
+    progress = Progress()
+    out: dict[str, Connection] = {}
+    for section in RELATION_SECTIONS:
+        label = _RELATION_LABELS[section]
+        progress.phase = section
+        if on_progress:
+            on_progress(progress)
+        for m in client.iter_members(nickname, section):
+            conn = out.get(_key(m))
+            if conn is None:
+                conn = out[_key(m)] = Connection(
+                    nickname=m.nickname, id=m.id, url=m.url, age=m.age,
+                    gender=m.gender, role=m.role, location=m.location,
+                )
+            if label not in conn.relations:
+                conn.relations.append(label)
+            progress.connections = len(out)
+            if on_progress:
+                on_progress(progress)
+    return out
+
+
+def count_relations(connections: dict[str, Connection]) -> dict[str, int]:
+    """``{"friends": n, "followers": n, "following": n}`` over *connections*."""
+    return {
+        section: sum(1 for c in connections.values() if label in c.relations)
+        for section, label in _RELATION_LABELS.items()
+    }
+
+
+# One row per member; the three list memberships are yes/no columns so the
+# file sorts and filters cleanly in a spreadsheet.
+CONNECTIONS_CSV_COLUMNS = ["nickname", "id", *RELATION_LABELS,
+                           "age", "gender", "role", "location", "url"]
+
+
+def write_connections_csv(connections: dict[str, Connection], fh) -> None:
+    """Write *connections* as CSV (see CONNECTIONS_CSV_COLUMNS), nickname order."""
+    writer = csv.writer(fh, lineterminator="\n")
+    writer.writerow(CONNECTIONS_CSV_COLUMNS)
+    for c in sorted(connections.values(), key=lambda c: c.nickname.lower()):
+        writer.writerow([
+            c.nickname, c.id or "",
+            *("yes" if label in c.relations else "no" for label in RELATION_LABELS),
+            "" if c.age is None else c.age, c.gender or "", c.role or "",
+            c.location or "", c.url or "",
+        ])
+
+
+def read_connections_csv(fh) -> dict[str, Connection]:
+    """Read a file written by :func:`write_connections_csv`, keyed like
+    :func:`gather_connections`. Raises ValueError if it isn't one."""
+    reader = csv.DictReader(fh)
+    missing = [c for c in ("nickname", *RELATION_LABELS) if c not in (reader.fieldnames or [])]
+    if missing:
+        raise ValueError(
+            f"not a connections file (missing column(s) {', '.join(missing)}); "
+            "write one with `fetlife connections`."
+        )
+    out: dict[str, Connection] = {}
+    for row in reader:
+        nickname = (row.get("nickname") or "").strip()
+        if not nickname:
+            continue
+        age = (row.get("age") or "").strip()
+        out[nickname.lower()] = Connection(
+            nickname=nickname,
+            id=row.get("id") or None,
+            url=row.get("url") or None,
+            age=int(age) if age.isdigit() else None,
+            gender=row.get("gender") or None,
+            role=row.get("role") or None,
+            location=row.get("location") or None,
+            relations=[l for l in RELATION_LABELS if (row.get(l) or "").strip().lower() == "yes"],
+        )
+    return out
 
 
 @dataclass
@@ -84,6 +186,8 @@ class Report:
     friends: int = 0
     followers: int = 0
     following: int = 0
+    # "live" when fetched during the scan, else the connections file used.
+    connections_source: str = "live"
     posts: int = 0
     # Posts whose loves/comments couldn't be read (deleted, restricted...).
     skipped: int = 0
@@ -192,6 +296,8 @@ def scan(
     client,
     target,
     since: datetime,
+    connections: Optional[dict[str, Connection]] = None,
+    connections_source: str = "live",
     on_progress: Optional[Callable[[Progress], None]] = None,
     now: Optional[datetime] = None,
 ) -> Report:
@@ -199,7 +305,9 @@ def scan(
 
     *target* is the :class:`~fetlife.models.Member` to scan (resolve it with
     ``client.get_member`` first, so the caller has the canonical nickname for
-    the state file). Members are matched by nickname (case-insensitive) because the loves grid
+    the state file). *connections* is a previously gathered (or loaded) map
+    from :func:`gather_connections`; when None the three lists are fetched
+    now. Members are matched by nickname (case-insensitive) because the loves grid
     exposes nothing else. The scanned member's own loves and comments on their
     posts are ignored. A post whose loves or comments can't be read is counted
     in ``Report.skipped`` and otherwise ignored; throttling (HTTP 429) is
@@ -222,16 +330,12 @@ def scan(
     target_key = _key(target)
 
     # 1. Connections: nickname -> the lists it appears in.
-    relations: dict[str, list[str]] = {}
-    for section in RELATION_SECTIONS:
-        _emit(section)
-        count = 0
-        for member in client.iter_members(target.nickname, section):
-            relations.setdefault(_key(member), []).append(_RELATION_LABELS[section])
-            count += 1
-            progress.connections = len(relations)
-            _emit(section)
-        setattr(report, section, count)
+    if connections is None:
+        connections = gather_connections(client, target.nickname, on_progress)
+    report.connections_source = connections_source
+    for section, n in count_relations(connections).items():
+        setattr(report, section, n)
+    progress.connections = len(connections)
 
     # 2. Posts since the cutoff, and who loved / commented on each.
     engagers: dict[str, Engager] = {}
@@ -242,11 +346,11 @@ def scan(
             return
         eng = engagers.get(key)
         if eng is None:
-            labels = relations.get(key)
+            conn = connections.get(key)
             eng = engagers[key] = Engager(
                 nickname=member.nickname, url=member.url, id=member.id,
-                connected=labels is not None,
-                relation=", ".join(labels) if labels else None,
+                connected=conn is not None,
+                relation=conn.relation if conn else None,
             )
         if member.id and not eng.id:
             eng.id = member.id  # comments carry ids, loves don't

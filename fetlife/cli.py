@@ -5,8 +5,10 @@ Run ``fetlife --help`` for the full command list.
 
 from __future__ import annotations
 
+import csv
 import dataclasses
 import json
+import os
 import sys
 from datetime import datetime, timezone
 
@@ -396,6 +398,53 @@ def discover(ctx, center, radius, units, seed, ds_only, active_within, max_visit
         status_console.print(f"[dim]crawl complete; {found} shown.[/dim]")
 
 
+def _report_retry(status, wait, attempt, max_attempts):
+    status_console.print(
+        f"\n[yellow]HTTP {status}; backing off {wait:.0f}s "
+        f"(retry {attempt}/{max_attempts})…[/yellow]"
+    )
+
+
+@cli.command("connections")
+@click.argument("nickname_or_id")
+@click.option("--out", "out_path", default="friends.csv", show_default=True,
+              type=click.Path(dir_okay=False, writable=True, allow_dash=True),
+              help="CSV file to write ('-' for stdout).")
+@click.pass_context
+def connections_cmd(ctx, nickname_or_id, out_path):
+    """Save NICKNAME_OR_ID's friends, followers and following to a CSV file.
+
+    One row per member with yes/no columns for each list, plus the
+    age/gender/role/location the lists show. Hand the file to
+    `fetlife engagement --connections` to skip re-fetching the lists.
+    """
+    fl = _client(ctx)
+    fl.on_retry = _report_retry
+    with fl:
+        target = fl.get_member(nickname_or_id)
+
+        def on_progress(p: engagement.Progress) -> None:
+            status_console.print(
+                f"[dim]{p.phase:<10} connections {p.connections} · requests {fl.requests}[/dim]",
+                end="\r",
+            )
+
+        found = engagement.gather_connections(fl, target.nickname, on_progress)
+    status_console.print()  # end the progress line
+
+    if out_path == "-":
+        engagement.write_connections_csv(found, sys.stdout)
+    else:
+        with open(out_path, "w", encoding="utf-8", newline="") as fh:
+            engagement.write_connections_csv(found, fh)
+    counts = engagement.count_relations(found)
+    status_console.print(
+        f"[dim]{target.nickname}: {counts['friends']} friends, {counts['followers']} followers, "
+        f"{counts['following']} following · {len(found)} members"
+        + ("" if out_path == "-" else f" → {out_path}") + "[/dim]"
+    )
+
+
 @cli.command("engagement")
 @click.argument("nickname_or_id")
 @click.option("--since", default=None,
@@ -412,10 +461,14 @@ def discover(ctx, center, radius, units, seed, ds_only, active_within, max_visit
 @click.option("--csv", "as_csv", is_flag=True, default=False,
               help="Write the rows to stdout as CSV instead of a table "
                    "(same rows as --all/--strangers, plus the post URLs).")
+@click.option("--connections", "connections_path", default=None,
+              type=click.Path(exists=True, dir_okay=False),
+              help="Read the friends/followers/following from this CSV (written by "
+                   "`fetlife connections`) instead of fetching them.")
 @json_option
 @click.pass_context
 def engagement_cmd(ctx, nickname_or_id, since, show_all, state_dir, no_save, as_csv,
-                   json_local):
+                   connections_path, json_local):
     """Find who engages with NICKNAME_OR_ID's posts without being connected to them.
 
     Gathers the member's friends, followers and following, then every love and
@@ -426,14 +479,22 @@ def engagement_cmd(ctx, nickname_or_id, since, show_all, state_dir, no_save, as_
     as_json = _as_json(ctx, json_local)
     now = datetime.now(timezone.utc)
 
-    def on_retry(status, wait, attempt, max_attempts):
+    # Read the file before any network work, so a bad path fails fast.
+    connections = None
+    if connections_path:
+        try:
+            with open(connections_path, encoding="utf-8", newline="") as fh:
+                connections = engagement.read_connections_csv(fh)
+        except (OSError, ValueError, csv.Error) as exc:
+            raise FetLifeError(f"Could not read {connections_path}: {exc}")
+        age_days = (now.timestamp() - os.path.getmtime(connections_path)) / 86400
         status_console.print(
-            f"\n[yellow]HTTP {status}; backing off {wait:.0f}s "
-            f"(retry {attempt}/{max_attempts})…[/yellow]"
+            f"[dim]connections from {connections_path}: {len(connections)} members, "
+            f"saved {age_days:.0f} day(s) ago[/dim]"
         )
 
     fl = _client(ctx)
-    fl.on_retry = on_retry
+    fl.on_retry = _report_retry
     with fl:
         # Resolve the profile first: the last-scan file is keyed by the
         # canonical nickname, so an id or a differently-cased nickname finds it.
@@ -463,7 +524,11 @@ def engagement_cmd(ctx, nickname_or_id, since, show_all, state_dir, no_save, as_
                 end="\r",
             )
 
-        report = engagement.scan(fl, target, cutoff, on_progress=on_progress, now=now)
+        report = engagement.scan(
+            fl, target, cutoff, connections=connections,
+            connections_source=connections_path or "live",
+            on_progress=on_progress, now=now,
+        )
     status_console.print()  # end the progress line
 
     if not no_save:

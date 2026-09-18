@@ -213,3 +213,52 @@ def test_write_csv():
     engagement.write_csv(report.engagers, out)
     alice = next(r for r in csv.DictReader(io.StringIO(out.getvalue())) if r["nickname"] == "alice")
     assert alice["connected"] == "yes" and alice["relation"] == "friend"
+
+
+def test_gather_connections_merges_lists():
+    client = _build()
+    found = engagement.gather_connections(client, "Xanadu_Kink")
+    assert set(found) == {"alice", "bob", "carol", "dave"}
+    assert found["bob"].relations == ["friend", "follower"]
+    assert found["bob"].relation == "friend, follower"
+    assert found["bob"].nickname == "bob"          # first spelling seen wins
+    assert engagement.count_relations(found) == {"friends": 2, "followers": 2, "following": 1}
+
+
+def test_connections_csv_round_trip():
+    client = _build()
+    client.relations["friends"][0] = Member(
+        id="1", nickname="alice", url="https://fetlife.com/alice",
+        age=33, gender="F", role="submissive", location="Newark, New Jersey",
+    )
+    found = engagement.gather_connections(client, "Xanadu_Kink")
+    out = io.StringIO()
+    engagement.write_connections_csv(found, out)
+
+    rows = list(csv.DictReader(io.StringIO(out.getvalue())))
+    assert [r["nickname"] for r in rows] == ["alice", "bob", "carol", "dave"]
+    bob = rows[1]
+    assert (bob["friend"], bob["follower"], bob["following"]) == ("yes", "yes", "no")
+    assert rows[0]["location"] == "Newark, New Jersey" and rows[0]["age"] == "33"
+
+    back = engagement.read_connections_csv(io.StringIO(out.getvalue()))
+    assert back == found
+
+
+def test_read_connections_csv_rejects_other_files():
+    with pytest.raises(ValueError):
+        engagement.read_connections_csv(io.StringIO("nickname,loves\nx,1\n"))
+
+
+def test_scan_uses_supplied_connections_without_fetching():
+    client = _build()
+    supplied = {"eve": engagement.Connection(nickname="Eve", relations=["follower"])}
+    report = engagement.scan(client, TARGET, NOW - timedelta(days=30),
+                             connections=supplied, connections_source="friends.csv", now=NOW)
+    assert not [c for c in client.calls if c[0] == "members"]
+    assert report.connections_source == "friends.csv"
+    assert (report.friends, report.followers, report.following) == (0, 1, 0)
+    by_name = {e.nickname.lower(): e for e in report.engagers}
+    assert by_name["eve"].connected and by_name["eve"].relation == "follower"
+    assert not by_name["alice"].connected     # alice isn't in the supplied file
+    assert [e.nickname for e in report.strangers] == ["alice", "frank"]
