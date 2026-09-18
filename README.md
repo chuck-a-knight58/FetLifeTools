@@ -17,6 +17,7 @@ FetLife sits behind Cloudflare, which blocks plain HTTP clients. To get through,
 - `relationships` — a member's vanilla and D/s relationships (and who they're with).
 - `followers` / `following` — who follows a member, and who they follow.
 - `discover` — crawl the friends/followers graph to find members near a location (D/s flag + activity filter).
+- `engagement` — who loves/comments on a member's posts without being a friend, follower or followed.
 - `search` — keyword member search _(experimental — see notes)_.
 - `events` / `event` — list events or fetch one by id _(experimental — partial data)_.
 - `group` — fetch a group by id (name + member count).
@@ -68,6 +69,8 @@ fetlife followers JohnDoe           # who follows them
 fetlife following JohnDoe           # who they follow
 fetlife discover --seed JohnDoe --center "Washington, NJ" --radius 50 --ds-only
 fetlife discover --seed JohnDoe --active-within "2 weeks"   # activity filter (default 1 month)
+fetlife engagement JohnDoe          # engagers on their posts since the last scan who aren't connected
+fetlife engagement JohnDoe --since "2 weeks" --all   # every engager, with how they're connected
 fetlife search "rope portland"
 fetlife events --place 123
 fetlife event 5551234
@@ -90,7 +93,7 @@ Global options (before the subcommand):
 
 Every command accepts `--json` (or `-j` after the subcommand). Table output uses [rich](https://github.com/Textualize/rich); JSON output is a list of objects (or a single object for one-item results) suitable for `jq`. Outputs below are **illustrative** (nicknames/values are examples).
 
-> **Command status.** `whoami`, `profile`, `friends`, `relationships`, `followers`, `following`, `discover`, `group`, `login`, and `raw` use FetLife's JSON API (or stable server-rendered fields) and return full data. `search`, `events`, and `event` are **experimental** — see notes on each; they were scaffolded against older markup and are awaiting the JSON endpoints the SPA now uses.
+> **Command status.** `whoami`, `profile`, `friends`, `relationships`, `followers`, `following`, `discover`, `engagement`, `group`, `login`, and `raw` use FetLife's JSON API (or stable server-rendered fields) and return full data. `search`, `events`, and `event` are **experimental** — see notes on each; they were scaffolded against older markup and are awaiting the JSON endpoints the SPA now uses.
 
 ### `login`
 
@@ -222,6 +225,14 @@ Find members near a location by crawling the friends/followers graph, with dista
 fetlife discover --seed JohnDoe --center "Washington, NJ" --radius 50 --ds-only
 ```
 
+### `engagement`
+
+Who engages with a member's posts without being connected to them. **See the dedicated [`engagement` section](#engagement--who-engages-without-being-connected) below.**
+
+```bash
+fetlife engagement JohnDoe --since "2 weeks"
+```
+
 ### `group`
 
 Fetch a group by numeric id (name + member count).
@@ -287,6 +298,7 @@ fetlife/
   client.py     FetLifeClient — session, login (CSRF), rate limiting, queries
   parsers.py    All HTML/JSON parsing (the part that changes when FetLife does)
   crawl.py      Geo-bounded BFS over friends/followers (the `discover` command)
+  engagement.py Connections vs. post engagers (the `engagement` command)
   geo.py        Haversine + Nominatim geocoder (cached)
   models.py     Member / Relationship / Event / Group dataclasses
   config.py     Env/.env credential + settings loading
@@ -304,12 +316,15 @@ header:
 |---|---|---|
 | Profile card | `GET /<nickname>` → `{core, currentUserRelation}` | `get_member` / `profile` |
 | Relationships | `GET /<nickname>` → `core.relationships` + `core.dsRelationships` | `get_relationships` / `relationships` |
-| Friends | `GET /<nickname>/friends?page=N` **(HTML)** | `get_friends` / `friends` |
+| Friends | `GET /<nickname>/friends?page=N` **(HTML)**, 20 per page | `get_friends` / `friends`; `iter_members` walks every page |
 | Followers / following | `GET /<nickname>/{followers,following}?page=N` **(HTML)** | `get_followers` `get_following` / `followers` `following` |
-| Activity / last-active | `GET /<nickname>/activity?accurate_per_page=N` (newest `created_at`) | `get_last_active` |
+| Activity feed | `GET /<nickname>/activity[/<tab>]` **(HTML)**, then `…/activity[/<tab>].turbo_stream?marker=M` for each later page | `get_activity` / `iter_posts` (the `all-posts` tab) |
+| Last-active | newest `<time datetime>` on `GET /<nickname>/activity` | `get_last_active` |
+| Loves on a post | `GET /loves/story/<uid>?content_type=Story` | `get_story_lovers` |
+| Comments on a post | `GET /comments.turbo_stream?order=oldest&story_uid=<uid>[&cursor=C]` | `iter_story_commenters` |
 | Pictures | `GET /<nickname>/pictures` | *(easy to add)* |
 
-The three relation lists are the exception: FetLife 404s the JSON variant of those (for any member, your own profile included), so they are read from the server-rendered page by `members_from_relations_html`. The markup carries the same per-entry age/gender/role/location the JSON did, at the same one request per page.
+The relation lists and the activity feed are the exceptions: FetLife answers the JSON variant of those with a 404/406 (for any member, your own profile included), so they are read from the server-rendered page — `members_from_relations_html` and `stories_from_activity_html`. The markup carries the same data the JSON did, at the same one request per page. The feed, loves and comments are all [Hotwire](https://hotwired.dev) pages: the first page is plain HTML and each later page is the Turbo Stream that the page's lazy pagination `<turbo-frame>` would load, addressed by the `marker`/`cursor` in that frame's `src`. Every post in the feed carries a **story uid** (on its love button) that keys the loves and comments endpoints.
 
 These are **plain cookie-authenticated GETs** — no CSRF token, no request signing — so they replay directly from our `curl_cffi` session (which also clears Cloudflare). This is why full data is available for *any* member, not just the logged-in viewer. See `get_json` in `client.py`; adding the remaining endpoints is a few lines each following `get_friends`.
 
@@ -348,7 +363,7 @@ Distance is checked on the cheap list *string* first, so a full profile is fetch
 | `--ds-only / --all` | `--all` | `--ds-only` shows only members with a D/s relationship. Default `--all` shows everyone in-area (the `ds` column marks who is D/s). Never changes what gets expanded. |
 | `--active-within TEXT` | `"1 month"` | Hide members whose most recent activity is older than this. Accepts `"1 month"`, `"2 weeks"`, `"90 days"`, `30d`, `6m`, `1y`, `48h`, …; `any`/`none`/`0`/`off` disables the filter. |
 | `--max-visits INTEGER` | `300` | Hard cap on profiles fetched **for the whole search**, including profiles visited by earlier `--resume` runs. |
-| `--max-pages INTEGER` | `1` | Pages of each friends/followers list to expand (each page ≈ 10 members). Each page costs one request *per list*, so raising this multiplies request volume — and your odds of being rate-limited. |
+| `--max-pages INTEGER` | `1` | Pages of each friends/followers list to expand (each page = 20 members). Each page costs one request *per list*, so raising this multiplies request volume — and your odds of being rate-limited. |
 | `--max-results INTEGER` | `0` | Stop after N displayed rows (`0` = unlimited). |
 | `--state PATH` | `~/.fetlife/discover_state.json` | Where the resumable frontier + visited set is stored. |
 | `--resume / --fresh` | `--fresh` | `--resume` continues a suspended crawl from `--state`; `--fresh` (default) starts over. |
@@ -411,7 +426,7 @@ Location strings are resolved with OpenStreetMap **Nominatim** and cached to `~/
 
 ### The activity filter
 
-"Last active" is inferred from the newest `created_at` in `GET /<nickname>/activity` —
+"Last active" is inferred from the newest story timestamp on `GET /<nickname>/activity` —
 FetLife exposes no explicit "last seen" field. Consequently a member who only **lurks** (logs in but never posts or reacts publicly) has no stories and reads as *inactive*, so they're hidden by default. Members with unknown activity are also hidden. Use
 `--active-within any` to switch the filter off entirely.
 
@@ -533,6 +548,69 @@ visited 7/300 · queued 345 · found 7
 ```bash
 fetlife discover --seed JohnDoe --ds-only --json | jq -c '{fet_name, gps, last_active}'
 ```
+
+## `engagement` — who engages without being connected
+
+Given a member, `engagement` answers: *who loves or comments on their posts but isn't a friend, a follower, or someone they follow?*
+
+```bash
+fetlife engagement [OPTIONS] NICKNAME_OR_ID
+```
+
+### How it works
+
+1. **Connections.** Pulls the member's complete **friends**, **followers** and **following** lists (every page).
+2. **Posts.** Walks the member's *All Posts* feed — pictures, writings, statuses, videos — newest first, stopping at the first post older than `--since`. Posts by other members that show up in the feed (shares, tags) are ignored.
+3. **Engagers.** For each post, fetches who **loved** it and who **commented** on it. Posts the feed reports with zero loves (or zero comments) skip that fetch.
+4. **Diff.** Everyone from step 3 who appears in none of the step-1 lists is listed, most engaged first. The member's own loves and comments on their posts are ignored.
+
+Members are matched by nickname (case-insensitive) — the loves grid exposes nothing else.
+
+### Options
+
+| Option | Default | Description |
+|---|---|---|
+| `--since TEXT` | last scan, else 30 days | Only posts created after this. An ISO date/time (`2026-09-01`, `2026-09-01T12:00Z`) or a duration back from now (`"2 weeks"`, `30d`, `6m`). |
+| `--all` / `--strangers` | `--strangers` | `--all` lists every engager with a `relation` column (`friend`, `follower`, `following`, or combinations); `--strangers` lists only those not connected. |
+| `--state-dir PATH` | `~/.fetlife/engagement` | Where each member's last-scan date is kept (`<nickname>.json`). |
+| `--no-save` | off | Don't record this run as the member's last scan. |
+| `-j, --json` | off | Emit the full report as JSON. |
+
+### The last-scan date
+
+Each successful run records its **start time** as the member's last scan, keyed by the canonical nickname (so `johndoe`, `JohnDoe` and the numeric id share one record). The next run without `--since` scans only the posts made after that, so a periodic run sees each post once. `--since` overrides the stored date for that run (the record is still updated afterwards unless `--no-save`). A run that fails — including one stopped by rate limiting, exit code 75 — leaves the record untouched, so rerunning it covers the same window.
+
+Note the window is on the **post's creation date**: a love or comment left *today* on a post from *before* the window is not seen. Widen `--since` when you want to catch up on older posts.
+
+### Output
+
+```
+              Not connected to JohnDoe, but engaging
+┏━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ nickname     ┃ loves ┃ comments ┃ posts ┃ url                         ┃
+┡━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ RopeCurious  │ 4     │ 1        │ 4     │ https://fetlife.com/RopeCu… │
+│ QuietFan_22  │ 2     │ 0        │ 2     │ https://fetlife.com/QuietF… │
+└──────────────┴───────┴──────────┴───────┴─────────────────────────────┘
+```
+
+| Column | Meaning |
+|---|---|
+| `loves` / `comments` | How many of the member's posts they loved, and how many comments they left (an author who comments twice on one post counts twice). |
+| `posts` | Distinct posts they engaged with. |
+| `relation` | (`--all` only) which of the member's lists they're in. |
+
+A summary line goes to stderr: list sizes, posts scanned, engagers found, how many are not connected, and any posts whose loves/comments couldn't be read.
+
+`--json` emits one object: `target`, `since`, `scanned_at`, the three list sizes, `posts`, `skipped`, `engagers` (everyone, each with `loves`, `comments`, the `posts` URLs, `connected`, `relation`) and `strangers` (the not-connected subset):
+
+```bash
+fetlife engagement JohnDoe --json | jq -r '.strangers[] | "\(.nickname)\t\(.loves)\t\(.comments)"'
+```
+
+### Cost
+
+One request per 20 connections, one per 20 posts, and per post one for the loves plus one per page of comments (pages are large; a post with a handful of comments is one request, plus one empty trailing page FetLife always serves). A member with ~900 connections and a dozen posts is about 70 requests — a few minutes at the default delay. The connection lists are re-fetched on every run, so they dominate for a member with many connections and few posts. Throttling stops the run with exit code 75 like `discover`; wait a few hours and rerun.
 
 ## Development
 

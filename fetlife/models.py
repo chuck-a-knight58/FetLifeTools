@@ -7,6 +7,7 @@ JSON output and easy to assert against in tests.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from datetime import datetime, timezone
 
 
 @dataclass
@@ -46,6 +47,39 @@ class Member:
     verified: bool | None = None
     relationships: list[Relationship] = field(default_factory=list)
     meta: dict = field(default_factory=dict)
+
+
+@dataclass
+class Story:
+    """One entry in a member's activity feed.
+
+    ``type`` is FetLife's story type (``picture_created``, ``post_created``,
+    ``status_created``, ``loved_picture``, ``follow_created``...). Only the
+    member's own posts carry a ``uid``, which is the handle the loves and
+    comments endpoints take; ``kind``/``content_id`` identify the underlying
+    Picture / Post / Status / Video.
+    """
+
+    id: str | None = None
+    type: str | None = None
+    uid: str | None = None
+    kind: str | None = None
+    content_id: str | None = None
+    actor_id: str | None = None
+    url: str | None = None
+    created_at: str | None = None
+    loves: int | None = None
+    comments: int | None = None
+
+    def created(self) -> "datetime | None":
+        """``created_at`` as an aware UTC datetime (None if absent/unparseable)."""
+        if not self.created_at:
+            return None
+        try:
+            dt = datetime.fromisoformat(self.created_at.replace("Z", "+00:00"))
+        except ValueError:
+            return None
+        return dt if dt.tzinfo else dt.replace(tzinfo=timezone.utc)
 
 
 @dataclass

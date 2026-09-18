@@ -17,18 +17,31 @@ from __future__ import annotations
 import json
 import re
 from datetime import datetime, timezone
-from urllib.parse import urljoin
+from urllib.parse import parse_qs, urljoin, urlsplit
 
 from bs4 import BeautifulSoup
 
 from .exceptions import ParseError
-from .models import Event, Group, Member, Relationship
+from .models import Event, Group, Member, Relationship, Story
 
 _PARSER = "lxml"
 
 
 def _soup(html: str) -> BeautifulSoup:
     return BeautifulSoup(html, _PARSER)
+
+
+# Turbo Stream responses wrap their markup in <turbo-stream><template>. Text
+# inside <template> is invisible to BeautifulSoup's get_text() (it becomes a
+# TemplateString, which get_text skips), so the wrapper is dropped before
+# parsing. Plain pages are left alone: their <template>s hold inert modals.
+_TEMPLATE_TAG_RE = re.compile(r"</?template(?:\s[^>]*)?>", re.I)
+
+
+def _page_soup(html: str) -> BeautifulSoup:
+    if "<turbo-stream" in html:
+        html = _TEMPLATE_TAG_RE.sub("", html)
+    return _soup(html)
 
 
 def _int(text: str | None) -> int | None:
@@ -372,21 +385,127 @@ def _parse_iso(text) -> datetime | None:
     return dt if dt.tzinfo else dt.replace(tzinfo=timezone.utc)
 
 
-def last_active_from_activity(payload: dict) -> datetime | None:
-    """Return the newest story ``created_at`` in an activity feed, or None.
+# --------------------------------------------------------------------------- #
+# Activity feed, loves and comments
+# --------------------------------------------------------------------------- #
+# The activity feed is server-rendered: the first page is a normal HTML page and
+# every later page is a Turbo Stream fetched through the lazy
+# ``activity-stories-pagination-loader`` frame, whose ``src`` carries the
+# ``marker`` cursor. Both formats wrap each entry in <article id="story_N">, so
+# one parser reads them all. (The JSON variant these feeds used to answer now
+# returns 406.)
+_STORY_ID_RE = re.compile(r"^story_(\d+)$")
+
+
+def _query_param(url: str | None, name: str) -> str | None:
+    if not url:
+        return None
+    values = parse_qs(urlsplit(url).query).get(name)
+    return values[0] if values else None
+
+
+def _loader_param(soup: BeautifulSoup, frame_id: str, name: str) -> str | None:
+    """The cursor a lazy pagination frame would fetch the next page with."""
+    frame = soup.find("turbo-frame", id=frame_id)
+    return _query_param(frame.get("src"), name) if frame else None
+
+
+def _story_from_article(art, base_url: str) -> Story:
+    m = _STORY_ID_RE.match(art.get("id", ""))
+    header = art.find("header") or art
+    when = header.find("time") or art.find("time")
+    permalink = when.find_parent("a") if when else None
+    love = art.select_one("[data-controller='story-love-button']")
+    cta = art.select_one("[data-controller='comment-cta']")
+    href = (permalink.get("href") if permalink else None) or (
+        cta.get("href", "").split("#")[0] if cta else None
+    )
+    count = None
+    for span in art.select("[data-comment-cta-count]"):
+        count = _int(span.get_text())
+        if count is not None:
+            break
+    return Story(
+        id=m.group(1) if m else None,
+        type=art.get("data-story-type"),
+        uid=love.get("data-story-love-button-content-id-value") if love else None,
+        kind=cta.get("data-comment-cta-target-class-value") if cta else None,
+        content_id=cta.get("data-comment-cta-target-id-value") if cta else None,
+        actor_id=art.get("data-story-actor-id"),
+        url=urljoin(base_url + "/", href.lstrip("/")) if href else None,
+        created_at=when.get("datetime") if when else None,
+        loves=_int(love.get("data-story-love-button-loves-count-value")) if love else None,
+        comments=count,
+    )
+
+
+def stories_from_activity_html(html: str, base_url: str = "") -> tuple[list[Story], str | None]:
+    """Parse one page of an activity feed into ``(stories, next_marker)``.
+
+    Works on the HTML first page and the Turbo Stream continuation pages alike.
+    ``next_marker`` is None on the last page.
+    """
+    soup = _page_soup(html)
+    stories = [
+        _story_from_article(art, base_url)
+        for art in soup.find_all("article", id=_STORY_ID_RE)
+    ]
+    return stories, _loader_param(soup, "activity-stories-pagination-loader", "marker")
+
+
+def last_active_from_activity(html: str) -> datetime | None:
+    """Return the newest story timestamp on an activity page, or None.
 
     FetLife has no explicit "last seen" field, so a member's most recent public
-    activity (reactions/posts in ``GET /<nickname>/activity``) is the best
-    available signal of recent activity. Members who only lurk produce no
-    stories and will read as inactive.
+    activity (loves, comments, follows and posts in ``GET /<nickname>/activity``)
+    is the best available signal. Members who only lurk produce no stories and
+    will read as inactive.
     """
-    newest: datetime | None = None
-    for group in payload.get("story_groups") or []:
-        for story in group.get("stories") or []:
-            dt = _parse_iso(story.get("created_at"))
-            if dt and (newest is None or dt > newest):
-                newest = dt
-    return newest
+    stories, _ = stories_from_activity_html(html)
+    times = [s.created() for s in stories]
+    times = [t for t in times if t]
+    return max(times) if times else None
+
+
+def lovers_from_loves_html(html: str, base_url: str = "") -> list[Member]:
+    """Members who loved a story (``GET /loves/story/<uid>?content_type=Story``).
+
+    The grid is a list of avatars, each tagged with ``data-lover-nickname``;
+    no age/location is shown, so only nickname and URL are filled in.
+    """
+    out: list[Member] = []
+    for block in _soup(html).select("[data-lover-nickname]"):
+        nickname = _clean(block.get("data-lover-nickname"))
+        if not nickname:
+            continue
+        link = block.find("a", href=_PROFILE_HREF_RE)
+        href = link.get("href") if link else f"/{nickname}"
+        out.append(Member(nickname=nickname, url=urljoin(base_url + "/", href.lstrip("/"))))
+    return out
+
+
+def comments_from_stream(html: str, base_url: str = "") -> tuple[list[Member], str | None]:
+    """Parse a page of ``GET /comments.turbo_stream?story_uid=…`` into authors.
+
+    Returns ``(authors, next_cursor)``; one entry per comment, in feed order,
+    so an author who commented twice appears twice. FetLife emits a pagination
+    frame even after the last comment, so callers should stop on an empty page
+    rather than on a missing cursor.
+    """
+    soup = _page_soup(html)
+    out: list[Member] = []
+    for item in soup.select("[data-comment-item-author-nickname-value]"):
+        nickname = _clean(item.get("data-comment-item-author-nickname-value"))
+        if not nickname:
+            continue
+        out.append(Member(
+            id=item.get("data-comment-item-author-id-value") or None,
+            nickname=nickname,
+            url=urljoin(base_url + "/", nickname),
+        ))
+    frame = soup.find("turbo-frame", id=re.compile(r"^comments_page_"))
+    cursor = _query_param(frame.get("src"), "cursor") if frame else None
+    return out, cursor
 
 
 def _nickname_from_title(soup: BeautifulSoup) -> str:
@@ -452,8 +571,6 @@ def parse_member(
 def _base_from_url(url: str | None) -> str:
     if not url:
         return ""
-    from urllib.parse import urlsplit
-
     parts = urlsplit(url)
     return f"{parts.scheme}://{parts.netloc}" if parts.scheme else ""
 

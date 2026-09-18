@@ -195,25 +195,181 @@ def test_member_from_core_handles_missing_fields():
     assert m.age is None and m.gender is None and m.location is None
 
 
+# A profile activity feed, as the HTML tab renders it: one <article> per story.
+# The member's own posts carry a love button (with the story uid used by the
+# loves/comments endpoints) and a comment CTA; other stories (loves, follows)
+# carry neither.
+ACTIVITY_HTML = """
+<div id="activity-stories-list">
+<article id="story_11790045501" data-story-type="picture_created" data-story-actor-id="21621264">
+  <header>
+    <a href="/Xanadu_Kink">Xanadu_Kink</a>
+    <span><a href="/Xanadu_Kink/pictures/225264245">
+      <time datetime="2026-09-18T15:19:15Z">38s</time></a></span>
+  </header>
+  <footer>
+    <span data-controller="story-love-button"
+          data-story-love-button-content-id-value="fd87pc9ga4"
+          data-story-love-button-loves-count-value="3"></span>
+    <a data-controller="comment-cta" data-comment-cta-target-class-value="Picture"
+       data-comment-cta-target-id-value="225264245"
+       href="/Xanadu_Kink/pictures/225264245#comment">
+      <span data-comment-cta-count="">2</span><span data-comment-cta-count="">2</span>
+    </a>
+  </footer>
+</article>
+<article id="story_11789813485" data-story-type="loved_picture" data-story-actor-id="21621264">
+  <header><time datetime="2026-09-18T14:37:01Z">1h</time></header>
+</article>
+<article id="story_11760041052" data-story-type="status_created" data-story-actor-id="21621264">
+  <header><span><a href="/Xanadu_Kink/s/tmmzbkb3d8">
+    <time datetime="2026-09-14T02:03:29Z">4d</time></a></span></header>
+  <footer>
+    <span data-controller="story-love-button"
+          data-story-love-button-content-id-value="tmmzbkb3d8"
+          data-story-love-button-loves-count-value="0"></span>
+    <a data-controller="comment-cta" data-comment-cta-target-class-value="Status"
+       data-comment-cta-target-id-value="65607586" href="/Xanadu_Kink/s/tmmzbkb3d8#comment">
+      <span data-comment-cta-count="">0</span>
+    </a>
+  </footer>
+</article>
+</div>
+<div id="activity-stories-pagination">
+  <turbo-frame id="activity-stories-pagination-loader" loading="lazy"
+    src="/Xanadu_Kink/activity.turbo_stream?marker=1789504280755269&amp;story_size=large">
+  </turbo-frame>
+</div>
+"""
+
+# The continuation pages are Turbo Streams: the same articles inside
+# <turbo-stream><template>, and a loader frame for the page after.
+ACTIVITY_STREAM = """
+<turbo-stream action="append" target="activity-stories-list"><template>
+<article id="story_11684468864" data-story-type="post_created" data-story-actor-id="21621264">
+  <header><span><a href="/Xanadu_Kink/posts/14430217">
+    <time datetime="2026-09-02T17:04:00Z">16d</time></a></span></header>
+  <footer>
+    <span data-controller="story-love-button"
+          data-story-love-button-content-id-value="sl0bl4pk35"
+          data-story-love-button-loves-count-value="7"></span>
+    <a data-controller="comment-cta" data-comment-cta-target-class-value="Post"
+       data-comment-cta-target-id-value="14430217" href="/Xanadu_Kink/posts/14430217#comment">
+      <span data-comment-cta-count>4</span>
+    </a>
+  </footer>
+</article>
+</template></turbo-stream>
+<turbo-stream action="update" target="activity-stories-pagination"><template>
+  <turbo-frame id="activity-stories-pagination-loader" loading="lazy"
+    src="/Xanadu_Kink/activity/all-posts.turbo_stream?marker=1784165667699051&amp;story_size=large">
+  </turbo-frame>
+</template></turbo-stream>
+"""
+
+LOVES_HTML = """
+<turbo-frame id="story-loves-grid">
+  <div data-lover-nickname="Hammerbacher"><a href="/Hammerbacher" title="Hammerbacher"><img></a></div>
+  <div data-lover-nickname="Lulu-1313"><a href="/Lulu-1313" title="Lulu-1313"><img></a></div>
+</turbo-frame>
+"""
+
+COMMENTS_STREAM = """
+<turbo-stream action="append" target="comments_wrapper"><template>
+  <div data-comment-id="1" data-controller="comment-item"
+       data-comment-item-author-id-value="15758532"
+       data-comment-item-author-nickname-value="Knight_of_Xanadu"><p>First</p></div>
+  <div data-comment-id="2" data-controller="comment-item"
+       data-comment-item-author-id-value="4063157"
+       data-comment-item-author-nickname-value="JadedViper"><p>Second</p></div>
+</template></turbo-stream>
+<turbo-stream action="update" target="comments_pagination"><template>
+  <turbo-frame id="comments_page_MTc4OTcz" loading="lazy"
+    src="/comments.turbo_stream?cursor=MTc4OTcz&amp;order=oldest&amp;story_uid=vpu26glhhc">
+  </turbo-frame>
+</template></turbo-stream>
+"""
+
+COMMENTS_STREAM_LAST = """
+<turbo-stream action="append" target="comments_wrapper"><template></template></turbo-stream>
+"""
+
+
+def test_stories_from_activity_html():
+    stories, marker = parsers.stories_from_activity_html(
+        ACTIVITY_HTML, base_url="https://fetlife.com"
+    )
+    assert marker == "1789504280755269"
+    assert [s.type for s in stories] == ["picture_created", "loved_picture", "status_created"]
+
+    pic = stories[0]
+    assert pic.id == "11790045501"
+    assert pic.uid == "fd87pc9ga4"
+    assert pic.kind == "Picture" and pic.content_id == "225264245"
+    assert pic.url == "https://fetlife.com/Xanadu_Kink/pictures/225264245"
+    assert pic.created_at == "2026-09-18T15:19:15Z"
+    assert pic.created().tzinfo is not None
+    assert pic.loves == 3 and pic.comments == 2
+
+    loved = stories[1]  # not a post: no uid, no counts, but still timestamped
+    assert loved.uid is None and loved.loves is None and loved.comments is None
+    assert loved.created_at == "2026-09-18T14:37:01Z"
+
+    status = stories[2]
+    assert status.kind == "Status" and status.loves == 0 and status.comments == 0
+
+
+def test_stories_from_turbo_stream_reads_counts_inside_template():
+    stories, marker = parsers.stories_from_activity_html(
+        ACTIVITY_STREAM, base_url="https://fetlife.com"
+    )
+    assert marker == "1784165667699051"
+    assert len(stories) == 1
+    assert stories[0].uid == "sl0bl4pk35"
+    assert stories[0].url == "https://fetlife.com/Xanadu_Kink/posts/14430217"
+    # Text inside <template> is invisible to get_text() unless unwrapped.
+    assert stories[0].loves == 7 and stories[0].comments == 4
+
+
+def test_stories_last_page_has_no_marker():
+    html = ACTIVITY_HTML.split('<div id="activity-stories-pagination">')[0]
+    stories, marker = parsers.stories_from_activity_html(html)
+    assert len(stories) == 3 and marker is None
+
+
 def test_last_active_from_activity_picks_newest():
-    payload = {
-        "story_groups": [
-            {"stories": [
-                {"created_at": "2026-07-07T19:11:32.432Z"},
-                {"created_at": "2026-07-05T00:00:00Z"},
-            ]},
-            {"stories": [{"created_at": "2026-06-01T00:00:00Z"}]},
-        ]
-    }
-    dt = parsers.last_active_from_activity(payload)
+    dt = parsers.last_active_from_activity(ACTIVITY_HTML)
     assert dt is not None
-    assert dt.year == 2026 and dt.month == 7 and dt.day == 7
+    assert (dt.year, dt.month, dt.day, dt.hour) == (2026, 9, 18, 15)
     assert dt.tzinfo is not None  # UTC-aware
 
 
 def test_last_active_from_activity_empty():
-    assert parsers.last_active_from_activity({"story_groups": []}) is None
-    assert parsers.last_active_from_activity({}) is None
+    assert parsers.last_active_from_activity("<html><body></body></html>") is None
+    assert parsers.last_active_from_activity("") is None
+
+
+def test_lovers_from_loves_html():
+    lovers = parsers.lovers_from_loves_html(LOVES_HTML, base_url="https://fetlife.com")
+    assert [m.nickname for m in lovers] == ["Hammerbacher", "Lulu-1313"]
+    assert lovers[1].url == "https://fetlife.com/Lulu-1313"
+    assert parsers.lovers_from_loves_html("<div></div>") == []
+
+
+def test_comments_from_stream():
+    authors, cursor = parsers.comments_from_stream(
+        COMMENTS_STREAM, base_url="https://fetlife.com"
+    )
+    assert [(a.nickname, a.id) for a in authors] == [
+        ("Knight_of_Xanadu", "15758532"), ("JadedViper", "4063157"),
+    ]
+    assert authors[0].url == "https://fetlife.com/Knight_of_Xanadu"
+    assert cursor == "MTc4OTcz"
+
+
+def test_comments_from_stream_last_page():
+    authors, cursor = parsers.comments_from_stream(COMMENTS_STREAM_LAST)
+    assert authors == [] and cursor is None
 
 
 RELATIONS_HTML = """

@@ -6,6 +6,7 @@ import time
 import pytest
 import requests
 import responses
+from responses.matchers import query_param_matcher
 
 from fetlife import client
 from fetlife.client import FetLifeClient
@@ -196,3 +197,114 @@ def test_on_retry_hook_called(tmp_path):
 
     fl.get("/home")
     assert seen == [(429, 1)]
+
+
+# --------------------------------------------------------------------------- #
+# Paged feeds (engagement): every loop below must terminate on FetLife's own
+# end-of-list signals, not on a guessed page count.
+# --------------------------------------------------------------------------- #
+def _authed(tmp_path):
+    fl = _client(tmp_path)
+    fl._authenticated = True  # skip the login handshake
+    return fl
+
+
+def _relation(uid, nick):
+    return (f'<div id="relation_user_{uid}"><div><a class="font-bold" href="/{nick}">{nick}</a>'
+            f'<span class="font-bold">30M</span></div></div>')
+
+
+@responses.activate
+def test_iter_members_walks_pages_until_empty(tmp_path):
+    responses.add(responses.GET, "https://fetlife.com/X/friends",
+                  body=_relation(1, "a") + _relation(2, "b"), match=[query_param_matcher({'page': '1'})])
+    responses.add(responses.GET, "https://fetlife.com/X/friends",
+                  body=_relation(3, "c"), match=[query_param_matcher({'page': '2'})])
+    responses.add(responses.GET, "https://fetlife.com/X/friends",
+                  body="<div></div>", match=[query_param_matcher({'page': '3'})])
+    fl = _authed(tmp_path)
+    assert [m.nickname for m in fl.iter_members("X", "friends")] == ["a", "b", "c"]
+    assert len(responses.calls) == 3
+
+
+@responses.activate
+def test_iter_members_stops_when_a_page_only_repeats(tmp_path):
+    # A list that ignores ?page= would serve page 1 forever.
+    responses.add(responses.GET, "https://fetlife.com/X/followers",
+                  body=_relation(1, "a"))
+    fl = _authed(tmp_path)
+    assert [m.nickname for m in fl.iter_members("X", "followers")] == ["a"]
+    assert len(responses.calls) == 2
+
+
+def _story(uid, when, loves=1):
+    return (f'<article id="story_{uid}" data-story-type="picture_created"><header>'
+            f'<a href="/X/pictures/{uid}"><time datetime="{when}">t</time></a></header>'
+            f'<span data-controller="story-love-button" '
+            f'data-story-love-button-content-id-value="u{uid}" '
+            f'data-story-love-button-loves-count-value="{loves}"></span></article>')
+
+
+def _loader(marker):
+    return (f'<turbo-frame id="activity-stories-pagination-loader" '
+            f'src="/X/activity/all-posts.turbo_stream?marker={marker}"></turbo-frame>')
+
+
+@responses.activate
+def test_iter_posts_follows_markers_and_stops_at_since(tmp_path):
+    from datetime import datetime, timezone
+
+    responses.add(responses.GET, "https://fetlife.com/X/activity/all-posts",
+                  body=_story(1, "2026-09-18T00:00:00Z") + _loader("m2"))
+    responses.add(responses.GET, "https://fetlife.com/X/activity/all-posts.turbo_stream",
+                  body=_story(2, "2026-09-10T00:00:00Z") + _story(3, "2026-08-01T00:00:00Z")
+                  + _loader("m3"), match=[query_param_matcher({'marker': 'm2', 'story_size': 'large'})])
+    fl = _authed(tmp_path)
+    since = datetime(2026, 9, 1, tzinfo=timezone.utc)
+    got = [s.uid for s in fl.iter_posts("X", since=since)]
+    assert got == ["u1", "u2"]           # u3 is older than `since`; m3 never fetched
+    assert len(responses.calls) == 2
+
+
+@responses.activate
+def test_iter_posts_ends_without_a_marker(tmp_path):
+    responses.add(responses.GET, "https://fetlife.com/X/activity/all-posts",
+                  body=_story(1, "2026-09-18T00:00:00Z"))
+    fl = _authed(tmp_path)
+    assert [s.uid for s in fl.iter_posts("X")] == ["u1"]
+
+
+def _comment(nick, uid):
+    return (f'<div data-comment-item-author-nickname-value="{nick}" '
+            f'data-comment-item-author-id-value="{uid}"></div>')
+
+
+@responses.activate
+def test_iter_story_commenters_stops_on_the_empty_trailing_page(tmp_path):
+    responses.add(responses.GET, "https://fetlife.com/comments.turbo_stream",
+                  body=_comment("a", 1) + _comment("b", 2)
+                  + '<turbo-frame id="comments_page_c2" src="/comments.turbo_stream?cursor=c2&story_uid=abc">',
+                  match=[query_param_matcher({"order": "oldest", "story_uid": "abc"})])
+    responses.add(responses.GET, "https://fetlife.com/comments.turbo_stream",
+                  body='<turbo-frame id="comments_page_c3" src="/comments.turbo_stream?cursor=c3&story_uid=abc">',
+                  match=[query_param_matcher({"order": "oldest", "story_uid": "abc", "cursor": "c2"})])
+    fl = _authed(tmp_path)
+    assert [(m.nickname, m.id) for m in fl.iter_story_commenters("abc")] == [("a", "1"), ("b", "2")]
+    assert len(responses.calls) == 2
+
+
+@responses.activate
+def test_get_story_lovers(tmp_path):
+    responses.add(responses.GET, "https://fetlife.com/loves/story/abc",
+                  body='<div data-lover-nickname="zed"><a href="/zed"></a></div>',
+                  match=[query_param_matcher({"content_type": "Story"})])
+    fl = _authed(tmp_path)
+    assert [m.nickname for m in fl.get_story_lovers("abc")] == ["zed"]
+
+
+@responses.activate
+def test_get_last_active_reads_the_html_feed(tmp_path):
+    responses.add(responses.GET, "https://fetlife.com/X/activity",
+                  body=_story(1, "2026-09-18T00:00:00Z") + _story(2, "2026-09-01T00:00:00Z"))
+    fl = _authed(tmp_path)
+    assert fl.get_last_active("X").isoformat() == "2026-09-18T00:00:00+00:00"

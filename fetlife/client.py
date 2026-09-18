@@ -11,6 +11,7 @@ from __future__ import annotations
 import json
 import random
 import time
+from typing import Iterator
 from urllib.parse import urljoin, quote_plus, urlsplit
 
 from curl_cffi import requests as cffi_requests
@@ -23,7 +24,7 @@ from .exceptions import (
     ParseError,
     RateLimitedError,
 )
-from .models import Event, Group, Member, Relationship
+from .models import Event, Group, Member, Relationship, Story
 from . import parsers
 
 # Adaptive throttling. FetLife's rate limit is a *rolling window*, so backing
@@ -470,6 +471,87 @@ class FetLifeClient:
         """List the members this member is following."""
         return self._member_list(nickname_or_id, "following", page)
 
+    def iter_members(self, nickname_or_id: str, section: str) -> Iterator[Member]:
+        """Every page of a friends/followers/following list, one member at a time.
+
+        Pages until FetLife returns an empty one. A page that only repeats
+        members already seen also ends the walk, so a list that stops honoring
+        ``page`` can't loop forever.
+        """
+        seen: set[str] = set()
+        for page in range(1, 10_000):
+            members = self._member_list(nickname_or_id, section, page)
+            fresh = [m for m in members if (m.id or m.nickname.lower()) not in seen]
+            if not fresh:
+                return
+            for m in fresh:
+                seen.add(m.id or m.nickname.lower())
+                yield m
+
+    def get_activity(
+        self, nickname_or_id: str, section: str | None = None, marker: str | None = None
+    ) -> tuple[list[Story], str | None]:
+        """One page of a member's activity feed: ``(stories, next_marker)``.
+
+        *section* picks a tab of the feed (``all-posts``, ``pictures``,
+        ``statuses``, ``writings``...; None is "All Activity", which also has
+        the member's loves, comments and follows). The first page is the HTML
+        tab itself; later pages are the Turbo Stream the tab's lazy pagination
+        frame loads, addressed by the *marker* the previous page handed back.
+        """
+        self._ensure_auth()
+        path = self._profile_path(nickname_or_id) + "/activity"
+        if section:
+            path += f"/{section}"
+        if marker is None:
+            resp = self.get(path)
+        else:
+            resp = self.get(path + ".turbo_stream",
+                            params={"marker": marker, "story_size": "large"})
+        return parsers.stories_from_activity_html(resp.text, base_url=self.config.base_url)
+
+    def iter_posts(self, nickname_or_id: str, since=None) -> Iterator[Story]:
+        """A member's own posts (pictures, writings, statuses...), newest first.
+
+        Walks the "All Posts" tab page by page and stops at the first post
+        created before *since* (an aware datetime), so a recent window costs
+        only as many pages as it spans.
+        """
+        marker = None
+        while True:
+            stories, marker = self.get_activity(nickname_or_id, "all-posts", marker)
+            for story in stories:
+                created = story.created()
+                if since is not None and created is not None and created < since:
+                    return
+                yield story
+            if not stories or marker is None:
+                return
+
+    def get_story_lovers(self, uid: str) -> list[Member]:
+        """Members who loved a story (nickname + URL only)."""
+        self._ensure_auth()
+        resp = self.get(f"/loves/story/{uid}", params={"content_type": "Story"})
+        return parsers.lovers_from_loves_html(resp.text, base_url=self.config.base_url)
+
+    def iter_story_commenters(self, uid: str) -> Iterator[Member]:
+        """Authors of every comment on a story, one per comment, oldest first."""
+        self._ensure_auth()
+        cursor = None
+        while True:
+            params = {"order": "oldest", "story_uid": uid}
+            if cursor:
+                params["cursor"] = cursor
+            resp = self.get("/comments.turbo_stream", params=params)
+            authors, cursor = parsers.comments_from_stream(
+                resp.text, base_url=self.config.base_url
+            )
+            if not authors:
+                return  # the last page is always empty (see parsers)
+            yield from authors
+            if cursor is None:
+                return
+
     def get_last_active(self, nickname_or_id: str):
         """Best-effort last-active time (UTC datetime) from the activity feed.
 
@@ -480,12 +562,12 @@ class FetLifeClient:
         self._ensure_auth()
         path = self._profile_path(nickname_or_id) + "/activity"
         try:
-            data = self.get_json(path, params={"accurate_per_page": 5})
+            resp = self.get(path)
         except RateLimitedError:
             raise  # surface throttling so callers can back off / halt
         except FetLifeError:
             return None
-        return parsers.last_active_from_activity(data)
+        return parsers.last_active_from_activity(resp.text)
 
     def get_relationships(self, nickname_or_id: str) -> list["Relationship"]:
         """List a member's relationships (vanilla and D/s).

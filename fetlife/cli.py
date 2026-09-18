@@ -8,12 +8,13 @@ from __future__ import annotations
 import dataclasses
 import json
 import sys
+from datetime import datetime, timezone
 
 import click
 from rich.console import Console
 from rich.table import Table
 
-from . import __version__, crawl, geo
+from . import __version__, crawl, engagement, geo
 from .client import FetLifeClient
 from .config import Config
 from .exceptions import FetLifeError, RateLimitedError
@@ -393,6 +394,98 @@ def discover(ctx, center, radius, units, seed, ds_only, active_within, max_visit
     else:
         state.remove()  # frontier exhausted -> search complete
         status_console.print(f"[dim]crawl complete; {found} shown.[/dim]")
+
+
+@cli.command("engagement")
+@click.argument("nickname_or_id")
+@click.option("--since", default=None,
+              help="Only posts created after this: an ISO date (2026-09-01) or a "
+                   "duration ('2 weeks', '30d'). Default: the member's last scan, "
+                   "or 30 days on a first scan.")
+@click.option("--all/--strangers", "show_all", default=False, show_default=True,
+              help="--all lists every engager (with how they're connected); "
+                   "--strangers only those who are not a friend, follower or followed.")
+@click.option("--state-dir", default=engagement.DEFAULT_STATE_DIR, show_default=True,
+              help="Directory holding each member's last-scan date.")
+@click.option("--no-save", is_flag=True, default=False,
+              help="Don't record this run as the member's last scan.")
+@json_option
+@click.pass_context
+def engagement_cmd(ctx, nickname_or_id, since, show_all, state_dir, no_save, json_local):
+    """Find who engages with NICKNAME_OR_ID's posts without being connected to them.
+
+    Gathers the member's friends, followers and following, then every love and
+    comment on the posts they made since --since, and lists the engagers who
+    appear in none of those lists. Each successful run records its start time
+    as the member's last scan, so the next run picks up where it left off.
+    """
+    as_json = _as_json(ctx, json_local)
+    now = datetime.now(timezone.utc)
+
+    def on_retry(status, wait, attempt, max_attempts):
+        status_console.print(
+            f"\n[yellow]HTTP {status}; backing off {wait:.0f}s "
+            f"(retry {attempt}/{max_attempts})…[/yellow]"
+        )
+
+    fl = _client(ctx)
+    fl.on_retry = on_retry
+    with fl:
+        # Resolve the profile first: the last-scan file is keyed by the
+        # canonical nickname, so an id or a differently-cased nickname finds it.
+        target = fl.get_member(nickname_or_id)
+        state = engagement.ScanState(state_dir, target.nickname)
+        if since is not None:
+            try:
+                cutoff = engagement.parse_since(since, now)
+            except ValueError as exc:
+                raise FetLifeError(str(exc))
+            why = f"--since {since}"
+        elif state.last_scan is not None:
+            cutoff = state.last_scan
+            why = f"last scan, from {state.path}"
+        else:
+            cutoff = now - engagement.DEFAULT_LOOKBACK
+            why = "first scan of this member, so the default window"
+        status_console.print(
+            f"[dim]{target.nickname}: posts since "
+            f"{cutoff.astimezone(timezone.utc):%Y-%m-%d %H:%M} UTC ({why})[/dim]"
+        )
+
+        def on_progress(p: engagement.Progress) -> None:
+            status_console.print(
+                f"[dim]{p.phase:<10} connections {p.connections} · posts {p.posts} · "
+                f"engagers {p.engagers} · requests {fl.requests}[/dim]",
+                end="\r",
+            )
+
+        report = engagement.scan(fl, target, cutoff, on_progress=on_progress, now=now)
+    status_console.print()  # end the progress line
+
+    if not no_save:
+        state.record(report)
+
+    if as_json:
+        console.print_json(json.dumps(report.to_dict()))
+        return
+
+    status_console.print(
+        f"[dim]{report.target}: {report.friends} friends, {report.followers} followers, "
+        f"{report.following} following · {report.posts} posts · "
+        f"{len(report.engagers)} engagers, {len(report.strangers)} not connected"
+        + (f" · {report.skipped} posts unreadable" if report.skipped else "") + "[/dim]"
+    )
+    rows = report.engagers if show_all else report.strangers
+    columns = ["nickname", "loves", "comments", "posts", "url"]
+    if show_all:
+        columns.insert(4, "relation")
+    title = (f"Engagers on {report.target}'s posts" if show_all
+             else f"Not connected to {report.target}, but engaging")
+    # posts is shown as a count; the URLs themselves are in --json.
+    _emit(
+        [dataclasses.replace(e, posts=len(e.posts)) for e in rows],
+        False, columns, title,
+    )
 
 
 @cli.command()
