@@ -20,7 +20,7 @@ FetLife sits behind Cloudflare, which blocks plain HTTP clients. To get through,
 - `connections` — save a member's complete friends and followers to a CSV file.
 - `engagement` — who loves/comments on a member's posts without being a friend or follower.
 - `friend-requests` — send friend requests to the members listed in a CSV, with caps, a dry run and a log.
-- `message` — send a direct message (subject + body) to a member from the logged-in account.
+- `message` — send a direct message (subject + body) to a member, or to everyone in a CSV, from the logged-in account.
 - `search` — keyword member search _(experimental — see notes)_.
 - `events` / `event` — list events or fetch one by id _(experimental — partial data)_.
 - `group` — fetch a group by id (name + member count).
@@ -272,6 +272,7 @@ Send a direct message to a member from the logged-in account (the one in your `.
 fetlife message JohnDoe --subject "Hi" --body "Saw you at the munch — good to meet you."
 fetlife message JohnDoe -s "Hi" --body-file note.txt      # longer text from a file ('-' = stdin)
 fetlife message JohnDoe -s "Hi" -b "…" --dry-run          # check they accept messages; send nothing
+fetlife message --from-csv strangers.csv -s "Hi {nickname}" --body-file note.txt --dry-run
 ```
 ```
 from Xanadu_Kink to JohnDoe (id 12345)
@@ -281,7 +282,20 @@ Send this message to JohnDoe as Xanadu_Kink? [y/N]: y
 Sent. Your message has been successfully sent to JohnDoe
 ```
 
-It opens the site's own compose form for the member and submits it (`POST /conversations`) with the subject and body. FetLife answers a successful send with a redirect to the member's profile carrying a confirmation toast, which is what gets printed; anything else is reported as an error, with the site's notice if it gave one. The member is resolved by nickname or numeric id. FetLife bounces the compose page for members who don't accept messages from your account (privacy settings, blocks); those are reported and nothing is sent. Subject is limited to 255 characters. `-y`/`--yes` skips the prompt for scripted use.
+It opens the site's own compose form for the member and submits it (`POST /conversations`) with the subject and body. FetLife answers a successful send with a redirect to the member's profile carrying a confirmation toast, which is what gets printed; anything else is reported as an error, with the site's notice if it gave one.
+
+**Many recipients.** `--from-csv FILE` messages every member in a CSV with a `nickname` column (`engagement --csv` output, a `connections` file, or a headerless one-name-per-line list) instead of one `NICKNAME_OR_ID`. It works like [`friend-requests`](#friend-requests--send-friend-requests-from-a-list): each member is checked first (those who don't accept messages from your account are skipped with that reason), at most `--limit` messages go out per run (default 10), `--pause` seconds apart (default 30), and every outcome is appended to `--log` (default `~/.fetlife/messages.jsonl`) so a rerun over the same file **never messages anyone twice** (`--resend` overrides). `{nickname}` in the subject or body is replaced with each recipient's nickname. The sending account is never messaged even if it's listed. One line per member is printed as it's processed:
+
+```
+action      nickname                 reason
+-------------------------------------------
+sent        RopeCurious              Your message has been successfully sent to RopeCurious
+skipped     QuietFan_22              doesn't accept messages from this account
+skipped     Old_Contact              already messaged 2026-09-20
+skipped     Extra_One                over --limit 10
+```
+
+Throttling (HTTP 429) stops the run with exit code 75; the log is intact, so rerunning later continues where it stopped. Always `--dry-run` a new list first — it resolves every member and shows exactly who would be messaged. The member is resolved by nickname or numeric id. FetLife bounces the compose page for members who don't accept messages from your account (privacy settings, blocks); those are reported and nothing is sent. Subject is limited to 255 characters. `-y`/`--yes` skips the prompt for scripted use.
 
 ### `group`
 

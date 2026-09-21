@@ -16,7 +16,7 @@ import click
 from rich.console import Console
 from rich.table import Table
 
-from . import __version__, crawl, engagement, friending, geo
+from . import __version__, crawl, engagement, friending, geo, messaging
 from .client import FetLifeClient
 from .config import Config
 from .exceptions import FetLifeError, RateLimitedError
@@ -624,24 +624,43 @@ def friend_requests(ctx, csv_file, limit, pause, dry_run, yes, resend, log_path)
 
 
 @cli.command("message")
-@click.argument("nickname_or_id")
-@click.option("--subject", "-s", required=True, help="Message subject (up to 255 characters).")
+@click.argument("nickname_or_id", required=False)
+@click.option("--from-csv", "csv_file", type=click.File("r", encoding="utf-8"), default=None,
+              help="Message every member in this CSV (its `nickname` column, e.g. "
+                   "strangers.csv) instead of one NICKNAME_OR_ID.")
+@click.option("--subject", "-s", required=True,
+              help="Message subject (up to 255 characters). {nickname} is filled in.")
 @click.option("--body", "-b", default=None,
-              help="Message body. Use --body-file for longer text.")
+              help="Message body ({nickname} is filled in). Use --body-file for longer text.")
 @click.option("--body-file", type=click.File("r", encoding="utf-8"), default=None,
               help="Read the body from a file ('-' for stdin).")
 @click.option("--dry-run", is_flag=True, default=False,
-              help="Check that the member can be messaged and show the message; send nothing.")
+              help="Check that the member(s) can be messaged and show what would go; send nothing.")
 @click.option("--yes", "-y", is_flag=True, default=False, help="Skip the confirmation prompt.")
+@click.option("--limit", default=messaging.DEFAULT_LIMIT, show_default=True,
+              help="--from-csv: most messages to send in this run.")
+@click.option("--pause", default=messaging.DEFAULT_PAUSE, show_default=True,
+              help="--from-csv: seconds to wait between two sends.")
+@click.option("--resend", is_flag=True, default=False,
+              help="--from-csv: don't skip members already messaged (per --log).")
+@click.option("--log", "log_path", default=messaging.DEFAULT_LOG_PATH, show_default=True,
+              help="--from-csv: record of every message sent; reruns skip the members in it.")
 @click.pass_context
-def message(ctx, nickname_or_id, subject, body, body_file, dry_run, yes):
-    """Send a direct message to NICKNAME_OR_ID from the logged-in account.
+def message(ctx, nickname_or_id, csv_file, subject, body, body_file, dry_run, yes,
+            limit, pause, resend, log_path):
+    """Send a direct message from the logged-in account.
 
-    Starts a new conversation with the member, with the given --subject and
-    --body (or --body-file). The account that sends it is the one in your .env;
-    use --env-file to send from another. Members who don't accept messages
-    from that account are reported, not messaged.
+    To one member: `fetlife message NICKNAME_OR_ID -s SUBJECT -b BODY`. To
+    everyone in a CSV with a `nickname` column (such as `engagement --csv`
+    output): `--from-csv strangers.csv`, which sends at most --limit messages
+    per run, --pause seconds apart, and logs each one so a rerun never
+    messages the same member twice. `{nickname}` in the subject or body is
+    replaced per recipient. The sending account is the one in your .env
+    (use --env-file to send from another). Members who don't accept
+    messages from that account are reported, not messaged. Try --dry-run.
     """
+    if (nickname_or_id is None) == (csv_file is None):
+        raise FetLifeError("Give exactly one of NICKNAME_OR_ID or --from-csv FILE.")
     if (body is None) == (body_file is None):
         raise FetLifeError("Give the message text with exactly one of --body or --body-file.")
     if body_file is not None:
@@ -655,6 +674,10 @@ def message(ctx, nickname_or_id, subject, body, body_file, dry_run, yes):
 
     fl = _client(ctx)
     fl.on_retry = _report_retry
+    if csv_file is not None:
+        _message_many(ctx, fl, csv_file, subject, body, dry_run, yes, limit, pause, resend, log_path)
+        return
+
     with fl:
         me = fl.whoami()
         ident = str(nickname_or_id)
@@ -672,7 +695,7 @@ def message(ctx, nickname_or_id, subject, body, body_file, dry_run, yes):
                 f"{label} doesn't accept messages from {me.nickname} "
                 "(FetLife won't open a conversation with them)."
             )
-
+        subject, body = messaging.render(subject, ident), messaging.render(body, ident)
         status_console.print(f"[dim]from {me.nickname} to {label} (id {user_id})[/dim]")
         status_console.print(f"[bold]Subject:[/bold] {subject}")
         status_console.print(body)
@@ -681,8 +704,51 @@ def message(ctx, nickname_or_id, subject, body, body_file, dry_run, yes):
             return
         if not yes:
             click.confirm(f"Send this message to {label} as {me.nickname}?", abort=True, err=True)
-        confirmation = fl.send_message(user_id, subject, body)
+        confirmation = fl.send_message(user_id, subject, body, form=form)
     console.print(f"[green]Sent.[/green] {confirmation}")
+
+
+def _message_many(ctx, fl, csv_file, subject, body, dry_run, yes, limit, pause, resend, log_path):
+    """The --from-csv side of `message`: one message per listed member."""
+    nicknames = friending.read_nicknames(csv_file)
+    if not nicknames:
+        raise FetLifeError(f"No nicknames found in {csv_file.name}.")
+    log = friending.RequestLog(log_path)
+    already = sum(1 for n in nicknames if n.lower() in log.sent)
+
+    with fl:
+        me = fl.whoami()
+        # Never message the sending account, whatever the file says.
+        nicknames = [n for n in nicknames
+                     if n.lower() not in {(me.nickname or "").lower(), str(me.id)}]
+        status_console.print(
+            f"[dim]{len(nicknames)} nicknames in {csv_file.name}"
+            + (f", {already} already messaged (see {log_path})" if already and not resend else "")
+            + f" · sending as {me.nickname} · limit {limit}, pause {pause:g}s"
+            + (" · DRY RUN" if dry_run else "") + "[/dim]"
+        )
+        status_console.print(f"[bold]Subject:[/bold] {subject}")
+        status_console.print(body)
+        if not dry_run and not yes:
+            click.confirm(
+                f"Send this message to up to {limit} member(s) as {me.nickname}?",
+                abort=True, err=True,
+            )
+
+        header = f"{'action':<11} {'nickname':<24} reason"
+        _stream_write(header)
+        _stream_write("-" * len(header))
+        counts: dict[str, int] = {}
+        try:
+            for o in messaging.run(fl, nicknames, log, subject, body, limit=limit,
+                                   pause=pause, dry_run=dry_run, resend=resend):
+                counts[o.action] = counts.get(o.action, 0) + 1
+                _stream_write(f"{o.action:<11} {o.nickname:<24} {o.reason}")
+        except RateLimitedError as exc:
+            status_console.print(f"[red]{exc}[/red]")
+            status_console.print("[dim]stopping; the log is intact — rerun later to continue.[/dim]")
+            ctx.exit(EXIT_RATE_LIMITED)
+    status_console.print("[dim]" + " · ".join(f"{v} {k}" for k, v in counts.items()) + "[/dim]")
 
 
 @cli.command()

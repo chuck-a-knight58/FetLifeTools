@@ -624,14 +624,16 @@ class FetLifeClient:
             return None
         return parsers.message_form_from_html(resp.text)
 
-    def send_message(self, user_id: str, subject: str, body: str) -> str:
+    def send_message(self, user_id: str, subject: str, body: str, form: dict | None = None) -> str:
         """Start a conversation with *user_id*; return FetLife's confirmation.
 
         Submits the same form the site's compose page posts, token and all.
+        Pass *form* from :meth:`get_message_form` to skip fetching it again.
         Raises FetLifeError if the member can't be messaged or the site
         rejects the message.
         """
-        form = self.get_message_form(user_id)
+        if form is None:
+            form = self.get_message_form(user_id)
         if form is None:
             raise FetLifeError(
                 f"Member {user_id} doesn't accept messages from this account "
