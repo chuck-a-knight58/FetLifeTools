@@ -278,10 +278,10 @@ from Xanadu_Kink to JohnDoe (id 12345)
 Subject: Hi
 Saw you at the munch — good to meet you.
 Send this message to JohnDoe as Xanadu_Kink? [y/N]: y
-Sent. https://fetlife.com/conversations/987654
+Sent. Your message has been successfully sent to JohnDoe
 ```
 
-It opens the site's own compose form for the member and submits it (`POST /conversations`) with the subject and body, then prints the new conversation's URL. The member is resolved by nickname or numeric id. FetLife bounces the compose page for members who don't accept messages from your account (privacy settings, blocks); those are reported and nothing is sent. Subject is limited to 255 characters. `-y`/`--yes` skips the prompt for scripted use.
+It opens the site's own compose form for the member and submits it (`POST /conversations`) with the subject and body. FetLife answers a successful send with a redirect to the member's profile carrying a confirmation toast, which is what gets printed; anything else is reported as an error, with the site's notice if it gave one. The member is resolved by nickname or numeric id. FetLife bounces the compose page for members who don't accept messages from your account (privacy settings, blocks); those are reported and nothing is sent. Subject is limited to 255 characters. `-y`/`--yes` skips the prompt for scripted use.
 
 ### `group`
 
@@ -761,10 +761,13 @@ fetlife engagement Xanadu_Kink
 # are not currently friends or followers
 fetlife engagement Xanadu_Kink --since “1 month” --connections friends.csv --csv > strangers.csv
 
-# The final command uses the file strangers.csv to send a friend request to those engagers
+# This command uses the file strangers.csv to send a friend request to those engagers
 fetlife friend-requests strangers.csv
 
+# This command uses the file strangers.csv to send a welcom message to those engagers
+fetlife message <name> --subject "A Warm Welcome From Xanadu Kink" --body-file greeting.txt --yes
 
+[strangers.csv]
 nickname,loves,comments,posts,connected,relation,url,post_urls
 Errrp,5,0,5,no,,https://fetlife.com/Errrp,https://fetlife.com/Xanadu_Kink/pictures/225256065 https://fetlife.com/Xanadu_Kink/pictures/225066652 https://fetlife.com/Xanadu_Kink/s/tmmzbkb3d8 https://fetlife.com/Xanadu_Kink/s/scn734wltb https://fetlife.com/Xanadu_Kink/posts/14452571
 confeltine,1,0,1,no,,https://fetlife.com/confeltine,https://fetlife.com/Xanadu_Kink/pictures/225256065

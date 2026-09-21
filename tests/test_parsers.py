@@ -584,7 +584,10 @@ def test_message_form_from_html():
     assert parsers.message_form_from_html("<html><body>profile</body></html>") is None
 
 
-def test_conversation_error_from_html():
-    html = '<div class="flash bg-red-500">Body can\'t be blank</div>'
-    assert parsers.conversation_error_from_html(html) == "Body can't be blank"
-    assert parsers.conversation_error_from_html("<p>ok</p>") is None
+def test_flash_from_html():
+    toast = ('<div data-flash-toast data-controller="flash-toast" data-type="success">'
+             '<span>Your message has been successfully sent to Pal</span></div>')
+    assert parsers.flash_from_html(toast) == "Your message has been successfully sent to Pal"
+    assert parsers.flash_from_html('<div id="flash">Body can\'t be blank</div>') == "Body can't be blank"
+    # A "0 / 0" counter or similar chrome must not read as a notice.
+    assert parsers.flash_from_html('<div class="text-red-500">0 / 0</div><p>ok</p>') is None

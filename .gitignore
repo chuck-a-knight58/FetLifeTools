@@ -39,3 +39,4 @@ htmlcov/
 *.log
 hammersbacher.env
 xanadu_kink.env
+.env

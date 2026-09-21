@@ -681,8 +681,8 @@ def message(ctx, nickname_or_id, subject, body, body_file, dry_run, yes):
             return
         if not yes:
             click.confirm(f"Send this message to {label} as {me.nickname}?", abort=True, err=True)
-        url = fl.send_message(user_id, subject, body)
-    console.print(f"[green]Sent.[/green] {url}")
+        confirmation = fl.send_message(user_id, subject, body)
+    console.print(f"[green]Sent.[/green] {confirmation}")
 
 
 @cli.command()

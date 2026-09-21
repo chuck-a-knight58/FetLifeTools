@@ -647,10 +647,15 @@ def message_form_from_html(html: str) -> dict | None:
     return fields
 
 
-def conversation_error_from_html(html: str) -> str | None:
-    """The error the compose form re-rendered with, if any (else None)."""
+def flash_from_html(html: str) -> str | None:
+    """The flash notice a page shows (Rails' one-shot message), if any.
+
+    FetLife answers a successful write with a redirect and puts the outcome
+    ("Your message has been successfully sent to X") in a flash toast on the
+    landing page, so this is how a caller learns what happened.
+    """
     soup = _soup(html)
-    for el in soup.select("[class*='error'], [class*='bg-red'], [role='alert'], [id*='flash']"):
+    for el in soup.select("[data-controller~='flash-toast'], [class~='flash'], [id^='flash']"):
         text = _clean(el.get_text(" "))
         if text and 3 < len(text) < 300:
             return text

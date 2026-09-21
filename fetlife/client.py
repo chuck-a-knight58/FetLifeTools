@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import json
 import random
+import re
 import time
 from typing import Iterator
 from urllib.parse import urljoin, quote_plus, urlsplit
@@ -624,7 +625,7 @@ class FetLifeClient:
         return parsers.message_form_from_html(resp.text)
 
     def send_message(self, user_id: str, subject: str, body: str) -> str:
-        """Start a conversation with *user_id*; return the conversation URL.
+        """Start a conversation with *user_id*; return FetLife's confirmation.
 
         Submits the same form the site's compose page posts, token and all.
         Raises FetLifeError if the member can't be messaged or the site
@@ -645,12 +646,16 @@ class FetLifeClient:
             headers={"Referer": self._url("/conversations/new"), "Origin": self.config.base_url},
             data=data,
         )
+        # Success is a redirect to the member's profile carrying a flash, not a
+        # landing on the conversation itself.
+        flash = parsers.flash_from_html(resp.text)
+        if flash and re.search(r"successfully sent", flash, re.I):
+            return flash
         if "/conversations/" in resp.url and "/conversations/new" not in resp.url:
-            return resp.url
-        reason = parsers.conversation_error_from_html(resp.text)
+            return f"Conversation opened: {resp.url}"
         raise FetLifeError(
-            "FetLife did not create the conversation"
-            + (f": {reason}" if reason else f" (landed on {resp.url}).")
+            "FetLife did not confirm the message"
+            + (f": {flash}" if flash else f" (landed on {resp.url} with no notice).")
         )
 
     def get_relationships(self, nickname_or_id: str) -> list["Relationship"]:

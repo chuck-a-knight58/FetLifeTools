@@ -320,19 +320,39 @@ COMPOSE = ('<form action="/conversations" method="post">'
            '<input type="hidden" name="with[]" value="42"></form>')
 
 
+FLASH_OK = ('<div data-flash-toast data-controller="flash-toast" data-type="success">'
+            'Your message has been successfully sent to Pal</div>')
+
+
 @responses.activate
-def test_send_message_posts_the_form_and_returns_the_conversation(tmp_path):
+def test_send_message_posts_the_form_and_reads_the_success_flash(tmp_path):
     responses.add(responses.GET, "https://fetlife.com/conversations/new", body=COMPOSE,
                   match=[query_param_matcher({"source": "profile", "with": "42"})])
+    # Success is a redirect back to the member's profile carrying a flash toast.
     responses.add(responses.POST, "https://fetlife.com/conversations", status=302,
-                  headers={"Location": "https://fetlife.com/conversations/987"})
-    responses.add(responses.GET, "https://fetlife.com/conversations/987", body="<p>thread</p>")
+                  headers={"Location": "https://fetlife.com/Pal"})
+    responses.add(responses.GET, "https://fetlife.com/Pal", body="<p>profile</p>" + FLASH_OK)
     fl = _authed(tmp_path)
-    assert fl.send_message("42", "Hi there", "Body text") == "https://fetlife.com/conversations/987"
+    assert fl.send_message("42", "Hi there", "Body text") == \
+        "Your message has been successfully sent to Pal"
     post = next(c.request for c in responses.calls if c.request.method == "POST")
     assert post.body == ("authenticity_token=tok&source=profile&with%5B%5D=42"
                          "&subject=Hi+there&body=Body+text")
     assert post.headers["Origin"] == "https://fetlife.com"
+
+
+@responses.activate
+def test_send_message_without_a_confirmation_is_an_error(tmp_path):
+    from fetlife.exceptions import FetLifeError
+
+    responses.add(responses.GET, "https://fetlife.com/conversations/new", body=COMPOSE,
+                  match=[query_param_matcher({"source": "profile", "with": "42"})])
+    responses.add(responses.POST, "https://fetlife.com/conversations", status=302,
+                  headers={"Location": "https://fetlife.com/Pal"})
+    responses.add(responses.GET, "https://fetlife.com/Pal", body="<p>profile, no flash</p>")
+    fl = _authed(tmp_path)
+    with pytest.raises(FetLifeError, match="did not confirm"):
+        fl.send_message("42", "s", "b")
 
 
 @responses.activate
@@ -358,7 +378,7 @@ def test_send_message_surfaces_a_rejected_post(tmp_path):
     responses.add(responses.GET, "https://fetlife.com/conversations/new", body=COMPOSE,
                   match=[query_param_matcher({"source": "profile", "with": "42"})])
     responses.add(responses.POST, "https://fetlife.com/conversations", status=200,
-                  body='<div class="flash bg-red-500">Subject is too long</div>' + COMPOSE)
+                  body='<div id="flash" class="bg-red-500">Subject is too long</div>' + COMPOSE)
     fl = _authed(tmp_path)
     with pytest.raises(FetLifeError, match="Subject is too long"):
         fl.send_message("42", "s", "b")
