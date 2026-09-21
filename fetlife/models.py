@@ -120,3 +120,12 @@ class Group:
     category: str | None = None
     url: str | None = None
     meta: dict = field(default_factory=dict)
+
+
+@dataclass
+class GroupMembersPage:
+    """One page of a group's member list."""
+
+    group: Group
+    members: list[Member] = field(default_factory=list)
+    next_page: int | None = None

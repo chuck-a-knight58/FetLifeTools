@@ -22,7 +22,9 @@ from urllib.parse import parse_qs, urljoin, urlsplit
 from bs4 import BeautifulSoup
 
 from .exceptions import ParseError
-from .models import Event, Group, Member, ProfileRelation, Relationship, Story
+from .models import (
+    Event, Group, GroupMembersPage, Member, ProfileRelation, Relationship, Story,
+)
 
 _PARSER = "lxml"
 
@@ -310,7 +312,8 @@ _RELATION_ID_RE = re.compile(r"^relation_user_(\d+)$")
 _PROFILE_HREF_RE = re.compile(r"^/[^/?#]+$")
 # The bold line under a nickname: age glued to a gender abbreviation, then an
 # optional role — "49M", "56W Villain", "38F Submissive".
-_AGE_GENDER_RE = re.compile(r"^(\d+)([A-Za-z]*)$")
+# The gender code can contain a slash ("47CD/TV Bottom").
+_AGE_GENDER_RE = re.compile(r"^(\d+)([A-Za-z/]*)$")
 
 
 def _age_gender_role(text: str | None) -> tuple[int | None, str | None, str | None]:
@@ -777,3 +780,68 @@ def parse_group(html: str, url: str | None = None) -> Group:
             "fetlife/parsers.py likely needs updating."
         )
     return group
+
+
+def parse_group_members(html: str, url: str | None = None, base_url: str = "") -> GroupMembersPage:
+    """Parse one page of a group's member list (``/groups/ID/members``).
+
+    The list is server-rendered only. Each entry is a card under
+    ``#group_members_list`` with the same name / "49M Sadist" / location lines
+    the friends lists use, plus a "joined <time>" line. FetLife shows no user
+    id here, so members are keyed by nickname. ``next_page`` is read from the
+    pagination's "Next" link and is ``None`` on the last page.
+    """
+    soup = _soup(html)
+    group = Group(url=url, id=_id_from_url(url, "groups"))
+    h1 = soup.find("h1")
+    group.name = _clean(h1.get_text()) if h1 else ""
+    count_hint = h1.find_next("p") if h1 else None
+    if count_hint and re.search(r"member", count_hint.get_text(), re.I):
+        group.member_count = _int(count_hint.get_text())
+
+    container = soup.find(id="group_members_list")
+    if container is None:
+        raise ParseError(
+            "Could not find the group member list. The group members parser in "
+            "fetlife/parsers.py likely needs updating."
+        )
+    members: list[Member] = []
+    for link in container.select("a.font-bold[href]"):
+        href = link.get("href", "")
+        if not _PROFILE_HREF_RE.match(href):
+            continue
+        nickname = _clean(link.get_text()) or href.lstrip("/")
+        name_line = link.find_parent("div")
+        stats = name_line.select_one("span.font-bold") if name_line else None
+        age, gender, role = _age_gender_role(_clean(stats.get_text()) if stats else None)
+        # After the name line: the location, then "joined <time>". A member
+        # with no location shown drops the line, so the joined one can't be
+        # taken for it.
+        location, joined = None, None
+        for sib in name_line.find_next_siblings("div") if name_line else []:
+            if sib.find("a"):
+                continue
+            if sib.find("time"):
+                joined = sib.find("time").get("datetime")
+                break
+            location = location or _clean(sib.get_text(" "))
+        img = link.find_previous("img")
+        members.append(
+            Member(
+                nickname=nickname,
+                age=age,
+                gender=gender,
+                role=role,
+                location=location,
+                joined=joined,
+                url=urljoin(base_url + "/", href.lstrip("/")),
+                avatar_url=img.get("src") if img else None,
+            )
+        )
+
+    next_page = None
+    next_link = soup.select_one(".pagination a.next_page[href], .pagination a[rel=next][href]")
+    if next_link:
+        m = re.search(r"[?&]page=(\d+)", next_link["href"])
+        next_page = int(m.group(1)) if m else None
+    return GroupMembersPage(group=group, members=members, next_page=next_page)

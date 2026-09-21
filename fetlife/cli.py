@@ -9,14 +9,16 @@ import csv
 import dataclasses
 import json
 import os
+import re
 import sys
+from contextlib import nullcontext
 from datetime import datetime, timezone
 
 import click
 from rich.console import Console
 from rich.table import Table
 
-from . import __version__, crawl, engagement, friending, geo, messaging
+from . import __version__, crawl, engagement, friending, geo, groups, messaging
 from .client import FetLifeClient
 from .config import Config
 from .exceptions import FetLifeError, RateLimitedError
@@ -578,10 +580,10 @@ def engagement_cmd(ctx, nickname_or_id, since, show_all, state_dir, no_save, as_
 def friend_requests(ctx, csv_file, limit, pause, dry_run, yes, resend, log_path):
     """Send a friend request to each member listed in CSV_FILE.
 
-    CSV_FILE needs a `nickname` column (e.g. the output of `engagement --csv`
-    or `connections`); a headerless one-name-per-line file also works. Each
-    profile is checked first and a request is sent only where FetLife itself
-    offers "Add as Friend" — existing friends and pending requests are
+    CSV_FILE needs a `nickname` column (e.g. the output of `engagement --csv`,
+    `connections` or `group-members`); a headerless one-name-per-line file also
+    works. Each profile is checked first and a request is sent only where
+    FetLife itself offers "Add as Friend" — existing friends and pending requests are
     skipped, as is anyone already in --log. At most --limit go out per run,
     --pause seconds apart. Try --dry-run first.
     """
@@ -818,6 +820,73 @@ def group(ctx: click.Context, group_id: str, json_local: bool) -> None:
     with _client(ctx) as fl:
         found = fl.get_group(group_id)
     _emit(found, _as_json(ctx, json_local), ["name", "member_count", "url"], "Group")
+
+
+@cli.command("group-members")
+@click.argument("group_id")
+@click.option("--out", "out_path", default=None,
+              type=click.Path(dir_okay=False, writable=True, allow_dash=True),
+              help="CSV file to write ('-' for stdout).  [default: group_ID_members.csv]")
+@click.option("--start-page", default=1, show_default=True, type=click.IntRange(min=1),
+              help="First page of the list to read (to resume after a rate limit).")
+@click.option("--max-pages", default=None, type=click.IntRange(min=1),
+              help="Most pages to read this run (about 20 members each).  [default: all]")
+@click.pass_context
+def group_members_cmd(ctx, group_id, out_path, start_page, max_pages):
+    """Save every member of group GROUP_ID to a CSV file.
+
+    GROUP_ID is the group's numeric id (or its URL). One row per member with
+    the age/gender/role/location and join date the list shows; the file has
+    a `nickname` column, so it can be handed straight to `friend-requests`
+    or `message --from-csv`. If FetLife starts throttling, what was read so
+    far is written and the page to rerun with --start-page is reported.
+    """
+    m = re.search(r"\d+", group_id)
+    if not m:
+        raise FetLifeError(f"{group_id!r} isn't a group id or group URL.")
+    group_id = m.group()
+    if out_path is None:
+        out_path = f"group_{group_id}_members.csv"
+
+    fl = _client(ctx)
+    fl.on_retry = _report_retry
+    # The file is written page by page and committed to disk after each one,
+    # so whatever stops the run, the members already read are on disk.
+    out = (nullcontext(sys.stdout) if out_path == "-"
+           else open(out_path, "w", encoding="utf-8", newline=""))
+    with out as fh, fl:
+        writer = groups.MembersCsvWriter(fh)
+
+        def on_progress(p: groups.Progress) -> None:
+            status_console.print(
+                f"[dim]page {p.page} · members {p.members} · requests {fl.requests}[/dim]",
+                end="\r",
+            )
+
+        result = groups.gather_members(fl, group_id, start_page=start_page,
+                                       max_pages=max_pages, on_page=writer.write,
+                                       on_progress=on_progress)
+    status_console.print()  # end the progress line
+
+    total = f" of {result.group.member_count}" if result.group.member_count else ""
+    status_console.print(
+        f"[dim]{result.group.name or 'group ' + group_id}: {len(result.members)}{total} members "
+        f"({result.pages} page{'s' if result.pages != 1 else ''})"
+        + ("" if out_path == "-" else f" → {out_path}") + "[/dim]"
+    )
+    if result.resume_page is not None:
+        status_console.print(
+            f"[red]FetLife is rate limiting; stopped before page {result.resume_page}.[/red]"
+        )
+        status_console.print(
+            f"[dim]rerun later with --start-page {result.resume_page} "
+            f"(and --out another file, or merge by hand) to continue.[/dim]"
+        )
+        ctx.exit(EXIT_RATE_LIMITED)
+    elif result.next_page is not None:
+        status_console.print(
+            f"[dim]--max-pages reached; the list continues at --start-page {result.next_page}.[/dim]"
+        )
 
 
 @cli.command()

@@ -25,7 +25,9 @@ from .exceptions import (
     ParseError,
     RateLimitedError,
 )
-from .models import Event, Group, Member, ProfileRelation, Relationship, Story
+from .models import (
+    Event, Group, GroupMembersPage, Member, ProfileRelation, Relationship, Story,
+)
 from . import parsers
 
 # Adaptive throttling. FetLife's rate limit is a *rolling window*, so backing
@@ -696,6 +698,36 @@ class FetLifeClient:
         self._ensure_auth()
         resp = self.get(f"/groups/{group_id}")
         return parsers.parse_group(resp.text, url=resp.url)
+
+    def get_group_members(self, group_id: str, page: int = 1) -> GroupMembersPage:
+        """One page of a group's member list (``/groups/ID/members?page=N``)."""
+        self._ensure_auth()
+        resp = self.get(f"/groups/{group_id}/members", params={"page": page})
+        return parsers.parse_group_members(
+            resp.text, url=resp.url, base_url=self.config.base_url
+        )
+
+    def iter_group_member_pages(
+        self, group_id: str, start_page: int = 1
+    ) -> Iterator[tuple[int, GroupMembersPage]]:
+        """Every page of a group's member list from *start_page*, as
+        ``(page_number, page)``.
+
+        Stops after the page FetLife shows no "Next" link for. A page that
+        only repeats members already seen also ends the walk, so a list that
+        stops honoring ``page`` can't loop forever.
+        """
+        seen: set[str] = set()
+        page = start_page
+        while page is not None:
+            found = self.get_group_members(group_id, page)
+            fresh = [m for m in found.members if m.nickname.lower() not in seen]
+            if not fresh:
+                return
+            seen.update(m.nickname.lower() for m in fresh)
+            found.members = fresh
+            yield page, found
+            page = found.next_page
 
     def fetch_raw(self, path: str) -> str:
         """Return the raw HTML for an arbitrary path (handy for debugging parsers)."""

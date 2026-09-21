@@ -591,3 +591,93 @@ def test_flash_from_html():
     assert parsers.flash_from_html('<div id="flash">Body can\'t be blank</div>') == "Body can't be blank"
     # A "0 / 0" counter or similar chrome must not read as a notice.
     assert parsers.flash_from_html('<div class="text-red-500">0 / 0</div><p>ok</p>') is None
+
+
+GROUP_MEMBERS_HTML = """
+<h1><a href="/groups/88">Profania</a></h1>
+<p class="text-sm">116 members</p>
+<div id="group_members_list">
+  <div class="grid">
+    <div class="xs:mb-2">
+      <div onclick="openLink(event, '/escravoroger_rf')">
+        <div class="flex items-center">
+          <div class="flex-auto flex">
+            <div class="flex-none">
+              <a href="/escravoroger_rf" title="escravoroger_rf"><img alt="escravoroger_rf" src="https://x/a.jpg"></a>
+            </div>
+            <div class="relative flex-auto">
+              <div class="leading-normal truncate">
+                <a href="/escravoroger_rf" class="link text-base font-bold text-red-500">escravoroger_rf</a>
+                <span class="text-sm font-bold text-gray-300">47CD/TV Bottom</span>
+              </div>
+              <div class="text-sm truncate">Ceará, Brazil</div>
+              <div class="text-sm text-gray-500">
+                <span class="dot-separated">joined <time datetime="2008-04-21T16:26:41Z">21 Apr 2008</time></span>
+              </div>
+              <div class="text-sm"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="xs:mb-2">
+      <div onclick="openLink(event, '/nowhere')">
+        <div class="flex items-center">
+          <div class="flex-auto flex">
+            <div class="relative flex-auto">
+              <div class="leading-normal truncate">
+                <a href="/nowhere" class="link text-base font-bold text-red-500">nowhere</a>
+                <span class="text-sm font-bold text-gray-300">49M</span>
+              </div>
+              <div class="text-sm text-gray-500">
+                <span class="dot-separated">joined <time datetime="2008-11-13T12:43:27Z">13 Nov 2008</time></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div role="navigation" class="pagination"><span class="previous_page disabled">&lt; Perv</span>
+<em class="current">1</em> <a rel="next" href="/groups/88/members?page=2">2</a>
+<a href="/groups/88/members?page=6">6</a>
+<a class="next_page" rel="next" href="/groups/88/members?page=2">Next &gt;</a></div>
+"""
+
+
+def test_parse_group_members():
+    page = parsers.parse_group_members(
+        GROUP_MEMBERS_HTML, url="https://fetlife.com/groups/88/members?page=1",
+        base_url="https://fetlife.com",
+    )
+    assert page.group.id == "88" and page.group.name == "Profania"
+    assert page.group.member_count == 116
+    assert page.next_page == 2
+    assert len(page.members) == 2
+    m = page.members[0]
+    assert m.nickname == "escravoroger_rf" and m.id is None
+    assert (m.age, m.gender, m.role) == (47, "CD/TV", "Bottom")
+    assert m.location == "Ceará, Brazil"
+    assert m.joined == "2008-04-21T16:26:41Z"
+    assert m.url == "https://fetlife.com/escravoroger_rf"
+    assert m.avatar_url == "https://x/a.jpg"
+
+
+def test_parse_group_members_without_location():
+    """No location line: the "joined" line must not be mistaken for it."""
+    m = parsers.parse_group_members(GROUP_MEMBERS_HTML).members[1]
+    assert m.nickname == "nowhere" and (m.age, m.gender, m.role) == (49, "M", None)
+    assert m.location is None
+    assert m.joined == "2008-11-13T12:43:27Z"
+
+
+def test_parse_group_members_last_page_has_no_next():
+    html = GROUP_MEMBERS_HTML.split('<div role="navigation"')[0]
+    page = parsers.parse_group_members(html)
+    assert page.next_page is None and len(page.members) == 2
+
+
+def test_parse_group_members_requires_the_list():
+    with pytest.raises(ParseError):
+        parsers.parse_group_members("<html><body><h1>Gone</h1></body></html>")

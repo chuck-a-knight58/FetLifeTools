@@ -382,3 +382,39 @@ def test_send_message_surfaces_a_rejected_post(tmp_path):
     fl = _authed(tmp_path)
     with pytest.raises(FetLifeError, match="Subject is too long"):
         fl.send_message("42", "s", "b")
+
+
+def _group_page(nicks, next_page=None):
+    entries = "".join(
+        f'<div><div><a class="font-bold" href="/{n}">{n}</a>'
+        f'<span class="font-bold">30M</span></div></div>' for n in nicks
+    )
+    nav = (f'<div class="pagination"><a class="next_page" rel="next" '
+           f'href="/groups/9/members?page={next_page}">Next</a></div>' if next_page else "")
+    return f'<h1>G</h1><div id="group_members_list">{entries}</div>{nav}'
+
+
+@responses.activate
+def test_iter_group_member_pages_follows_next_links(tmp_path):
+    responses.add(responses.GET, "https://fetlife.com/groups/9/members",
+                  body=_group_page(["a", "b"], next_page=2),
+                  match=[query_param_matcher({'page': '1'})])
+    responses.add(responses.GET, "https://fetlife.com/groups/9/members",
+                  body=_group_page(["c"]),  # last page: no Next link
+                  match=[query_param_matcher({'page': '2'})])
+    fl = _authed(tmp_path)
+    pages = list(fl.iter_group_member_pages("9"))
+    assert [(p, [m.nickname for m in found.members]) for p, found in pages] == [
+        (1, ["a", "b"]), (2, ["c"]),
+    ]
+    assert len(responses.calls) == 2  # stops on the missing Next link, no extra fetch
+
+
+@responses.activate
+def test_iter_group_member_pages_starts_where_told_and_stops_on_repeats(tmp_path):
+    # A list that ignores ?page= would serve the same page forever.
+    responses.add(responses.GET, "https://fetlife.com/groups/9/members",
+                  body=_group_page(["a"], next_page=4))
+    fl = _authed(tmp_path)
+    assert [p for p, _ in fl.iter_group_member_pages("9", start_page=3)] == [3]
+    assert [c.request.params["page"] for c in responses.calls] == ["3", "4"]

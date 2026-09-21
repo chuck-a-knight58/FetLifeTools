@@ -24,6 +24,7 @@ FetLife sits behind Cloudflare, which blocks plain HTTP clients. To get through,
 - `search` — keyword member search _(experimental — see notes)_.
 - `events` / `event` — list events or fetch one by id _(experimental — partial data)_.
 - `group` — fetch a group by id (name + member count).
+- `group-members` — save every member of a group to a CSV file that `friend-requests` and `message --from-csv` accept.
 - `raw` — dump raw HTML of any path (for inspecting/updating parsers).
 - JSON output on every command (`--json`) for piping into `jq` or scripts.
 
@@ -81,6 +82,7 @@ fetlife search "rope portland"
 fetlife events --place 123
 fetlife event 5551234
 fetlife group 88 --json | jq .
+fetlife group-members 88            # → group_88_members.csv, ready for friend-requests / message --from-csv
 fetlife raw /home > home.html       # inspect live markup
 ```
 
@@ -99,7 +101,7 @@ Global options (before the subcommand):
 
 Every command accepts `--json` (or `-j` after the subcommand). Table output uses [rich](https://github.com/Textualize/rich); JSON output is a list of objects (or a single object for one-item results) suitable for `jq`. Outputs below are **illustrative** (nicknames/values are examples).
 
-> **Command status.** `whoami`, `profile`, `friends`, `relationships`, `followers`, `following`, `discover`, `connections`, `engagement`, `friend-requests`, `message`, `group`, `login`, and `raw` use FetLife's JSON API (or stable server-rendered fields) and return full data. `search`, `events`, and `event` are **experimental** — see notes on each; they were scaffolded against older markup and are awaiting the JSON endpoints the SPA now uses.
+> **Command status.** `whoami`, `profile`, `friends`, `relationships`, `followers`, `following`, `discover`, `connections`, `engagement`, `friend-requests`, `message`, `group`, `group-members`, `login`, and `raw` use FetLife's JSON API (or stable server-rendered fields) and return full data. `search`, `events`, and `event` are **experimental** — see notes on each; they were scaffolded against older markup and are awaiting the JSON endpoints the SPA now uses.
 
 ### `login`
 
@@ -284,7 +286,7 @@ Sent. Your message has been successfully sent to JohnDoe
 
 It opens the site's own compose form for the member and submits it (`POST /conversations`) with the subject and body. FetLife answers a successful send with a redirect to the member's profile carrying a confirmation toast, which is what gets printed; anything else is reported as an error, with the site's notice if it gave one.
 
-**Many recipients.** `--from-csv FILE` messages every member in a CSV with a `nickname` column (`engagement --csv` output, a `connections` file, or a headerless one-name-per-line list) instead of one `NICKNAME_OR_ID`. It works like [`friend-requests`](#friend-requests--send-friend-requests-from-a-list): each member is checked first (those who don't accept messages from your account are skipped with that reason), at most `--limit` messages go out per run (default 10), `--pause` seconds apart (default 30), and every outcome is appended to `--log` (default `~/.fetlife/messages.jsonl`) so a rerun over the same file **never messages anyone twice** (`--resend` overrides). `{nickname}` in the subject or body is replaced with each recipient's nickname. The sending account is never messaged even if it's listed. One line per member is printed as it's processed:
+**Many recipients.** `--from-csv FILE` messages every member in a CSV with a `nickname` column (`engagement --csv` output, a `connections` or `group-members` file, or a headerless one-name-per-line list) instead of one `NICKNAME_OR_ID`. It works like [`friend-requests`](#friend-requests--send-friend-requests-from-a-list): each member is checked first (those who don't accept messages from your account are skipped with that reason), at most `--limit` messages go out per run (default 10), `--pause` seconds apart (default 30), and every outcome is appended to `--log` (default `~/.fetlife/messages.jsonl`) so a rerun over the same file **never messages anyone twice** (`--resend` overrides). `{nickname}` in the subject or body is replaced with each recipient's nickname. The sending account is never messaged even if it's listed. One line per member is printed as it's processed:
 
 ```
 action      nickname                 reason
@@ -312,6 +314,31 @@ fetlife group 88
 │ Profania │ 112          │ https://fetlife.com/groups/88 │
 └──────────┴──────────────┴───────────────────────────────┘
 ```
+
+### `group-members`
+
+Save every member of a group to a CSV file. `GROUP_ID` is the numeric id or the group's URL.
+
+```bash
+fetlife group-members 88                         # → group_88_members.csv
+fetlife group-members 88 --out profania.csv
+fetlife group-members https://fetlife.com/groups/88 --out - | head
+```
+```
+nickname,age,gender,role,location,joined,url
+escravoroger_rf,47,CD/TV,Bottom,"Ceará, Brazil",2008-04-21T16:26:41Z,https://fetlife.com/escravoroger_rf
+xenonman,71,M,Switch,"Madison, Wisconsin",2008-07-13T23:49:53Z,https://fetlife.com/xenonman
+```
+
+One row per member, in the order FetLife lists them, with the age/gender/role/location and join date the list shows (FetLife shows no user id on group member lists, so there is no `id` column). The file starts with a `nickname` column, which is all [`friend-requests`](#friend-requests--send-friend-requests-from-a-list) and [`message --from-csv`](#message) need:
+
+```bash
+fetlife group-members 88 --out profania.csv
+fetlife friend-requests profania.csv --dry-run
+fetlife message --from-csv profania.csv -s "Hello from the group" --body-file hello.txt --dry-run
+```
+
+The list is 20 members per page, one request per page. The file is written **as the list is read**: the header first, then each page's rows as soon as that page arrives, each committed to disk (flushed and fsynced) before the next page is requested — so a rate limit, a Ctrl-C or a crash leaves a complete file of everything fetched so far, and the progress line's member count is what's on disk. `--max-pages N` caps a run (it reports the page the list continues at) and `--start-page N` begins there; both are also how you get through a large group under FetLife's rate limit: when throttling starts, the page to resume from is reported and the command exits with code 75, like `discover`. Resume into a different `--out` file (each run writes its file from scratch) and concatenate.
 
 ### `search` (experimental)
 
@@ -364,8 +391,9 @@ fetlife/
   crawl.py      Geo-bounded BFS over friends/followers (the `discover` command)
   engagement.py Connections vs. post engagers (`connections` + `engagement`)
   friending.py  Checked, capped, logged friend requests (`friend-requests`)
+  groups.py     A group's member list as a friending/messaging CSV (`group-members`)
   geo.py        Haversine + Nominatim geocoder (cached)
-  models.py     Member / Relationship / Event / Group dataclasses
+  models.py     Member / Relationship / Event / Group / GroupMembersPage dataclasses
   config.py     Env/.env credential + settings loading
   exceptions.py Typed error hierarchy
 ```
@@ -702,7 +730,7 @@ One request per 20 connections, one per 20 posts, and per post one for the loves
 
 ## `friend-requests` — send friend requests from a list
 
-The one command that **writes** to FetLife. Given a CSV of nicknames — `engagement --csv` output, a `connections` file, or a hand-made list — it sends each member a friend request, the same way the profile page's "Add as Friend" does.
+The one command that **writes** to FetLife. Given a CSV of nicknames — `engagement --csv` output, a `connections` or `group-members` file, or a hand-made list — it sends each member a friend request, the same way the profile page's "Add as Friend" does.
 
 ```bash
 fetlife friend-requests [OPTIONS] CSV_FILE
