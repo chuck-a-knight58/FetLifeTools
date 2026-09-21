@@ -275,10 +275,10 @@ fetlife message JohnDoe -s "Hi" -b "…" --dry-run          # check they accept 
 fetlife message --from-csv strangers.csv -s "Hi {nickname}" --body-file note.txt --dry-run
 ```
 ```
-from Xanadu_Kink to JohnDoe (id 12345)
+from <Nickname> to JohnDoe (id 12345)
 Subject: Hi
 Saw you at the munch — good to meet you.
-Send this message to JohnDoe as Xanadu_Kink? [y/N]: y
+Send this message to JohnDoe as <Nickname>? [y/N]: y
 Sent. Your message has been successfully sent to JohnDoe
 ```
 
@@ -594,7 +594,7 @@ FETLIFE_RATE_LIMIT_MIN=0.5 FETLIFE_RATE_LIMIT_MAX=1.5 \
   fetlife discover --seed JohnDoe --radius 25 --max-visits 100 --max-pages 1
 
 # My example
-fetlife discover --seed Knight_of_Xanadu --center "Washington, NJ" --radius 100 --ds-only --active-within any
+fetlife discover --seed "<Nickname>" --center "<Location>" --radius 100 --ds-only --active-within any
 center 'Washington, NJ' -> 40.758,-74.979 | radius 1000.0mi | streaming results; ~2s/request
 
 ds   fet_name            age  gender   role              location                gps                       last_active  url
@@ -758,40 +758,3 @@ pytest            # fully offline: parser + client tests use fixtures/mocks
 ## Disclaimer
 
 Not affiliated with or endorsed by FetLife / BitLove Inc. Provided as-is for personal, authorized use.
-
-## Workflows
-This script sends friend requests to engagers who are not currently friends or followers of a specified FetLife user.
-Note, make sure .env has the proper credentials in it.
-
-```bash
-# This script sends friend requests to engagers who are not currently friends or followers of a specified FetLife user.
- 
-# 1) Use the credentials found in .env
-fetlive login
-
-# 2) List all of Xanadu_Kink’s friends and followers and write the output to the file friends.csv
-fetlife engagement Xanadu_Kink
-
-# 3) Use the file friends.csv to find people that have been engaged but are not currently friends or followers
-fetlife engagement Xanadu_Kink --since “1 month” --connections friends.csv --csv > strangers.csv
-
-# 4) Use the file strangers.csv to send a friend request to those engagers
-fetlife friend-requests strangers.csv
-
-# 5) Use the file strangers.csv to send a welcome message to those engagers
-fetlife message --from-csv strangers.csv --subject "A Warm Welcome From Xanadu Kink" --body-file greeting.txt --yes
-
-[strangers.csv]
-nickname,loves,comments,posts,connected,relation,url,post_urls
-Errrp,5,0,5,no,,https://fetlife.com/Errrp,https://fetlife.com/Xanadu_Kink/pictures/225256065 https://fetlife.com/Xanadu_Kink/pictures/225066652 https://fetlife.com/Xanadu_Kink/s/tmmzbkb3d8 https://fetlife.com/Xanadu_Kink/s/scn734wltb https://fetlife.com/Xanadu_Kink/posts/14452571
-confeltine,1,0,1,no,,https://fetlife.com/confeltine,https://fetlife.com/Xanadu_Kink/pictures/225256065
-Elfiaine,1,0,1,no,,https://fetlife.com/Elfiaine,https://fetlife.com/Xanadu_Kink/posts/14452571
-Leather-Lioness,1,0,1,no,,https://fetlife.com/Leather-Lioness,https://fetlife.com/Xanadu_Kink/posts/14487289
-Lilac-ed,1,0,1,no,,https://fetlife.com/Lilac-ed,https://fetlife.com/Xanadu_Kink/pictures/225066652
-Ms_Maria,1,0,1,no,,https://fetlife.com/Ms_Maria,https://fetlife.com/Xanadu_Kink/posts/14487563
-PrincessMiriah,1,0,1,no,,https://fetlife.com/PrincessMiriah,https://fetlife.com/Xanadu_Kink/pictures/225264245
-Professor_Silva,1,0,1,no,,https://fetlife.com/Professor_Silva,https://fetlife.com/Xanadu_Kink/pictures/225264245
-ready2play315,1,0,1,no,,https://fetlife.com/ready2play315,https://fetlife.com/Xanadu_Kink/pictures/225264245
-SevenPC,1,0,1,no,,https://fetlife.com/SevenPC,https://fetlife.com/Xanadu_Kink/posts/14487563
-Zahtevna13,1,0,1,no,,https://fetlife.com/Zahtevna13,https://fetlife.com/Xanadu_Kink/pictures/224416770
-```

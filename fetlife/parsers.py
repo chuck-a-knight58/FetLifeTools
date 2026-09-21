@@ -522,7 +522,7 @@ def _nickname_from_title(soup: BeautifulSoup) -> str:
     if not title:
         og = soup.find("meta", property="og:title")
         title = og["content"] if og and og.get("content") else ""
-    # "Knight_of_Xanadu - Kinksters | FetLife" -> "Knight_of_Xanadu"
+    # "<Nickname> - Kinksters | FetLife" -> "<Nickname>"
     return _clean(title.split(" - ")[0].split(" | ")[0]) or ""
 
 
