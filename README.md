@@ -20,6 +20,7 @@ FetLife sits behind Cloudflare, which blocks plain HTTP clients. To get through,
 - `connections` — save a member's complete friends and followers to a CSV file.
 - `engagement` — who loves/comments on a member's posts without being a friend or follower.
 - `friend-requests` — send friend requests to the members listed in a CSV, with caps, a dry run and a log.
+- `message` — send a direct message (subject + body) to a member from the logged-in account.
 - `search` — keyword member search _(experimental — see notes)_.
 - `events` / `event` — list events or fetch one by id _(experimental — partial data)_.
 - `group` — fetch a group by id (name + member count).
@@ -75,6 +76,7 @@ fetlife connections JohnDoe         # friends + followers -> friends.csv
 fetlife engagement JohnDoe --connections friends.csv   # engagers since the last scan who aren't connected
 fetlife engagement JohnDoe --since "2 weeks" --all     # every engager, fetching the lists live
 fetlife friend-requests strangers.csv --dry-run       # who would get a request; then drop --dry-run
+fetlife message JohnDoe -s "Hi" -b "Saw you at the munch…"   # DM from the logged-in account
 fetlife search "rope portland"
 fetlife events --place 123
 fetlife event 5551234
@@ -97,7 +99,7 @@ Global options (before the subcommand):
 
 Every command accepts `--json` (or `-j` after the subcommand). Table output uses [rich](https://github.com/Textualize/rich); JSON output is a list of objects (or a single object for one-item results) suitable for `jq`. Outputs below are **illustrative** (nicknames/values are examples).
 
-> **Command status.** `whoami`, `profile`, `friends`, `relationships`, `followers`, `following`, `discover`, `connections`, `engagement`, `friend-requests`, `group`, `login`, and `raw` use FetLife's JSON API (or stable server-rendered fields) and return full data. `search`, `events`, and `event` are **experimental** — see notes on each; they were scaffolded against older markup and are awaiting the JSON endpoints the SPA now uses.
+> **Command status.** `whoami`, `profile`, `friends`, `relationships`, `followers`, `following`, `discover`, `connections`, `engagement`, `friend-requests`, `message`, `group`, `login`, and `raw` use FetLife's JSON API (or stable server-rendered fields) and return full data. `search`, `events`, and `event` are **experimental** — see notes on each; they were scaffolded against older markup and are awaiting the JSON endpoints the SPA now uses.
 
 ### `login`
 
@@ -262,6 +264,25 @@ fetlife friend-requests strangers.csv --dry-run
 fetlife friend-requests strangers.csv --limit 5
 ```
 
+### `message`
+
+Send a direct message to a member from the logged-in account (the one in your `.env`; pass `--env-file` to send from another). Writes to FetLife.
+
+```bash
+fetlife message JohnDoe --subject "Hi" --body "Saw you at the munch — good to meet you."
+fetlife message JohnDoe -s "Hi" --body-file note.txt      # longer text from a file ('-' = stdin)
+fetlife message JohnDoe -s "Hi" -b "…" --dry-run          # check they accept messages; send nothing
+```
+```
+from Xanadu_Kink to JohnDoe (id 12345)
+Subject: Hi
+Saw you at the munch — good to meet you.
+Send this message to JohnDoe as Xanadu_Kink? [y/N]: y
+Sent. https://fetlife.com/conversations/987654
+```
+
+It opens the site's own compose form for the member and submits it (`POST /conversations`) with the subject and body, then prints the new conversation's URL. The member is resolved by nickname or numeric id. FetLife bounces the compose page for members who don't accept messages from your account (privacy settings, blocks); those are reported and nothing is sent. Subject is limited to 255 characters. `-y`/`--yes` skips the prompt for scripted use.
+
 ### `group`
 
 Fetch a group by numeric id (name + member count).
@@ -354,6 +375,7 @@ header:
 | Comments on a post | `GET /comments.turbo_stream?order=oldest&story_uid=<uid>[&cursor=C]` | `iter_story_commenters` |
 | Relation button | `GET /<nickname>` **(HTML)** → `profile_relation_button_<id>` frame | `get_profile_relation` |
 | Friend request | `POST /requests?user_id=<id>` with the page's CSRF token | `send_friend_request` |
+| Direct message | `GET /conversations/new?with=<id>` (form + token), then `POST /conversations` | `get_message_form` / `send_message` |
 | Pictures | `GET /<nickname>/pictures` | *(easy to add)* |
 
 The relation lists and the activity feed are the exceptions: FetLife answers the JSON variant of those with a 404/406 (for any member, your own profile included), so they are read from the server-rendered page — `members_from_relations_html` and `stories_from_activity_html`. The markup carries the same data the JSON did, at the same one request per page. The feed, loves and comments are all [Hotwire](https://hotwired.dev) pages: the first page is plain HTML and each later page is the Turbo Stream that the page's lazy pagination `<turbo-frame>` would load, addressed by the `marker`/`cursor` in that frame's `src`. Every post in the feed carries a **story uid** (on its love button) that keys the loves and comments endpoints.
@@ -722,3 +744,37 @@ pytest            # fully offline: parser + client tests use fixtures/mocks
 ## Disclaimer
 
 Not affiliated with or endorsed by FetLife / BitLove Inc. Provided as-is for personal, authorized use.
+
+## Workflows
+This script sends friend requests to engagers who are not currently friends or followers of a specified FetLife user.
+Note, make sure .env has the proper credentials in it.
+
+```bash
+# This script sends friend requests to engagers who are not currently friends or followers 
+# of a specified FetLife user.
+ 
+# The first command lists all of Xanadu_Kink’s friends and followers and writes the 
+# output to the file friends.csv
+fetlife engagement Xanadu_Kink
+
+# The second command uses the file  friends.csv to find people that have been engaged but 
+# are not currently friends or followers
+fetlife engagement Xanadu_Kink --since “1 month” --connections friends.csv --csv > strangers.csv
+
+# The final command uses the file strangers.csv to send a friend request to those engagers
+fetlife friend-requests strangers.csv
+
+
+nickname,loves,comments,posts,connected,relation,url,post_urls
+Errrp,5,0,5,no,,https://fetlife.com/Errrp,https://fetlife.com/Xanadu_Kink/pictures/225256065 https://fetlife.com/Xanadu_Kink/pictures/225066652 https://fetlife.com/Xanadu_Kink/s/tmmzbkb3d8 https://fetlife.com/Xanadu_Kink/s/scn734wltb https://fetlife.com/Xanadu_Kink/posts/14452571
+confeltine,1,0,1,no,,https://fetlife.com/confeltine,https://fetlife.com/Xanadu_Kink/pictures/225256065
+Elfiaine,1,0,1,no,,https://fetlife.com/Elfiaine,https://fetlife.com/Xanadu_Kink/posts/14452571
+Leather-Lioness,1,0,1,no,,https://fetlife.com/Leather-Lioness,https://fetlife.com/Xanadu_Kink/posts/14487289
+Lilac-ed,1,0,1,no,,https://fetlife.com/Lilac-ed,https://fetlife.com/Xanadu_Kink/pictures/225066652
+Ms_Maria,1,0,1,no,,https://fetlife.com/Ms_Maria,https://fetlife.com/Xanadu_Kink/posts/14487563
+PrincessMiriah,1,0,1,no,,https://fetlife.com/PrincessMiriah,https://fetlife.com/Xanadu_Kink/pictures/225264245
+Professor_Silva,1,0,1,no,,https://fetlife.com/Professor_Silva,https://fetlife.com/Xanadu_Kink/pictures/225264245
+ready2play315,1,0,1,no,,https://fetlife.com/ready2play315,https://fetlife.com/Xanadu_Kink/pictures/225264245
+SevenPC,1,0,1,no,,https://fetlife.com/SevenPC,https://fetlife.com/Xanadu_Kink/posts/14487563
+Zahtevna13,1,0,1,no,,https://fetlife.com/Zahtevna13,https://fetlife.com/Xanadu_Kink/pictures/224416770
+```

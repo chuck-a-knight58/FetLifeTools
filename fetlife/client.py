@@ -613,6 +613,46 @@ class FetLifeClient:
         except ParseError:
             return None
 
+    def get_message_form(self, user_id: str) -> dict | None:
+        """The compose form for a conversation with *user_id*, or None if the
+        member doesn't accept messages from this account (FetLife sends the
+        compose page back to their profile in that case)."""
+        self._ensure_auth()
+        resp = self.get("/conversations/new", params={"source": "profile", "with": user_id})
+        if "/conversations/new" not in resp.url:
+            return None
+        return parsers.message_form_from_html(resp.text)
+
+    def send_message(self, user_id: str, subject: str, body: str) -> str:
+        """Start a conversation with *user_id*; return the conversation URL.
+
+        Submits the same form the site's compose page posts, token and all.
+        Raises FetLifeError if the member can't be messaged or the site
+        rejects the message.
+        """
+        form = self.get_message_form(user_id)
+        if form is None:
+            raise FetLifeError(
+                f"Member {user_id} doesn't accept messages from this account "
+                "(FetLife won't open a conversation with them)."
+            )
+        data = [(k, v) for k, vs in form.items() for v in (vs if isinstance(vs, list) else [vs])]
+        if not any(k == "with[]" for k, _ in data):
+            data.append(("with[]", str(user_id)))
+        data += [("subject", subject), ("body", body)]
+        resp = self.request(
+            "POST", "/conversations",
+            headers={"Referer": self._url("/conversations/new"), "Origin": self.config.base_url},
+            data=data,
+        )
+        if "/conversations/" in resp.url and "/conversations/new" not in resp.url:
+            return resp.url
+        reason = parsers.conversation_error_from_html(resp.text)
+        raise FetLifeError(
+            "FetLife did not create the conversation"
+            + (f": {reason}" if reason else f" (landed on {resp.url}).")
+        )
+
     def get_relationships(self, nickname_or_id: str) -> list["Relationship"]:
         """List a member's relationships (vanilla and D/s).
 

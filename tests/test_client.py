@@ -308,3 +308,57 @@ def test_get_last_active_reads_the_html_feed(tmp_path):
                   body=_story(1, "2026-09-18T00:00:00Z") + _story(2, "2026-09-01T00:00:00Z"))
     fl = _authed(tmp_path)
     assert fl.get_last_active("X").isoformat() == "2026-09-18T00:00:00+00:00"
+
+
+# --------------------------------------------------------------------------- #
+# Direct messages
+# --------------------------------------------------------------------------- #
+COMPOSE = ('<form action="/conversations" method="post">'
+           '<input type="hidden" name="authenticity_token" value="tok">'
+           '<input type="hidden" name="source" value="profile">'
+           '<input type="hidden" name="with[]" value="">'
+           '<input type="hidden" name="with[]" value="42"></form>')
+
+
+@responses.activate
+def test_send_message_posts_the_form_and_returns_the_conversation(tmp_path):
+    responses.add(responses.GET, "https://fetlife.com/conversations/new", body=COMPOSE,
+                  match=[query_param_matcher({"source": "profile", "with": "42"})])
+    responses.add(responses.POST, "https://fetlife.com/conversations", status=302,
+                  headers={"Location": "https://fetlife.com/conversations/987"})
+    responses.add(responses.GET, "https://fetlife.com/conversations/987", body="<p>thread</p>")
+    fl = _authed(tmp_path)
+    assert fl.send_message("42", "Hi there", "Body text") == "https://fetlife.com/conversations/987"
+    post = next(c.request for c in responses.calls if c.request.method == "POST")
+    assert post.body == ("authenticity_token=tok&source=profile&with%5B%5D=42"
+                         "&subject=Hi+there&body=Body+text")
+    assert post.headers["Origin"] == "https://fetlife.com"
+
+
+@responses.activate
+def test_send_message_refuses_when_member_cannot_be_messaged(tmp_path):
+    from fetlife.exceptions import FetLifeError
+
+    # FetLife bounces the compose page back to the profile.
+    responses.add(responses.GET, "https://fetlife.com/conversations/new", status=302,
+                  headers={"Location": "https://fetlife.com/Closed"},
+                  match=[query_param_matcher({"source": "profile", "with": "7"})])
+    responses.add(responses.GET, "https://fetlife.com/Closed", body="<p>profile</p>")
+    fl = _authed(tmp_path)
+    assert fl.get_message_form("7") is None
+    with pytest.raises(FetLifeError, match="doesn't accept messages"):
+        fl.send_message("7", "s", "b")
+    assert not [c for c in responses.calls if c.request.method == "POST"]
+
+
+@responses.activate
+def test_send_message_surfaces_a_rejected_post(tmp_path):
+    from fetlife.exceptions import FetLifeError
+
+    responses.add(responses.GET, "https://fetlife.com/conversations/new", body=COMPOSE,
+                  match=[query_param_matcher({"source": "profile", "with": "42"})])
+    responses.add(responses.POST, "https://fetlife.com/conversations", status=200,
+                  body='<div class="flash bg-red-500">Subject is too long</div>' + COMPOSE)
+    fl = _authed(tmp_path)
+    with pytest.raises(FetLifeError, match="Subject is too long"):
+        fl.send_message("42", "s", "b")

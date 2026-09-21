@@ -561,3 +561,30 @@ def test_profile_relation_closed():
 def test_profile_relation_missing_raises():
     with pytest.raises(ParseError):
         parsers.profile_relation_from_html("<html><body>nothing</body></html>")
+
+
+COMPOSE_HTML = """
+<form action="/search" method="get"><input name="q"></form>
+<form data-controller="chat-draft" action="/conversations" accept-charset="UTF-8" method="post">
+  <input type="hidden" name="authenticity_token" value="tok123" />
+  <input type="hidden" name="source" id="source" value="profile" />
+  <input type="hidden" name="with[]" value="">
+  <input type="hidden" name="with[]" value="2678009">
+  <input type="hidden" name="with[]" value="2678009">
+  <input type="text" name="subject" maxlength="255">
+  <textarea name="body"></textarea>
+  <button type="submit">Send</button>
+</form>
+"""
+
+
+def test_message_form_from_html():
+    form = parsers.message_form_from_html(COMPOSE_HTML)
+    assert form == {"authenticity_token": "tok123", "source": "profile", "with[]": ["2678009"]}
+    assert parsers.message_form_from_html("<html><body>profile</body></html>") is None
+
+
+def test_conversation_error_from_html():
+    html = '<div class="flash bg-red-500">Body can\'t be blank</div>'
+    assert parsers.conversation_error_from_html(html) == "Body can't be blank"
+    assert parsers.conversation_error_from_html("<p>ok</p>") is None

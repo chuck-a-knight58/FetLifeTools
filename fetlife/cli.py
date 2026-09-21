@@ -623,6 +623,68 @@ def friend_requests(ctx, csv_file, limit, pause, dry_run, yes, resend, log_path)
     status_console.print("[dim]" + " · ".join(f"{v} {k}" for k, v in counts.items()) + "[/dim]")
 
 
+@cli.command("message")
+@click.argument("nickname_or_id")
+@click.option("--subject", "-s", required=True, help="Message subject (up to 255 characters).")
+@click.option("--body", "-b", default=None,
+              help="Message body. Use --body-file for longer text.")
+@click.option("--body-file", type=click.File("r", encoding="utf-8"), default=None,
+              help="Read the body from a file ('-' for stdin).")
+@click.option("--dry-run", is_flag=True, default=False,
+              help="Check that the member can be messaged and show the message; send nothing.")
+@click.option("--yes", "-y", is_flag=True, default=False, help="Skip the confirmation prompt.")
+@click.pass_context
+def message(ctx, nickname_or_id, subject, body, body_file, dry_run, yes):
+    """Send a direct message to NICKNAME_OR_ID from the logged-in account.
+
+    Starts a new conversation with the member, with the given --subject and
+    --body (or --body-file). The account that sends it is the one in your .env;
+    use --env-file to send from another. Members who don't accept messages
+    from that account are reported, not messaged.
+    """
+    if (body is None) == (body_file is None):
+        raise FetLifeError("Give the message text with exactly one of --body or --body-file.")
+    if body_file is not None:
+        body = body_file.read()
+    body = body.strip("\n")
+    subject = subject.strip()
+    if not subject or not body.strip():
+        raise FetLifeError("Both the subject and the body must be non-empty.")
+    if len(subject) > 255:
+        raise FetLifeError("The subject is limited to 255 characters.")
+
+    fl = _client(ctx)
+    fl.on_retry = _report_retry
+    with fl:
+        me = fl.whoami()
+        ident = str(nickname_or_id)
+        if ident.lower() in {(me.nickname or "").lower(), str(me.id)}:
+            raise FetLifeError(f"{ident} is the logged-in account ({me.nickname}); "
+                               "you can't message yourself.")
+        if ident.isdigit():
+            user_id, label = ident, f"user {ident}"
+        else:
+            relation, _ = fl.get_profile_relation(ident)
+            user_id, label = relation.user_id, ident
+        form = fl.get_message_form(user_id)
+        if form is None:
+            raise FetLifeError(
+                f"{label} doesn't accept messages from {me.nickname} "
+                "(FetLife won't open a conversation with them)."
+            )
+
+        status_console.print(f"[dim]from {me.nickname} to {label} (id {user_id})[/dim]")
+        status_console.print(f"[bold]Subject:[/bold] {subject}")
+        status_console.print(body)
+        if dry_run:
+            status_console.print("[dim]dry run: not sent.[/dim]")
+            return
+        if not yes:
+            click.confirm(f"Send this message to {label} as {me.nickname}?", abort=True, err=True)
+        url = fl.send_message(user_id, subject, body)
+    console.print(f"[green]Sent.[/green] {url}")
+
+
 @cli.command()
 @click.argument("nickname_or_id")
 @json_option

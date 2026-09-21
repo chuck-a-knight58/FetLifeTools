@@ -623,6 +623,40 @@ def profile_relation_from_html(html: str) -> ProfileRelation:
     )
 
 
+def message_form_from_html(html: str) -> dict | None:
+    """The hidden fields of the new-conversation form (``POST /conversations``).
+
+    Returns None when the page carries no such form — FetLife redirects the
+    compose page away when the viewer isn't allowed to message that member.
+    """
+    soup = _soup(html)
+    form = soup.find("form", action="/conversations")
+    if form is None:
+        return None
+    fields: dict = {}
+    for tag in form.find_all("input", attrs={"type": "hidden"}):
+        name, value = tag.get("name"), tag.get("value")
+        if not name or not value:
+            continue
+        if name.endswith("[]"):
+            fields.setdefault(name, [])
+            if value not in fields[name]:
+                fields[name].append(value)
+        else:
+            fields[name] = value
+    return fields
+
+
+def conversation_error_from_html(html: str) -> str | None:
+    """The error the compose form re-rendered with, if any (else None)."""
+    soup = _soup(html)
+    for el in soup.select("[class*='error'], [class*='bg-red'], [role='alert'], [id*='flash']"):
+        text = _clean(el.get_text(" "))
+        if text and 3 < len(text) < 300:
+            return text
+    return None
+
+
 def _base_from_url(url: str | None) -> str:
     if not url:
         return ""
