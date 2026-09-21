@@ -275,10 +275,10 @@ fetlife message JohnDoe -s "Hi" -b "…" --dry-run          # check they accept 
 fetlife message --from-csv strangers.csv -s "Hi {nickname}" --body-file note.txt --dry-run
 ```
 ```
-from <Nickname> to JohnDoe (id 12345)
+from JohnDoe to JohnDoe (id 12345)
 Subject: Hi
 Saw you at the munch — good to meet you.
-Send this message to JohnDoe as <Nickname>? [y/N]: y
+Send this message to JohnDoe as JohnDoe? [y/N]: y
 Sent. Your message has been successfully sent to JohnDoe
 ```
 
@@ -594,7 +594,7 @@ FETLIFE_RATE_LIMIT_MIN=0.5 FETLIFE_RATE_LIMIT_MAX=1.5 \
   fetlife discover --seed JohnDoe --radius 25 --max-visits 100 --max-pages 1
 
 # My example
-fetlife discover --seed "<Nickname>" --center "<Location>" --radius 100 --ds-only --active-within any
+fetlife discover --seed "JohnDoe" --center "<Location>" --radius 100 --ds-only --active-within any
 center 'Washington, NJ' -> 40.758,-74.979 | radius 1000.0mi | streaming results; ~2s/request
 
 ds   fet_name            age  gender   role              location                gps                       last_active  url
