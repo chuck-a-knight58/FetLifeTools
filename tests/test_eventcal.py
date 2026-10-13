@@ -101,6 +101,30 @@ def test_events_near_reads_cards_and_continuations():
     assert fest.when is None and fest.id is None
 
 
+def test_events_near_reads_turbo_stream_appends_to_days_already_shown():
+    stream = f"""
+<turbo-stream action="append" target="events_near_day_2026-10-16_cards"><template>
+{_card("/events/2026/10/16/friday-f1", "Friday Party", CAT.format("Sex Party"),
+       " Fri, Oct 16 at 9:00 PM ", "Club", "Newark, New Jersey", event_id="2400001")}
+</template></turbo-stream>
+<turbo-stream action="append" target="events_near_day_2026-10-17_continuations"><template>
+{_continuation("/events/2026/10/16/retreat-r1", "Retreat",
+               'day 2 of 3<span> · </span>' + CAT.format("Conference / Festival"))}
+</template></turbo-stream>
+<turbo-stream action="append" target="events_near_list"><template>
+{_day("2026-10-19", cards=_card("/events/2026/10/19/munch-m1", "Monday Munch", CAT.format("Social"),
+                                " Mon, Oct 19 at 7:00 PM ", "Diner", "Easton, Pennsylvania"))}
+</template></turbo-stream>"""
+    events, _ = parsers.events_near_from_html(stream, base_url="https://fetlife.com")
+    by_name = {e.name: e for e in events}
+    assert set(by_name) == {"Friday Party", "Retreat", "Monday Munch"}
+    friday, retreat = by_name["Friday Party"], by_name["Retreat"]
+    assert friday.meta["listed_on"] == "2026-10-16" and friday.id == "2400001"
+    assert (friday.location, friday.address) == ("Club", "Newark, New Jersey")
+    assert retreat.meta["continuation"] and retreat.meta["listed_on"] == "2026-10-17"
+    assert (retreat.start, retreat.end) == ("2026-10-16", "2026-10-18")
+
+
 def test_events_near_reads_turbo_stream_pages_and_their_end():
     events, next_path = parsers.events_near_from_html(NEAR_STREAM, base_url="https://fetlife.com")
     assert next_path is None
@@ -139,15 +163,31 @@ def test_gather_keeps_events_overlapping_the_dates_and_stops_past_the_end():
         [_ev("2026-10-10", "fest", end="2026-10-16", cont=True, listed="2026-10-13"),
          _ev("2026-10-13", "munch"), _ev("2026-10-15", "class")],
         [_ev("2026-10-20", "party"), _ev("2026-10-21", "late")],
-        [_ev("2026-11-01", "never-fetched")],
+        [_ev("2026-11-01", "past-end")],
+        [_ev("2026-11-02", "never-fetched")],
     ]})
     seen = []
     r = eventcal.gather_events(fl, (40.0, -75.0), 25, "mi", date(2026, 10, 13), date(2026, 10, 20),
                                on_progress=seen.append)
     assert [e.name for e in r.events] == ["fest", "munch", "class", "party"]
     assert fl.calls == [("2026-10-13", 40234)]  # 25 mi in meters
-    assert r.pages == 2 and not r.rate_limited and r.through == "2026-10-21"
-    assert [(p.pages, p.events) for p in seen] == [(1, 3), (2, 4)]
+    assert r.pages == 3 and not r.rate_limited and r.through == "2026-11-01"
+    assert [(p.pages, p.events) for p in seen] == [(1, 3), (2, 4), (3, 4)]
+
+
+def test_gather_reads_on_while_pages_add_to_days_already_shown():
+    # Page 1 shows Oct 16-18; page 2 appends more cards to Oct 16.
+    fl = StubClient({"2026-10-16": [
+        [_ev("2026-10-13", "week", end="2026-10-18", listed="2026-10-16"),
+         _ev("2026-10-13", "week", end="2026-10-18", cont=True, listed="2026-10-18")],
+        [_ev("2026-10-16", "friday")],
+        [_ev("2026-10-17", "saturday"), _ev("2026-10-19", "monday")],
+        [_ev("2026-10-20", "tuesday")],
+        [_ev("2026-10-21", "never-fetched")],
+    ]})
+    r = eventcal.gather_events(fl, (0, 0), 50, "mi", date(2026, 10, 16), date(2026, 10, 17))
+    assert [e.name for e in r.events] == ["week", "friday", "saturday"]
+    assert r.pages == 4
 
 
 def test_gather_prefers_a_full_card_over_a_continuation():

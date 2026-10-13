@@ -821,7 +821,7 @@ def event(ctx: click.Context, event_id: str, json_local: bool) -> None:
 @cli.command("events-calendar")
 @click.option("--center", default="Washington, NJ", show_default=True,
               help='Where to search from; a place name or "lat,lng".')
-@click.option("--radius", default=100.0, show_default=True,
+@click.option("--radius", default=50.0, show_default=True,
               type=click.FloatRange(min=0, min_open=True), help="Search distance from --center.")
 @click.option("--units", type=click.Choice(["mi", "km"]), default="mi", show_default=True)
 @click.option("--start", "start", type=click.DateTime(formats=["%Y-%m-%d"]), default=None,

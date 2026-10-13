@@ -359,7 +359,7 @@ The list is 20 members per page, one request per page. The file is written **as 
 Save every event within a distance of a place, running on any day between two dates (inclusive), as **one standalone HTML page**: it opens in any browser with nothing else (no server, no internet).
 
 ```bash
-fetlife events-calendar                                         # 100 mi of Washington, NJ; this month and the next two
+fetlife events-calendar                                         # 50 mi of Washington, NJ; this month and the next two
 fetlife events-calendar --center "Easton, PA" --radius 30 --start 2026-11-01 --end 2026-12-31
 fetlife events-calendar --center "40.69,-75.21" --radius 40 --units km --out easton.html --title "Lehigh Valley"
 ```
@@ -372,7 +372,7 @@ page 2 · events 41 · through 2027-01-02 · requests 3
 | Option | Default | Purpose |
 |---|---|---|
 | `--center` | `Washington, NJ` | Where to search from: a place name (geocoded like [`discover`](#geocoding)) or `"lat,lng"`. |
-| `--radius` / `--units` | `100` / `mi` | How far from `--center` (`mi` or `km`). Any distance works, not only the site's menu of 5/10/25/50/100/200/500 mi. |
+| `--radius` / `--units` | `50` / `mi` | How far from `--center` (`mi` or `km`). Any distance works, not only the site's menu of 5/10/25/50/100/200/500 mi. |
 | `--start` / `--end` | the 1st of this month / three months later | First and last day, `YYYY-MM-DD`, both included. By default that's three whole months (run in October: Oct 1 – Dec 31). Without `--end` the span is three months from `--start`: it ends the day before the same date three months on (`--start 2026-10-13` → Jan 12), or on the last day of a month too short for that date (Nov 30 → Feb 28). |
 | `--out` | `community_calendar.html` | File to write (`-` for stdout). Each run replaces it, so pass `--out` to keep earlier calendars. |
 | `--title` | `Events near CENTER` | The page heading. |

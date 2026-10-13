@@ -87,7 +87,8 @@ def gather_events(
     *start* to *end* (inclusive), in start-date order.
 
     A multi-day event that began before *start* but is still running counts.
-    Pages are read until one lists a day past *end*. If the search runs out
+    Pages are read until one lists only days past *end* (a page can add
+    more events to days an earlier page already showed). If the search runs out
     before *end* (FetLife only lists so far ahead in one go), it is started
     again from the day after the last one listed. A :class:`RateLimitedError`
     ends the walk instead of propagating: what was read is returned with
@@ -104,11 +105,14 @@ def gather_events(
             for events in fl.iter_events_near(center[0], center[1], range_meters,
                                               _iso(from_date), place_name=place_name):
                 result.pages += 1
+                listed_in_range = False
                 for event in events:
                     listed_any = True
                     day = event.meta.get("listed_on")
                     if day and (result.through is None or day > result.through):
                         result.through = day
+                    if day and day <= hi:
+                        listed_in_range = True
                     if (event.start or "") > hi or (event.end or event.start or "") < lo:
                         continue
                     # A full card beats the slim continuation of the same event.
@@ -118,7 +122,9 @@ def gather_events(
                         found[event.url] = event
                 if on_progress:
                     on_progress(Progress(result.pages, len(found), result.through))
-                if result.through and result.through > hi:
+                # Later pages can still add to days already shown, so stop only
+                # once a page has nothing on or before *end*.
+                if result.through and result.through > hi and not listed_in_range:
                     break
             if not listed_any or not result.through or result.through >= hi:
                 break

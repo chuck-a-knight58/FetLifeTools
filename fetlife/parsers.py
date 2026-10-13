@@ -813,6 +813,10 @@ def _near_span_end(event: Event) -> None:
         event.end = (start + timedelta(days=days - 1)).strftime("%Y-%m-%d")
 
 
+# A turbo-stream that adds more of one day's cards or continuations.
+_NEAR_DAY_TARGET_RE = re.compile(r"^events_near_day_(\d{4}-\d{2}-\d{2})_(cards|continuations)$")
+
+
 def events_near_from_html(html: str, base_url: str = "") -> tuple[list[Event], str | None]:
     """The events on one page of the near-me search, and the path of the next page.
 
@@ -822,10 +826,21 @@ def events_near_from_html(html: str, base_url: str = "") -> tuple[list[Event], s
     or picture. ``meta["listed_on"]`` is the day it was listed under.
     """
     soup = _page_soup(html)
+    # (day, cards container, continuations container): the days a page renders,
+    # then the turbo-stream appends that later pages make to days already shown.
+    sections = [
+        (day["data-day-key"], day.find(attrs={"data-day-cards": True}),
+         day.find(attrs={"data-day-continuations": True}))
+        for day in soup.find_all(attrs={"data-day-key": True})
+    ]
+    for stream in soup.find_all("turbo-stream", attrs={"action": "append"}):
+        m = _NEAR_DAY_TARGET_RE.match(stream.get("target") or "")
+        if m:
+            is_cards = m.group(2) == "cards"
+            sections.append((m.group(1), stream if is_cards else None,
+                             None if is_cards else stream))
     events: list[Event] = []
-    for day in soup.find_all(attrs={"data-day-key": True}):
-        key = day["data-day-key"]
-        cards = day.find(attrs={"data-day-cards": True})
+    for key, cards, conts in sections:
         for card in cards.find_all(attrs={"data-clickable-url-value": True}) if cards else []:
             event = _near_event(card["data-clickable-url-value"], base_url, key)
             if event is None:
@@ -852,7 +867,6 @@ def events_near_from_html(html: str, base_url: str = "") -> tuple[list[Event], s
             event.id = frame["id"].rsplit("_", 1)[1] if frame else None
             _near_span_end(event)
             events.append(event)
-        conts = day.find(attrs={"data-day-continuations": True})
         for a in conts.find_all("a", href=True) if conts else []:
             event = _near_event(a["href"], base_url, key)
             if event is None:
