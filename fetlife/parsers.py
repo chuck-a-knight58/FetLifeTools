@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import json
 import re
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from urllib.parse import parse_qs, urljoin, urlsplit
 
 from bs4 import BeautifulSoup
@@ -758,6 +758,114 @@ def parse_event_list(html: str, base_url: str = "") -> list[Event]:
             )
         )
     return events
+
+
+# The near-me search (``/events/near``) lists events by day: each day is a
+# ``<div data-day-key="YYYY-MM-DD">`` holding full cards (``[data-day-cards]``)
+# for events starting that day and slim links (``[data-day-continuations]``)
+# for multi-day events still running. The first page is a normal HTML page;
+# later pages are Turbo Streams appending more days, fetched from the ``src``
+# of the ``events_near_pagination_loader`` frame (absent on the last page).
+# Event URLs carry the start date: ``/events/2026/10/13/<slug>``.
+_EVENT_DATE_URL_RE = re.compile(r"^/events/(\d{4})/(\d\d)/(\d\d)/")
+_DAY_OF_RE = re.compile(r"^day (\d+) of (\d+)$", re.I)
+_RSVPS_RE = re.compile(r"(\d[\d,]*)\s+RSVPs?\b", re.I)
+
+
+def _near_icon_row(card, icon: str):
+    """The text cell of a card row marked with ``#icon-<icon>`` (clock, location)."""
+    use = card.find("use", href=re.compile(rf"#icon-{icon}$"))
+    row = use.find_parent("div") if use else None
+    cells = row.find_all("span", recursive=False) if row else []
+    return cells[-1] if len(cells) >= 2 else None
+
+
+def _near_header(event: Event, header) -> None:
+    """Read the "day 1 of 3 · BDSM Party · $20" line above a card's title."""
+    if header is None:
+        return
+    category = header.find(attrs={"data-testid": "event card category"})
+    event.category = _clean(category.get_text()) if category else None
+    for part in (_clean(p) for p in header.get_text().split("·")):
+        if not part or part == event.category:
+            continue
+        m = _DAY_OF_RE.match(part)
+        if m:
+            event.meta["days"] = int(m.group(2))
+        elif not event.cost:
+            event.cost = part
+
+
+def _near_event(href: str, base_url: str, day_key: str) -> Event | None:
+    m = _EVENT_DATE_URL_RE.match(href)
+    if not m:
+        return None
+    start = "-".join(m.groups())
+    return Event(name="", start=start, end=start,
+                 url=urljoin(base_url + "/", href.lstrip("/")), meta={"listed_on": day_key})
+
+
+def _near_span_end(event: Event) -> None:
+    """Set ``end`` from the "day N of M" count (a one-day event ends as it starts)."""
+    days = event.meta.get("days")
+    if days and days > 1 and event.start:
+        start = datetime.strptime(event.start, "%Y-%m-%d")
+        event.end = (start + timedelta(days=days - 1)).strftime("%Y-%m-%d")
+
+
+def events_near_from_html(html: str, base_url: str = "") -> tuple[list[Event], str | None]:
+    """The events on one page of the near-me search, and the path of the next page.
+
+    Each event's ``start``/``end`` are ``YYYY-MM-DD`` dates. A multi-day event
+    that began before the page's first day appears only as a continuation
+    (``meta["continuation"]``): name, category and dates, but no time, place
+    or picture. ``meta["listed_on"]`` is the day it was listed under.
+    """
+    soup = _page_soup(html)
+    events: list[Event] = []
+    for day in soup.find_all(attrs={"data-day-key": True}):
+        key = day["data-day-key"]
+        cards = day.find(attrs={"data-day-cards": True})
+        for card in cards.find_all(attrs={"data-clickable-url-value": True}) if cards else []:
+            event = _near_event(card["data-clickable-url-value"], base_url, key)
+            if event is None:
+                continue
+            h3 = card.find("h3")
+            event.name = _clean(h3.get("title") or h3.get_text()) if h3 else ""
+            _near_header(event, h3.find_previous_sibling("div") if h3 else None)
+            clock = _near_icon_row(card, "clock")
+            if clock:
+                lines = [_clean(s.get_text()) for s in clock.find_all("span", recursive=False)]
+                event.when = " · ".join(t for t in lines if t) or _clean(clock.get_text())
+            place = _near_icon_row(card, "location")
+            if place:
+                city = place.find("span")
+                event.address = _clean(city.get_text()) if city else None
+                if city:
+                    city.extract()
+                event.location = _clean(place.get_text())
+            img = card.find("img")
+            event.image_url = img.get("src") if img else None
+            rsvps = _RSVPS_RE.search(card.get_text(" "))
+            event.going_count = int(rsvps.group(1).replace(",", "")) if rsvps else None
+            frame = card.find("turbo-frame", id=re.compile(r"^event_rsvp_bar_\d+$"))
+            event.id = frame["id"].rsplit("_", 1)[1] if frame else None
+            _near_span_end(event)
+            events.append(event)
+        conts = day.find(attrs={"data-day-continuations": True})
+        for a in conts.find_all("a", href=True) if conts else []:
+            event = _near_event(a["href"], base_url, key)
+            if event is None:
+                continue
+            title = a.find(attrs={"title": True})
+            event.name = _clean(title["title"]) if title else _clean(a.get_text()) or ""
+            _near_header(event, a.find("div"))
+            event.meta["continuation"] = True
+            _near_span_end(event)
+            events.append(event)
+
+    loader = soup.find("turbo-frame", id="events_near_pagination_loader")
+    return events, (loader.get("src") or None) if loader else None
 
 
 # --------------------------------------------------------------------------- #

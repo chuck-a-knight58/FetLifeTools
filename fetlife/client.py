@@ -687,6 +687,38 @@ class FetLifeClient:
         resp = self.get(path, params={"page": page})
         return parsers.parse_event_list(resp.text, base_url=self.config.base_url)
 
+    def iter_events_near(
+        self, lat: float, lng: float, range_meters: float, from_date: str,
+        place_name: str | None = None,
+    ) -> Iterator[list[Event]]:
+        """Pages of the in-person event search around ``(lat, lng)``.
+
+        The same search as the site's Events tab (``/events/near``): events
+        within *range_meters* (any value works, not just the site's menu of
+        distances) from *from_date* (``YYYY-MM-DD``) onward, in date order.
+        Each page continues from the last, following the lazy pagination
+        frame until FetLife renders none. The caller decides when it has read
+        far enough and stops iterating.
+        """
+        self._ensure_auth()
+        params = {
+            "from_date": from_date,
+            "search[lat]": f"{lat:.6f}",
+            "search[long]": f"{lng:.6f}",
+            "search[range]": str(round(range_meters)),
+        }
+        if place_name:
+            params["search[place_name]"] = place_name
+        resp = self.get("/events/near", params=params)
+        while True:
+            events, next_path = parsers.events_near_from_html(
+                resp.text, base_url=self.config.base_url
+            )
+            yield events
+            if not next_path:
+                return
+            resp = self.get(next_path)
+
     def get_event(self, event_id: str) -> Event:
         """Fetch a single event by id."""
         self._ensure_auth()

@@ -1,6 +1,8 @@
 """Tests for the bulk-message runner using an in-memory stub client (offline)."""
 
 import json
+import re
+import uuid
 from datetime import datetime, timezone
 
 import pytest
@@ -50,6 +52,35 @@ def _run(client, names, log=None, **kw):
 
 def test_render_fills_nickname_only():
     assert messaging.render("Hi {nickname}, {other}", "Eve") == "Hi Eve, {other}"
+
+
+def test_render_fills_datetime_and_uuid():
+    uid = uuid.UUID("12345678-1234-5678-1234-567812345678")
+    out = messaging.render("{nickname} {datetime} {uuid}", "Eve", NOW, uid)
+    stamp = NOW.astimezone().strftime("%Y-%m-%d %H:%M:%S %Z")  # local time, zone named
+    assert out == f"Eve {stamp} {uid}"
+    assert re.fullmatch(r"\d{4}-\d\d-\d\d \d\d:\d\d:\d\d \S+", stamp)
+
+
+def test_render_defaults_to_now_and_a_fresh_uuid():
+    a, b = (messaging.render("{uuid}", "Eve") for _ in range(2))
+    assert uuid.UUID(a) != uuid.UUID(b)          # random, and well-formed
+    assert re.fullmatch(r"\d{4}-\d\d-\d\d \d\d:\d\d:\d\d \S+", messaging.render("{datetime}", "Eve"))
+
+
+def test_run_gives_each_message_its_own_uuid_shared_by_subject_and_body():
+    client = StubClient(ids={"a": "1", "b": "2"}, forms={"1": FORM, "2": FORM})
+    outcomes = list(messaging.run(client, ["a", "b"], friending.RequestLog(None),
+                                  "ref {uuid}", "{nickname}: {uuid} at {datetime}",
+                                  sleep=lambda s: None, now=lambda: NOW))
+    assert [o.action for o in outcomes] == ["sent", "sent"]
+    ids = []
+    for (user_id, subject, body), nick in zip(client.sent, ["a", "b"]):
+        uid = subject.removeprefix("ref ")
+        ids.append(uuid.UUID(uid))
+        assert body == f"{nick}: {uid} at " + NOW.astimezone().strftime("%Y-%m-%d %H:%M:%S %Z")
+    assert ids[0] != ids[1]
+    assert outcomes[0].at == NOW.isoformat()
 
 
 def test_run_sends_rendered_messages_where_allowed_and_logs():

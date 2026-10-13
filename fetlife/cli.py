@@ -11,6 +11,7 @@ import json
 import os
 import re
 import sys
+import uuid
 from contextlib import nullcontext
 from datetime import datetime, timezone
 
@@ -18,7 +19,7 @@ import click
 from rich.console import Console
 from rich.table import Table
 
-from . import __version__, crawl, engagement, friending, geo, groups, messaging
+from . import __version__, crawl, engagement, eventcal, friending, geo, groups, messaging
 from .client import FetLifeClient
 from .config import Config
 from .exceptions import FetLifeError, RateLimitedError
@@ -631,9 +632,11 @@ def friend_requests(ctx, csv_file, limit, pause, dry_run, yes, resend, log_path)
               help="Message every member in this CSV (its `nickname` column, e.g. "
                    "strangers.csv) instead of one NICKNAME_OR_ID.")
 @click.option("--subject", "-s", required=True,
-              help="Message subject (up to 255 characters). {nickname} is filled in.")
+              help="Message subject (up to 255 characters). {nickname}, {datetime} and "
+                   "{uuid} are filled in.")
 @click.option("--body", "-b", default=None,
-              help="Message body ({nickname} is filled in). Use --body-file for longer text.")
+              help="Message body ({nickname}, {datetime} and {uuid} are filled in). "
+                   "Use --body-file for longer text.")
 @click.option("--body-file", type=click.File("r", encoding="utf-8"), default=None,
               help="Read the body from a file ('-' for stdin).")
 @click.option("--dry-run", is_flag=True, default=False,
@@ -656,8 +659,10 @@ def message(ctx, nickname_or_id, csv_file, subject, body, body_file, dry_run, ye
     everyone in a CSV with a `nickname` column (such as `engagement --csv`
     output): `--from-csv strangers.csv`, which sends at most --limit messages
     per run, --pause seconds apart, and logs each one so a rerun never
-    messages the same member twice. `{nickname}` in the subject or body is
-    replaced per recipient. The sending account is the one in your .env
+    messages the same member twice. In the subject or body, `{nickname}` is
+    replaced with the recipient's nickname, `{datetime}` with the send time
+    (local, e.g. 2026-09-21 18:40:12 EDT) and `{uuid}` with a random UUID,
+    one per message. The sending account is the one in your .env
     (use --env-file to send from another). Members who don't accept
     messages from that account are reported, not messaged. Try --dry-run.
     """
@@ -697,7 +702,9 @@ def message(ctx, nickname_or_id, csv_file, subject, body, body_file, dry_run, ye
                 f"{label} doesn't accept messages from {me.nickname} "
                 "(FetLife won't open a conversation with them)."
             )
-        subject, body = messaging.render(subject, ident), messaging.render(body, ident)
+        when, uid = datetime.now(timezone.utc), uuid.uuid4()
+        subject = messaging.render(subject, ident, when, uid)
+        body = messaging.render(body, ident, when, uid)
         status_console.print(f"[dim]from {me.nickname} to {label} (id {user_id})[/dim]")
         status_console.print(f"[bold]Subject:[/bold] {subject}")
         status_console.print(body)
@@ -809,6 +816,96 @@ def event(ctx: click.Context, event_id: str, json_local: bool) -> None:
         ["name", "start", "end", "location", "address", "url"],
         "Event",
     )
+
+
+@cli.command("events-calendar")
+@click.option("--center", default="Washington, NJ", show_default=True,
+              help='Where to search from; a place name or "lat,lng".')
+@click.option("--radius", default=100.0, show_default=True,
+              type=click.FloatRange(min=0, min_open=True), help="Search distance from --center.")
+@click.option("--units", type=click.Choice(["mi", "km"]), default="mi", show_default=True)
+@click.option("--start", "start", type=click.DateTime(formats=["%Y-%m-%d"]), default=None,
+              help="First day to include, YYYY-MM-DD.  [default: the 1st of this month]")
+@click.option("--end", "end", type=click.DateTime(formats=["%Y-%m-%d"]), default=None,
+              help="Last day to include (inclusive), YYYY-MM-DD.  [default: three months "
+                   "from --start, e.g. Oct 1 → Dec 31]")
+@click.option("--out", "out_path", default=None,
+              type=click.Path(dir_okay=False, writable=True, allow_dash=True),
+              help="HTML file to write ('-' for stdout).  [default: community_calendar.html]")
+@click.option("--title", default=None, help='Page heading.  [default: "Events near CENTER"]')
+@click.option("--images/--no-images", default=False, show_default=True,
+              help="Include the event pictures (embedded in the page, so it's bigger; "
+                   "FetLife's picture links won't load outside FetLife).")
+@click.pass_context
+def events_calendar(ctx, center, radius, units, start, end, out_path, title, images):
+    """Save the events within --radius of --center as a standalone HTML calendar.
+
+    Covers every event running on any day from --start to --end (inclusive),
+    including multi-day events that began earlier; by default three
+    months, starting on the 1st of this month. The page has a calendar (Overview,
+    Month, Week and Day layouts; clicking a date opens that day's list in a
+    new tab) and a list view, a category legend that doubles as a filter,
+    and a text filter. It needs nothing but a browser to open.
+    """
+    config = ctx.obj["config"]
+    start = start.date() if start else datetime.now().date().replace(day=1)
+    end = end.date() if end else eventcal.default_end(start)
+    if end < start:
+        raise click.BadParameter("must not be before --start.", param_hint="--end")
+    if out_path is None:
+        out_path = "community_calendar.html"
+
+    geocoder = geo.Geocoder(
+        cache_path=config.geocode_cache_path,
+        user_agent=config.geocoder_user_agent,
+    )
+    coord, _ = geocoder.locate(center)
+    if coord is None:
+        raise FetLifeError(f"Could not geocode center location: {center!r}")
+    status_console.print(
+        f"[dim]center {center!r} -> {coord[0]:.3f},{coord[1]:.3f} | radius {radius:g}{units} "
+        f"| {start:%Y-%m-%d} to {end:%Y-%m-%d}[/dim]"
+    )
+
+    fl = _client(ctx)
+    fl.on_retry = _report_retry
+    with fl:
+        def on_progress(p: eventcal.Progress) -> None:
+            status_console.print(
+                f"[dim]page {p.pages} · events {p.events} · through {p.through or '-'} "
+                f"· requests {fl.requests}[/dim]",
+                end="\r",
+            )
+
+        result = eventcal.gather_events(fl, coord, radius, units, start, end,
+                                        place_name=center, on_progress=on_progress)
+        status_console.print()  # end the progress line
+        if images:
+            embedded = eventcal.embed_images(
+                fl.session, result.events, referer=config.base_url + "/",
+                on_progress=lambda i, n: status_console.print(
+                    f"[dim]pictures {i}/{n}[/dim]", end="\r"),
+            )
+            status_console.print()  # end the progress line
+            status_console.print(f"[dim]embedded {embedded} picture{'s' if embedded != 1 else ''}[/dim]")
+
+    page = eventcal.render_html(result.events, start, end, center, radius, units, title=title)
+    if out_path == "-":
+        sys.stdout.write(page)
+    else:
+        with open(out_path, "w", encoding="utf-8") as fh:
+            fh.write(page)
+    status_console.print(
+        f"[dim]{len(result.events)} event{'s' if len(result.events) != 1 else ''} "
+        f"({result.pages} page{'s' if result.pages != 1 else ''})"
+        + ("" if out_path == "-" else f" → {out_path}") + "[/dim]"
+    )
+    if result.rate_limited:
+        status_console.print(
+            "[red]FetLife is rate limiting; the calendar may be missing events from "
+            f"{result.through or start} on. Rerun later to fill it in.[/red]"
+        )
+        ctx.exit(EXIT_RATE_LIMITED)
 
 
 @cli.command()

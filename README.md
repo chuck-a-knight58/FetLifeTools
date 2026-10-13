@@ -23,6 +23,7 @@ FetLife sits behind Cloudflare, which blocks plain HTTP clients. To get through,
 - `message` — send a direct message (subject + body) to a member, or to everyone in a CSV, from the logged-in account.
 - `search` — keyword member search _(experimental — see notes)_.
 - `events` / `event` — list events or fetch one by id _(experimental — partial data)_.
+- `events-calendar` — every event within a distance of a place between two dates, saved as a standalone HTML calendar + list page.
 - `group` — fetch a group by id (name + member count).
 - `group-members` — save every member of a group to a CSV file that `friend-requests` and `message --from-csv` accept.
 - `raw` — dump raw HTML of any path (for inspecting/updating parsers).
@@ -81,6 +82,7 @@ fetlife message JohnDoe -s "Hi" -b "Saw you at the munch…"   # DM from the log
 fetlife search "rope portland"
 fetlife events --place 123
 fetlife event 5551234
+fetlife events-calendar --center "Easton, PA" --radius 30 --start 2026-11-01 --end 2026-12-31
 fetlife group 88 --json | jq .
 fetlife group-members 88            # → group_88_members.csv, ready for friend-requests / message --from-csv
 fetlife raw /home > home.html       # inspect live markup
@@ -101,7 +103,7 @@ Global options (before the subcommand):
 
 Every command accepts `--json` (or `-j` after the subcommand). Table output uses [rich](https://github.com/Textualize/rich); JSON output is a list of objects (or a single object for one-item results) suitable for `jq`. Outputs below are **illustrative** (nicknames/values are examples).
 
-> **Command status.** `whoami`, `profile`, `friends`, `relationships`, `followers`, `following`, `discover`, `connections`, `engagement`, `friend-requests`, `message`, `group`, `group-members`, `login`, and `raw` use FetLife's JSON API (or stable server-rendered fields) and return full data. `search`, `events`, and `event` are **experimental** — see notes on each; they were scaffolded against older markup and are awaiting the JSON endpoints the SPA now uses.
+> **Command status.** `whoami`, `profile`, `friends`, `relationships`, `followers`, `following`, `discover`, `connections`, `engagement`, `friend-requests`, `message`, `group`, `group-members`, `events-calendar`, `login`, and `raw` use FetLife's JSON API (or stable server-rendered fields) and return full data. `search`, `events`, and `event` are **experimental** — see notes on each; they were scaffolded against older markup and are awaiting the JSON endpoints the SPA now uses.
 
 ### `login`
 
@@ -286,7 +288,19 @@ Sent. Your message has been successfully sent to JohnDoe
 
 It opens the site's own compose form for the member and submits it (`POST /conversations`) with the subject and body. FetLife answers a successful send with a redirect to the member's profile carrying a confirmation toast, which is what gets printed; anything else is reported as an error, with the site's notice if it gave one.
 
-**Many recipients.** `--from-csv FILE` messages every member in a CSV with a `nickname` column (`engagement --csv` output, a `connections` or `group-members` file, or a headerless one-name-per-line list) instead of one `NICKNAME_OR_ID`. It works like [`friend-requests`](#friend-requests--send-friend-requests-from-a-list): each member is checked first (those who don't accept messages from your account are skipped with that reason), at most `--limit` messages go out per run (default 10), `--pause` seconds apart (default 30), and every outcome is appended to `--log` (default `~/.fetlife/messages.jsonl`) so a rerun over the same file **never messages anyone twice** (`--resend` overrides). `{nickname}` in the subject or body is replaced with each recipient's nickname. The sending account is never messaged even if it's listed. One line per member is printed as it's processed:
+**Placeholders.** These are filled in per message, in the subject and the body alike (with one recipient, the preview shows them filled in); any other `{…}` is sent as written.
+
+| Placeholder | Becomes |
+|---|---|
+| `{nickname}` | The recipient's nickname (or the numeric id, if that's what was given). |
+| `{datetime}` | The date and time the message is sent, in your local time zone, e.g. `2026-09-21 18:40:12 EDT`. |
+| `{uuid}` | A random UUID, e.g. `3f2c9e1a-8b4d-4c6e-9a1f-2d7b5e8c0a13` — one per message, so a subject and body that both use it get the same value. Handy as a reference you can search for later. |
+
+```bash
+fetlife message JohnDoe -s "Hi {nickname}" -b "Sent {datetime} · ref {uuid}" --dry-run
+```
+
+**Many recipients.** `--from-csv FILE` messages every member in a CSV with a `nickname` column (`engagement --csv` output, a `connections` or `group-members` file, or a headerless one-name-per-line list) instead of one `NICKNAME_OR_ID`. It works like [`friend-requests`](#friend-requests--send-friend-requests-from-a-list): each member is checked first (those who don't accept messages from your account are skipped with that reason), at most `--limit` messages go out per run (default 10), `--pause` seconds apart (default 30), and every outcome is appended to `--log` (default `~/.fetlife/messages.jsonl`) so a rerun over the same file **never messages anyone twice** (`--resend` overrides). `{nickname}` in the subject or body is replaced with each recipient's nickname (see the placeholders below). The sending account is never messaged even if it's listed. One line per member is printed as it's processed:
 
 ```
 action      nickname                 reason
@@ -339,6 +353,47 @@ fetlife message --from-csv profania.csv -s "Hello from the group" --body-file he
 ```
 
 The list is 20 members per page, one request per page. The file is written **as the list is read**: the header first, then each page's rows as soon as that page arrives, each committed to disk (flushed and fsynced) before the next page is requested — so a rate limit, a Ctrl-C or a crash leaves a complete file of everything fetched so far, and the progress line's member count is what's on disk. `--max-pages N` caps a run (it reports the page the list continues at) and `--start-page N` begins there; both are also how you get through a large group under FetLife's rate limit: when throttling starts, the page to resume from is reported and the command exits with code 75, like `discover`. Resume into a different `--out` file (each run writes its file from scratch) and concatenate.
+
+### `events-calendar`
+
+Save every event within a distance of a place, running on any day between two dates (inclusive), as **one standalone HTML page**: it opens in any browser with nothing else (no server, no internet).
+
+```bash
+fetlife events-calendar                                         # 100 mi of Washington, NJ; this month and the next two
+fetlife events-calendar --center "Easton, PA" --radius 30 --start 2026-11-01 --end 2026-12-31
+fetlife events-calendar --center "40.69,-75.21" --radius 40 --units km --out easton.html --title "Lehigh Valley"
+```
+```
+center 'Easton, PA' -> 40.691,-75.209 | radius 30mi | 2026-11-01 to 2026-12-31
+page 2 · events 41 · through 2027-01-02 · requests 3
+41 events (2 pages) → community_calendar.html
+```
+
+| Option | Default | Purpose |
+|---|---|---|
+| `--center` | `Washington, NJ` | Where to search from: a place name (geocoded like [`discover`](#geocoding)) or `"lat,lng"`. |
+| `--radius` / `--units` | `100` / `mi` | How far from `--center` (`mi` or `km`). Any distance works, not only the site's menu of 5/10/25/50/100/200/500 mi. |
+| `--start` / `--end` | the 1st of this month / three months later | First and last day, `YYYY-MM-DD`, both included. By default that's three whole months (run in October: Oct 1 – Dec 31). Without `--end` the span is three months from `--start`: it ends the day before the same date three months on (`--start 2026-10-13` → Jan 12), or on the last day of a month too short for that date (Nov 30 → Feb 28). |
+| `--out` | `community_calendar.html` | File to write (`-` for stdout). Each run replaces it, so pass `--out` to keep earlier calendars. |
+| `--title` | `Events near CENTER` | The page heading. |
+| `--images` | _(off)_ | Include the event pictures, embedded in the page (a much bigger file, and one picture download per event). |
+
+The page, styled after the Xanadu Reserve events page (black and goldenrod):
+
+- **Calendar view**, in four layouts (Prev/Next step through the dates):
+  - **Overview:** a small grid for every month from `--start` to `--end`. Days with events are colored by category (gold when a day mixes categories), with a dot per event when there are several. Hover over a day (or tab to it) to see its events with their time and place (and picture, with `--images`).
+  - **Month:** one month at a time, with up to three events per day by start time (more are counted).
+  - **Week:** Sunday to Saturday in columns, every event with its time and place.
+  - **Day:** one day's events as full cards, in time order.
+
+  A multi-day event shows its start time on its first day and "Day N of M" after that. **Clicking a date** in any of these layouts opens that day's events in the List view **in a new browser tab**. The tab is the same page with `#day=YYYY-MM-DD` added, so it can be bookmarked; "Show all events" there goes back to the full list. Clicking an event opens it on FetLife.
+- **List view:** the events grouped by day, each with its category and cost, time, venue and city, RSVP count, and a link to the event on FetLife.
+- **Filters:** the category legend toggles categories on and off, and a text box filters by name or place. Both views follow the filters.
+- **Hidden words:** type words or phrases into *Hide events containing* (several at once, comma-separated) to remove every event whose name, venue, city or category contains one. Matching ignores case and goes by whole words, so hiding `rope` keeps "Europe". Remove a word with its ×. The list is saved in the browser's own storage (localStorage), so it survives reloads and is not part of the file. Browsers generally share that storage across local files, so newly generated calendars start with the same list. A different browser or profile starts with an empty list. The page remembers which views you last used.
+
+A multi-day event appears on each of its days in the calendar, and in the list under its first day in range. One that started before `--start` and is still running is included too.
+
+**How it works.** It runs the same search as the site's Events tab (`/events/near`, by latitude/longitude and range in meters, from `--start`) and follows that search's pages until one lists a day past `--end`. If the search runs out before `--end` (FetLife only lists so far ahead at once), it starts again from the day after the last one listed. Each page holds about two to three weeks of events, so this is only a few requests. With `--images`, the pictures are then **embedded in the page**. They have to be: FetLife's picture CDN refuses requests that don't come from FetLife ("Not Allowed: Hot Linking"), and its links expire within days anyway. Downloading them takes one request per event, sent straight to the picture CDN (not paced like the page requests). If FetLife starts throttling, the events read so far are still written, and the command exits with code 75 (like `discover`). Rerun it later for a complete page.
 
 ### `search` (experimental)
 

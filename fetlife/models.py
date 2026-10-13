@@ -107,6 +107,12 @@ class Event:
     cost: str | None = None
     url: str | None = None
     going_count: int | None = None
+    # Set by the near-me search (`parse_events_near`): the card's category
+    # ("BDSM Party", "Social"...), its time line as displayed ("Tue, Oct 13
+    # at 6:00 PM"), and its picture (a signed CDN URL that expires in days).
+    category: str | None = None
+    when: str | None = None
+    image_url: str | None = None
     meta: dict = field(default_factory=dict)
 
 

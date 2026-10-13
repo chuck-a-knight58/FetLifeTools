@@ -3,14 +3,15 @@
 Same shape as :mod:`fetlife.friending`: every recipient is checked first (does
 FetLife let this account message them?), a log means a rerun over the same
 file never messages anyone twice, and the caller caps how many go out per run
-and how far apart. The subject and body may use ``{nickname}``, filled in per
-recipient.
+and how far apart. The subject and body may use ``{nickname}``, ``{datetime}``
+and ``{uuid}``, filled in per message (see :func:`render`).
 """
 
 from __future__ import annotations
 
 import os
 import time
+import uuid
 from datetime import datetime, timezone
 from typing import Callable, Iterable, Iterator
 
@@ -22,9 +23,27 @@ DEFAULT_LIMIT = 10
 DEFAULT_PAUSE = 30.0
 
 
-def render(template: str, nickname: str) -> str:
-    """Fill ``{nickname}`` in; any other braces are left as written."""
-    return template.replace("{nickname}", nickname)
+# How ``{datetime}`` reads in a message: the send time, in the sender's local
+# time zone, e.g. "2026-09-21 18:40:12 EDT".
+DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S %Z"
+
+
+def render(template: str, nickname: str, when: datetime | None = None,
+           uid: uuid.UUID | str | None = None) -> str:
+    """Fill the placeholders in a subject or body; other braces stay as written.
+
+    ``{nickname}`` is the recipient, ``{datetime}`` is *when* (the send time,
+    now by default) in local time, and ``{uuid}`` is *uid* (a fresh random
+    UUID by default). Pass the same *when* and *uid* for the subject and the
+    body of one message so they agree.
+    """
+    out = template.replace("{nickname}", nickname)
+    if "{datetime}" in out:
+        when = when or datetime.now(timezone.utc)
+        out = out.replace("{datetime}", when.astimezone().strftime(DATETIME_FORMAT))
+    if "{uuid}" in out:
+        out = out.replace("{uuid}", str(uid or uuid.uuid4()))
+    return out
 
 
 def run(
@@ -89,16 +108,18 @@ def run(
 
         if sent and pause > 0:
             sleep(pause)
+        when, uid = now(), uuid.uuid4()  # one send time and id per message
         try:
             confirmation = client.send_message(
-                user_id, render(subject, nickname), render(body, nickname), form=form
+                user_id, render(subject, nickname, when, uid),
+                render(body, nickname, when, uid), form=form,
             )
         except RateLimitedError:
             raise
         except FetLifeError as exc:
-            outcome = Outcome(nickname, FAILED, str(exc), user_id, url, now().isoformat())
+            outcome = Outcome(nickname, FAILED, str(exc), user_id, url, when.isoformat())
         else:
             sent += 1
-            outcome = Outcome(nickname, SENT, confirmation, user_id, url, now().isoformat())
+            outcome = Outcome(nickname, SENT, confirmation, user_id, url, when.isoformat())
         log.append(outcome)
         yield outcome

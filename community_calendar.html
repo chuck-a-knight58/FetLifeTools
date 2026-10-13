@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Events near Washington, NJ</title>
+<style>
+  :root {
+    --gold: #daa520;
+    --gold-soft: #8c7035;
+    --bg: #000;
+    --panel: #111;
+    --elevated: #1a1a1a;
+    --muted: #9a8350;
+    --link: #87cefa;
+    --serif: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--gold);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  a { color: var(--link); }
+  a:hover { color: #b0e0ff; }
+  header { text-align: center; padding: 28px 16px 4px; border-bottom: 1px solid var(--gold); }
+  h1 {
+    font-family: var(--serif);
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    font-size: 2.2em;
+    margin: 0 0 4px;
+  }
+  .subtitle { color: var(--muted); margin: 0 0 18px; }
+
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+    margin: 20px auto 6px;
+    padding: 0 16px;
+  }
+  .view-toggle { display: inline-flex; }
+  .view-toggle button {
+    padding: 8px 20px;
+    background: transparent;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    cursor: pointer;
+    font: inherit;
+    font-size: 14px;
+  }
+  .view-toggle button:first-child { border-radius: 4px 0 0 4px; border-right: none; }
+  .view-toggle button:last-child { border-radius: 0 4px 4px 0; }
+  .view-toggle button.active { background: var(--gold); color: #000; font-weight: bold; }
+  .search {
+    background: var(--panel);
+    color: var(--gold);
+    border: 1px solid var(--gold-soft);
+    border-radius: 4px;
+    padding: 8px 12px;
+    font: inherit;
+    font-size: 14px;
+    width: min(260px, 100%);
+  }
+  .search::placeholder { color: var(--gold-soft); }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin: 12px auto 0;
+    padding: 0 16px;
+    max-width: 1100px;
+  }
+  .legend button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    color: var(--gold);
+    border: 1px solid #333;
+    border-radius: 14px;
+    padding: 3px 12px;
+    font: inherit;
+    font-size: 0.85em;
+    cursor: pointer;
+  }
+  .legend button.off { opacity: 0.35; text-decoration: line-through; }
+  .swatch { display: inline-block; width: 12px; height: 12px; border-radius: 3px; }
+  .legend-hint { width: 100%; text-align: center; color: var(--gold-soft); font-size: 0.75em; }
+
+  .exclude {
+    max-width: 1100px;
+    margin: 12px auto 0;
+    padding: 0 16px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85em;
+  }
+  .exclude form { display: inline-flex; align-items: center; gap: 6px; }
+  .exclude input { width: min(220px, 60vw); font-size: 13px; padding: 5px 10px; }
+  .exclude button[type=submit] {
+    background: transparent;
+    color: var(--gold);
+    border: 1px solid var(--gold-soft);
+    border-radius: 4px;
+    padding: 4px 12px;
+    font: inherit;
+    cursor: pointer;
+  }
+  .word {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #2a1416;
+    color: #f0c0c0;
+    border: 1px solid #6b2e3d;
+    border-radius: 12px;
+    padding: 1px 4px 1px 10px;
+  }
+  .word button {
+    background: transparent;
+    border: 0;
+    color: inherit;
+    font-size: 1.1em;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0 4px;
+  }
+  .word button:hover { color: #fff; }
+  .exclude-count { color: var(--gold-soft); }
+  .exclude-clear { color: var(--gold-soft); }
+
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 20px;
+    max-width: 1100px;
+    margin: 20px auto 40px;
+    padding: 0 16px;
+  }
+  .calendar-month { border: 1px solid var(--gold); padding: 10px; background: var(--panel); }
+  .calendar-month-title {
+    text-align: center;
+    font-family: var(--serif);
+    font-size: 1.2em;
+    font-weight: 600;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--gold);
+    padding-bottom: 6px;
+  }
+  .calendar-weekdays, .calendar-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+  .calendar-weekdays div { text-align: center; font-size: 0.75em; opacity: 0.7; padding: 4px 0; }
+  .calendar-days > * {
+    display: block;
+    text-align: center;
+    padding: 5px 0 3px;
+    font-size: 0.85em;
+    min-height: 38px;
+    border-radius: 3px;
+  }
+  .calendar-days > .out { opacity: 0.25; }
+  .calendar-day-event { cursor: pointer; color: #000; font-weight: bold; text-decoration: none; }
+  .calendar-day-event:hover { color: #000; }
+  .calendar-day-event:hover, .calendar-day-event:focus { outline: 2px solid #fff; outline-offset: -2px; }
+  .dots { display: flex; justify-content: center; align-items: center; gap: 2px; margin-top: 2px; height: 7px; }
+  .dots span { width: 7px; height: 7px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.6); }
+  .dots b { font-size: 9px; line-height: 7px; }
+
+  .event-popup {
+    position: absolute;
+    display: none;
+    z-index: 1000;
+    width: 300px;
+    max-width: calc(100vw - 16px);
+    background: var(--elevated);
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+    padding: 12px;
+    font-size: 0.85em;
+    pointer-events: none;
+  }
+  .ep-date { font-family: var(--serif); font-size: 1.2em; font-weight: 600; margin-bottom: 6px; }
+  .ep-item { border-top: 1px solid #333; padding: 6px 0; display: flex; gap: 8px; }
+  .ep-item img { width: 64px; height: 40px; object-fit: cover; flex: none; border-radius: 2px; }
+  .ep-title { font-weight: bold; }
+  .ep-meta { color: var(--muted); }
+  .ep-more { border-top: 1px solid #333; padding-top: 6px; color: var(--muted); }
+
+  .list-view { max-width: 1100px; margin: 10px auto 40px; padding: 0 16px; }
+  .list-day { margin-top: 26px; scroll-margin-top: 12px; }
+  .list-day h2 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 1.35em;
+    margin: 0 0 10px;
+    border-bottom: 1px solid var(--gold-soft);
+    padding-bottom: 4px;
+  }
+  .list-day.flash h2 { color: #fff; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(480px, 100%), 1fr)); gap: 14px; }
+  .card {
+    display: grid;
+    grid-template-columns: 1fr;
+    background: var(--panel);
+    border: 1px solid #2a2a2a;
+    border-left: 4px solid var(--gold);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .card.has-image { grid-template-columns: 190px 1fr; }
+  .card-image { display: block; background: #222; }
+  .card-image img { width: 100%; height: 100%; min-height: 100%; object-fit: cover; display: block; }
+  .card-body { padding: 12px 14px 14px; }
+  .card-cat { font-size: 0.75em; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+  .card-title { font-family: var(--serif); font-size: 1.3em; font-weight: 600; line-height: 1.2; margin: 4px 0 8px; }
+  .card-title a { color: var(--gold); text-decoration: none; }
+  .card-title a:hover { text-decoration: underline; }
+  .card-line { font-size: 0.9em; margin: 2px 0; }
+  .card-line .label { color: var(--muted); }
+  .card-link { display: inline-block; margin-top: 8px; font-size: 0.9em; }
+  .empty { text-align: center; color: var(--muted); margin: 40px 16px; }
+  .day-banner {
+    margin: 20px 0 0;
+    padding: 10px 14px;
+    border: 1px solid var(--gold-soft);
+    border-radius: 4px;
+    background: var(--panel);
+    text-align: center;
+  }
+
+  /* ---- Calendar sub-views: Overview / Month / Week / Day ---- */
+  .subviews { display: flex; justify-content: center; margin: 14px auto 0; padding: 0 16px; }
+  .subviews button { padding: 5px 14px; font-size: 13px; }
+  .cal-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin: 18px auto 0;
+    padding: 0 16px;
+  }
+  .cal-nav button {
+    background: transparent;
+    color: var(--gold);
+    border: 1px solid var(--gold-soft);
+    border-radius: 4px;
+    padding: 5px 12px;
+    font: inherit;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .cal-nav button:disabled { opacity: 0.3; cursor: default; }
+  .cal-nav-label {
+    font-family: var(--serif);
+    font-size: 1.45em;
+    font-weight: 600;
+    min-width: 15em;
+    text-align: center;
+  }
+  .period { max-width: 1100px; margin: 14px auto 40px; padding: 0 16px; }
+  .date-link { color: var(--gold); text-decoration: none; }
+  .date-link:hover { color: #fff; text-decoration: underline; }
+  .chip {
+    display: block;
+    color: #eee;
+    text-decoration: none;
+    background: #1c1c1c;
+    border-left: 3px solid var(--gold);
+    border-radius: 2px;
+    padding: 1px 5px;
+    margin-top: 3px;
+    font-size: 0.75em;
+    line-height: 1.35;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .chip:hover { color: #fff; background: #262626; }
+  .chip .t { color: var(--muted); }
+
+  .mv-weekdays, .mv-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 3px; }
+  .mv-weekdays div { text-align: center; font-size: 0.8em; color: var(--muted); padding: 4px 0; }
+  .mv-cell {
+    min-height: 112px;
+    background: var(--panel);
+    border: 1px solid #2a2a2a;
+    border-radius: 3px;
+    padding: 4px 5px 6px;
+    cursor: pointer;
+  }
+  .mv-cell:hover { border-color: var(--gold-soft); }
+  .mv-cell.blank { background: transparent; border-color: transparent; cursor: default; }
+  .mv-cell.out { opacity: 0.3; cursor: default; }
+  .mv-cell.out:hover { border-color: #2a2a2a; }
+  .mv-date { font-weight: bold; font-size: 0.9em; }
+  .mv-more { font-size: 0.72em; color: var(--muted); margin-top: 3px; }
+  .mv-cell .dotrow { display: none; flex-wrap: wrap; gap: 2px; margin-top: 4px; }
+  .mv-cell .dotrow span { width: 7px; height: 7px; border-radius: 50%; }
+
+  .wv-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+  .wv-col { background: var(--panel); border: 1px solid #2a2a2a; border-radius: 3px; min-height: 220px; }
+  .wv-col.out { opacity: 0.3; }
+  .wv-head { text-align: center; padding: 6px 4px; border-bottom: 1px solid #2a2a2a; }
+  .wv-head .dn { display: block; font-size: 0.75em; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+  .wv-head .dd { font-family: var(--serif); font-size: 1.5em; font-weight: 600; line-height: 1.1; }
+  .wv-body { padding: 4px; }
+  .wv-ev {
+    display: block;
+    text-decoration: none;
+    color: #eee;
+    background: #1c1c1c;
+    border-left: 3px solid var(--gold);
+    border-radius: 2px;
+    padding: 4px 6px;
+    margin-bottom: 5px;
+    font-size: 0.8em;
+    line-height: 1.3;
+  }
+  .wv-ev:hover { background: #262626; color: #fff; }
+  .wv-ev .t { display: block; color: var(--muted); font-size: 0.92em; }
+  .wv-ev .n { display: block; font-weight: bold; overflow-wrap: anywhere; }
+  .wv-ev .p { display: block; color: var(--muted); overflow-wrap: anywhere; }
+  .wv-none { color: #555; font-size: 0.8em; text-align: center; padding: 10px 0; }
+
+  .dv-hint { text-align: center; color: var(--gold-soft); font-size: 0.8em; margin-bottom: 14px; }
+  .card-time { font-size: 0.8em; font-weight: bold; color: var(--gold); margin-bottom: 2px; }
+
+  footer {
+    text-align: center;
+    color: var(--gold-soft);
+    font-size: 0.8em;
+    border-top: 1px solid #333;
+    padding: 16px;
+  }
+  [hidden] { display: none !important; }
+  @media (max-width: 640px) {
+    h1 { font-size: 1.7em; }
+    .card.has-image { grid-template-columns: 1fr; }
+    .card-image img { aspect-ratio: 1.91 / 1; height: auto; }
+    .cal-nav-label { min-width: 0; font-size: 1.15em; }
+    .mv-cell { min-height: 64px; padding: 3px; }
+    .mv-cell .chip, .mv-cell .mv-more { display: none; }
+    .mv-cell .dotrow { display: flex; }
+    .wv-grid { grid-template-columns: 1fr; }
+    .wv-col { min-height: 0; }
+    .wv-col.out { display: none; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Events near Washington, NJ</h1>
+  <p class="subtitle">Within 100 mi of Washington, NJ · Oct 13 – Nov 12, 2026 · 127 events</p>
+</header>
+
+<div class="controls">
+  <div class="view-toggle" role="group" aria-label="View">
+    <button id="btn-view-calendar" class="active" type="button">Calendar</button>
+    <button id="btn-view-list" type="button">List</button>
+  </div>
+  <input id="search" class="search" type="search" placeholder="Filter by name or place" aria-label="Filter events">
+</div>
+<div id="legend" class="legend"></div>
+<div class="exclude">
+  <form id="exclude-form">
+    <label for="exclude-input">Hide events containing</label>
+    <input id="exclude-input" class="search" type="text" placeholder="word or phrase, …" autocomplete="off">
+    <button type="submit">Hide</button>
+  </form>
+  <span id="exclude-words"></span>
+  <span id="exclude-count" class="exclude-count"></span>
+</div>
+
+<div id="calendar-view">
+  <div class="subviews">
+    <div class="view-toggle" role="group" aria-label="Calendar view">
+      <button type="button" data-sub="overview" class="active">Overview</button>
+      <button type="button" data-sub="month">Month</button>
+      <button type="button" data-sub="week">Week</button>
+      <button type="button" data-sub="day">Day</button>
+    </div>
+  </div>
+  <div id="cal-nav" class="cal-nav" hidden>
+    <button id="nav-prev" type="button" aria-label="Previous">&#8249; Prev</button>
+    <div id="nav-label" class="cal-nav-label"></div>
+    <button id="nav-next" type="button" aria-label="Next">Next &#8250;</button>
+  </div>
+  <div id="overview" class="calendar-grid"></div>
+  <div id="period" class="period" hidden></div>
+</div>
+<div id="list-view" class="list-view" hidden></div>
+<p id="empty" class="empty" hidden>No events match.</p>
+<div id="event-popup" class="event-popup" role="tooltip"></div>
+
+<footer>
+  Generated October 13, 2026 at 2:07 PM by FetLifeTools from FetLife's event search.
+  Event details may have changed since — follow an event's link for the current listing.
+</footer>
+
+<script>
+var EVENTS = [{"url": "https://fetlife.com/events/2026/10/09/laughs-giggles-ladies-only-foxjhz", "name": "Laughs & Giggles Ladies ONLY", "start": "2026-10-09", "end": "2026-10-15", "category": "Sex Party", "cost": null, "when": "Oct 9 – 15 · Fri 10:00 PM – Thu 10:00 PM", "venue": "Secret Location given once rsvp", "city": "Philadelphia, Pennsylvania, United States", "rsvps": 9, "image": null}, {"url": "https://fetlife.com/events/2026/10/10/sold-out-unholy-blood-moon-outdoor-halloween-play-party-festival-36oodn", "name": "~Sold out~ Unholy: Blood moon - outdoor Halloween play party/festival", "start": "2026-10-10", "end": "2026-10-16", "category": "BDSM Party", "cost": null, "when": "Oct 10 – 17 · Sat 7:00 PM – Sat 1:00 AM", "venue": "a private location", "city": "Allentown, Pennsylvania, United States", "rsvps": 93, "image": null}, {"url": "https://fetlife.com/events/2026/10/12/monday-funday-glory-hole-party-dvdizb", "name": "monday funday glory hole party", "start": "2026-10-12", "end": "2026-10-14", "category": "Sex Party", "cost": "Free", "when": "Oct 12 – 15 · Mon 12:00 AM – Thu 3:00 AM", "venue": "dm for location", "city": "Cherry Hill, New Jersey, United States", "rsvps": 19, "image": null}, {"url": "https://fetlife.com/events/2026/10/12/goon-edge-bate-get-your-nut-on-need-a-place-to-do-your-thing-81tjv1", "name": "Goon edge bate - get your nut on - need a place to do your thing?", "start": "2026-10-12", "end": "2026-10-13", "category": "Sex Party", "cost": "Free", "when": "Oct 12 – 14 · Mon 9:45 AM – Wed 3:00 AM", "venue": "Pvt Apt", "city": "New York City, New York, United States", "rsvps": 12, "image": null}, {"url": "https://fetlife.com/events/2026/10/12/labs-hallowswim-10-12-14-26-kqm0ib", "name": "Labs hallowswim (10/12-14/26)", "start": "2026-10-12", "end": "2026-10-14", "category": "Conference / Festival", "cost": null, "when": "Oct 12 – 14 · Mon 10:00 AM – Wed 2:00 PM", "venue": "Resort in Poconos (Pennsylvania)", "city": "Stroudsburg, Pennsylvania, United States", "rsvps": 22, "image": null}, {"url": "https://fetlife.com/events/2026/10/12/appointments-with-guignonette-philly-pwkqdp", "name": "Appointments with Guignonette — Philly", "start": "2026-10-12", "end": "2026-10-14", "category": "Educational", "cost": null, "when": "Oct 12 – 14 · Mon 6:00 PM – Wed 5:00 PM", "venue": null, "city": "Philadelphia, Pennsylvania, United States", "rsvps": 7, "image": null}, {"url": "https://fetlife.com/events/2026/10/12/swap-party-xbdcmd", "name": "Swap Party", "start": "2026-10-12", "end": "2026-10-14", "category": "Sex Party", "cost": "Free", "when": "Oct 12 – 14 · Mon 7:00 PM – Wed 10:00 PM", "venue": "philao", "city": "Philadelphia, Pennsylvania, United States", "rsvps": 17, "image": null}, {"url": "https://fetlife.com/events/2026/10/13/birthday-gangbang-jb4blq", "name": "Birthday Gangbang", "start": "2026-10-13", "end": "2026-10-13", "category": "Sex Party", "cost": "Free", "when": "Tue, Oct 13 at 6:00 AM", "venue": "bushwick", "city": "New York City, New York, United States", "rsvps": 4, "image": null}, {"url": "https://fetlife.com/events/2026/10/13/cherry-vanilla-presents-munch-game-night-jipaql", "name": "CHERRY-VANILLA PRESENTS: MUNCH GAME NIGHT", "start": "2026-10-13", "end": "2026-10-13", "category": "Social", "cost": null, "when": "Tue, Oct 13 at 11:00 AM", "venue": "Motor Inn", "city": "Cinnaminson, New Jersey, United States", "rsvps": null, "image": null}, {"url": "https://fetlife.com/events/2026/10/13/hrlm-gloryhole-tasty-tuesday-edition-no-gag-reflex-anything-goes-bigq54", "name": "HRLM GloryHoLE: Tasty TUEsday EDITION; NO GAG REFLEX - ANYTHING GOES", "start": "2026-10-13", "end": "2026-10-13", "category": "BDSM Party", "cost": "Free", "when": "Tue, Oct 13 at 1:00 PM", "venue": null, "city": "New York City, New York, United States", "rsvps": 43, "image": null}, {"url": "https://fetlife.com/events/2026/10/13/midtown-hotel-suck-off-10-13-xml2vi", "name": "Midtown hotel SUCK OFF (10/13)", "start": "2026-10-13", "end": "2026-10-13", "category": "Sex Party", "cost": "Free", "when": "Tue, Oct 13 at 2:00 PM", "venue": "Hotel provided later", "city": "New York City, New York, United States", "rsvps": 40, "image": null}, {"url": "https://fetlife.com/events/2026/10/13/jerk-off-sesh-all-welcome-girls-and-guys-umhnp8", "name": "jerk off sesh all welcome girls and guys", "start": "2026-10-13", "end": "2026-10-13", "category": "BDSM Party", "cost": "Free", "when": "Tue, Oct 13 at 2:00 PM", "venue": "center city", "city": "Philadelphia, Pennsylvania, United States", "rsvps": null, "image": null}, {"url": "https://fetlife.com/events/2026/10/13/filling-up-philadelphia-play-party-gangbang-philadelphia-pa-2-ca-girls-4ztmdy", "name": "**Filling Up** Philadelphia Play Party/Gangbang (Philadelphia, PA), 2 CA Girls", "start": "2026-10-13", "end": "2026-10-13", "category": "Sex Party", "cost": null, "when": "Tue, Oct 13 at 3:00 PM", "venue": "California Girls Events", "city": "Philadelphia, Pennsylvania, United States", "rsvps": 287, "image": null}, {"url": "https://fetlife.com/events/2026/10/13/center-city-munch-gghd5d", "name": "Center City Munch", "start": "2026-10-13", "end": "2026-10-13", "category": "Social", "cost": "Free", "when": "Tue, Oct 13 at 5:30 PM", "venue": "Hard Rock", "city": "Philadelphia, Pennsylvania, United States", "rsvps": 176, "image": null}, {"url": "https://fetlife.com/events/2026/10/13/hudson-valley-miscellaneous-munch-w8rdjs", "name": "Hudson Valley Miscellaneous Munch", "start": "2026-10-13", "end": "2026-10-13", "category": "Social", "cost": null, "when": "Tue, Oct 13 at 6:00 PM", "venue": "Location to be given in PM after RSVP closing date", "city": "Newburgh, New York, United States", "rsvps": 21, "image": null}, {"url": "https://fetlife.com/events/2026/10/13/n-a-k-e-d-munch-tklrkn", "name": "N.A.K.E.D Munch", "start": "2026-10-13", "end": "2026-10-13", "category": "Social", "cost": null, "when": "Tue, Oct 13 at 6:00 PM", "venue": null, "city": "Mount Laurel, New Jersey, United States", "rsvps": 27, "image": null}, {"url": "https://fetlife.com/events/2026/10/13/grounded_shibari-tranquil_tuesday-2n2z11", "name": "GROUNDED_SHIBARI - Tranquil_Tuesday", "start": "2026-10-13", "end": "2026-10-14", "category": "BDSM Party", "cost": null, "when": "Oct 13 – 14 · Tue 6:00 PM – Wed 10:00 PM", "venue": "The Zen Den", "city": "New York City, New York, United States", "rsvps": 6, "image": null}, {"url": "https://fetlife.com/events/2026/10/13/sensual-nights-gloryhole-event-lywvmg", "name": "Sensual Nights Gloryhole Event", "start": "2026-10-13", "end": "2026-10-13", "category": "Sex Party", "cost": "Free", "when": "Tue, Oct 13 at 6:00 PM", "venue": "Private Location", "city": "Union, New Jersey, United States", "rsvps": 2, "image": null}, {"url": "https://fetlife.com/events/2026/10/13/candys-after-work-gangbang-p0m8fh", "name": "CANDYS AFTER WORK GANGBANG", "start": "2026-10-13", "end": "2026-10-15", "category": "Sex Party", "cost": null, "when": "Oct 13 – 15 · Tue 6:00 PM – Thu 11:00 PM", "venue": "THE CLUB", "city": "New York City, New York, United States", "rsvps": 54, "image": null}, {"url": "https://fetlife.com/events/2026/10/13/after-work-shenanigans-6pm-11pm-tuesday-100-entry-s6zzbw", "name": "AFTER-WORK SHENANIGANS: 6pm-11pm TUESDAY. $100 entry", "start": "2026-10-13", "end": "2026-10-13", "category": "Sex Party", "cost": null, "when": "Tue, Oct 13 at 6:00 PM", "venue": "Juliette\"s PlayPen (Midtown)", "city": "Manhattan, New York, United States", "rsvps": 66, "image": null}, {"url": "https://fetlife.com/events/2026/10/13/sexy-hot-fun-all-week-long-tblsgi", "name": "sexy hot fun all week long", "start": "2026-10-13", "end": "2026-10-18", "category": "Sex Party", "cost": null, "when": null, "venue": null, "city": null, "rsvps": null, "image": null}, {"url": "https://fetlife.com/events/2026/10/16/touch-max-your-game-learn-thai-massage-at-goddess-realm-a5fa0g", "name": "TOUCH MAX YOUR GAME : Learn Thai Massage at Goddess Realm", "start": "2026-10-16", "end": "2026-10-20", "category": "Educational", "cost": null, "when": null, "venue": null, "city": null, "rsvps": null, "image": null}, {"url": "https://fetlife.com/events/2026/10/16/2026-hump-film-festival-fall-season-new-york-city-ny-daily-showings-10-16-10-22-7fthhz", "name": "2026 HUMP! Film Festival: FALL SEASON - New York City, NY - Daily Showings 10/16 - 10/22", "start": "2026-10-16", "end": "2026-10-22", "category": "Conference / Festival", "cost": null, "when": null, "venue": null, "city": null, "rsvps": null, "image": null}, {"url": "https://fetlife.com/events/2026/10/20/hotel-shannigans-zbdtjp", "name": "Hotel Shannigans", "start": "2026-10-20", "end": "2026-10-23", "category": "Sex Party", "cost": null, "when": null, "venue": null, "city": null, "rsvps": null, "image": null}, {"url": "https://fetlife.com/events/2026/10/21/nomad-voyageur-san-juan-puerto-rico-skvrmd", "name": "Nomad Voyagéur San Juan Puerto Rico", "start": "2026-10-21", "end": "2026-10-25", "category": "Social", "cost": null, "when": null, "venue": null, "city": null, "rsvps": null, "image": null}, {"url": "https://fetlife.com/events/2026/10/26/cherry-vanilla-presents-munch-game-night-8vlaip", "name": "CHERRY-VANILLA PRESENTS: MUNCH GAME NIGHT", "start": "2026-10-26", "end": "2026-10-26", "category": "Social", "cost": null, "when": "Mon, Oct 26 at 11:00 AM", "venue": "Motor Inn", "city": "Cinnaminson, New Jersey, United States", "rsvps": null, "image": null}, {"url": "https://fetlife.com/events/2026/10/26/open-rope-practice-coil-cord-10-26-n4uf7g", "name": "Open Rope Practice @ Coil & Cord 10/26", "start": "2026-10-26", "end": "2026-10-26", "category": "Educational", "cost": null, "when": "Mon, Oct 26 at 5:00 PM", "venue": "Coil & Cord Studio", "city": "Brooklyn, New York, United States", "rsvps": 9, "image": null}, {"url": "https://fetlife.com/events/2026/10/26/new-jersey-foot-fetish-event-by-footnight-10-26-26-te66eq", "name": "New Jersey Foot Fetish Event BY FOOTNIGHT 10/26/26", "start": "2026-10-26", "end": "2026-10-26", "category": "BDSM Party", "cost": null, "when": "Mon, Oct 26 at 5:00 PM", "venue": "Bareden", "city": "Newton, New Jersey, United States", "rsvps": 4, "image": null}, {"url": "https://fetlife.com/events/2026/10/26/lasc-whip-share-dp7ss5", "name": "LASC Whip Share", "start": "2026-10-26", "end": "2026-10-26", "category": "Educational", "cost": null, "when": "Mon, Oct 26 at 6:00 PM", "venue": null, "city": "Dover Plains, New York, United States", "rsvps": 3, "image": null}, {"url": "https://fetlife.com/events/2026/10/26/sexy-school-girl-gangbang-wqgvd9", "name": "Sexy school girl gangbang", "start": "2026-10-26", "end": "2026-10-26", "category": "Sex Party", "cost": "Free", "when": "Mon, Oct 26 at 6:00 PM", "venue": "downtown Philly", "city": "Philadelphia, Pennsylvania, United States", "rsvps": 2, "image": null}, {"url": "https://fetlife.com/events/2026/10/26/the-west-nyack-halloween-munch-event-monday-october-26th-always-the-4th-monday-of-the-month-furttr", "name": "The West Nyack Halloween Munch Event MONDAY OCTOBER 26th - always the 4th Monday of the month", "start": "2026-10-26", "end": "2026-10-26", "category": "Social", "cost": "Free", "when": "Mon, Oct 26 at 6:00 PM", "venue": "Dave & Busters", "city": "West Nyack, New York, United States", "rsvps": 53, "image": null}, {"url": "https://fetlife.com/events/2026/10/26/philly-metro-photo-workshops-unhallowed-cwn2zp", "name": "Philly Metro Photo Workshops: UNHALLOWED", "start": "2026-10-26", "end": "2026-10-26", "category": "Educational", "cost": null, "when": "Mon, Oct 26 at 6:00 PM", "venue": "location to be shared upon payment", "city": "Philadelphia, Pennsylvania, United States", "rsvps": 98, "image": null}, {"url": "https://fetlife.com/events/2026/10/26/owl-academy-the-intricacies-of-power-play-with-foxielou-kjzxbi", "name": "Owl Academy: The Intricacies of Power Play with FoxieLou", "start": "2026-10-26", "end": "2026-10-26", "category": "Educational", "cost": null, "when": "Mon, Oct 26 at 7:00 PM", "venue": "The Nest (exact address provided with ticket purchase)", "city": "Philadelphia, Pennsylvania, United States", "rsvps": 279, "image": null}, {"url": "https://fetlife.com/events/2026/10/26/f-like-a-pro-hand-skills-workshop-and-after-hours-uinsuo", "name": "F*** like a Pro: Hand Skills - Workshop and After Hours!", "start": "2026-10-26", "end": "2026-10-26", "category": "Educational", "cost": null, "when": "Mon, Oct 26 at 7:00 PM", "venue": "Address given in email confirmation. Please contact us if paying at door.", "city": "New York City, New York, United States", "rsvps": 37, "image": null}, {"url": "https://fetlife.com/events/2026/10/26/alphabeat-city-0pen-t0-all-bdsm-industry-kink-n-play-munch-monday-october-26th-manhattan-nyc-1fh26w", "name": "\"AlphaBEAT City\" 0PEN t0 ALL. BDSM Industry KiNK-n-PLAY MUNCH. Monday October 26th Manhattan NYC", "start": "2026-10-26", "end": "2026-10-26", "category": "Social", "cost": "Free", "when": "Mon, Oct 26 at 7:00 PM", "venue": "AlphaBEAT City", "city": "New York City, New York, United States", "rsvps": 29, "image": null}, {"url": "https://fetlife.com/events/2026/10/26/nj-rope-lab-formerly-nj-rope-bite-an-open-event-kggm52", "name": "NJ Rope Lab (formerly NJ Rope Bite) - An Open Event", "start": "2026-10-26", "end": "2026-10-26", "category": "Educational", "cost": null, "when": "Mon, Oct 26 at 7:00 PM", "venue": "The Pride Center of NJ", "city": "Highland Park, New Jersey, United States", "rsvps": 18, "image": null}, {"url": "https://fetlife.com/events/2026/10/26/hvps-october-munch-discussion-group-xlcdid", "name": "HVPS October Munch + Discussion Group", "start": "2026-10-26", "end": "2026-10-26", "category": "Social", "cost": "Free", "when": "Mon, Oct 26 at 7:00 PM", "venue": "Given to Approved RSVPs", "city": "Newburgh, New York, United States", "rsvps": 11, "image": null}, {"url": "https://fetlife.com/events/2026/10/26/dungeons-daddy-issues-slutty-roleplay-game-6tsx4s", "name": "Dungeons & Daddy Issues: Slutty Roleplay Game", "start": "2026-10-26", "end": "2026-10-26", "category": "Educational", "cost": null, "when": "Mon, Oct 26 at 7:30 PM", "venue": "Williamsburg, NYC, (exact address sent in confirmation email)", "city": "New York City, New York, United States", "rsvps": 7, "image": null}, {"url": "https://fetlife.com/events/2026/10/26/halloween-hotwife-filthy-gb-bukkake-yonkers-jyfygy", "name": "Halloween Hotwife Filthy GB & Bukkake Yonkers", "start": "2026-10-26", "end": "2026-10-26", "category": "Sex Party", "cost": null, "when": "Mon, Oct 26 at 7:30 PM", "venue": null, "city": "Yonkers, New York, United States", "rsvps": 115, "image": null}, {"url": "https://fetlife.com/events/2026/10/26/eagles-vs-cowboys-watch-party-play-party-6limlo", "name": "Eagles Vs Cowboys Watch Party + Play Party", "start": "2026-10-26", "end": "2026-10-26", "category": "Sex Party", "cost": "Free", "when": "Mon, Oct 26 at 8:00 PM", "venue": null, "city": "Philadelphia, Pennsylvania, United States", "rsvps": 21, "image": null}, {"url": "https://fetlife.com/events/2026/10/26/all-eyes-on-the-birthday-slut-tzotrn", "name": "All Eyes on the Birthday Slut", "start": "2026-10-26", "end": "2026-10-26", "category": "Sex Party", "cost": null, "when": "Mon, Oct 26 at 10:00 PM", "venue": null, "city": "Queens, New York, United States", "rsvps": 11, "image": null}, {"url": "https://fetlife.com/events/2026/10/27/cherry-vanilla-presents-munch-game-night-jtqwy3", "name": "CHERRY-VANILLA PRESENTS: MUNCH GAME NIGHT", "start": "2026-10-27", "end": "2026-10-27", "category": "Social", "cost": null, "when": "Tue, Oct 27 at 11:00 AM", "venue": "Motor Inn", "city": "Cinnaminson, New Jersey, United States", "rsvps": null, "image": null}, {"url": "https://fetlife.com/events/2026/10/27/the-middle-ground-barcade-fishtown-gcbobf", "name": "The Middle Ground @ Barcade Fishtown", "start": "2026-10-27", "end": "2026-10-27", "category": "Social", "cost": "Free", "when": "Tue, Oct 27 at 6:00 PM", "venue": "Barcade Fishtown", "city": "Philadelphia, Pennsylvania, United States", "rsvps": 128, "image": null}, {"url": "https://fetlife.com/events/2026/10/28/cherry-vanilla-presents-munch-game-night-chkobj", "name": "CHERRY-VANILLA PRESENTS: MUNCH GAME NIGHT", "start": "2026-10-28", "end": "2026-10-28", "category": "Social", "cost": null, "when": "Wed, Oct 28 at 11:00 AM", "venue": "Motor Inn, Cinnaminson NJ", "city": "Cinnaminson, New Jersey, United States", "rsvps": null, "image": null}, {"url": "https://fetlife.com/events/2026/10/28/secret-pleasures-lunchtime-play-party-12pm-to-3pm-xjaind", "name": "Secret Pleasures - Lunchtime Play Party - 12pm to 3pm", "start": "2026-10-28", "end": "2026-10-28", "category": "Sex Party", "cost": null, "when": "Wed, Oct 28 at 12:00 PM", "venue": "Secret Pleasures is at the Back Door of the Wi Fi Cafe", "city": "Emmaus, Pennsylvania, United States", "rsvps": 63, "image": null}, {"url": "https://fetlife.com/events/2026/10/28/lunch-time-play-and-gang-bang-12pm-5pm-rsvp-now-and-get-10-off-entry-fee-dttwj0", "name": "Lunch time play and Gang Bang 12pm-5pm, RSVP now and get $10 off entry fee!", "start": "2026-10-28", "end": "2026-10-28", "category": "Sex Party", "cost": null, "when": "Wed, Oct 28 at 12:00 PM", "venue": "Sinners Paradise Club", "city": "Philadelphia, Pennsylvania, United States", "rsvps": 18, "image": null}, {"url": "https://fetlife.com/events/2026/10/28/slipawayandplay-events-kgkui4", "name": "Slipawayandplay events", "start": "2026-10-28", "end": "2026-10-28", "category": "Sex Party", "cost": null, "when": "Wed, Oct 28 at 3:30 PM", "venue": "Info given after your email address is supplied.", "city": "Parsippany, New Jersey, United States", "rsvps": 8, "image": null}, {"url": "https://fetlife.com/events/2026/10/28/kinksters-klimbing-in-lic-october-28th-fbohli", "name": "Kinksters Klimbing in LIC October 28th", "start": "2026-10-28", "end": "2026-10-28", "category": "Social", "cost": null, "when": "Wed, Oct 28 at 6:00 PM", "venue": "Movement LIC", "city": "Queens, New York, United States", "rsvps": 5, "image": null}, {"url": "https://fetlife.com/events/2026/10/28/the-south-jersey-social-october-28-2026-ixoywe", "name": "The South Jersey Social- October 28, 2026", "start": "2026-10-28", "end": "2026-10-28", "category": "Social", "cost": "Free", "when": "Wed, Oct 28 at 6:00 PM", "venue": "Buena Connection Brewing Company", "city": "Buena, New Jersey, United States", "rsvps": 89, "image": null}, {"url": "https://fetlife.com/events/2026/10/28/juicy-ass-looking-for-6-to-8-selective-tops-vfpfmr", "name": "Juicy Ass looking for 6 to 8 selective tops-", "start": "2026-10-28", "end": "2026-10-29", "category": "Sex Party", "cost": null, "when": null, "venue": null, "city": null, "rsvps": null, "image": null}, {"url": "https://fetlife.com/events/2026/10/29/slipawayandplay-events-r5o750", "name": "Slipawayandplay events", "start": "2026-10-29", "end": "2026-10-29", "category": "Sex Party", "cost": null, "when": "Thu, Oct 29 at 9:30 AM", "venue": "Info given after your email address is supplied.", "city": "Parsippany, New Jersey, United States", "rsvps": 9, "image": null}, {"url": "https://fetlife.com/events/2026/10/29/cherry-vanilla-presents-munch-game-night-91ds45", "name": "CHERRY-VANILLA PRESENTS: MUNCH GAME NIGHT", "start": "2026-10-29", "end": "2026-10-29", "category": "Social", "cost": null, "when": "Thu, Oct 29 at 11:00 AM", "venue": "Motor Inn, Cinnaminson NJ", "city": "Cinnaminson, New Jersey, United States", "rsvps": null, "image": null}, {"url": "https://fetlife.com/events/2026/10/29/asylum-13-presents-magic-monsters-veu6b5", "name": "Asylum 13 presents Magic & Monsters", "start": "2026-10-29", "end": "2026-10-29", "category": "BDSM Party", "cost": null, "when": "Thu, Oct 29 at 6:00 PM", "venue": "Bar XIII", "city": "Wilmington, Delaware, United States", "rsvps": 141, "image": null}, {"url": "https://fetlife.com/events/2026/10/30/the-matinee-open-play-party-sutqqw", "name": "The Matinee: Open Play Party", "start": "2026-10-30", "end": "2026-10-30", "category": "BDSM Party", "cost": null, "when": "Fri, Oct 30 at 11:00 AM", "venue": "The Venue", "city": "Bethlehem, Pennsylvania, United States", "rsvps": 41, "image": null}, {"url": "https://fetlife.com/events/2026/10/30/cherry-vanilla-presents-munch-game-night-wg4v6d", "name": "CHERRY-VANILLA PRESENTS: MUNCH GAME NIGHT", "start": "2026-10-30", "end": "2026-10-30", "category": "Social", "cost": null, "when": "Fri, Oct 30 at 11:00 AM", "venue": "Motor Inn, Cinnaminson NJ", "city": "Cinnaminson, New Jersey, United States", "rsvps": null, "image": null}, {"url": "https://fetlife.com/events/2026/10/30/repair-after-harm-nvmt48", "name": "Repair After Harm", "start": "2026-10-30", "end": "2026-10-30", "category": "Educational", "cost": "Free", "when": "Fri, Oct 30 at 5:00 PM", "venue": "Gotham’s Classroom", "city": "New York City, New York, United States", "rsvps": 74, "image": null}, {"url": "https://fetlife.com/events/2026/10/30/halloween-cum-dump-aj1thu", "name": "halloween cum dump", "start": "2026-10-30", "end": "2026-10-30", "category": "Sex Party", "cost": "Free", "when": "Fri, Oct 30 at 5:00 PM", "venue": null, "city": "Woodbridge, New Jersey, United States", "rsvps": null, "image": null}, {"url": "https://fetlife.com/events/2026/10/30/only-muscular-men-gangbang-lgd9xa", "name": "Only muscular men gangbang", "start": "2026-10-30", "end": "2026-10-31", "category": "Sex Party", "cost": null, "when": null, "venue": null, "city": null, "rsvps": null, "image": null}, {"url": "https://fetlife.com/events/2026/10/30/the-seance-halloween-night-brat-baby-presents-a-night-of-wicked-vibes-chaos-nkccdl", "name": "THE SÉANCE — HALLOWEEN NIGHT BRAT BABY PRESENTS: A NIGHT OF WICKED VIBES & CHAOS", "start": "2026-10-30", "end": "2026-10-31", "category": "Sex Party", "cost": null, "when": null, "venue": null, "city": null, "rsvps": null, "image": null}, {"url": "https://fetlife.com/events/2026/11/01/new-paltz-munch-sponsored-by-the-church-nico007-msrnk9", "name": "New Paltz Munch - sponsored by the Church & Nico007", "start": "2026-11-01", "end": "2026-11-01", "category": "Social", "cost": "Free", "when": "Sun, Nov 1 at 10:00 AM", "venue": "Plaza Diner", "city": "New Paltz, New York, United States", "rsvps": 86, "image": null}, {"url": "https://fetlife.com/events/2026/11/01/cherry-vanilla-presents-munch-game-night-bvtav7", "name": "CHERRY-VANILLA PRESENTS: MUNCH GAME NIGHT", "start": "2026-11-01", "end": "2026-11-01", "category": "Social", "cost": null, "when": "Sun, Nov 1 at 11:00 AM", "venue": "Motor Inn, Cinnaminson NJ", "city": "Cinnaminson, New Jersey, United States", "rsvps": null, "image": null}, {"url": "https://fetlife.com/events/2026/11/01/sacred-sunday-afternoon-play-party-12-30-3-pm-hltdr4", "name": "Sacred Sunday – Afternoon Play Party 12:30 - 3 pm", "start": "2026-11-01", "end": "2026-11-01", "category": "BDSM Party", "cost": null, "when": "Sun, Nov 1 at 12:30 PM", "venue": "Church", "city": "New Paltz, New York, United States", "rsvps": 9, "image": null}, {"url": "https://fetlife.com/events/2026/11/01/november-spanking-lovers-mall-walk-and-food-court-picnic-84foeg", "name": "November Spanking Lovers Mall Walk and Food Court Picnic", "start": "2026-11-01", "end": "2026-11-01", "category": "Social", "cost": "Free", "when": "Sun, Nov 1 at 12:30 PM", "venue": "Bridgewater Commons Mall", "city": "Bridgewater, New Jersey, United States", "rsvps": 43, "image": null}, {"url": "https://fetlife.com/events/2026/11/01/the-owls-nest-bagels-bondage-beatings-play-party-gfp532", "name": "The Owls Nest Bagels, Bondage, Beatings PLAY PARTY", "start": "2026-11-01", "end": "2026-11-01", "category": "BDSM Party", "cost": null, "when": "Sun, Nov 1 at 1:00 PM", "venue": "The Nest (exact location given upon registration)", "city": "Philadelphia, Pennsylvania, United States", "rsvps": 434, "image": null}, {"url": "https://fetlife.com/events/2026/11/01/november-central-nj-rope-share-0c1385", "name": "November Central NJ Rope Share", "start": "2026-11-01", "end": "2026-11-01", "category": "Educational", "cost": null, "when": "Sun, Nov 1 at 1:00 PM", "venue": "Pride Center of NJ", "city": "Highland Park, New Jersey, United States", "rsvps": 10, "image": null}, {"url": "https://fetlife.com/events/2026/11/01/spanking-club-of-ny-scony-ldpsob", "name": "Spanking Club of NY (SCONY)", "start": "2026-11-01", "end": "2026-11-01", "category": "BDSM Party", "cost": null, "when": "Sun, Nov 1 at 1:00 PM", "venue": "The Diamond Club, , Manhattan, NY. (Not the Bronx or Queens)", "city": "New York City, New York, United States", "rsvps": 30, "image": null}, {"url": "https://fetlife.com/events/2026/11/01/philly-leather-pride-night-2026-hxao67", "name": "Philly Leather Pride Night 2026", "start": "2026-11-01", "end": "2026-11-01", "category": "Conference / Festival", "cost": null, "when": "Sun, Nov 1 at 3:00 PM", "venue": "Provided at time tickets are purchased.", "city": "Philadelphia, Pennsylvania, United States", "rsvps": 82, "image": null}, {"url": "https://fetlife.com/events/2026/11/01/mast-metro-ny-let-s-get-it-on-sex-sexuality-in-m-s-sunday-november-1-2026-pgtcem", "name": "MAsT: Metro NY - LET'S GET IT ON: Sex & Sexuality in M/s - Sunday November 1, 2026", "start": "2026-11-01", "end": "2026-11-01", "category": "Educational", "cost": null, "when": "Sun, Nov 1 at 4:00 PM", "venue": null, "city": "Manhattan, New York, United States", "rsvps": 26, "image": null}, {"url": "https://fetlife.com/events/2026/11/01/spooky-season-s-south-street-boardgame-munch-6uswl1", "name": "Spooky Season’s South Street Boardgame Munch", "start": "2026-11-01", "end": "2026-11-01", "category": "Social", "cost": "Free", "when": "Sun, Nov 1 at 6:00 PM", "venue": null, "city": "Philadelphia, Pennsylvania, United States", "rsvps": 28, "image": null}, {"url": "https://fetlife.com/events/2026/11/01/sold-out-cherry-noir-day-of-the-dead-party-for-the-last-night-of-the-halloween-season-kayxgd", "name": "SOLD OUT - Cherry Noir: Day of the Dead - Party for the Last night of the Halloween Season", "start": "2026-11-01", "end": "2026-11-01", "category": "BDSM Party", "cost": null, "when": "Sun, Nov 1 at 8:00 PM", "venue": "UE Gaming Lounge", "city": "Philadelphia, Pennsylvania, United States", "rsvps": 183, "image": null}, {"url": "https://fetlife.com/events/2026/11/01/the-diamond-club-nyc-presents-spicy-swinger-sundays-sexy-fall-edition-q5fsvp", "name": "THE DIAMOND CLUB NYC PRESENTS: SPICY SWINGER SUNDAYS [SEXY FALL EDITION]", "start": "2026-11-01", "end": "2026-11-01", "category": "Sex Party", "cost": null, "when": "Sun, Nov 1 at 8:00 PM", "venue": "THE DIAMOND CLUB NYC [2ND FLOOR]", "city": "New York City, New York, United States", "rsvps": 35, "image": null}, {"url": "https://fetlife.com/events/2026/11/01/caligula-ny-presents-sinful-sunday-night-swinger-social-sexy-fall-2026-edition-trjjky", "name": "CALIGULA NY PRESENTS: SINFUL SUNDAY NIGHT SWINGER SOCIAL [SEXY FALL 2026 EDITION]", "start": "2026-11-01", "end": "2026-11-01", "category": "Sex Party", "cost": null, "when": "Sun, Nov 1 at 9:00 PM", "venue": "CALIGULA NY", "city": "New York City, New York, United States", "rsvps": 24, "image": null}, {"url": "https://fetlife.com/events/2026/11/02/cherry-vanilla-presents-munch-game-night-z4bsly", "name": "CHERRY-VANILLA PRESENTS: MUNCH GAME NIGHT", "start": "2026-11-02", "end": "2026-11-02", "category": "Social", "cost": null, "when": "Mon, Nov 2 at 11:00 AM", "venue": "Motor Inn, Cinnaminson NJ", "city": "Cinnaminson, New Jersey, United States", "rsvps": null, "image": null}, {"url": "https://fetlife.com/events/2026/11/02/open-rope-practice-coil-cord-11-2-z0xrgy", "name": "Open Rope Practice @ Coil & Cord 11/2", "start": "2026-11-02", "end": "2026-11-02", "category": "Educational", "cost": null, "when": "Mon, Nov 2 at 5:00 PM", "venue": "Coil & Cord Studio", "city": "Brooklyn, New York, United States", "rsvps": 6, "image": null}, {"url": "https://fetlife.com/events/2026/11/02/mtg-non-monogamous-nerds-unite-university-city-isohu0", "name": "MTG Non-Monogamous Nerds Unite (University City)", "start": "2026-11-02", "end": "2026-11-02", "category": "Social", "cost": "Free", "when": "Mon, Nov 2 at 6:30 PM", "venue": null, "city": "Philadelphia, Pennsylvania, United States", "rsvps": 3, "image": null}, {"url": "https://fetlife.com/events/2026/11/02/rope-study-nov-26-t8dqwp", "name": "Rope Study (Nov. '26)", "start": "2026-11-02", "end": "2026-11-02", "category": "Educational", "cost": null, "when": "Mon, Nov 2 at 7:00 PM", "venue": "Less Dead Studio", "city": "Poughkeepsie, New York, United States", "rsvps": 34, "image": null}, {"url": "https://fetlife.com/events/2026/11/02/owl-academy-mindfuck-me-fear-psychological-edge-play-w-jamie-joy-9giaqb", "name": "Owl Academy - \"Mindfuck Me! Fear & Psychological Edge Play\" w/ Jamie Joy", "start": "2026-11-02", "end": "2026-11-02", "category": "Educational", "cost": null, "when": "Mon, Nov 2 at 7:00 PM", "venue": "The Nest", "city": "Philadelphia, Pennsylvania, United States", "rsvps": 270, "image": null}, {"url": "https://fetlife.com/events/2026/11/02/pretty-plastic-a-bimbo-pageant-event-by-the-taillors-1pcjge", "name": "Pretty Plastic: a Bimbo Pageant Event by the Taillors", "start": "2026-11-02", "end": "2026-11-02", "category": "BDSM Party", "cost": null, "when": "Mon, Nov 2 at 7:00 PM", "venue": "The Crown", "city": "Brooklyn, New York, United States", "rsvps": 26, "image": null}, {"url": "https://fetlife.com/events/2026/11/02/hotel-fun-zvzehd", "name": "hotel fun", "start": "2026-11-02", "end": "2026-11-06", "category": "Sex Party", "cost": "Free", "when": null, "venue": null, "city": null, "rsvps": null, "image": null}, {"url": "https://fetlife.com/events/2026/11/02/gangbang-fun-bcidsd", "name": "gangbang fun", "start": "2026-11-02", "end": "2026-11-03", "category": "Sex Party", "cost": "Free", "when": null, "venue": null, "city": null, "rsvps": null, "image": null}, {"url": "https://fetlife.com/events/2026/11/03/cherry-vanilla-presents-munch-game-night-wyurzj", "name": "CHERRY-VANILLA PRESENTS: MUNCH GAME NIGHT", "start": "2026-11-03", "end": "2026-11-03", "category": "Social", "cost": null, "when": "Tue, Nov 3 at 11:00 AM", "venue": "Motor Inn, Cinnaminson NJ", "city": "Cinnaminson, New Jersey, United States", "rsvps": null, "image": null}, {"url": "https://fetlife.com/events/2026/11/03/hitchin-bitches-nyc-social-nov-unvetted-welcome-dedobl", "name": "Hitchin Bitches NYC Social - NOV(unvetted welcome)", "start": "2026-11-03", "end": "2026-11-03", "category": "Social", "cost": "Free", "when": "Tue, Nov 3 at 5:30 PM", "venue": null, "city": "Manhattan, New York, United States", "rsvps": 12, "image": null}, {"url": "https://fetlife.com/events/2026/11/03/the-nyc-caregivers-littles-munch-formerly-known-as-the-nyc-ddlg-munch-rvb3og", "name": "The NYC Caregivers - littles Munch (formerly known as The NYC DDlg Munch)", "start": "2026-11-03", "end": "2026-11-03", "category": "Social", "cost": "Free", "when": "Tue, Nov 3 at 6:00 PM", "venue": "Jake’s Saloon", "city": "Manhattan, New York, United States", "rsvps": 26, "image": null}, {"url": "https://fetlife.com/events/2026/11/03/tethered-tuesday-philly-s-weekly-rope-community-lab-tqc4mb", "name": "Tethered Tuesday Philly's Weekly Rope Community Lab", "start": "2026-11-03", "end": "2026-11-03", "category": "Social", "cost": null, "when": "Tue, Nov 3 at 6:30 PM", "venue": "The Nest", "city": "Philadelphia, Pennsylvania, United States", "rsvps": 17, "image": null}, {"url": "https://fetlife.com/events/2026/11/03/njtog-karaoke-munch-tkvr2h", "name": "NJTOG Karaoke Munch!", "start": "2026-11-03", "end": "2026-11-03", "category": "Social", "cost": "Free", "when": "Tue, Nov 3 at 6:30 PM", "venue": null, "city": "Clifton, New Jersey, United States", "rsvps": 10, "image": null}, {"url": "https://fetlife.com/events/2026/11/03/philly-bottoms-munch-november-2026-h4ui9j", "name": "Philly Bottoms' Munch - November 2026", "start": "2026-11-03", "end": "2026-11-03", "category": "Social", "cost": "Free", "when": "Tue, Nov 3 at 6:30 PM", "venue": "Frankford Hall", "city": "Philadelphia, Pennsylvania, United States", "rsvps": 15, "image": null}, {"url": "https://fetlife.com/events/2026/11/03/brooklyn-beasts-pet-play-social-0rcc1q", "name": "Brooklyn Beasts: Pet Play Social", "start": "2026-11-03", "end": "2026-11-03", "category": "Social", "cost": "Free", "when": "Tue, Nov 3 at 7:00 PM", "venue": "No Exit at Talon Bar", "city": "Brooklyn, New York, United States", "rsvps": 37, "image": null}, {"url": "https://fetlife.com/events/2026/11/03/secret-pleasures-tuesday-titties-tushies-party-8pm-to-12am-8hjpej", "name": "Secret Pleasures - Tuesday Titties & Tushies Party - 8pm to 12am", "start": "2026-11-03", "end": "2026-11-03", "category": "Sex Party", "cost": null, "when": "Tue, Nov 3 at 8:00 PM", "venue": "Secret Pleasures at the Back Door of the Wi Fi Cafe", "city": "Emmaus, Pennsylvania, United States", "rsvps": 71, "image": null}, {"url": "https://fetlife.com/events/2026/11/04/cherry-vanilla-presents-munch-game-night-egmzis", "name": "CHERRY-VANILLA PRESENTS: MUNCH GAME NIGHT", "start": "2026-11-04", "end": "2026-11-04", "category": "Social", "cost": null, "when": "Wed, Nov 4 at 11:00 AM", "venue": "Motor Inn, Cinnaminson NJ", "city": "Cinnaminson, New Jersey, United States", "rsvps": null, "image": null}, {"url": "https://fetlife.com/events/2026/11/04/secret-pleasures-lunchtime-play-party-12pm-to-3pm-rmdpmj", "name": "Secret Pleasures - Lunchtime Play Party - 12pm to 3pm", "start": "2026-11-04", "end": "2026-11-04", "category": "Sex Party", "cost": null, "when": "Wed, Nov 4 at 12:00 PM", "venue": "Secret Pleasures is at the Back Door of the Wi Fi Cafe", "city": "Emmaus, Pennsylvania, United States", "rsvps": 60, "image": null}, {"url": "https://fetlife.com/events/2026/11/04/lunch-time-play-and-gang-bang-12pm-5pm-rsvp-now-and-get-10-off-entry-fee-tvuvgv", "name": "Lunch time play and Gang Bang 12pm-5pm, RSVP now and get $10 off entry fee!", "start": "2026-11-04", "end": "2026-11-04", "category": "Sex Party", "cost": null, "when": "Wed, Nov 4 at 12:00 PM", "venue": "Sinners Paradise Club", "city": "Philadelphia, Pennsylvania, United States", "rsvps": 14, "image": null}, {"url": "https://fetlife.com/events/2026/11/04/knitting-circle-14-a-rope-gathering-vd4ypa", "name": "Knitting Circle #14 - A Rope Gathering", "start": "2026-11-04", "end": "2026-11-04", "category": "Social", "cost": null, "when": "Wed, Nov 4 at 6:00 PM", "venue": "Midtown NYC", "city": "New York City, New York, United States", "rsvps": 35, "image": null}, {"url": "https://fetlife.com/events/2026/11/04/kinksters-klimbing-in-lic-november-4th-z6jbyb", "name": "Kinksters Klimbing in LIC November 4th", "start": "2026-11-04", "end": "2026-11-04", "category": "Social", "cost": null, "when": "Wed, Nov 4 at 6:00 PM", "venue": "Movement LIC", "city": "Queens, New York, United States", "rsvps": 4, "image": null}, {"url": "https://fetlife.com/events/2026/11/04/sinners-munch-6pm-10pm-an-exclusive-meet-greet-free-entry-to-this-event-no-membership-reqiured-9uhjd7", "name": "Sinners Munch 6pm-10pm, An Exclusive MEET & GREET, FREE ENTRY TO THIS EVENT, no membership reqiured!", "start": "2026-11-04", "end": "2026-11-04", "category": "Social", "cost": "Free", "when": "Wed, Nov 4 at 6:00 PM", "venue": "Sinners Paradise Club", "city": "Philadelphia, Pennsylvania, United States", "rsvps": 29, "image": null}, {"url": "https://fetlife.com/events/2026/11/04/nyc-tng-ages-18-35-weeknight-munch-november-2026-mzlw3f", "name": "NYC TNG (Ages 18-35) Weeknight Munch - November 2026", "start": "2026-11-04", "end": "2026-11-04", "category": "Social", "cost": "Free", "when": "Wed, Nov 4 at 6:30 PM", "venue": "TBD", "city": "New York City, New York, United States", "rsvps": 12, "image": null}, {"url": "https://fetlife.com/events/2026/11/04/philly-s-monogamous-munch-njdm0k", "name": "Philly’s Monogamous Munch", "start": "2026-11-04", "end": "2026-11-04", "category": "Social", "cost": "Free", "when": "Wed, Nov 4 at 6:30 PM", "venue": "TBD", "city": "Philadelphia, Pennsylvania, United States", "rsvps": 32, "image": null}, {"url": "https://fetlife.com/events/2026/11/04/kafol-munch-november-vzbtjx", "name": "KAFOL Munch November", "start": "2026-11-04", "end": "2026-11-04", "category": "Social", "cost": "Free", "when": "Wed, Nov 4 at 6:30 PM", "venue": null, "city": "Lawrenceville, New Jersey, United States", "rsvps": 22, "image": null}, {"url": "https://fetlife.com/events/2026/11/06/keystone-leather-contest-2-0-qgih68", "name": "Keystone Leather Contest 2.0", "start": "2026-11-06", "end": "2026-11-08", "category": "Conference / Festival", "cost": null, "when": null, "venue": null, "city": null, "rsvps": null, "image": null}, {"url": "https://fetlife.com/events/2026/11/09/cherry-vanilla-presents-munch-game-night-9nklgp", "name": "CHERRY-VANILLA PRESENTS: MUNCH GAME NIGHT", "start": "2026-11-09", "end": "2026-11-09", "category": "Social", "cost": null, "when": "Mon, Nov 9 at 11:00 AM", "venue": "Motor Inn, Cinnaminson NJ", "city": "Cinnaminson, New Jersey, United States", "rsvps": null, "image": null}, {"url": "https://fetlife.com/events/2026/11/09/open-rope-practice-coil-cord-11-9-aafcos", "name": "Open Rope Practice @ Coil & Cord 11/9", "start": "2026-11-09", "end": "2026-11-09", "category": "Educational", "cost": null, "when": "Mon, Nov 9 at 5:00 PM", "venue": "Coil & Cord Studio", "city": "Brooklyn, New York, United States", "rsvps": 6, "image": null}, {"url": "https://fetlife.com/events/2026/11/09/jersey-city-polyam-enm-mixer-maxotp", "name": "Jersey City Polyam/ENM Mixer", "start": "2026-11-09", "end": "2026-11-09", "category": "Social", "cost": "Free", "when": "Mon, Nov 9 at 6:00 PM", "venue": "Pet Shop", "city": "Jersey City, New York, United States", "rsvps": 4, "image": null}, {"url": "https://fetlife.com/events/2026/11/09/queer-takeover-munch-cykveq", "name": "Queer Takeover Munch", "start": "2026-11-09", "end": "2026-11-09", "category": "Social", "cost": null, "when": "Mon, Nov 9 at 6:30 PM", "venue": null, "city": "Queens, New York, United States", "rsvps": 6, "image": null}, {"url": "https://fetlife.com/events/2026/11/09/november-central-jersey-poly-kinky-munch-ynzp0s", "name": "November - Central Jersey Poly & Kinky Munch", "start": "2026-11-09", "end": "2026-11-09", "category": "Social", "cost": "Free", "when": "Mon, Nov 9 at 6:30 PM", "venue": "Town and Country Diner Bordentown", "city": "Bordentown, New Jersey, United States", "rsvps": 42, "image": null}, {"url": "https://fetlife.com/events/2026/11/09/legion-of-sin-philly-november-2026-club-meeting-mai49f", "name": "Legion Of Sin Philly November 2026 Club Meeting", "start": "2026-11-09", "end": "2026-11-09", "category": "Social", "cost": "Free", "when": "Mon, Nov 9 at 7:00 PM", "venue": "Hooters King Of Prussia", "city": "King of Prussia, Pennsylvania, United States", "rsvps": 6, "image": null}, {"url": "https://fetlife.com/events/2026/11/09/poly-connections-intimacy-lab-uhariw", "name": "Poly Connections: Intimacy Lab", "start": "2026-11-09", "end": "2026-11-09", "category": "Educational", "cost": null, "when": "Mon, Nov 9 at 7:00 PM", "venue": "Address given in email confirmation. Please contact us if paying at door.", "city": "New York City, New York, United States", "rsvps": 18, "image": null}, {"url": "https://fetlife.com/events/2026/11/09/trans-night-at-club-philadelphia-h7ieey", "name": "Trans Night at Club Philadelphia", "start": "2026-11-09", "end": "2026-11-09", "category": "Sex Party", "cost": null, "when": "Mon, Nov 9 at 8:00 PM", "venue": "Club Philadelphia", "city": "Philadelphia, Pennsylvania, United States", "rsvps": 5, "image": null}, {"url": "https://fetlife.com/events/2026/11/10/cherry-vanilla-presents-munch-game-night-94uled", "name": "CHERRY-VANILLA PRESENTS: MUNCH GAME NIGHT", "start": "2026-11-10", "end": "2026-11-10", "category": "Social", "cost": null, "when": "Tue, Nov 10 at 11:00 AM", "venue": "Motor Inn, Cinnaminson NJ", "city": "Cinnaminson, New Jersey, United States", "rsvps": null, "image": null}, {"url": "https://fetlife.com/events/2026/11/10/lwp-monthly-rope-share-eajg3d", "name": "LWP Monthly Rope Share", "start": "2026-11-10", "end": "2026-11-10", "category": "Educational", "cost": null, "when": "Tue, Nov 10 at 6:00 PM", "venue": "The Venue", "city": "Bethlehem, Pennsylvania, United States", "rsvps": 25, "image": null}, {"url": "https://fetlife.com/events/2026/11/10/mast-clifton-november-2026-munch-nyaszr", "name": "MAsT Clifton November 2026 Munch", "start": "2026-11-10", "end": "2026-11-10", "category": "Social", "cost": null, "when": "Tue, Nov 10 at 6:30 PM", "venue": "UNO Pizzeria & Grill", "city": "Clifton, New Jersey, United States", "rsvps": 5, "image": null}, {"url": "https://fetlife.com/events/2026/11/10/nj-tng-ages-18-35-central-munch-nov-10-qodb1e", "name": "NJ TNG (ages 18-35) Central Munch - Nov 10", "start": "2026-11-10", "end": "2026-11-10", "category": "Social", "cost": "Free", "when": "Tue, Nov 10 at 7:00 PM", "venue": null, "city": "Piscataway, New Jersey, United States", "rsvps": 24, "image": null}, {"url": "https://fetlife.com/events/2026/11/10/delco-drinks-munch-november-2026-82jbsl", "name": "Delco Drinks Munch - November 2026", "start": "2026-11-10", "end": "2026-11-10", "category": "Social", "cost": "Free", "when": "Tue, Nov 10 at 7:00 PM", "venue": "Tom and Jerry's", "city": "Woodlyn, Pennsylvania, United States", "rsvps": 10, "image": null}, {"url": "https://fetlife.com/events/2026/11/10/secret-pleasures-tuesday-titties-tushies-party-8pm-to-12am-ijwuhr", "name": "Secret Pleasures - Tuesday Titties & Tushies Party - 8pm to 12am", "start": "2026-11-10", "end": "2026-11-10", "category": "Sex Party", "cost": null, "when": "Tue, Nov 10 at 8:00 PM", "venue": "Secret Pleasures at the Back Door of the Wi Fi Cafe", "city": "Emmaus, Pennsylvania, United States", "rsvps": 69, "image": null}, {"url": "https://fetlife.com/events/2026/11/11/cherry-vanilla-presents-munch-game-night-xj6ub0", "name": "CHERRY-VANILLA PRESENTS: MUNCH GAME NIGHT", "start": "2026-11-11", "end": "2026-11-11", "category": "Social", "cost": null, "when": "Wed, Nov 11 at 11:00 AM", "venue": "Motor Inn", "city": "Cinnaminson, New Jersey, United States", "rsvps": null, "image": null}, {"url": "https://fetlife.com/events/2026/11/11/secret-pleasures-lunchtime-play-party-12pm-to-3pm-npodn9", "name": "Secret Pleasures - Lunchtime Play Party - 12pm to 3pm", "start": "2026-11-11", "end": "2026-11-11", "category": "Sex Party", "cost": null, "when": "Wed, Nov 11 at 12:00 PM", "venue": "Secret Pleasures is at the Back Door of the Wi Fi Cafe", "city": "Emmaus, Pennsylvania, United States", "rsvps": 64, "image": null}, {"url": "https://fetlife.com/events/2026/11/11/kinksters-klimbing-in-lic-november-11th-jnag7k", "name": "Kinksters Klimbing in LIC November 11th", "start": "2026-11-11", "end": "2026-11-11", "category": "Social", "cost": null, "when": "Wed, Nov 11 at 6:00 PM", "venue": "Movement LIC", "city": "Queens, New York, United States", "rsvps": 1, "image": null}, {"url": "https://fetlife.com/events/2026/11/12/south-jersey-craft-munch-november-2026-bgdrus", "name": "south jersey craft munch - november 2026", "start": "2026-11-12", "end": "2026-11-12", "category": "Social", "cost": "Free", "when": "Thu, Nov 12 at 6:00 PM", "venue": "falcon diner", "city": "Brooklawn, New Jersey, United States", "rsvps": 13, "image": null}, {"url": "https://fetlife.com/events/2026/11/12/stuffed-at-house-of-wax-iftq3i", "name": "Stuffed at House of Wax", "start": "2026-11-12", "end": "2026-11-12", "category": "Social", "cost": "Free", "when": "Thu, Nov 12 at 6:00 PM", "venue": null, "city": "Brooklyn, New York, United States", "rsvps": 16, "image": null}, {"url": "https://fetlife.com/events/2026/11/12/the-jersey-city-munch-november-12th-edition-_i-s-bday-munch-m3719y", "name": "The Jersey City Munch November 12th Edition - _i-`s BDAY MUNCH", "start": "2026-11-12", "end": "2026-11-12", "category": "Social", "cost": "Free", "when": "Thu, Nov 12 at 6:00 PM", "venue": "Zeppelin Hall", "city": "Jersey City, New York, United States", "rsvps": 48, "image": null}, {"url": "https://fetlife.com/events/2026/11/12/fairfield-county-munch-zgoc2c", "name": "Fairfield County Munch", "start": "2026-11-12", "end": "2026-11-12", "category": "Social", "cost": "Free", "when": "Thu, Nov 12 at 6:30 PM", "venue": "314 Beer Garden", "city": "Norwalk, Connecticut, United States", "rsvps": 72, "image": null}, {"url": "https://fetlife.com/events/2026/11/12/t4t-rope-jam-philadelphia-potluck-one-year-anniversary-party-czxwph", "name": "T4T Rope Jam Philadelphia (& potluck) - ONE YEAR ANNIVERSARY PARTY", "start": "2026-11-12", "end": "2026-11-12", "category": "Social", "cost": null, "when": "Thu, Nov 12 at 6:30 PM", "venue": "The Nest", "city": "Philadelphia, Pennsylvania, United States", "rsvps": 27, "image": null}, {"url": "https://fetlife.com/events/2026/11/12/millennials-munch-ages-28-45-age-restricted-event-quox9m", "name": "Millennials Munch (Ages 28-45) AGE RESTRICTED EVENT", "start": "2026-11-12", "end": "2026-11-12", "category": "Social", "cost": "Free", "when": "Thu, Nov 12 at 6:30 PM", "venue": null, "city": "Philadelphia, Pennsylvania, United States", "rsvps": 22, "image": null}, {"url": "https://fetlife.com/events/2026/11/12/the-gathering-a-noir-collective-social-xrnfax", "name": "The Gathering- A Noir Collective Social", "start": "2026-11-12", "end": "2026-11-12", "category": "Social", "cost": "Free", "when": "Thu, Nov 12 at 6:30 PM", "venue": null, "city": "Manhattan, New York, United States", "rsvps": null, "image": null}, {"url": "https://fetlife.com/events/2026/11/12/airflow-a-suspension-transition-sequence-workshop-with-sassy-masochist-fearless-masochist-fku1al", "name": "AirFlow: A Suspension Transition Sequence Workshop with Sassy Masochist & Fearless Masochist", "start": "2026-11-12", "end": "2026-11-12", "category": "Educational", "cost": null, "when": "Thu, Nov 12 at 7:00 PM", "venue": "Coil & Cord Studio", "city": "Brooklyn, New York, United States", "rsvps": 11, "image": null}, {"url": "https://fetlife.com/events/2026/11/12/kink-connection-book-club-nov-26-jjnhpi", "name": "Kink & Connection Book Club (Nov. '26)", "start": "2026-11-12", "end": "2026-11-12", "category": "Social", "cost": "Free", "when": "Thu, Nov 12 at 7:00 PM", "venue": "Less Dead Studio", "city": "Poughkeepsie, New York, United States", "rsvps": 5, "image": null}, {"url": "https://fetlife.com/events/2026/11/12/queens-poly-mixer-djcaaj", "name": "Queens Poly Mixer!", "start": "2026-11-12", "end": "2026-11-13", "category": "Social", "cost": "Free", "when": "Nov 12 – 13 · Thu 7:00 PM – Fri 10:00 PM", "venue": "Solid State", "city": "Queens, New York, United States", "rsvps": 5, "image": null}, {"url": "https://fetlife.com/events/2026/11/12/labyrinth-orgy-thursdays-long-play-open-9-3-midtown-couples-40-singles-80-ladies-free-ovq59l", "name": "LABYRINTH + ORGY THURSDAYS *LONG PLAY* + OPEN 9-3 + MIDTOWN + COUPLES $40, SINGLES $80, LADIES FREE", "start": "2026-11-12", "end": "2026-11-12", "category": "Sex Party", "cost": null, "when": "Thu, Nov 12 at 9:00 PM", "venue": "TBA", "city": "New York City, New York, United States", "rsvps": 3, "image": null}, {"url": "https://fetlife.com/events/2026/11/12/caligula-ny-presents-one-night-stand-swinger-fling-thursday-edition-lloz7d", "name": "CALIGULA NY PRESENTS: \"ONE NIGHT STAND\" [SWINGER FLING THURSDAY EDITION]", "start": "2026-11-12", "end": "2026-11-12", "category": "Sex Party", "cost": null, "when": "Thu, Nov 12 at 9:00 PM", "venue": "CALIGULA NY", "city": "New York City, New York, United States", "rsvps": 28, "image": null}];
+var CONFIG = {"start": "2026-10-13", "end": "2026-11-12", "colors": {"Sex Party": "#c98ad6", "BDSM Party": "#d9534f", "Conference / Festival": "#5fb3a1", "Educational": "#7fb3d5", "Social": "#daa520"}};
+(function () {
+  var monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  var weekdays = ['S','M','T','W','T','F','S'];
+  var MAX_POPUP = 6;
+  var MAX_CHIPS = 3;
+
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function parse(iso) { var p = iso.split('-'); return new Date(+p[0], +p[1] - 1, +p[2]); }
+  function iso(d) {
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+  function addDays(d, n) { return new Date(d.getFullYear(), d.getMonth(), d.getDate() + n); }
+  function longDate(isoDay) {
+    var d = parse(isoDay);
+    return dayNames[d.getDay()] + ', ' + monthNames[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+  }
+  function shortDate(isoDay) { var d = parse(isoDay); return monthNames[d.getMonth()].slice(0, 3) + ' ' + d.getDate(); }
+  function colorOf(ev) { return CONFIG.colors[ev.category] || '#daa520'; }
+  function place(ev) { return [ev.venue, ev.city].filter(Boolean).join(', '); }
+  function daysBetween(a, b) { return Math.round((parse(b) - parse(a)) / 86400000); }
+
+  // The start time on a card's time line ("Tue, Oct 13 at 6:30 PM",
+  // "Oct 13 – 18 · Tue 6:00 PM – Sun 8:00 AM"), as minutes and as text.
+  function startTime(ev) {
+    var m = /(\d{1,2}):(\d\d)\s*([AP]M)/i.exec(ev.when || '');
+    if (!m) return null;
+    var h = +m[1] % 12 + (m[3].toUpperCase() === 'PM' ? 12 : 0);
+    return { minutes: h * 60 + +m[2], text: m[1] + ':' + m[2] + ' ' + m[3].toUpperCase() };
+  }
+  // What to show as an event's time on one of its days: its start time on
+  // the first day, "Day N of M" on the days a multi-day event continues.
+  function timeOn(ev, day) {
+    if (ev.end && ev.end !== ev.start && day !== ev.start) {
+      return 'Day ' + (daysBetween(ev.start, day) + 1) + ' of ' + (daysBetween(ev.start, ev.end) + 1);
+    }
+    var t = startTime(ev);
+    return t ? t.text : '';
+  }
+  // A day's events in time order; multi-day events already running come first.
+  function sortedOn(evs, day) {
+    return evs.slice().sort(function (a, b) {
+      var ka = a.start !== day ? -1 : (startTime(a) || { minutes: 1440 }).minutes;
+      var kb = b.start !== day ? -1 : (startTime(b) || { minutes: 1440 }).minutes;
+      return ka - kb;
+    });
+  }
+
+  // Clicking a date opens that day's list in a new browser tab: this same
+  // page, with the day in the URL's #fragment.
+  function dayHref(k) { return '#day=' + k; }
+  function openDayTab(k) { window.open(dayHref(k), '_blank'); }
+
+  var hiddenCats = {};
+  var query = '';
+  function haystack(ev) { return [ev.name, ev.venue, ev.city, ev.category].join(' ').toLowerCase(); }
+
+  // ---- Hidden words: events mentioning any of them are left out everywhere.
+  // Kept in this browser's storage, so the list survives reloads and
+  // applies to every calendar page opened from the same place.
+  var WORDS_KEY = 'fetlifeEventsHiddenWords';
+  var hiddenWords = [], wordPatterns = [];
+  function loadWords() {
+    try {
+      var saved = JSON.parse(localStorage.getItem(WORDS_KEY) || '[]');
+      hiddenWords = Array.isArray(saved) ? saved.filter(function (w) { return typeof w === 'string' && w; }) : [];
+    } catch (e) { hiddenWords = []; }
+    // Whole words only: hiding "rope" keeps "Europe". Case is ignored.
+    wordPatterns = hiddenWords.map(function (w) {
+      return new RegExp('(^|[^\\p{L}\\p{N}])' + w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '($|[^\\p{L}\\p{N}])', 'iu');
+    });
+  }
+  function saveWords() {
+    try { localStorage.setItem(WORDS_KEY, JSON.stringify(hiddenWords)); } catch (e) {}
+    loadWords();
+  }
+  function hiddenByWord(ev) {
+    var text = haystack(ev);
+    return wordPatterns.some(function (re) { return re.test(text); });
+  }
+  loadWords();
+
+  function visible(ev) {
+    if (hiddenCats[ev.category]) return false;
+    if (hiddenByWord(ev)) return false;
+    if (!query) return true;
+    return haystack(ev).indexOf(query) !== -1;
+  }
+
+  var wordsEl = document.getElementById('exclude-words');
+  function renderWords() {
+    wordsEl.innerHTML = hiddenWords.map(function (w, i) {
+      return '<span class="word">' + esc(w) + '<button type="button" data-i="' + i + '" aria-label="Stop hiding ' + esc(w) + '">×</button></span>';
+    }).join(' ') + (hiddenWords.length > 1 ? ' <a href="#" class="exclude-clear" id="exclude-clear">clear all</a>' : '');
+    var n = EVENTS.filter(hiddenByWord).length;
+    document.getElementById('exclude-count').textContent =
+      hiddenWords.length ? n + ' event' + (n === 1 ? '' : 's') + ' hidden' : '';
+  }
+  document.getElementById('exclude-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var input = document.getElementById('exclude-input');
+    // Several at once, comma-separated.
+    input.value.split(',').forEach(function (w) {
+      w = w.trim().replace(/\s+/g, ' ').toLowerCase();
+      if (w && hiddenWords.indexOf(w) === -1) hiddenWords.push(w);
+    });
+    input.value = '';
+    saveWords();
+    render();
+  });
+  wordsEl.addEventListener('click', function (e) {
+    if (e.target.id === 'exclude-clear') {
+      e.preventDefault();
+      hiddenWords = [];
+    } else if (e.target.hasAttribute('data-i')) {
+      hiddenWords.splice(+e.target.getAttribute('data-i'), 1);
+    } else {
+      return;
+    }
+    saveWords();
+    render();
+  });
+  // Another tab (say, a day opened from the calendar) changed the list.
+  window.addEventListener('storage', function (e) {
+    if (e.key === WORDS_KEY) { loadWords(); render(); }
+  });
+
+  // ---- Legend: one toggle per category ----
+  var legendEl = document.getElementById('legend');
+  var cats = Object.keys(CONFIG.colors);
+  cats.forEach(function (cat) {
+    var n = EVENTS.filter(function (e) { return e.category === cat; }).length;
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.setAttribute('aria-pressed', 'true');
+    b.innerHTML = '<span class="swatch" style="background:' + esc(CONFIG.colors[cat]) + '"></span>' + esc(cat) + ' (' + n + ')';
+    b.addEventListener('click', function () {
+      hiddenCats[cat] = !hiddenCats[cat];
+      b.classList.toggle('off', !!hiddenCats[cat]);
+      b.setAttribute('aria-pressed', hiddenCats[cat] ? 'false' : 'true');
+      render();
+    });
+    legendEl.appendChild(b);
+  });
+  if (cats.length > 1) {
+    legendEl.insertAdjacentHTML('beforeend', '<div class="legend-hint">Click a category to hide or show it</div>');
+  }
+
+  // ---- Which events fall on which day (multi-day events on every day) ----
+  var rangeStart = parse(CONFIG.start), rangeEnd = parse(CONFIG.end);
+  function inRange(d) { return d >= rangeStart && d <= rangeEnd; }
+  function eventsByDay(list) {
+    var map = {};
+    list.forEach(function (ev) {
+      var d = parse(ev.start), last = parse(ev.end || ev.start);
+      if (d < rangeStart) d = rangeStart;
+      if (last > rangeEnd) last = rangeEnd;
+      for (; d <= last; d = addDays(d, 1)) {
+        var k = iso(d);
+        (map[k] = map[k] || []).push(ev);
+      }
+    });
+    return map;
+  }
+  var byDay = {};
+
+  // ---- One event as a card (list and day views) ----
+  function cardHtml(ev, day) {
+    var multi = ev.end && ev.end !== ev.start;
+    var dates = multi ? shortDate(ev.start) + ' – ' + shortDate(ev.end) : '';
+    var t = day ? timeOn(ev, day) : '';
+    return '<article class="card' + (ev.image ? ' has-image' : '') + '" style="border-left-color:' + esc(colorOf(ev)) + '">'
+      + (ev.image ? '<a class="card-image" href="' + esc(ev.url) + '" target="_blank" rel="noopener" tabindex="-1"><img src="' + esc(ev.image) + '" alt="" loading="lazy"></a>' : '')
+      + '<div class="card-body">'
+      + (t ? '<div class="card-time">' + esc(t) + '</div>' : '')
+      + '<div class="card-cat" style="color:' + esc(colorOf(ev)) + '">' + esc(ev.category) + (ev.cost ? ' · ' + esc(ev.cost) : '') + '</div>'
+      + '<div class="card-title"><a href="' + esc(ev.url) + '" target="_blank" rel="noopener">' + esc(ev.name) + '</a></div>'
+      + (ev.when ? '<div class="card-line"><span class="label">When:</span> ' + esc(ev.when) + '</div>'
+                 : (dates ? '<div class="card-line"><span class="label">When:</span> ' + esc(dates) + '</div>' : ''))
+      + (ev.venue ? '<div class="card-line"><span class="label">Where:</span> ' + esc(ev.venue) + '</div>' : '')
+      + (ev.city ? '<div class="card-line"><span class="label">' + (ev.venue ? '' : 'Where: ') + '</span>' + esc(ev.city) + '</div>' : '')
+      + (ev.rsvps != null ? '<div class="card-line"><span class="label">RSVPs:</span> ' + esc(ev.rsvps) + '</div>' : '')
+      + '<a class="card-link" href="' + esc(ev.url) + '" target="_blank" rel="noopener">View on FetLife</a>'
+      + '</div></article>';
+  }
+
+  // ---- Calendar: Overview (every month in range, compact) ----
+  var overviewEl = document.getElementById('overview');
+  function renderOverview() {
+    var html = '';
+    var m = new Date(rangeStart.getFullYear(), rangeStart.getMonth(), 1);
+    for (; m <= rangeEnd; m = new Date(m.getFullYear(), m.getMonth() + 1, 1)) {
+      var year = m.getFullYear(), month = m.getMonth();
+      var firstDay = m.getDay();
+      var daysInMonth = new Date(year, month + 1, 0).getDate();
+      html += '<div class="calendar-month"><div class="calendar-month-title">' + monthNames[month] + ' ' + year + '</div>';
+      html += '<div class="calendar-weekdays">';
+      weekdays.forEach(function (w) { html += '<div>' + w + '</div>'; });
+      html += '</div><div class="calendar-days">';
+      for (var i = 0; i < firstDay; i++) html += '<div></div>';
+      for (var d = 1; d <= daysInMonth; d++) {
+        var day = new Date(year, month, d), k = iso(day);
+        var evs = byDay[k];
+        if (!inRange(day)) {
+          html += '<div class="out">' + d + '</div>';
+        } else if (evs && evs.length) {
+          var colors = [];
+          evs.forEach(function (ev) { var c = colorOf(ev); if (colors.indexOf(c) === -1) colors.push(c); });
+          var bg = colors.length === 1 ? colors[0] : '#daa520';
+          // One dot per event (in its category's color) when there's more than one.
+          var dots = evs.length > 1
+            ? evs.slice(0, 5).map(function (ev) { return '<span style="background:' + esc(colorOf(ev)) + '"></span>'; }).join('')
+              + (evs.length > 5 ? '<b>+</b>' : '')
+            : '';
+          html += '<a class="calendar-day-event" href="' + dayHref(k) + '" target="_blank" data-day="' + k + '" style="background:' + esc(bg) + '"'
+            + ' aria-label="' + esc(longDate(k) + ': ' + evs.length + ' event' + (evs.length === 1 ? '' : 's') + ' (opens in a new tab)') + '">'
+            + d + '<div class="dots">' + dots + '</div></a>';
+        } else {
+          html += '<div>' + d + '</div>';
+        }
+      }
+      html += '</div></div>';
+    }
+    overviewEl.innerHTML = html;
+  }
+
+  // ---- Hover card for an Overview day ----
+  var popup = document.getElementById('event-popup');
+  function showPopup(cell) {
+    var k = cell.getAttribute('data-day');
+    var evs = sortedOn(byDay[k] || [], k);
+    var html = '<div class="ep-date">' + esc(longDate(k)) + '</div>';
+    evs.slice(0, MAX_POPUP).forEach(function (ev) {
+      var multi = ev.end && ev.end !== ev.start ? shortDate(ev.start) + ' – ' + shortDate(ev.end) : '';
+      html += '<div class="ep-item">'
+        + (ev.image ? '<img src="' + esc(ev.image) + '" alt="">' : '')
+        + '<div><div class="ep-title" style="color:' + esc(colorOf(ev)) + '">' + esc(ev.name) + '</div>'
+        + '<div class="ep-meta">' + esc(ev.category) + (ev.cost ? ' · ' + esc(ev.cost) : '') + '</div>'
+        + '<div>' + esc(ev.when || multi) + '</div>'
+        + (place(ev) ? '<div class="ep-meta">' + esc(place(ev)) + '</div>' : '')
+        + '</div></div>';
+    });
+    if (evs.length > MAX_POPUP) {
+      html += '<div class="ep-more">+ ' + (evs.length - MAX_POPUP) + ' more — click the day to see them all</div>';
+    }
+    popup.innerHTML = html;
+    popup.style.display = 'block';
+
+    var rect = cell.getBoundingClientRect();
+    var scrollX = window.pageXOffset, scrollY = window.pageYOffset;
+    var w = popup.offsetWidth, h = popup.offsetHeight;
+    var left = rect.left + scrollX + rect.width / 2 - w / 2;
+    var top = rect.bottom + scrollY + 6;
+    var maxLeft = scrollX + document.documentElement.clientWidth - w - 8;
+    if (left > maxLeft) left = maxLeft;
+    if (left < scrollX + 8) left = scrollX + 8;
+    if (rect.bottom + h + 12 > document.documentElement.clientHeight && rect.top > h + 12) {
+      top = rect.top + scrollY - h - 6;
+    }
+    popup.style.left = left + 'px';
+    popup.style.top = top + 'px';
+  }
+  function hidePopup() { popup.style.display = 'none'; }
+  overviewEl.addEventListener('mouseover', function (e) {
+    var cell = e.target.closest('.calendar-day-event');
+    if (cell) showPopup(cell);
+  });
+  overviewEl.addEventListener('mouseout', function (e) {
+    var cell = e.target.closest('.calendar-day-event');
+    if (cell && !cell.contains(e.relatedTarget)) hidePopup();
+  });
+  overviewEl.addEventListener('focusin', function (e) {
+    var cell = e.target.closest('.calendar-day-event');
+    if (cell) showPopup(cell);
+  });
+  overviewEl.addEventListener('focusout', hidePopup);
+  overviewEl.addEventListener('click', hidePopup);
+
+  // ---- Calendar: Month / Week / Day, one period at a time ----
+  var periodEl = document.getElementById('period');
+  var navEl = document.getElementById('cal-nav');
+  var today = new Date(); today = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  var cursor = inRange(today) ? today : rangeStart;
+  var sub = 'overview';
+
+  function weekStart(d) { return addDays(d, -d.getDay()); }
+  function chipHtml(ev, k) {
+    var t = timeOn(ev, k);
+    return '<a class="chip" href="' + esc(ev.url) + '" target="_blank" rel="noopener" style="border-left-color:' + esc(colorOf(ev)) + '"'
+      + ' title="' + esc(ev.name + (t ? ' — ' + t : '') + (place(ev) ? ' — ' + place(ev) : '')) + '">'
+      + (t ? '<span class="t">' + esc(t) + '</span> ' : '') + esc(ev.name) + '</a>';
+  }
+
+  function renderMonth() {
+    var first = new Date(cursor.getFullYear(), cursor.getMonth(), 1);
+    var daysInMonth = new Date(first.getFullYear(), first.getMonth() + 1, 0).getDate();
+    var html = '<div class="mv-weekdays">';
+    dayNames.forEach(function (n) { html += '<div>' + n.slice(0, 3) + '</div>'; });
+    html += '</div><div class="mv-grid">';
+    for (var i = 0; i < first.getDay(); i++) html += '<div class="mv-cell blank"></div>';
+    for (var d = 1; d <= daysInMonth; d++) {
+      var day = new Date(first.getFullYear(), first.getMonth(), d), k = iso(day);
+      if (!inRange(day)) {
+        html += '<div class="mv-cell out"><div class="mv-date">' + d + '</div></div>';
+        continue;
+      }
+      var evs = sortedOn(byDay[k] || [], k);
+      html += '<div class="mv-cell" data-day="' + k + '">'
+        + '<a class="mv-date date-link" href="' + dayHref(k) + '" target="_blank" title="Open ' + esc(longDate(k)) + ' in a new tab">' + d + '</a>';
+      evs.slice(0, MAX_CHIPS).forEach(function (ev) { html += chipHtml(ev, k); });
+      if (evs.length > MAX_CHIPS) html += '<div class="mv-more">+ ' + (evs.length - MAX_CHIPS) + ' more</div>';
+      if (evs.length) {
+        html += '<div class="dotrow">' + evs.map(function (ev) { return '<span style="background:' + esc(colorOf(ev)) + '"></span>'; }).join('') + '</div>';
+      }
+      html += '</div>';
+    }
+    periodEl.innerHTML = html + '</div>';
+    return esc(monthNames[first.getMonth()] + ' ' + first.getFullYear());
+  }
+
+  function renderWeek() {
+    var ws = weekStart(cursor), we = addDays(ws, 6);
+    var html = '<div class="wv-grid">';
+    for (var i = 0; i < 7; i++) {
+      var day = addDays(ws, i), k = iso(day);
+      var evs = inRange(day) ? sortedOn(byDay[k] || [], k) : [];
+      html += '<div class="wv-col' + (inRange(day) ? '' : ' out') + '"><div class="wv-head">'
+        + '<span class="dn">' + dayNames[day.getDay()].slice(0, 3) + '</span>'
+        + (inRange(day)
+            ? '<a class="dd date-link" href="' + dayHref(k) + '" target="_blank" title="Open ' + esc(longDate(k)) + ' in a new tab">' + day.getDate() + '</a>'
+            : '<span class="dd">' + day.getDate() + '</span>')
+        + '</div><div class="wv-body">';
+      evs.forEach(function (ev) {
+        var t = timeOn(ev, k);
+        html += '<a class="wv-ev" href="' + esc(ev.url) + '" target="_blank" rel="noopener" style="border-left-color:' + esc(colorOf(ev)) + '">'
+          + (t ? '<span class="t">' + esc(t) + '</span>' : '')
+          + '<span class="n">' + esc(ev.name) + '</span>'
+          + (place(ev) ? '<span class="p">' + esc(place(ev)) + '</span>' : '')
+          + '</a>';
+      });
+      if (inRange(day) && !evs.length) html += '<div class="wv-none">No events</div>';
+      html += '</div></div>';
+    }
+    periodEl.innerHTML = html + '</div>';
+    return esc((ws.getFullYear() === we.getFullYear()
+      ? shortDate(iso(ws)) : shortDate(iso(ws)) + ', ' + ws.getFullYear())
+      + ' – ' + shortDate(iso(we)) + ', ' + we.getFullYear());
+  }
+
+  function renderDay() {
+    var k = iso(cursor);
+    var evs = sortedOn(byDay[k] || [], k);
+    var html = '<div class="dv-hint">' + evs.length + ' event' + (evs.length === 1 ? '' : 's') + ' · click the date to open this day in a new tab</div>';
+    html += evs.length
+      ? '<div class="cards">' + evs.map(function (ev) { return cardHtml(ev, k); }).join('') + '</div>'
+      : '<p class="empty">No events on this day.</p>';
+    periodEl.innerHTML = html;
+    return '<a class="date-link" href="' + dayHref(k) + '" target="_blank" title="Open this day in a new tab">' + esc(longDate(k)) + '</a>';
+  }
+
+  // The period before/after the cursor, and whether it still touches the range.
+  function shifted(step) {
+    if (sub === 'month') return new Date(cursor.getFullYear(), cursor.getMonth() + step, 1);
+    if (sub === 'week') return addDays(weekStart(cursor), 7 * step);
+    return addDays(cursor, step);
+  }
+  function touchesRange(d) {
+    if (sub === 'month') {
+      var a = new Date(d.getFullYear(), d.getMonth(), 1), b = new Date(d.getFullYear(), d.getMonth() + 1, 0);
+      return b >= rangeStart && a <= rangeEnd;
+    }
+    if (sub === 'week') { var ws = weekStart(d); return addDays(ws, 6) >= rangeStart && ws <= rangeEnd; }
+    return inRange(d);
+  }
+  function clampToRange(d) { return d < rangeStart ? rangeStart : d > rangeEnd ? rangeEnd : d; }
+
+  function renderPeriod() {
+    if (sub === 'overview') return;
+    var label = sub === 'month' ? renderMonth() : sub === 'week' ? renderWeek() : renderDay();
+    document.getElementById('nav-label').innerHTML = label;
+    document.getElementById('nav-prev').disabled = !touchesRange(shifted(-1));
+    document.getElementById('nav-next').disabled = !touchesRange(shifted(1));
+  }
+  function step(n) {
+    var d = shifted(n);
+    if (!touchesRange(d)) return;
+    cursor = clampToRange(d);
+    renderPeriod();
+  }
+  document.getElementById('nav-prev').addEventListener('click', function () { step(-1); });
+  document.getElementById('nav-next').addEventListener('click', function () { step(1); });
+
+  // In the Month view, a click anywhere in a day's box (other than on an
+  // event) opens that day in a new tab, like its date.
+  periodEl.addEventListener('click', function (e) {
+    if (e.target.closest('a')) return;
+    var cell = e.target.closest('.mv-cell[data-day]');
+    if (cell) openDayTab(cell.getAttribute('data-day'));
+  });
+
+  var subButtons = document.querySelectorAll('[data-sub]');
+  function setSub(mode) {
+    sub = mode;
+    hidePopup();
+    subButtons.forEach(function (b) { b.classList.toggle('active', b.getAttribute('data-sub') === mode); });
+    overviewEl.hidden = mode !== 'overview';
+    periodEl.hidden = navEl.hidden = mode === 'overview';
+    renderPeriod();
+    try { localStorage.setItem('fetlifeEventsCalendarView', mode); } catch (e) {}
+  }
+  subButtons.forEach(function (b) {
+    b.addEventListener('click', function () { setSub(b.getAttribute('data-sub')); });
+  });
+
+  // ---- List view: each event under its first day in range ----
+  // With a day in the URL (#day=YYYY-MM-DD, how a clicked date opens), only
+  // that day's events are listed, multi-day events still running included.
+  var listEl = document.getElementById('list-view');
+  var onlyDay = null;
+  function renderList(list) {
+    var html = '';
+    if (onlyDay) {
+      var evs = sortedOn(byDay[onlyDay] || [], onlyDay);
+      html += '<div class="day-banner">Showing ' + esc(longDate(onlyDay)) + ' only · <a href="#" id="show-all">Show all events</a></div>'
+        + '<section class="list-day"><h2>' + esc(longDate(onlyDay)) + '</h2>'
+        + (evs.length ? '<div class="cards">' + evs.map(function (ev) { return cardHtml(ev, onlyDay); }).join('') + '</div>'
+                      : '<p class="empty">No events on this day.</p>')
+        + '</section>';
+      listEl.innerHTML = html;
+      return;
+    }
+    var groups = {}, order = [];
+    list.forEach(function (ev) {
+      var k = ev.start < CONFIG.start ? CONFIG.start : ev.start;
+      if (!groups[k]) { groups[k] = []; order.push(k); }
+      groups[k].push(ev);
+    });
+    order.sort();
+    order.forEach(function (k) {
+      html += '<section class="list-day" id="day-' + k + '"><h2>' + esc(longDate(k)) + '</h2><div class="cards">'
+        + sortedOn(groups[k], k).map(function (ev) { return cardHtml(ev, k); }).join('')
+        + '</div></section>';
+    });
+    listEl.innerHTML = html;
+  }
+  listEl.addEventListener('click', function (e) {
+    if (e.target.id !== 'show-all') return;
+    e.preventDefault();
+    history.replaceState(null, '', location.pathname + location.search);
+    readHash();
+  });
+
+  // ---- View switching (remembered per browser) ----
+  var calendarEl = document.getElementById('calendar-view');
+  function setView(mode, remember) {
+    var list = mode === 'list';
+    hidePopup();
+    calendarEl.hidden = list;
+    listEl.hidden = !list;
+    document.getElementById('btn-view-calendar').classList.toggle('active', !list);
+    document.getElementById('btn-view-list').classList.toggle('active', list);
+    if (remember !== false) {
+      try { localStorage.setItem('fetlifeEventsView', mode); } catch (e) {}
+    }
+  }
+  document.getElementById('btn-view-calendar').addEventListener('click', function () { setView('calendar'); });
+  document.getElementById('btn-view-list').addEventListener('click', function () { setView('list'); });
+  document.getElementById('search').addEventListener('input', function (e) {
+    query = e.target.value.trim().toLowerCase();
+    render();
+  });
+
+  function render() {
+    var list = EVENTS.filter(visible);
+    byDay = eventsByDay(list);
+    renderOverview();
+    renderPeriod();
+    renderList(list);
+    renderWords();
+    document.getElementById('empty').hidden = list.length > 0;
+  }
+
+  function readHash() {
+    var m = /^#day=(\d{4}-\d\d-\d\d)$/.exec(location.hash);
+    onlyDay = m ? m[1] : null;
+    if (onlyDay) {
+      cursor = clampToRange(parse(onlyDay));
+      document.title = longDate(onlyDay) + ' — ' + document.title.replace(/^.* — /, '');
+    }
+    render();
+    if (onlyDay) { setView('list', false); window.scrollTo(0, 0); }
+  }
+  window.addEventListener('hashchange', readHash);
+
+  try {
+    var savedSub = localStorage.getItem('fetlifeEventsCalendarView');
+    if (savedSub && document.querySelector('[data-sub="' + savedSub + '"]')) sub = savedSub;
+  } catch (e) {}
+  setSub(sub);
+  readHash();
+  if (!onlyDay) {
+    try { if (localStorage.getItem('fetlifeEventsView') === 'list') setView('list'); } catch (e) {}
+  }
+})();
+</script>
+</body>
+</html>
