@@ -2,7 +2,8 @@
 
 import json
 import re
-from datetime import date
+from datetime import date, datetime
+from pathlib import Path
 
 from fetlife import eventcal, parsers
 from fetlife.exceptions import RateLimitedError
@@ -218,7 +219,7 @@ def test_gather_returns_what_it_has_when_rate_limited():
 
 
 # --------------------------------------------------------------------------- #
-# embed_images / render_html
+# embed_images / render_data_js / the page
 # --------------------------------------------------------------------------- #
 class _Resp:
     def __init__(self, status, ctype, content=b""):
@@ -253,32 +254,53 @@ def test_embed_images_inlines_what_the_cdn_serves():
 
 
 def _page_data(page):
-    events = re.search(r"var EVENTS = (.*);\nvar CONFIG = (.*);\n", page)
+    events = re.search(r"var EVENTS = (.*?);\nvar CONFIG = (.*?);\n", page, re.S)
     return json.loads(events.group(1)), json.loads(events.group(2))
 
 
-def test_render_html_embeds_the_events_and_settings():
+def test_render_data_js_holds_the_events_and_settings():
     shown = Event(name="Munch </script><b>", start="2026-11-01", end="2026-11-01", category="Social",
                   url="https://fetlife.com/events/2026/11/01/m", image_url="data:image/png;base64,AA==")
     linked = Event(name="Party", start="2026-11-03", end="2026-11-04", category="Masquerade",
                    url="https://fetlife.com/events/2026/11/03/p", image_url="https://cdn/p.jpg")
-    page = eventcal.render_html([shown, linked], date(2026, 11, 1), date(2026, 11, 30),
-                                "Easton, PA", 25, "mi", title="Fall & Winter")
-    assert "<title>Fall &amp; Winter</title>" in page
-    assert "Within 25 mi of Easton, PA · Nov 1 – Nov 30, 2026 · 2 events" in page
-    assert "</script><b>" not in page  # a name can't close the data script
-    events, config = _page_data(page)
+    data = eventcal.render_data_js([shown, linked], date(2026, 11, 1), date(2026, 11, 30),
+                                   "Easton, PA", 25, "mi", title="Fall & Winter",
+                                   generated=datetime(2026, 10, 14, 9, 5))
+    assert data.startswith("// Data for community_calendar.html")
+    assert "</script><b>" not in data  # safe to inline in a <script> too
+    assert '\n        "name": "Party",\n' in data  # one field per line
+    events, config = _page_data(data)
     assert [e["name"] for e in events] == ["Munch </script><b>", "Party"]
     assert events[0]["image"] == "data:image/png;base64,AA=="
     assert events[1]["image"] is None  # a CDN link wouldn't load outside FetLife
+    assert config["title"] == "Fall & Winter"
+    assert config["subtitle"] == "Within 25 mi of Easton, PA · Nov 1 – Nov 30, 2026 · 2 events"
+    assert config["generated"] == "October 14, 2026 at 9:05 AM"
     assert config["start"] == "2026-11-01" and config["end"] == "2026-11-30"
     assert config["colors"] == {"Social": "#daa520", "Masquerade": eventcal.FALLBACK_COLORS[0]}
-    # The calendar's views, and dates that open a day's list in a new tab.
+    # Without --title, the heading names the place.
+    _, config = _page_data(eventcal.render_data_js([], date(2026, 11, 1), date(2026, 11, 30),
+                                                   "Easton, PA", 25, "mi"))
+    assert config["title"] == "Events near Easton, PA"
+
+
+def test_calendar_page_loads_the_data_script():
+    page = (Path(__file__).resolve().parent.parent / "community_calendar.html").read_text()
+    assert '<script src="community_calendar.js"></script>' in page
+    assert "document.title = CONFIG.title" in page
+    assert "data file didn't load" in page  # when the .js isn't beside it
+    # The calendar's views, and dates that open a day's list in one named tab.
     for sub in ("overview", "month", "week", "day"):
         assert f'data-sub="{sub}"' in page
-    assert "'#day=' + k" in page and "target=\"_blank\"" in page
+    assert "'#day=' + k" in page and "var DAY_TAB = 'calendar-day';" in page
+    assert "date-link\" href=\"' + dayHref(k) + '\" target=\"' + DAY_TAB + '\"" in page
     # Hidden words live in the browser's storage.
     assert 'id="exclude-form"' in page and "localStorage.setItem(WORDS_KEY" in page
+    # The (i) beside Hide explains it.
+    assert 'id="exclude-info-btn"' in page and "click the × on its bubble." in page
+    # ...and the one after the last category, the legend.
+    assert 'id="legend-info-btn"' in page and ">Click a category to hide or show it</span>" in page
+    assert "legend-hint" not in page
 
 
 def test_default_end_spans_three_months():

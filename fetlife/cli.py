@@ -221,7 +221,7 @@ def _discover_row_text(disc) -> str:
 @cli.command()
 @click.option("--center", default="Washington, NJ", show_default=True,
               help='Circle center; a place name or "lat,lng".')
-@click.option("--radius", default=50.0, show_default=True, help="Circle radius.")
+@click.option("--radius", default=100.0, show_default=True, help="Circle radius.")
 @click.option("--units", type=click.Choice(["mi", "km"]), default="mi", show_default=True)
 @click.option("--seed", default=None,
               help="Member whose friends/followers seed the crawl (default: you).")
@@ -821,7 +821,7 @@ def event(ctx: click.Context, event_id: str, json_local: bool) -> None:
 @cli.command("events-calendar")
 @click.option("--center", default="Washington, NJ", show_default=True,
               help='Where to search from; a place name or "lat,lng".')
-@click.option("--radius", default=50.0, show_default=True,
+@click.option("--radius", default=100.0, show_default=True,
               type=click.FloatRange(min=0, min_open=True), help="Search distance from --center.")
 @click.option("--units", type=click.Choice(["mi", "km"]), default="mi", show_default=True)
 @click.option("--start", "start", type=click.DateTime(formats=["%Y-%m-%d"]), default=None,
@@ -829,31 +829,31 @@ def event(ctx: click.Context, event_id: str, json_local: bool) -> None:
 @click.option("--end", "end", type=click.DateTime(formats=["%Y-%m-%d"]), default=None,
               help="Last day to include (inclusive), YYYY-MM-DD.  [default: three months "
                    "from --start, e.g. Oct 1 → Dec 31]")
-@click.option("--out", "out_path", default=None,
+@click.option("--out", "out_path", default="community_calendar.js", show_default=True,
               type=click.Path(dir_okay=False, writable=True, allow_dash=True),
-              help="HTML file to write ('-' for stdout).  [default: community_calendar.html]")
+              help="Data file to write for community_calendar.html ('-' for stdout).")
 @click.option("--title", default=None, help='Page heading.  [default: "Events near CENTER"]')
 @click.option("--images/--no-images", default=False, show_default=True,
-              help="Include the event pictures (embedded in the page, so it's bigger; "
+              help="Include the event pictures (embedded in the data file, so it's bigger; "
                    "FetLife's picture links won't load outside FetLife).")
 @click.pass_context
 def events_calendar(ctx, center, radius, units, start, end, out_path, title, images):
-    """Save the events within --radius of --center as a standalone HTML calendar.
+    """Save the events within --radius of --center as data for the HTML calendar.
 
     Covers every event running on any day from --start to --end (inclusive),
     including multi-day events that began earlier; by default three
     months, starting on the 1st of this month. The page has a calendar (Overview,
     Month, Week and Day layouts; clicking a date opens that day's list in a
     new tab) and a list view, a category legend that doubles as a filter,
-    and a text filter. It needs nothing but a browser to open.
+    and a text filter. This writes only the data, community_calendar.js; the
+    page is community_calendar.html in this repo. Keep the two in the same
+    folder; they need nothing but a browser to open.
     """
     config = ctx.obj["config"]
     start = start.date() if start else datetime.now().date().replace(day=1)
     end = end.date() if end else eventcal.default_end(start)
     if end < start:
         raise click.BadParameter("must not be before --start.", param_hint="--end")
-    if out_path is None:
-        out_path = "community_calendar.html"
 
     geocoder = geo.Geocoder(
         cache_path=config.geocode_cache_path,
@@ -889,12 +889,12 @@ def events_calendar(ctx, center, radius, units, start, end, out_path, title, ima
             status_console.print()  # end the progress line
             status_console.print(f"[dim]embedded {embedded} picture{'s' if embedded != 1 else ''}[/dim]")
 
-    page = eventcal.render_html(result.events, start, end, center, radius, units, title=title)
+    data = eventcal.render_data_js(result.events, start, end, center, radius, units, title=title)
     if out_path == "-":
-        sys.stdout.write(page)
+        sys.stdout.write(data)
     else:
         with open(out_path, "w", encoding="utf-8") as fh:
-            fh.write(page)
+            fh.write(data)
     status_console.print(
         f"[dim]{len(result.events)} event{'s' if len(result.events) != 1 else ''} "
         f"({result.pages} page{'s' if result.pages != 1 else ''})"

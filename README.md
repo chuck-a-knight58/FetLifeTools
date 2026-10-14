@@ -23,7 +23,7 @@ FetLife sits behind Cloudflare, which blocks plain HTTP clients. To get through,
 - `message` — send a direct message (subject + body) to a member, or to everyone in a CSV, from the logged-in account.
 - `search` — keyword member search _(experimental — see notes)_.
 - `events` / `event` — list events or fetch one by id _(experimental — partial data)_.
-- `events-calendar` — every event within a distance of a place between two dates, saved as a standalone HTML calendar + list page.
+- `events-calendar` — every event within a distance of a place between two dates, saved as the data file (`community_calendar.js`) for the HTML calendar + list page `community_calendar.html`.
 - `group` — fetch a group by id (name + member count).
 - `group-members` — save every member of a group to a CSV file that `friend-requests` and `message --from-csv` accept.
 - `raw` — dump raw HTML of any path (for inspecting/updating parsers).
@@ -356,27 +356,27 @@ The list is 20 members per page, one request per page. The file is written **as 
 
 ### `events-calendar`
 
-Save every event within a distance of a place, running on any day between two dates (inclusive), as **one standalone HTML page**: it opens in any browser with nothing else (no server, no internet).
+Save every event within a distance of a place, running on any day between two dates (inclusive), as **`community_calendar.js`**, the data for the calendar page **`community_calendar.html`** at the root of this repo, like the Xanadu site's `events.html` and `events-data.js`. The command writes only the `.js` file; the page is a static file edited by hand. Put the two in the same folder and the page opens in any browser with nothing else (no server, no internet).
 
 ```bash
-fetlife events-calendar                                         # 50 mi of Washington, NJ; this month and the next two
+fetlife events-calendar                                         # 100 mi of Washington, NJ; this month and the next two
 fetlife events-calendar --center "Easton, PA" --radius 30 --start 2026-11-01 --end 2026-12-31
-fetlife events-calendar --center "40.69,-75.21" --radius 40 --units km --out easton.html --title "Lehigh Valley"
+fetlife events-calendar --center "40.69,-75.21" --radius 40 --units km --out lehigh/community_calendar.js --title "Lehigh Valley"
 ```
 ```
 center 'Easton, PA' -> 40.691,-75.209 | radius 30mi | 2026-11-01 to 2026-12-31
 page 2 · events 41 · through 2027-01-02 · requests 3
-41 events (2 pages) → community_calendar.html
+41 events (2 pages) → community_calendar.js
 ```
 
 | Option | Default | Purpose |
 |---|---|---|
 | `--center` | `Washington, NJ` | Where to search from: a place name (geocoded like [`discover`](#geocoding)) or `"lat,lng"`. |
-| `--radius` / `--units` | `50` / `mi` | How far from `--center` (`mi` or `km`). Any distance works, not only the site's menu of 5/10/25/50/100/200/500 mi. |
+| `--radius` / `--units` | `100` / `mi` | How far from `--center` (`mi` or `km`). Any distance works, not only the site's menu of 5/10/25/50/100/200/500 mi. |
 | `--start` / `--end` | the 1st of this month / three months later | First and last day, `YYYY-MM-DD`, both included. By default that's three whole months (run in October: Oct 1 – Dec 31). Without `--end` the span is three months from `--start`: it ends the day before the same date three months on (`--start 2026-10-13` → Jan 12), or on the last day of a month too short for that date (Nov 30 → Feb 28). |
-| `--out` | `community_calendar.html` | File to write (`-` for stdout). Each run replaces it, so pass `--out` to keep earlier calendars. |
+| `--out` | `community_calendar.js` | Data file to write (`-` for stdout). Each run replaces it. The page always loads `community_calendar.js` from its own folder, so write it next to your copy of `community_calendar.html`. |
 | `--title` | `Events near CENTER` | The page heading. |
-| `--images` | _(off)_ | Include the event pictures, embedded in the page (a much bigger file, and one picture download per event). |
+| `--images` | _(off)_ | Include the event pictures, embedded in the data file (a much bigger file, and one picture download per event). |
 
 The page, styled after the Xanadu Reserve events page (black and goldenrod):
 
@@ -386,10 +386,10 @@ The page, styled after the Xanadu Reserve events page (black and goldenrod):
   - **Week:** Sunday to Saturday in columns, every event with its time and place.
   - **Day:** one day's events as full cards, in time order.
 
-  A multi-day event shows its start time on its first day and "Day N of M" after that. **Clicking a date** in any of these layouts opens that day's events in the List view **in a new browser tab**. The tab is the same page with `#day=YYYY-MM-DD` added, so it can be bookmarked; "Show all events" there goes back to the full list. Clicking an event opens it on FetLife.
+  A multi-day event shows its start time on its first day and "Day N of M" after that. **Clicking a date** in any of these layouts opens that day's events in the List view **in a separate browser tab**, the same tab every time: clicking another date updates that tab instead of opening a new one. The tab is the same page with `#day=YYYY-MM-DD` added, so it can be bookmarked; "Show all events" there goes back to the full list. Clicking an event opens it on FetLife.
 - **List view:** the events grouped by day, each with its category and cost, time, venue and city, RSVP count, and a link to the event on FetLife.
 - **Filters:** the category legend toggles categories on and off, and a text box filters by name or place. Both views follow the filters.
-- **Hidden words:** type words or phrases into *Hide events containing* (several at once, comma-separated) to remove every event whose name, venue, city or category contains one. Matching ignores case and goes by whole words, so hiding `rope` keeps "Europe". Remove a word with its ×. The list is saved in the browser's own storage (localStorage), so it survives reloads and is not part of the file. Browsers generally share that storage across local files, so newly generated calendars start with the same list. A different browser or profile starts with an empty list. The page remembers which views you last used.
+- **Hidden words:** type words or phrases into *Hide events containing* (several at once, comma-separated) to remove every event whose name, venue, city or category contains one. Matching ignores case and goes by whole words, so hiding `rope` keeps "Europe". Remove a word with its ×. The list is saved in the browser's own storage (localStorage), so it survives reloads and is not part of either file. Browsers generally share that storage across local files, so newly generated calendars start with the same list. A different browser or profile starts with an empty list. The page remembers which views you last used.
 
 A multi-day event appears on each of its days in the calendar, and in the list under its first day in range. One that started before `--start` and is still running is included too.
 

@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<!--
+  Community calendar. The events come from community_calendar.js in the same
+  folder, written by FetLifeTools' `fetlife events-calendar`; this page itself
+  is edited by hand. Self-contained otherwise: no external requests (pictures
+  are embedded in the data or left out). Styled after the Xanadu Reserve events
+  page, black and goldenrod. A calendar (an overview of every month with a
+  hover card per day, and Month / Week / Day views) and a list view; the chosen
+  views are remembered. Clicking a date opens that day's list in a separate tab,
+  the same one every time
+  (#day=YYYY-MM-DD).
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Events</title>
+<style>
+  :root {
+    --gold: #daa520;
+    --gold-soft: #8c7035;
+    --bg: #000;
+    --panel: #111;
+    --elevated: #1a1a1a;
+    --muted: #9a8350;
+    --link: #87cefa;
+    --serif: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--gold);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  a { color: var(--link); }
+  a:hover { color: #b0e0ff; }
+  header { text-align: center; padding: 28px 16px 4px; border-bottom: 1px solid var(--gold); }
+  h1 {
+    font-family: var(--serif);
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    font-size: 2.2em;
+    margin: 0 0 4px;
+  }
+  .subtitle { color: var(--muted); margin: 0 0 18px; }
+
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+    margin: 20px auto 6px;
+    padding: 0 16px;
+  }
+  .view-toggle { display: inline-flex; }
+  .view-toggle button {
+    padding: 8px 20px;
+    background: transparent;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    cursor: pointer;
+    font: inherit;
+    font-size: 14px;
+  }
+  .view-toggle button:first-child { border-radius: 4px 0 0 4px; border-right: none; }
+  .view-toggle button:last-child { border-radius: 0 4px 4px 0; }
+  .view-toggle button.active { background: var(--gold); color: #000; font-weight: bold; }
+  .search {
+    background: var(--panel);
+    color: var(--gold);
+    border: 1px solid var(--gold-soft);
+    border-radius: 4px;
+    padding: 8px 12px;
+    font: inherit;
+    font-size: 14px;
+    width: min(260px, 100%);
+  }
+  .search::placeholder { color: var(--gold-soft); }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin: 12px auto 0;
+    padding: 0 16px;
+    max-width: 1100px;
+  }
+  .legend > button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    color: var(--gold);
+    border: 1px solid #333;
+    border-radius: 14px;
+    padding: 3px 12px;
+    font: inherit;
+    font-size: 0.85em;
+    cursor: pointer;
+  }
+  .legend > button.off { opacity: 0.35; text-decoration: line-through; }
+  .swatch { display: inline-block; width: 12px; height: 12px; border-radius: 3px; }
+
+  .exclude {
+    max-width: 1100px;
+    margin: 12px auto 0;
+    padding: 0 16px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85em;
+  }
+  .exclude form { display: inline-flex; align-items: center; gap: 6px; }
+  .exclude input { width: min(220px, 60vw); font-size: 13px; padding: 5px 10px; }
+  .exclude button[type=submit] {
+    background: transparent;
+    color: var(--gold);
+    border: 1px solid var(--gold-soft);
+    border-radius: 4px;
+    padding: 4px 12px;
+    font: inherit;
+    cursor: pointer;
+  }
+  .word {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #2a1416;
+    color: #f0c0c0;
+    border: 1px solid #6b2e3d;
+    border-radius: 12px;
+    padding: 1px 4px 1px 10px;
+  }
+  .word button {
+    background: transparent;
+    border: 0;
+    color: inherit;
+    font-size: 1.1em;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0 4px;
+  }
+  .word button:hover { color: #fff; }
+  .exclude-count { color: var(--gold-soft); }
+  .info { position: relative; display: inline-flex; }
+  .info-btn {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid var(--gold-soft);
+    background: transparent;
+    color: var(--gold);
+    font: italic 600 13px/1 var(--serif);
+    padding: 0;
+    cursor: pointer;
+  }
+  .info-btn:hover, .info-btn[aria-expanded="true"] { border-color: var(--gold); background: var(--elevated); }
+  .info-pop {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    z-index: 20;
+    width: max-content;
+    max-width: min(280px, 80vw);
+    background: var(--elevated);
+    color: var(--gold);
+    border: 1px solid var(--gold-soft);
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-size: 13px;
+    line-height: 1.45;
+    text-align: left;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
+  }
+  .info-pop[hidden] { display: none; }
+  .exclude-clear { color: var(--gold-soft); }
+
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(290px, 100%), 1fr));
+    gap: 20px;
+    max-width: 1100px;
+    margin: 20px auto 40px;
+    padding: 0 16px;
+  }
+  .calendar-month { border: 1px solid var(--gold); padding: 10px; background: var(--panel); }
+  .calendar-month-title {
+    text-align: center;
+    font-family: var(--serif);
+    font-size: 1.2em;
+    font-weight: 600;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--gold);
+    padding-bottom: 6px;
+  }
+  /* minmax(0, 1fr): every day column the same width, however much a day holds. */
+  .calendar-weekdays, .calendar-days { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 2px; }
+  .calendar-weekdays div { text-align: center; font-size: 0.75em; opacity: 0.7; padding: 4px 0; }
+  .calendar-days > * {
+    display: block;
+    text-align: center;
+    padding: 5px 0 3px;
+    font-size: 0.85em;
+    min-height: 38px;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .calendar-days > .out { opacity: 0.25; }
+  .calendar-day-event { cursor: pointer; color: #000; font-weight: bold; text-decoration: none; }
+  .calendar-day-event:hover { color: #000; }
+  .calendar-day-event:hover, .calendar-day-event:focus { outline: 2px solid #fff; outline-offset: -2px; }
+  /* Dots wrap onto a second line rather than widen the day. */
+  .dots { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 2px; margin: 2px 2px 0; min-height: 6px; }
+  .dots span { width: 6px; height: 6px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.6); }
+  .dots b { font-size: 9px; line-height: 6px; }
+
+  .event-popup {
+    position: absolute;
+    display: none;
+    z-index: 1000;
+    width: 300px;
+    max-width: calc(100vw - 16px);
+    background: var(--elevated);
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+    padding: 12px;
+    font-size: 0.85em;
+    pointer-events: none;
+  }
+  .ep-date { font-family: var(--serif); font-size: 1.2em; font-weight: 600; margin-bottom: 6px; }
+  .ep-item { border-top: 1px solid #333; padding: 6px 0; display: flex; gap: 8px; }
+  .ep-item img { width: 64px; height: 40px; object-fit: cover; flex: none; border-radius: 2px; }
+  .ep-title { font-weight: bold; }
+  .ep-meta { color: var(--muted); }
+  .ep-more { border-top: 1px solid #333; padding-top: 6px; color: var(--muted); }
+
+  .list-view { max-width: 1100px; margin: 10px auto 40px; padding: 0 16px; }
+  .list-day { margin-top: 26px; scroll-margin-top: 12px; }
+  .list-day h2 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 1.35em;
+    margin: 0 0 10px;
+    border-bottom: 1px solid var(--gold-soft);
+    padding-bottom: 4px;
+  }
+  .list-day.flash h2 { color: #fff; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(480px, 100%), 1fr)); gap: 14px; }
+  .card {
+    display: grid;
+    grid-template-columns: 1fr;
+    background: var(--panel);
+    border: 1px solid #2a2a2a;
+    border-left: 4px solid var(--gold);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .card.has-image { grid-template-columns: 190px 1fr; }
+  .card-image { display: block; background: #222; }
+  .card-image img { width: 100%; height: 100%; min-height: 100%; object-fit: cover; display: block; }
+  .card-body { padding: 12px 14px 14px; }
+  .card-cat { font-size: 0.75em; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+  .card-title { font-family: var(--serif); font-size: 1.3em; font-weight: 600; line-height: 1.2; margin: 4px 0 8px; }
+  .card-title a { color: var(--gold); text-decoration: none; }
+  .card-title a:hover { text-decoration: underline; }
+  .card-line { font-size: 0.9em; margin: 2px 0; }
+  .card-line .label { color: var(--muted); }
+  .card-link { display: inline-block; margin-top: 8px; font-size: 0.9em; }
+  .empty { text-align: center; color: var(--muted); margin: 40px 16px; }
+  .day-banner {
+    margin: 20px 0 0;
+    padding: 10px 14px;
+    border: 1px solid var(--gold-soft);
+    border-radius: 4px;
+    background: var(--panel);
+    text-align: center;
+  }
+
+  /* ---- Calendar sub-views: Overview / Month / Week / Day ---- */
+  .subviews { display: flex; justify-content: center; margin: 14px auto 0; padding: 0 16px; }
+  .subviews button { padding: 5px 14px; font-size: 13px; }
+  .cal-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin: 18px auto 0;
+    padding: 0 16px;
+  }
+  .cal-nav button {
+    background: transparent;
+    color: var(--gold);
+    border: 1px solid var(--gold-soft);
+    border-radius: 4px;
+    padding: 5px 12px;
+    font: inherit;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .cal-nav button:disabled { opacity: 0.3; cursor: default; }
+  .cal-nav-label {
+    font-family: var(--serif);
+    font-size: 1.45em;
+    font-weight: 600;
+    min-width: 15em;
+    text-align: center;
+  }
+  .period { max-width: 1100px; margin: 14px auto 40px; padding: 0 16px; }
+  .date-link { color: var(--gold); text-decoration: none; }
+  .date-link:hover { color: #fff; text-decoration: underline; }
+  .chip {
+    display: block;
+    color: #eee;
+    text-decoration: none;
+    background: #1c1c1c;
+    border-left: 3px solid var(--gold);
+    border-radius: 2px;
+    padding: 1px 5px;
+    margin-top: 3px;
+    font-size: 0.75em;
+    line-height: 1.35;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .chip:hover { color: #fff; background: #262626; }
+  .chip .t { color: var(--muted); }
+
+  .mv-weekdays, .mv-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 3px; }
+  .mv-weekdays div { text-align: center; font-size: 0.8em; color: var(--muted); padding: 4px 0; }
+  .mv-cell {
+    min-height: 112px;
+    background: var(--panel);
+    border: 1px solid #2a2a2a;
+    border-radius: 3px;
+    padding: 4px 5px 6px;
+    cursor: pointer;
+  }
+  .mv-cell:hover { border-color: var(--gold-soft); }
+  .mv-cell.blank { background: transparent; border-color: transparent; cursor: default; }
+  .mv-cell.out { opacity: 0.3; cursor: default; }
+  .mv-cell.out:hover { border-color: #2a2a2a; }
+  .mv-date { font-weight: bold; font-size: 0.9em; }
+  .mv-more { font-size: 0.72em; color: var(--muted); margin-top: 3px; }
+  .mv-cell .dotrow { display: none; flex-wrap: wrap; gap: 2px; margin-top: 4px; }
+  .mv-cell .dotrow span { width: 7px; height: 7px; border-radius: 50%; }
+
+  .wv-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+  .wv-col { background: var(--panel); border: 1px solid #2a2a2a; border-radius: 3px; min-height: 220px; }
+  .wv-col.out { opacity: 0.3; }
+  .wv-head { text-align: center; padding: 6px 4px; border-bottom: 1px solid #2a2a2a; }
+  .wv-head .dn { display: block; font-size: 0.75em; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+  .wv-head .dd { font-family: var(--serif); font-size: 1.5em; font-weight: 600; line-height: 1.1; }
+  .wv-body { padding: 4px; }
+  .wv-ev {
+    display: block;
+    text-decoration: none;
+    color: #eee;
+    background: #1c1c1c;
+    border-left: 3px solid var(--gold);
+    border-radius: 2px;
+    padding: 4px 6px;
+    margin-bottom: 5px;
+    font-size: 0.8em;
+    line-height: 1.3;
+  }
+  .wv-ev:hover { background: #262626; color: #fff; }
+  .wv-ev .t { display: block; color: var(--muted); font-size: 0.92em; }
+  .wv-ev .n { display: block; font-weight: bold; overflow-wrap: anywhere; }
+  .wv-ev .p { display: block; color: var(--muted); overflow-wrap: anywhere; }
+  .wv-none { color: #555; font-size: 0.8em; text-align: center; padding: 10px 0; }
+
+  .dv-hint { text-align: center; color: var(--gold-soft); font-size: 0.8em; margin-bottom: 14px; }
+  .card-time { font-size: 0.8em; font-weight: bold; color: var(--gold); margin-bottom: 2px; }
+
+  footer {
+    text-align: center;
+    color: var(--gold-soft);
+    font-size: 0.8em;
+    border-top: 1px solid #333;
+    padding: 16px;
+  }
+  [hidden] { display: none !important; }
+  @media (max-width: 640px) {
+    h1 { font-size: 1.7em; }
+    .card.has-image { grid-template-columns: 1fr; }
+    .card-image img { aspect-ratio: 1.91 / 1; height: auto; }
+    .cal-nav-label { min-width: 0; font-size: 1.15em; }
+    .mv-cell { min-height: 64px; padding: 3px; }
+    .mv-cell .chip, .mv-cell .mv-more { display: none; }
+    .mv-cell .dotrow { display: flex; }
+    .wv-grid { grid-template-columns: 1fr; }
+    .wv-col { min-height: 0; }
+    .wv-col.out { display: none; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1 id="page-title"></h1>
+  <p id="page-subtitle" class="subtitle"></p>
+</header>
+
+<div class="controls">
+  <div class="view-toggle" role="group" aria-label="View">
+    <button id="btn-view-calendar" class="active" type="button">Calendar</button>
+    <button id="btn-view-list" type="button">List</button>
+  </div>
+  <input id="search" class="search" type="search" placeholder="Filter by name or place" aria-label="Filter events">
+</div>
+<div id="legend" class="legend"></div>
+<div class="exclude">
+  <form id="exclude-form">
+    <label for="exclude-input">Hide events containing</label>
+    <input id="exclude-input" class="search" type="text" placeholder="word or phrase, …" autocomplete="off">
+    <button type="submit">Hide</button>
+    <span class="info">
+      <button type="button" id="exclude-info-btn" class="info-btn" aria-label="How hiding works"
+              aria-expanded="false" aria-controls="exclude-info">i</button>
+      <span id="exclude-info" class="info-pop" role="note" hidden>To hide posts containing a word or phrase, type it in the box and click Hide. To remove a word from your filter later, click the × on its bubble.</span>
+    </span>
+  </form>
+  <span id="exclude-words"></span>
+  <span id="exclude-count" class="exclude-count"></span>
+</div>
+
+<div id="calendar-view">
+  <div class="subviews">
+    <div class="view-toggle" role="group" aria-label="Calendar view">
+      <button type="button" data-sub="overview" class="active">Overview</button>
+      <button type="button" data-sub="month">Month</button>
+      <button type="button" data-sub="week">Week</button>
+      <button type="button" data-sub="day">Day</button>
+    </div>
+  </div>
+  <div id="cal-nav" class="cal-nav" hidden>
+    <button id="nav-prev" type="button" aria-label="Previous">&#8249; Prev</button>
+    <div id="nav-label" class="cal-nav-label"></div>
+    <button id="nav-next" type="button" aria-label="Next">Next &#8250;</button>
+  </div>
+  <div id="overview" class="calendar-grid"></div>
+  <div id="period" class="period" hidden></div>
+</div>
+<div id="list-view" class="list-view" hidden></div>
+<p id="empty" class="empty" hidden>No events match.</p>
+<div id="event-popup" class="event-popup" role="tooltip"></div>
+
+<footer>
+  Generated <span id="page-generated"></span> by FetLifeTools from FetLife's event search.
+  Event details may have changed since — follow an event's link for the current listing.
+</footer>
+
+<script src="community_calendar.js"></script>
+<script>
+(function () {
+  if (typeof EVENTS === 'undefined' || typeof CONFIG === 'undefined') {
+    document.getElementById('page-title').textContent = 'Events';
+    document.getElementById('page-subtitle').textContent =
+      "This calendar's data file didn't load. Keep it in the same folder as this page.";
+    return;
+  }
+  document.title = CONFIG.title;
+  document.getElementById('page-title').textContent = CONFIG.title;
+  document.getElementById('page-subtitle').textContent = CONFIG.subtitle;
+  document.getElementById('page-generated').textContent = CONFIG.generated;
+  var monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  var weekdays = ['S','M','T','W','T','F','S'];
+  var MAX_POPUP = 6;
+  var MAX_CHIPS = 3;
+
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function parse(iso) { var p = iso.split('-'); return new Date(+p[0], +p[1] - 1, +p[2]); }
+  function iso(d) {
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+  function addDays(d, n) { return new Date(d.getFullYear(), d.getMonth(), d.getDate() + n); }
+  function longDate(isoDay) {
+    var d = parse(isoDay);
+    return dayNames[d.getDay()] + ', ' + monthNames[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+  }
+  function shortDate(isoDay) { var d = parse(isoDay); return monthNames[d.getMonth()].slice(0, 3) + ' ' + d.getDate(); }
+  function colorOf(ev) { return CONFIG.colors[ev.category] || '#daa520'; }
+  function place(ev) { return [ev.venue, ev.city].filter(Boolean).join(', '); }
+  function daysBetween(a, b) { return Math.round((parse(b) - parse(a)) / 86400000); }
+
+  // The start time on a card's time line ("Tue, Oct 13 at 6:30 PM",
+  // "Oct 13 – 18 · Tue 6:00 PM – Sun 8:00 AM"), as minutes and as text.
+  function startTime(ev) {
+    var m = /(\d{1,2}):(\d\d)\s*([AP]M)/i.exec(ev.when || '');
+    if (!m) return null;
+    var h = +m[1] % 12 + (m[3].toUpperCase() === 'PM' ? 12 : 0);
+    return { minutes: h * 60 + +m[2], text: m[1] + ':' + m[2] + ' ' + m[3].toUpperCase() };
+  }
+  // What to show as an event's time on one of its days: its start time on
+  // the first day, "Day N of M" on the days a multi-day event continues.
+  function timeOn(ev, day) {
+    if (ev.end && ev.end !== ev.start && day !== ev.start) {
+      return 'Day ' + (daysBetween(ev.start, day) + 1) + ' of ' + (daysBetween(ev.start, ev.end) + 1);
+    }
+    var t = startTime(ev);
+    return t ? t.text : '';
+  }
+  // A day's events in time order; multi-day events already running come first.
+  function sortedOn(evs, day) {
+    return evs.slice().sort(function (a, b) {
+      var ka = a.start !== day ? -1 : (startTime(a) || { minutes: 1440 }).minutes;
+      var kb = b.start !== day ? -1 : (startTime(b) || { minutes: 1440 }).minutes;
+      return ka - kb;
+    });
+  }
+
+  // Clicking a date opens that day's list in a separate browser tab: this
+  // same page, with the day in the URL's #fragment. The tab is named, so
+  // later dates replace the day in it instead of opening more tabs.
+  var DAY_TAB = 'calendar-day';
+  function dayHref(k) { return '#day=' + k; }
+  function openDayTab(k) {
+    var tab = window.open(dayHref(k), DAY_TAB);
+    if (tab) tab.focus();
+  }
+
+  var hiddenCats = {};
+  var query = '';
+  function haystack(ev) { return [ev.name, ev.venue, ev.city, ev.category].join(' ').toLowerCase(); }
+
+  // ---- Hidden words: events mentioning any of them are left out everywhere.
+  // Kept in this browser's storage, so the list survives reloads and
+  // applies to every calendar page opened from the same place.
+  var WORDS_KEY = 'fetlifeEventsHiddenWords';
+  var hiddenWords = [], wordPatterns = [];
+  function loadWords() {
+    try {
+      var saved = JSON.parse(localStorage.getItem(WORDS_KEY) || '[]');
+      hiddenWords = Array.isArray(saved) ? saved.filter(function (w) { return typeof w === 'string' && w; }) : [];
+    } catch (e) { hiddenWords = []; }
+    // Whole words only: hiding "rope" keeps "Europe". Case is ignored.
+    wordPatterns = hiddenWords.map(function (w) {
+      return new RegExp('(^|[^\\p{L}\\p{N}])' + w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '($|[^\\p{L}\\p{N}])', 'iu');
+    });
+  }
+  function saveWords() {
+    try { localStorage.setItem(WORDS_KEY, JSON.stringify(hiddenWords)); } catch (e) {}
+    loadWords();
+  }
+  function hiddenByWord(ev) {
+    var text = haystack(ev);
+    return wordPatterns.some(function (re) { return re.test(text); });
+  }
+  loadWords();
+
+  function visible(ev) {
+    if (hiddenCats[ev.category]) return false;
+    if (hiddenByWord(ev)) return false;
+    if (!query) return true;
+    return haystack(ev).indexOf(query) !== -1;
+  }
+
+  var wordsEl = document.getElementById('exclude-words');
+  function renderWords() {
+    wordsEl.innerHTML = hiddenWords.map(function (w, i) {
+      return '<span class="word">' + esc(w) + '<button type="button" data-i="' + i + '" aria-label="Stop hiding ' + esc(w) + '">×</button></span>';
+    }).join(' ') + (hiddenWords.length > 1 ? ' <a href="#" class="exclude-clear" id="exclude-clear">clear all</a>' : '');
+    var n = EVENTS.filter(hiddenByWord).length;
+    document.getElementById('exclude-count').textContent =
+      hiddenWords.length ? n + ' event' + (n === 1 ? '' : 's') + ' hidden' : '';
+  }
+  document.getElementById('exclude-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var input = document.getElementById('exclude-input');
+    // Several at once, comma-separated.
+    input.value.split(',').forEach(function (w) {
+      w = w.trim().replace(/\s+/g, ' ').toLowerCase();
+      if (w && hiddenWords.indexOf(w) === -1) hiddenWords.push(w);
+    });
+    input.value = '';
+    saveWords();
+    render();
+  });
+  wordsEl.addEventListener('click', function (e) {
+    if (e.target.id === 'exclude-clear') {
+      e.preventDefault();
+      hiddenWords = [];
+    } else if (e.target.hasAttribute('data-i')) {
+      hiddenWords.splice(+e.target.getAttribute('data-i'), 1);
+    } else {
+      return;
+    }
+    saveWords();
+    render();
+  });
+  // The (i) buttons: each toggles its note; a click elsewhere or Escape closes it.
+  function infoButtons() { return Array.prototype.slice.call(document.querySelectorAll('.info-btn')); }
+  function infoPopOf(b) { return document.getElementById(b.getAttribute('aria-controls')); }
+  function showInfo(b, open) {
+    infoPopOf(b).hidden = !open;
+    b.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  document.addEventListener('click', function (e) {
+    var clicked = e.target.closest('.info-btn');
+    var inside = e.target.closest('.info');
+    infoButtons().forEach(function (b) {
+      if (b === clicked) showInfo(b, infoPopOf(b).hidden);
+      else if (!inside || !inside.contains(b)) showInfo(b, false);
+    });
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    infoButtons().forEach(function (b) {
+      if (!infoPopOf(b).hidden) { showInfo(b, false); b.focus(); }
+    });
+  });
+
+  // Another tab (say, a day opened from the calendar) changed the list.
+  window.addEventListener('storage', function (e) {
+    if (e.key === WORDS_KEY) { loadWords(); render(); }
+  });
+
+  // ---- Legend: one toggle per category ----
+  var legendEl = document.getElementById('legend');
+  var cats = Object.keys(CONFIG.colors);
+  cats.forEach(function (cat) {
+    var n = EVENTS.filter(function (e) { return e.category === cat; }).length;
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.setAttribute('aria-pressed', 'true');
+    b.innerHTML = '<span class="swatch" style="background:' + esc(CONFIG.colors[cat]) + '"></span>' + esc(cat) + ' (' + n + ')';
+    b.addEventListener('click', function () {
+      hiddenCats[cat] = !hiddenCats[cat];
+      b.classList.toggle('off', !!hiddenCats[cat]);
+      b.setAttribute('aria-pressed', hiddenCats[cat] ? 'false' : 'true');
+      render();
+    });
+    legendEl.appendChild(b);
+  });
+  if (cats.length > 1) {
+    legendEl.insertAdjacentHTML('beforeend', '<span class="info">'
+      + '<button type="button" id="legend-info-btn" class="info-btn" aria-label="How the categories work"'
+      + ' aria-expanded="false" aria-controls="legend-info">i</button>'
+      + '<span id="legend-info" class="info-pop" role="note" hidden>Click a category to hide or show it</span></span>');
+  }
+
+  // ---- Which events fall on which day (multi-day events on every day) ----
+  var rangeStart = parse(CONFIG.start), rangeEnd = parse(CONFIG.end);
+  function inRange(d) { return d >= rangeStart && d <= rangeEnd; }
+  function eventsByDay(list) {
+    var map = {};
+    list.forEach(function (ev) {
+      var d = parse(ev.start), last = parse(ev.end || ev.start);
+      if (d < rangeStart) d = rangeStart;
+      if (last > rangeEnd) last = rangeEnd;
+      for (; d <= last; d = addDays(d, 1)) {
+        var k = iso(d);
+        (map[k] = map[k] || []).push(ev);
+      }
+    });
+    return map;
+  }
+  var byDay = {};
+
+  // ---- One event as a card (list and day views) ----
+  function cardHtml(ev, day) {
+    var multi = ev.end && ev.end !== ev.start;
+    var dates = multi ? shortDate(ev.start) + ' – ' + shortDate(ev.end) : '';
+    var t = day ? timeOn(ev, day) : '';
+    return '<article class="card' + (ev.image ? ' has-image' : '') + '" style="border-left-color:' + esc(colorOf(ev)) + '">'
+      + (ev.image ? '<a class="card-image" href="' + esc(ev.url) + '" target="_blank" rel="noopener" tabindex="-1"><img src="' + esc(ev.image) + '" alt="" loading="lazy"></a>' : '')
+      + '<div class="card-body">'
+      + (t ? '<div class="card-time">' + esc(t) + '</div>' : '')
+      + '<div class="card-cat" style="color:' + esc(colorOf(ev)) + '">' + esc(ev.category) + (ev.cost ? ' · ' + esc(ev.cost) : '') + '</div>'
+      + '<div class="card-title"><a href="' + esc(ev.url) + '" target="_blank" rel="noopener">' + esc(ev.name) + '</a></div>'
+      + (ev.when ? '<div class="card-line"><span class="label">When:</span> ' + esc(ev.when) + '</div>'
+                 : (dates ? '<div class="card-line"><span class="label">When:</span> ' + esc(dates) + '</div>' : ''))
+      + (ev.venue ? '<div class="card-line"><span class="label">Where:</span> ' + esc(ev.venue) + '</div>' : '')
+      + (ev.city ? '<div class="card-line"><span class="label">' + (ev.venue ? '' : 'Where: ') + '</span>' + esc(ev.city) + '</div>' : '')
+      + (ev.rsvps != null ? '<div class="card-line"><span class="label">RSVPs:</span> ' + esc(ev.rsvps) + '</div>' : '')
+      + '<a class="card-link" href="' + esc(ev.url) + '" target="_blank" rel="noopener">View on FetLife</a>'
+      + '</div></article>';
+  }
+
+  // ---- Calendar: Overview (every month in range, compact) ----
+  var overviewEl = document.getElementById('overview');
+  function renderOverview() {
+    var html = '';
+    var m = new Date(rangeStart.getFullYear(), rangeStart.getMonth(), 1);
+    for (; m <= rangeEnd; m = new Date(m.getFullYear(), m.getMonth() + 1, 1)) {
+      var year = m.getFullYear(), month = m.getMonth();
+      var firstDay = m.getDay();
+      var daysInMonth = new Date(year, month + 1, 0).getDate();
+      html += '<div class="calendar-month"><div class="calendar-month-title">' + monthNames[month] + ' ' + year + '</div>';
+      html += '<div class="calendar-weekdays">';
+      weekdays.forEach(function (w) { html += '<div>' + w + '</div>'; });
+      html += '</div><div class="calendar-days">';
+      for (var i = 0; i < firstDay; i++) html += '<div></div>';
+      for (var d = 1; d <= daysInMonth; d++) {
+        var day = new Date(year, month, d), k = iso(day);
+        var evs = byDay[k];
+        if (!inRange(day)) {
+          html += '<div class="out">' + d + '</div>';
+        } else if (evs && evs.length) {
+          var colors = [];
+          evs.forEach(function (ev) { var c = colorOf(ev); if (colors.indexOf(c) === -1) colors.push(c); });
+          var bg = colors.length === 1 ? colors[0] : '#daa520';
+          // One dot per event (in its category's color) when there's more than one.
+          var dots = evs.length > 1
+            ? evs.slice(0, 5).map(function (ev) { return '<span style="background:' + esc(colorOf(ev)) + '"></span>'; }).join('')
+              + (evs.length > 5 ? '<b>+</b>' : '')
+            : '';
+          html += '<a class="calendar-day-event" href="' + dayHref(k) + '" target="' + DAY_TAB + '" data-day="' + k + '" style="background:' + esc(bg) + '"'
+            + ' aria-label="' + esc(longDate(k) + ': ' + evs.length + ' event' + (evs.length === 1 ? '' : 's') + ' (opens in the day tab)') + '">'
+            + d + '<div class="dots">' + dots + '</div></a>';
+        } else {
+          html += '<div>' + d + '</div>';
+        }
+      }
+      html += '</div></div>';
+    }
+    overviewEl.innerHTML = html;
+  }
+
+  // ---- Hover card for an Overview day ----
+  var popup = document.getElementById('event-popup');
+  function showPopup(cell) {
+    var k = cell.getAttribute('data-day');
+    var evs = sortedOn(byDay[k] || [], k);
+    var html = '<div class="ep-date">' + esc(longDate(k)) + '</div>';
+    evs.slice(0, MAX_POPUP).forEach(function (ev) {
+      var multi = ev.end && ev.end !== ev.start ? shortDate(ev.start) + ' – ' + shortDate(ev.end) : '';
+      html += '<div class="ep-item">'
+        + (ev.image ? '<img src="' + esc(ev.image) + '" alt="">' : '')
+        + '<div><div class="ep-title" style="color:' + esc(colorOf(ev)) + '">' + esc(ev.name) + '</div>'
+        + '<div class="ep-meta">' + esc(ev.category) + (ev.cost ? ' · ' + esc(ev.cost) : '') + '</div>'
+        + '<div>' + esc(ev.when || multi) + '</div>'
+        + (place(ev) ? '<div class="ep-meta">' + esc(place(ev)) + '</div>' : '')
+        + '</div></div>';
+    });
+    if (evs.length > MAX_POPUP) {
+      html += '<div class="ep-more">+ ' + (evs.length - MAX_POPUP) + ' more — click the day to see them all</div>';
+    }
+    popup.innerHTML = html;
+    popup.style.display = 'block';
+
+    var rect = cell.getBoundingClientRect();
+    var scrollX = window.pageXOffset, scrollY = window.pageYOffset;
+    var w = popup.offsetWidth, h = popup.offsetHeight;
+    var left = rect.left + scrollX + rect.width / 2 - w / 2;
+    var top = rect.bottom + scrollY + 6;
+    var maxLeft = scrollX + document.documentElement.clientWidth - w - 8;
+    if (left > maxLeft) left = maxLeft;
+    if (left < scrollX + 8) left = scrollX + 8;
+    if (rect.bottom + h + 12 > document.documentElement.clientHeight && rect.top > h + 12) {
+      top = rect.top + scrollY - h - 6;
+    }
+    popup.style.left = left + 'px';
+    popup.style.top = top + 'px';
+  }
+  function hidePopup() { popup.style.display = 'none'; }
+  overviewEl.addEventListener('mouseover', function (e) {
+    var cell = e.target.closest('.calendar-day-event');
+    if (cell) showPopup(cell);
+  });
+  overviewEl.addEventListener('mouseout', function (e) {
+    var cell = e.target.closest('.calendar-day-event');
+    if (cell && !cell.contains(e.relatedTarget)) hidePopup();
+  });
+  overviewEl.addEventListener('focusin', function (e) {
+    var cell = e.target.closest('.calendar-day-event');
+    if (cell) showPopup(cell);
+  });
+  overviewEl.addEventListener('focusout', hidePopup);
+  overviewEl.addEventListener('click', hidePopup);
+
+  // ---- Calendar: Month / Week / Day, one period at a time ----
+  var periodEl = document.getElementById('period');
+  var navEl = document.getElementById('cal-nav');
+  var today = new Date(); today = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  var cursor = inRange(today) ? today : rangeStart;
+  var sub = 'overview';
+
+  function weekStart(d) { return addDays(d, -d.getDay()); }
+  function chipHtml(ev, k) {
+    var t = timeOn(ev, k);
+    return '<a class="chip" href="' + esc(ev.url) + '" target="_blank" rel="noopener" style="border-left-color:' + esc(colorOf(ev)) + '"'
+      + ' title="' + esc(ev.name + (t ? ' — ' + t : '') + (place(ev) ? ' — ' + place(ev) : '')) + '">'
+      + (t ? '<span class="t">' + esc(t) + '</span> ' : '') + esc(ev.name) + '</a>';
+  }
+
+  function renderMonth() {
+    var first = new Date(cursor.getFullYear(), cursor.getMonth(), 1);
+    var daysInMonth = new Date(first.getFullYear(), first.getMonth() + 1, 0).getDate();
+    var html = '<div class="mv-weekdays">';
+    dayNames.forEach(function (n) { html += '<div>' + n.slice(0, 3) + '</div>'; });
+    html += '</div><div class="mv-grid">';
+    for (var i = 0; i < first.getDay(); i++) html += '<div class="mv-cell blank"></div>';
+    for (var d = 1; d <= daysInMonth; d++) {
+      var day = new Date(first.getFullYear(), first.getMonth(), d), k = iso(day);
+      if (!inRange(day)) {
+        html += '<div class="mv-cell out"><div class="mv-date">' + d + '</div></div>';
+        continue;
+      }
+      var evs = sortedOn(byDay[k] || [], k);
+      html += '<div class="mv-cell" data-day="' + k + '">'
+        + '<a class="mv-date date-link" href="' + dayHref(k) + '" target="' + DAY_TAB + '" title="Open ' + esc(longDate(k)) + ' in the day tab">' + d + '</a>';
+      evs.slice(0, MAX_CHIPS).forEach(function (ev) { html += chipHtml(ev, k); });
+      if (evs.length > MAX_CHIPS) html += '<div class="mv-more">+ ' + (evs.length - MAX_CHIPS) + ' more</div>';
+      if (evs.length) {
+        html += '<div class="dotrow">' + evs.map(function (ev) { return '<span style="background:' + esc(colorOf(ev)) + '"></span>'; }).join('') + '</div>';
+      }
+      html += '</div>';
+    }
+    periodEl.innerHTML = html + '</div>';
+    return esc(monthNames[first.getMonth()] + ' ' + first.getFullYear());
+  }
+
+  function renderWeek() {
+    var ws = weekStart(cursor), we = addDays(ws, 6);
+    var html = '<div class="wv-grid">';
+    for (var i = 0; i < 7; i++) {
+      var day = addDays(ws, i), k = iso(day);
+      var evs = inRange(day) ? sortedOn(byDay[k] || [], k) : [];
+      html += '<div class="wv-col' + (inRange(day) ? '' : ' out') + '"><div class="wv-head">'
+        + '<span class="dn">' + dayNames[day.getDay()].slice(0, 3) + '</span>'
+        + (inRange(day)
+            ? '<a class="dd date-link" href="' + dayHref(k) + '" target="' + DAY_TAB + '" title="Open ' + esc(longDate(k)) + ' in the day tab">' + day.getDate() + '</a>'
+            : '<span class="dd">' + day.getDate() + '</span>')
+        + '</div><div class="wv-body">';
+      evs.forEach(function (ev) {
+        var t = timeOn(ev, k);
+        html += '<a class="wv-ev" href="' + esc(ev.url) + '" target="_blank" rel="noopener" style="border-left-color:' + esc(colorOf(ev)) + '">'
+          + (t ? '<span class="t">' + esc(t) + '</span>' : '')
+          + '<span class="n">' + esc(ev.name) + '</span>'
+          + (place(ev) ? '<span class="p">' + esc(place(ev)) + '</span>' : '')
+          + '</a>';
+      });
+      if (inRange(day) && !evs.length) html += '<div class="wv-none">No events</div>';
+      html += '</div></div>';
+    }
+    periodEl.innerHTML = html + '</div>';
+    return esc((ws.getFullYear() === we.getFullYear()
+      ? shortDate(iso(ws)) : shortDate(iso(ws)) + ', ' + ws.getFullYear())
+      + ' – ' + shortDate(iso(we)) + ', ' + we.getFullYear());
+  }
+
+  function renderDay() {
+    var k = iso(cursor);
+    var evs = sortedOn(byDay[k] || [], k);
+    var html = '<div class="dv-hint">' + evs.length + ' event' + (evs.length === 1 ? '' : 's') + ' · click the date to open this day in the day tab</div>';
+    html += evs.length
+      ? '<div class="cards">' + evs.map(function (ev) { return cardHtml(ev, k); }).join('') + '</div>'
+      : '<p class="empty">No events on this day.</p>';
+    periodEl.innerHTML = html;
+    return '<a class="date-link" href="' + dayHref(k) + '" target="' + DAY_TAB + '" title="Open this day in the day tab">' + esc(longDate(k)) + '</a>';
+  }
+
+  // The period before/after the cursor, and whether it still touches the range.
+  function shifted(step) {
+    if (sub === 'month') return new Date(cursor.getFullYear(), cursor.getMonth() + step, 1);
+    if (sub === 'week') return addDays(weekStart(cursor), 7 * step);
+    return addDays(cursor, step);
+  }
+  function touchesRange(d) {
+    if (sub === 'month') {
+      var a = new Date(d.getFullYear(), d.getMonth(), 1), b = new Date(d.getFullYear(), d.getMonth() + 1, 0);
+      return b >= rangeStart && a <= rangeEnd;
+    }
+    if (sub === 'week') { var ws = weekStart(d); return addDays(ws, 6) >= rangeStart && ws <= rangeEnd; }
+    return inRange(d);
+  }
+  function clampToRange(d) { return d < rangeStart ? rangeStart : d > rangeEnd ? rangeEnd : d; }
+
+  function renderPeriod() {
+    if (sub === 'overview') return;
+    var label = sub === 'month' ? renderMonth() : sub === 'week' ? renderWeek() : renderDay();
+    document.getElementById('nav-label').innerHTML = label;
+    document.getElementById('nav-prev').disabled = !touchesRange(shifted(-1));
+    document.getElementById('nav-next').disabled = !touchesRange(shifted(1));
+  }
+  function step(n) {
+    var d = shifted(n);
+    if (!touchesRange(d)) return;
+    cursor = clampToRange(d);
+    renderPeriod();
+  }
+  document.getElementById('nav-prev').addEventListener('click', function () { step(-1); });
+  document.getElementById('nav-next').addEventListener('click', function () { step(1); });
+
+  // In the Month view, a click anywhere in a day's box (other than on an
+  // event) opens that day in the day tab, like its date.
+  periodEl.addEventListener('click', function (e) {
+    if (e.target.closest('a')) return;
+    var cell = e.target.closest('.mv-cell[data-day]');
+    if (cell) openDayTab(cell.getAttribute('data-day'));
+  });
+
+  var subButtons = document.querySelectorAll('[data-sub]');
+  function setSub(mode) {
+    sub = mode;
+    hidePopup();
+    subButtons.forEach(function (b) { b.classList.toggle('active', b.getAttribute('data-sub') === mode); });
+    overviewEl.hidden = mode !== 'overview';
+    periodEl.hidden = navEl.hidden = mode === 'overview';
+    renderPeriod();
+    try { localStorage.setItem('fetlifeEventsCalendarView', mode); } catch (e) {}
+  }
+  subButtons.forEach(function (b) {
+    b.addEventListener('click', function () { setSub(b.getAttribute('data-sub')); });
+  });
+
+  // ---- List view: each event under its first day in range ----
+  // With a day in the URL (#day=YYYY-MM-DD, how a clicked date opens), only
+  // that day's events are listed, multi-day events still running included.
+  var listEl = document.getElementById('list-view');
+  var onlyDay = null;
+  function renderList(list) {
+    var html = '';
+    if (onlyDay) {
+      var evs = sortedOn(byDay[onlyDay] || [], onlyDay);
+      html += '<div class="day-banner">Showing ' + esc(longDate(onlyDay)) + ' only · <a href="#" id="show-all">Show all events</a></div>'
+        + '<section class="list-day"><h2>' + esc(longDate(onlyDay)) + '</h2>'
+        + (evs.length ? '<div class="cards">' + evs.map(function (ev) { return cardHtml(ev, onlyDay); }).join('') + '</div>'
+                      : '<p class="empty">No events on this day.</p>')
+        + '</section>';
+      listEl.innerHTML = html;
+      return;
+    }
+    var groups = {}, order = [];
+    list.forEach(function (ev) {
+      var k = ev.start < CONFIG.start ? CONFIG.start : ev.start;
+      if (!groups[k]) { groups[k] = []; order.push(k); }
+      groups[k].push(ev);
+    });
+    order.sort();
+    order.forEach(function (k) {
+      html += '<section class="list-day" id="day-' + k + '"><h2>' + esc(longDate(k)) + '</h2><div class="cards">'
+        + sortedOn(groups[k], k).map(function (ev) { return cardHtml(ev, k); }).join('')
+        + '</div></section>';
+    });
+    listEl.innerHTML = html;
+  }
+  listEl.addEventListener('click', function (e) {
+    if (e.target.id !== 'show-all') return;
+    e.preventDefault();
+    history.replaceState(null, '', location.pathname + location.search);
+    readHash();
+  });
+
+  // ---- View switching (remembered per browser) ----
+  var calendarEl = document.getElementById('calendar-view');
+  function setView(mode, remember) {
+    var list = mode === 'list';
+    hidePopup();
+    calendarEl.hidden = list;
+    listEl.hidden = !list;
+    document.getElementById('btn-view-calendar').classList.toggle('active', !list);
+    document.getElementById('btn-view-list').classList.toggle('active', list);
+    if (remember !== false) {
+      try { localStorage.setItem('fetlifeEventsView', mode); } catch (e) {}
+    }
+  }
+  document.getElementById('btn-view-calendar').addEventListener('click', function () { setView('calendar'); });
+  document.getElementById('btn-view-list').addEventListener('click', function () { setView('list'); });
+  document.getElementById('search').addEventListener('input', function (e) {
+    query = e.target.value.trim().toLowerCase();
+    render();
+  });
+
+  function render() {
+    var list = EVENTS.filter(visible);
+    byDay = eventsByDay(list);
+    renderOverview();
+    renderPeriod();
+    renderList(list);
+    renderWords();
+    document.getElementById('empty').hidden = list.length > 0;
+  }
+
+  function readHash() {
+    var m = /^#day=(\d{4}-\d\d-\d\d)$/.exec(location.hash);
+    onlyDay = m ? m[1] : null;
+    if (onlyDay) {
+      cursor = clampToRange(parse(onlyDay));
+      document.title = longDate(onlyDay) + ' — ' + document.title.replace(/^.* — /, '');
+    }
+    render();
+    if (onlyDay) { setView('list', false); window.scrollTo(0, 0); }
+  }
+  window.addEventListener('hashchange', readHash);
+
+  try {
+    var savedSub = localStorage.getItem('fetlifeEventsCalendarView');
+    if (savedSub && document.querySelector('[data-sub="' + savedSub + '"]')) sub = savedSub;
+  } catch (e) {}
+  setSub(sub);
+  readHash();
+  if (!onlyDay) {
+    try { if (localStorage.getItem('fetlifeEventsView') === 'list') setView('list'); } catch (e) {}
+  }
+})();
+</script>
+</body>
+</html>
