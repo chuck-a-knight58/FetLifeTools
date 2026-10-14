@@ -216,9 +216,13 @@
     overflow: hidden;
   }
   .calendar-days > .out { opacity: 0.25; }
-  .calendar-day-event { cursor: pointer; color: #000; font-weight: bold; text-decoration: none; }
+  /* No long-press link menu on phones: holding a day shows its card instead. */
+  .calendar-day-event { cursor: pointer; color: #000; font-weight: bold; text-decoration: none;
+                        -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
   .calendar-day-event:hover { color: #000; }
-  .calendar-day-event:hover, .calendar-day-event:focus { outline: 2px solid #fff; outline-offset: -2px; }
+  .calendar-day-event:focus-visible { outline: 2px solid #fff; outline-offset: -2px; }
+  /* Only for a real hover: a tap would leave the outline stuck on. */
+  @media (hover: hover) { .calendar-day-event:hover { outline: 2px solid #fff; outline-offset: -2px; } }
   /* Dots wrap onto a second line rather than widen the day. */
   .dots { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 2px; margin: 2px 2px 0; min-height: 6px; }
   .dots span { width: 6px; height: 6px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.6); }
@@ -770,17 +774,31 @@
     popup.style.top = top + 'px';
   }
   function hidePopup() { popup.style.display = 'none'; }
-  overviewEl.addEventListener('mouseover', function (e) {
+  // A mouse shows the card while it's over a day. A finger shows it while it
+  // touches a day and hides it on lifting (or once the page scrolls): touch
+  // screens never send the "pointer left" a mouse does, so the card would stay.
+  overviewEl.addEventListener('pointerover', function (e) {
     var cell = e.target.closest('.calendar-day-event');
-    if (cell) showPopup(cell);
+    if (cell && e.pointerType === 'mouse') showPopup(cell);
   });
-  overviewEl.addEventListener('mouseout', function (e) {
+  overviewEl.addEventListener('pointerout', function (e) {
     var cell = e.target.closest('.calendar-day-event');
-    if (cell && !cell.contains(e.relatedTarget)) hidePopup();
+    if (cell && e.pointerType === 'mouse' && !cell.contains(e.relatedTarget)) hidePopup();
   });
+  overviewEl.addEventListener('pointerdown', function (e) {
+    var cell = e.target.closest('.calendar-day-event');
+    if (cell && e.pointerType !== 'mouse') showPopup(cell);
+  });
+  ['pointerup', 'pointercancel'].forEach(function (type) {
+    document.addEventListener(type, function (e) { if (e.pointerType !== 'mouse') hidePopup(); });
+  });
+  // Keyboard focus shows it too, but not the focus a tap leaves behind.
+  function keyboardFocused(el) {
+    try { return el.matches(':focus-visible'); } catch (err) { return true; }
+  }
   overviewEl.addEventListener('focusin', function (e) {
     var cell = e.target.closest('.calendar-day-event');
-    if (cell) showPopup(cell);
+    if (cell && keyboardFocused(cell)) showPopup(cell);
   });
   overviewEl.addEventListener('focusout', hidePopup);
   overviewEl.addEventListener('click', hidePopup);
