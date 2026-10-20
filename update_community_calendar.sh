@@ -11,7 +11,7 @@ fi
 # Copy each file only if it's newer than the site's copy (or the site has none).
 for f in community_calendar.js; do
     if [ ! -e ~/Documents/github-projects/Xanadu/"$f" ] || [ "$f" -nt ~/Documents/github-projects/Xanadu/"$f" ]; then
-        cp "$f" ~/Documents/github-projects/Xanadu/XR/"$f"
+        cp "$f" ~/Documents/github-projects/Xanadu/"$f"
     fi
 done
 
