@@ -21,6 +21,7 @@ FetLife sits behind Cloudflare, which blocks plain HTTP clients. To get through,
 - `engagement` — who loves/comments on a member's posts without being a friend or follower.
 - `friend-requests` — send friend requests to the members listed in a CSV, with caps, a dry run and a log.
 - `message` — send a direct message (subject + body) to a member, or to everyone in a CSV, from the logged-in account.
+- `post-writing` — post a writing (title, text, category, tags, optional picture) from the logged-in account, or save it as a draft.
 - `search` — keyword member search _(experimental — see notes)_.
 - `events` / `event` — list events or fetch one by id _(experimental — partial data)_.
 - `events-calendar` — every event within a distance of a place between two dates, saved as the data file (`community_calendar.js`) for the HTML calendar + list page `community_calendar.html`.
@@ -103,7 +104,7 @@ Global options (before the subcommand):
 
 Every command accepts `--json` (or `-j` after the subcommand). Table output uses [rich](https://github.com/Textualize/rich); JSON output is a list of objects (or a single object for one-item results) suitable for `jq`. Outputs below are **illustrative** (nicknames/values are examples).
 
-> **Command status.** `whoami`, `profile`, `friends`, `relationships`, `followers`, `following`, `discover`, `connections`, `engagement`, `friend-requests`, `message`, `group`, `group-members`, `events-calendar`, `login`, and `raw` use FetLife's JSON API (or stable server-rendered fields) and return full data. `search`, `events`, and `event` are **experimental** — see notes on each; they were scaffolded against older markup and are awaiting the JSON endpoints the SPA now uses.
+> **Command status.** `whoami`, `profile`, `friends`, `relationships`, `followers`, `following`, `discover`, `connections`, `engagement`, `friend-requests`, `message`, `post-writing`, `group`, `group-members`, `events-calendar`, `login`, and `raw` use FetLife's JSON API (or stable server-rendered fields) and return full data. `search`, `events`, and `event` are **experimental** — see notes on each; they were scaffolded against older markup and are awaiting the JSON endpoints the SPA now uses.
 
 ### `login`
 
@@ -313,6 +314,33 @@ skipped     Extra_One                over --limit 10
 
 Throttling (HTTP 429) stops the run with exit code 75; the log is intact, so rerunning later continues where it stopped. Always `--dry-run` a new list first — it resolves every member and shows exactly who would be messaged. The member is resolved by nickname or numeric id. FetLife bounces the compose page for members who don't accept messages from your account (privacy settings, blocks); those are reported and nothing is sent. Subject is limited to 255 characters. `-y`/`--yes` skips the prompt for scripted use.
 
+### `post-writing`
+
+Post a writing from the logged-in account (the one in your `.env`; `--env-file` posts from another), the same way the site's New Writing page does.
+
+```bash
+fetlife post-writing -t "Saturday's rope jam" -b "What a night.
+
+Second paragraph." -c "Journal Entry" --tag rope --tag "rope jam"
+fetlife post-writing -t "Draft idea" -b "Notes for later" -c Note --draft
+fetlife post-writing -t "Gallery night" -b "Photos from Friday" -c Note \
+  --image friday.jpg --image-consent --privacy friends
+```
+
+| Option | Default | Purpose |
+|---|---|---|
+| `--title` / `-t` | _(required)_ | The title. |
+| `--body` / `-b` | _(required)_ | The text. A blank line starts a new paragraph; single line breaks are kept. It's posted as plain text (no formatting). |
+| `--category` / `-c` | _(required)_ | `Journal Entry`, `Erotica` or `Note` (any case). |
+| `--tag NAME` | _(none)_ | A tag; repeat it or comma-separate names. At most 5, and no `@` or `#`, as on the site. |
+| `--image FILE` | _(none)_ | A picture (png, jpg, gif, webp, heic, tiff) shown below the text. |
+| `--image-consent` | _(off)_ | Required with `--image`: the certification the site makes you tick — that everyone in the picture consented to it being uploaded, was 18 or older when it was taken, and that you have documentation to support this. |
+| `--privacy` | `public` | `public` (FetLifers), `friends_and_followers`, or `friends`. |
+| `--draft` | _(off)_ | Save it as a draft (only you see it) instead of publishing. |
+| `--yes` / `-y` | _(off)_ | Publish without the confirmation prompt. |
+
+It prints what it's about to post and asks before publishing; drafts are saved without asking. The picture is uploaded first, then the writing is posted with it; the post itself is never retried after a server error, so a writing can't go up twice. FetLife capitalizes tag names. Collections aren't supported yet.
+
 ### `group`
 
 Fetch a group by numeric id (name + member count).
@@ -435,6 +463,20 @@ fetlife raw /JohnDoe/friends > friends.html
 ```
 
 Prints the response body to stdout. Combine with `Accept: application/json` discovery in `client.py` to find new endpoints (see [How profiles are fetched](#how-profiles-are-fetched-the-json-api)).
+
+## Scheduling scripts
+
+`schedule.conf` lists when to run this directory's scripts, one job per line in crontab-style fields (`minute hour day month weekday script [arguments]`; the file explains the syntax). `schedule.py` turns it into macOS launchd jobs, so they run even when no terminal is open, and catch up after the Mac wakes from sleep:
+
+```bash
+python3 schedule.py check        # what schedule.conf schedules; changes nothing
+python3 schedule.py install      # schedule exactly that (rerun after every edit)
+python3 schedule.py status       # loaded? last exit code?
+python3 schedule.py run update_community_calendar.sh   # run a job now, as launchd will
+python3 schedule.py uninstall    # remove them all
+```
+
+Each job runs its script with `/bin/bash` in this directory, with `.venv/bin` on its PATH, and appends its output to `logs/<script>.log`. macOS keeps background jobs out of `~/Documents` unless allowed: if a log says `Operation not permitted`, give `/bin/bash` Full Disk Access (System Settings → Privacy & Security → Full Disk Access → +, then ⌘⇧G and `/bin/bash`).
 
 ## How it works
 

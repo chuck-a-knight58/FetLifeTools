@@ -1,9 +1,14 @@
+#!/bin/bash
+
 cd ~/Documents/github-projects/FetLifeTools
 source .venv/bin/activate
 
+# Run using anonymous credentials
+fetlife --env-file hammerbacher.env login
+
 # Fetch the events only if community_calendar.js wasn't already updated today.
 if [ ! -f community_calendar.js ] || [ "$(stat -f %Sm -t %Y-%m-%d community_calendar.js)" != "$(date +%Y-%m-%d)" ]; then
-    fetlife events-calendar --out community_calendar.js
+    fetlife --env-file hammerbacher.env events-calendar --out community_calendar.js
 else
     echo "community_calendar.js is already from today; skipping events-calendar."
 fi

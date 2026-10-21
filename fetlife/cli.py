@@ -19,7 +19,7 @@ import click
 from rich.console import Console
 from rich.table import Table
 
-from . import __version__, crawl, engagement, eventcal, friending, geo, groups, messaging
+from . import __version__, crawl, engagement, eventcal, friending, geo, groups, messaging, writing
 from .client import FetLifeClient
 from .config import Config
 from .exceptions import FetLifeError, RateLimitedError
@@ -906,6 +906,83 @@ def events_calendar(ctx, center, radius, units, start, end, out_path, title, ima
             f"{result.through or start} on. Rerun later to fill it in.[/red]"
         )
         ctx.exit(EXIT_RATE_LIMITED)
+
+
+@cli.command("post-writing")
+@click.option("--title", "-t", required=True, help="The writing's title.")
+@click.option("--body", "-b", required=True,
+              help="The text. A blank line starts a new paragraph; single line breaks are kept.")
+@click.option("--category", "-c", required=True,
+              type=click.Choice(writing.CATEGORIES, case_sensitive=False), help="FetLife's category.")
+@click.option("--tag", "tags", multiple=True, metavar="NAME",
+              help=f"A tag; repeat it, or separate names with commas (at most {writing.MAX_TAGS}).")
+@click.option("--image", type=click.Path(exists=True, dir_okay=False, readable=True), default=None,
+              help="A picture to show below the text (" + ", ".join(sorted({e.lstrip('.') for e in writing.IMAGE_TYPES})) + ").")
+@click.option("--image-consent", is_flag=True, default=False,
+              help="Required with --image: " + writing.IMAGE_CONSENT)
+@click.option("--privacy", type=click.Choice(list(writing.PRIVACY_LEVELS)), default="public",
+              show_default=True,
+              help="Who can read it: public (FetLifers), friends_and_followers, or friends.")
+@click.option("--draft", is_flag=True, default=False,
+              help="Save it as a draft (only you see it) instead of publishing.")
+@click.option("--yes", "-y", is_flag=True, default=False, help="Publish without asking first.")
+@click.pass_context
+def post_writing(ctx, title, body, category, tags, image, image_consent, privacy, draft, yes):
+    """Post a writing from the logged-in account.
+
+    `fetlife post-writing -t TITLE -b TEXT -c Note --tag rope --tag "first time"`.
+    Add --image FILE (with --image-consent, the certification FetLife asks for)
+    to show a picture below the text, --privacy to limit who reads it, and
+    --draft to save it unpublished. It shows what it will post and asks
+    before publishing (--yes skips that). The account is the one in your
+    .env (use --env-file to post from another).
+    """
+    title = " ".join(title.split())
+    if not title or not body.strip():
+        raise FetLifeError("Both the title and the body must be non-empty.")
+    category = next(c for c in writing.CATEGORIES if c.lower() == category.lower())
+    tags = writing.clean_tags(tags)
+    mime = None
+    if image:
+        mime = writing.image_type(image)
+        if not image_consent:
+            raise FetLifeError("Posting a picture needs --image-consent: " + writing.IMAGE_CONSENT)
+    rich_body = writing.text_html(body)
+
+    fl = _client(ctx)
+    fl.on_retry = _report_retry
+    with fl:
+        me = fl.whoami()
+        account = me.nickname or f"user {me.id}"
+        form = fl.get_writing_form()
+        if form["categories"] and category not in form["categories"]:
+            raise FetLifeError(f"FetLife no longer offers the category {category!r} "
+                               f"(it offers: {', '.join(form['categories'])}).")
+        if form["privacy_levels"] and privacy not in form["privacy_levels"]:
+            raise FetLifeError(f"FetLife no longer offers the privacy level {privacy!r} "
+                               f"(it offers: {', '.join(form['privacy_levels'])}).")
+
+        console.print(f"[bold]{'Draft' if draft else 'Writing'} as {account}:[/bold] {title}")
+        console.print(f"  category {category} · {writing.PRIVACY_LEVELS[privacy]}"
+                      + (f" · tags {', '.join(tags)}" if tags else "")
+                      + (f" · picture {os.path.basename(image)}" if image else ""))
+        preview = body.strip()
+        console.print("  " + (preview[:300] + "…" if len(preview) > 300 else preview).replace("\n", "\n  "),
+                      markup=False, highlight=False)
+        if not draft and not yes:
+            click.confirm(f"Publish this writing as {account}?", abort=True)
+
+        picture_ids = []
+        if image:
+            picture = fl.upload_writing_picture(image, mime, form["csrf"] or form["token"])
+            rich_body += writing.picture_html(picture, mime, os.path.getsize(image))
+            picture_ids.append(picture["id"])
+        url = fl.create_writing(form["token"], title, rich_body, category, tags, privacy,
+                                picture_ids, draft=draft)
+    if draft:
+        console.print(f"[green]Draft saved.[/green] Your drafts: {url}")
+    else:
+        console.print(f"[green]Published:[/green] {url}")
 
 
 @cli.command()

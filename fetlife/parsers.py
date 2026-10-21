@@ -650,6 +650,44 @@ def message_form_from_html(html: str) -> dict | None:
     return fields
 
 
+def writing_form_from_html(html: str) -> dict | None:
+    """The New Writing form (``/posts/new``): its tokens, categories and
+    privacy levels, or None when the page carries no such form.
+
+    ``{"token": str, "csrf": str, "categories": [str], "privacy_levels": [str]}``.
+    ``token`` is the form's own authenticity token (Rails issues one per form),
+    for posting the form; ``csrf`` is the page's, which the editor's picture
+    upload sends instead. The categories and privacy levels are what the form
+    offers right now, so a caller can check its choices against the live site.
+    """
+    soup = _soup(html)
+    form = soup.find("form", action="/posts")
+    if form is None:
+        return None
+    token = form.find("input", attrs={"name": "authenticity_token"})
+    category = form.find("select", attrs={"name": "post[category]"})
+    return {
+        "token": token.get("value") if token else extract_csrf_token(html),
+        "csrf": extract_csrf_token(html),
+        "categories": [o.get("value") for o in category.find_all("option") if o.get("value")]
+                      if category else [],
+        "privacy_levels": [a.get("data-dropdown-value-param")
+                           for a in form.select("[data-dropdown-value-param]")],
+    }
+
+
+def form_errors_from_html(html: str) -> list[str]:
+    """The validation messages a re-rendered Rails form shows, if any."""
+    soup = _soup(html)
+    found: list[str] = []
+    for el in soup.select("#error_explanation li, .field_with_errors + .error, "
+                          "[class*='error'] li, [data-testid*='error']"):
+        text = _clean(el.get_text(" "))
+        if text and len(text) < 300 and text not in found:
+            found.append(text)
+    return found
+
+
 def flash_from_html(html: str) -> str | None:
     """The flash notice a page shows (Rails' one-shot message), if any.
 

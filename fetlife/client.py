@@ -12,9 +12,11 @@ import json
 import random
 import re
 import time
+from pathlib import Path
 from typing import Iterator
 from urllib.parse import urljoin, quote_plus, urlsplit
 
+from curl_cffi import CurlMime
 from curl_cffi import requests as cffi_requests
 
 from .config import Config
@@ -266,8 +268,14 @@ class FetLifeClient:
                 pass
         return min(self.config.retry_backoff * (2 ** attempt), 120.0)
 
-    def request(self, method: str, path: str, **kwargs) -> cffi_requests.Response:
-        """Perform a rate-limited request, retrying 429/5xx with backoff."""
+    def request(self, method: str, path: str, retry_server_errors: bool = True,
+                **kwargs) -> cffi_requests.Response:
+        """Perform a rate-limited request, retrying 429/5xx with backoff.
+
+        Pass ``retry_server_errors=False`` for a write that mustn't happen
+        twice: a 5xx may come after the server already acted, so it raises
+        at once. A 429 is still retried — the request was refused unread.
+        """
         url = self._url(path) if not path.startswith("http") else path
         attempts = max(1, self.config.max_retries + 1)
         for attempt in range(attempts):
@@ -277,6 +285,8 @@ class FetLifeClient:
             status = resp.status_code
 
             if status == 429 or status >= 500:
+                if status >= 500 and not retry_server_errors:
+                    raise FetLifeError(f"Server error {status} for {url}")
                 if status == 429:
                     # Slow down permanently, not just for this retry — the
                     # backoff below alone would leave the cadence unchanged.
@@ -660,6 +670,86 @@ class FetLifeClient:
         raise FetLifeError(
             "FetLife did not confirm the message"
             + (f": {flash}" if flash else f" (landed on {resp.url} with no notice).")
+        )
+
+    def get_writing_form(self) -> dict:
+        """The New Writing form: its token and the categories and privacy
+        levels it offers (see :func:`parsers.writing_form_from_html`)."""
+        self._ensure_auth()
+        resp = self.get("/posts/new")
+        form = parsers.writing_form_from_html(resp.text)
+        if form is None or not form.get("token"):
+            raise ParseError("Could not find the New Writing form on /posts/new.")
+        return form
+
+    def upload_writing_picture(self, path: str | Path, content_type: str, token: str) -> dict:
+        """Upload a picture for a writing, as the editor's image button does.
+
+        Returns FetLife's description of the picture (``id``,
+        ``attachable_sgid``, ``src_2x``, ``width``, ...) for
+        :func:`fetlife.writing.picture_html`. The picture belongs to no
+        writing until one is posted with it.
+        """
+        self._ensure_auth()
+        form = CurlMime()
+        try:
+            form.addpart(name="file", content_type=content_type, filename=Path(path).name,
+                         local_path=str(path))
+            form.addpart(name="target_type", data=b"Post")
+            resp = self.request(
+                "POST", "/attachments_pictures", multipart=form,
+                headers={"Accept": "application/json", "X-CSRF-Token": token,
+                         "Referer": self._url("/posts/new"), "Origin": self.config.base_url},
+            )
+        finally:
+            form.close()
+        try:
+            body = resp.json()
+        except ValueError:
+            body = {}
+        if resp.status_code >= 400 or not isinstance(body, dict) or "attachment" not in body:
+            messages = ((body.get("error") or {}).get("messages") if isinstance(body, dict) else None) or []
+            raise FetLifeError(
+                f"FetLife refused the picture {Path(path).name}"
+                + (f": {'; '.join(messages)}" if messages else f" (HTTP {resp.status_code}).")
+            )
+        return body["attachment"]
+
+    def create_writing(self, token: str, title: str, rich_body: str, category: str,
+                       tags: list[str], privacy: str, picture_ids: list[int] = (),
+                       draft: bool = False) -> str:
+        """Post a writing (or save it as a draft); return where it landed.
+
+        Submits the New Writing form: *rich_body* is editor HTML (see
+        :mod:`fetlife.writing`), *picture_ids* the ids of pictures it embeds.
+        Returns the new writing's URL, or for a draft the drafts page's.
+        Raises FetLifeError with the site's reasons if it's refused. Never
+        retried after a server error, so a writing can't go up twice.
+        """
+        self._ensure_auth()
+        data = [("authenticity_token", token), ("post[title]", title),
+                ("post[rich_body]", rich_body), ("post[category]", category),
+                ("post[tag_names][]", "")]
+        data += [("post[tag_names][]", t) for t in tags]
+        data += [("post[privacy_level]", privacy)]
+        data += [("post[attachment_ids][]", str(i)) for i in picture_ids]
+        data += [("post[audio][id]", ""), ("post[audio][consent]", "false"), ("post[audio]", ""),
+                 ("post[draft]", "1" if draft else "")]
+        resp = self.request(
+            "POST", "/posts", retry_server_errors=False, data=data,
+            headers={"Referer": self._url("/posts/new"), "Origin": self.config.base_url},
+        )
+        path = urlsplit(resp.url).path
+        flash = parsers.flash_from_html(resp.text)
+        if draft and path.endswith("/posts/drafts"):
+            return resp.url
+        if not draft and re.search(r"/posts/\d+$", path):
+            return resp.url
+        errors = parsers.form_errors_from_html(resp.text)
+        raise FetLifeError(
+            "FetLife did not " + ("save the draft" if draft else "publish the writing")
+            + (": " + "; ".join(errors) if errors else f": {flash}" if flash
+               else f" (HTTP {resp.status_code}, landed on {resp.url}).")
         )
 
     def get_relationships(self, nickname_or_id: str) -> list["Relationship"]:
