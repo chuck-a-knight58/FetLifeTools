@@ -19,9 +19,9 @@ if [ -z "$end" ]; then
 fi
 entry=$(awk -v e="$end" 'NR < e' "$TOPICS")
 
-# TITLE: the entry's first non-blank line. BODY: the rest, one paragraph per line.
+# TITLE: the entry's first non-blank line. BODY: every line after it, newlines kept as they are.
 TITLE=$(printf '%s\n' "$entry" | grep -m 1 -v '^[[:space:]]*$' || true)
-BODY=$(printf '%s\n' "$entry" | awk 'seen && NF { if (n++) printf "\n\n"; printf "%s", $0 } !seen && NF { seen = 1 }')
+BODY=$(printf '%s\n' "$entry" | awk 'seen { print } !seen && NF { seen = 1 }')
 if [ -z "$TITLE" ]; then
     echo "No entries left in $TOPICS; nothing to post." >&2
     exit 1
