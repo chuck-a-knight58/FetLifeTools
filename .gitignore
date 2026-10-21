@@ -32,8 +32,11 @@ htmlcov/
 .vscode/
 .venv/
 
-*.txt
 *.csv
+# Crawl results: other members' names, ages and locations. Never publish them.
+discover.txt
+results.txt
+runs/
 
 # Wrapper-script logs (go.sh)
 *.log
