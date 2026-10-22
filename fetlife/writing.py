@@ -11,7 +11,6 @@ form does; :class:`~fetlife.client.FetLifeClient` does the requests.
 from __future__ import annotations
 
 import html
-import re
 from pathlib import Path
 
 from .exceptions import FetLifeError
@@ -79,14 +78,37 @@ def clean_tags(tags) -> list[str]:
     return names
 
 
+# An empty line in the editor: what it stores when Enter is pressed on a blank line.
+EMPTY_LINE = "<p><br></p>"
+
+
 def text_html(text: str) -> str:
-    """Plain text as editor HTML: a paragraph per blank-line-separated block,
-    single line breaks kept, everything else escaped."""
-    blocks = [b.strip("\n") for b in re.split(r"\n\s*\n", text.replace("\r\n", "\n").strip())]
-    return "".join(
-        "<p>" + "<br>".join(html.escape(line, quote=False) for line in block.split("\n")) + "</p>"
-        for block in blocks if block.strip()
-    )
+    """Plain text as editor HTML, everything escaped.
+
+    A single line break stays a line break, a blank line starts a new
+    paragraph, and each blank line after the first adds an empty line, so
+    two blank lines leave a visible gap between paragraphs.
+    """
+    out: list[str] = []
+    block: list[str] = []
+    blanks = 0
+    for line in text.replace("\r\n", "\n").split("\n"):
+        if not line.strip():
+            blanks += 1
+            continue
+        if block and blanks:
+            out.append(_paragraph(block))
+            out.extend([EMPTY_LINE] * (blanks - 1))
+            block = []
+        block.append(line)
+        blanks = 0
+    if block:
+        out.append(_paragraph(block))
+    return "".join(out)
+
+
+def _paragraph(lines: list[str]) -> str:
+    return "<p>" + "<br>".join(html.escape(line, quote=False) for line in lines) + "</p>"
 
 
 def picture_html(picture: dict, content_type: str, size: int) -> str:

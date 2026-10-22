@@ -39,10 +39,17 @@ NEW_WRITING = """<html><head><meta name="csrf-token" content="page-tok"></head><
 
 
 def test_text_html_makes_paragraphs_and_escapes():
-    text = "One <b> & two\n\n\nThree, line one\r\nline two\n"
+    text = "One <b> & two\n\nThree, line one\r\nline two\n"
     assert writing.text_html(text) == ("<p>One &lt;b&gt; &amp; two</p>"
                                        "<p>Three, line one<br>line two</p>")
     assert writing.text_html("  \n\n ") == ""
+
+
+def test_text_html_adds_an_empty_line_for_each_extra_blank_line():
+    text = "\n\nFirst\n\n\nSecond\nstill second\n \n\n\nThird\n\n\n"
+    assert writing.text_html(text) == ("<p>First</p><p><br></p>"
+                                       "<p>Second<br>still second</p><p><br></p><p><br></p>"
+                                       "<p>Third</p>")
 
 
 def test_picture_html_points_at_the_upload_and_hides_the_filename():
