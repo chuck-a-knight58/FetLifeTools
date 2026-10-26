@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd ~/Documents/github-projects/FetLifeTools
+cd ~/github-projects/FetLifeTools
 source .venv/bin/activate
 
 # This script sends friend requests to engagers who are not currently friends or followers of a specified FetLife user.

@@ -476,7 +476,7 @@ python3 schedule.py run update_community_calendar.sh   # run a job now, as launc
 python3 schedule.py uninstall    # remove them all
 ```
 
-Each job runs its script with `/bin/bash` in this directory, with `.venv/bin` on its PATH, and appends its output to `logs/<script>.log`. macOS keeps background jobs out of `~/Documents` unless allowed: if a log says `Operation not permitted`, give `/bin/bash` Full Disk Access (System Settings → Privacy & Security → Full Disk Access → +, then ⌘⇧G and `/bin/bash`).
+Each job runs its script with `/bin/bash` in this directory, with `.venv/bin` on its PATH, and appends its output to `logs/<script>.log`. macOS keeps background jobs out of `~/Documents`, `~/Desktop` and `~/Downloads`, so keep this directory (and the Xanadu site that `update_community_calendar.sh` pushes to) elsewhere, e.g. `~/github-projects/`. A log that says `Operation not permitted` means a job touched one of those folders.
 
 ## How it works
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-cd ~/Documents/github-projects/FetLifeTools
+cd ~/github-projects/FetLifeTools
 source .venv/bin/activate
 
 # This script publishes a new think about it Monday post automatically using a text file and the signature image.

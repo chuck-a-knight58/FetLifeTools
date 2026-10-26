@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-cd ~/Documents/github-projects/FetLifeTools
+cd ~/github-projects/FetLifeTools
 source .venv/bin/activate
 
 # This script publishes a new Word of the Week post automatically from a text file.

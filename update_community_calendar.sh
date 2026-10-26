@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd ~/Documents/github-projects/FetLifeTools
+cd ~/github-projects/FetLifeTools
 source .venv/bin/activate
 
 # Run using anonymous credentials
@@ -15,12 +15,12 @@ fi
 
 # Copy each file only if it's newer than the site's copy (or the site has none).
 for f in community_calendar.js; do
-    if [ ! -e ~/Documents/github-projects/Xanadu/"$f" ] || [ "$f" -nt ~/Documents/github-projects/Xanadu/"$f" ]; then
-        cp "$f" ~/Documents/github-projects/Xanadu/"$f"
+    if [ ! -e ~/github-projects/Xanadu/"$f" ] || [ "$f" -nt ~/github-projects/Xanadu/"$f" ]; then
+        cp "$f" ~/github-projects/Xanadu/"$f"
     fi
 done
 
-cd ~/Documents/github-projects/Xanadu
-git add .
+cd ~/github-projects/Xanadu
+git add community_calendar.js
 git commit -m"Community calendar update"
 git push
