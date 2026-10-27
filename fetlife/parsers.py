@@ -651,10 +651,10 @@ def message_form_from_html(html: str) -> dict | None:
 
 
 def writing_form_from_html(html: str) -> dict | None:
-    """The New Writing form (``/posts/new``): its tokens, categories and
-    privacy levels, or None when the page carries no such form.
+    """The New Writing form (``/posts/new``): its tokens, categories,
+    collections and privacy levels, or None when the page carries no such form.
 
-    ``{"token": str, "csrf": str, "categories": [str], "privacy_levels": [str]}``.
+    ``collections`` contains each available collection's display name and UID.
     ``token`` is the form's own authenticity token (Rails issues one per form),
     for posting the form; ``csrf`` is the page's, which the editor's picture
     upload sends instead. The categories and privacy levels are what the form
@@ -666,11 +666,22 @@ def writing_form_from_html(html: str) -> dict | None:
         return None
     token = form.find("input", attrs={"name": "authenticity_token"})
     category = form.find("select", attrs={"name": "post[category]"})
+    collections_input = form.find("input", id="post_collections")
+    collections_widget = (
+        collections_input.find_parent(attrs={"data-controller": "form-typeahead-multi-select"})
+        if collections_input else None
+    )
     return {
         "token": token.get("value") if token else extract_csrf_token(html),
         "csrf": extract_csrf_token(html),
         "categories": [o.get("value") for o in category.find_all("option") if o.get("value")]
                       if category else [],
+        "collections": [
+            {"name": option.get("data-label"), "uid": option.get("data-value")}
+            for option in (collections_widget.select("[data-form-typeahead-multi-select-option]")
+                           if collections_widget else [])
+            if option.get("data-label") and option.get("data-value")
+        ],
         "privacy_levels": [a.get("data-dropdown-value-param")
                            for a in form.select("[data-dropdown-value-param]")],
     }

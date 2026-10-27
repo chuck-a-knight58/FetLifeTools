@@ -333,13 +333,14 @@ fetlife post-writing -t "Gallery night" -b "Photos from Friday" -c Note \
 | `--body` / `-b` | _(required)_ | The text. A blank line starts a new paragraph; single line breaks are kept. It's posted as plain text (no formatting). |
 | `--category` / `-c` | _(required)_ | `Journal Entry`, `Erotica` or `Note` (any case). |
 | `--tag NAME` | _(none)_ | A tag; repeat it or comma-separate names. At most 5, and no `@` or `#`, as on the site. |
+| `--collections NAME` | _(none)_ | Add the writing to an existing collection by name. |
 | `--image FILE` | _(none)_ | A picture (png, jpg, gif, webp, heic, tiff) shown below the text. |
 | `--image-consent` | _(off)_ | Required with `--image`: the certification the site makes you tick — that everyone in the picture consented to it being uploaded, was 18 or older when it was taken, and that you have documentation to support this. |
 | `--privacy` | `public` | `public` (FetLifers), `friends_and_followers`, or `friends`. |
 | `--draft` | _(off)_ | Save it as a draft (only you see it) instead of publishing. |
 | `--yes` / `-y` | _(off)_ | Publish without the confirmation prompt. |
 
-It prints what it's about to post and asks before publishing; drafts are saved without asking. The picture is uploaded first, then the writing is posted with it; the post itself is never retried after a server error, so a writing can't go up twice. FetLife capitalizes tag names. Collections aren't supported yet.
+It prints what it's about to post and asks before publishing; drafts are saved without asking. The picture is uploaded first, then the writing is posted with it; the post itself is never retried after a server error, so a writing can't go up twice. FetLife capitalizes tag names.
 
 ### `group`
 

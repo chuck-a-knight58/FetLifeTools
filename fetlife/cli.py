@@ -916,6 +916,8 @@ def events_calendar(ctx, center, radius, units, start, end, out_path, title, ima
               type=click.Choice(writing.CATEGORIES, case_sensitive=False), help="FetLife's category.")
 @click.option("--tag", "tags", multiple=True, metavar="NAME",
               help=f"A tag; repeat it, or separate names with commas (at most {writing.MAX_TAGS}).")
+@click.option("--collections", default="", metavar="VALUE",
+              help="Add the writing to an existing collection by name.")
 @click.option("--image", type=click.Path(exists=True, dir_okay=False, readable=True), default=None,
               help="A picture to show below the text (" + ", ".join(sorted({e.lstrip('.') for e in writing.IMAGE_TYPES})) + ").")
 @click.option("--image-consent", is_flag=True, default=False,
@@ -927,15 +929,17 @@ def events_calendar(ctx, center, radius, units, start, end, out_path, title, ima
               help="Save it as a draft (only you see it) instead of publishing.")
 @click.option("--yes", "-y", is_flag=True, default=False, help="Publish without asking first.")
 @click.pass_context
-def post_writing(ctx, title, body, category, tags, image, image_consent, privacy, draft, yes):
+def post_writing(ctx, title, body, category, tags, collections, image, image_consent,
+                 privacy, draft, yes):
     """Post a writing from the logged-in account.
 
     `fetlife post-writing -t TITLE -b TEXT -c Note --tag rope --tag "first time"`.
     Add --image FILE (with --image-consent, the certification FetLife asks for)
-    to show a picture below the text, --privacy to limit who reads it, and
-    --draft to save it unpublished. It shows what it will post and asks
-    before publishing (--yes skips that). The account is the one in your
-    .env (use --env-file to post from another).
+    to show a picture below the text, --privacy to limit who reads it,
+    --collections to add it to an existing collection by name, and --draft
+    to save it unpublished. It shows what it will post and asks before publishing
+    (--yes skips that). The account is the one in your .env (use --env-file
+    to post from another).
     """
     title = " ".join(title.split())
     if not title or not body.strip():
@@ -961,10 +965,25 @@ def post_writing(ctx, title, body, category, tags, image, image_consent, privacy
         if form["privacy_levels"] and privacy not in form["privacy_levels"]:
             raise FetLifeError(f"FetLife no longer offers the privacy level {privacy!r} "
                                f"(it offers: {', '.join(form['privacy_levels'])}).")
+        collection_uids = []
+        if collections:
+            collection = next(
+                (choice for choice in form["collections"]
+                 if choice["name"].casefold() == collections.casefold()),
+                None,
+            )
+            if collection is None:
+                available = ", ".join(choice["name"] for choice in form["collections"])
+                raise FetLifeError(
+                    f"FetLife does not offer a collection named {collections!r}"
+                    + (f" (available: {available})." if available else ".")
+                )
+            collection_uids.append(collection["uid"])
 
         console.print(f"[bold]{'Draft' if draft else 'Writing'} as {account}:[/bold] {title}")
         console.print(f"  category {category} · {writing.PRIVACY_LEVELS[privacy]}"
                       + (f" · tags {', '.join(tags)}" if tags else "")
+                      + (f" · collections {collections}" if collections else "")
                       + (f" · picture {os.path.basename(image)}" if image else ""))
         preview = body.strip()
         console.print("  " + (preview[:300] + "…" if len(preview) > 300 else preview).replace("\n", "\n  "),
@@ -978,7 +997,7 @@ def post_writing(ctx, title, body, category, tags, image, image_consent, privacy
             rich_body += writing.picture_html(picture, mime, os.path.getsize(image))
             picture_ids.append(picture["id"])
         url = fl.create_writing(form["token"], title, rich_body, category, tags, privacy,
-                                picture_ids, draft=draft)
+                                picture_ids, draft=draft, collection_uids=collection_uids)
     if draft:
         console.print(f"[green]Draft saved.[/green] Your drafts: {url}")
     else:

@@ -717,12 +717,13 @@ class FetLifeClient:
 
     def create_writing(self, token: str, title: str, rich_body: str, category: str,
                        tags: list[str], privacy: str, picture_ids: list[int] = (),
-                       draft: bool = False) -> str:
+                       draft: bool = False, collection_uids: list[str] = ()) -> str:
         """Post a writing (or save it as a draft); return where it landed.
 
         Submits the New Writing form: *rich_body* is editor HTML (see
-        :mod:`fetlife.writing`), *picture_ids* the ids of pictures it embeds.
-        Returns the new writing's URL, or for a draft the drafts page's.
+        :mod:`fetlife.writing`), *picture_ids* the ids of pictures it embeds,
+        and *collection_uids* the UIDs of collections to add it to. Returns the new
+        writing's URL, or for a draft the drafts page's.
         Raises FetLifeError with the site's reasons if it's refused. Never
         retried after a server error, so a writing can't go up twice.
         """
@@ -732,6 +733,8 @@ class FetLifeClient:
                 ("post[tag_names][]", "")]
         data += [("post[tag_names][]", t) for t in tags]
         data += [("post[privacy_level]", privacy)]
+        data += [("post[album_uids][]", "")]
+        data += [("post[album_uids][]", uid) for uid in collection_uids]
         data += [("post[attachment_ids][]", str(i)) for i in picture_ids]
         data += [("post[audio][id]", ""), ("post[audio][consent]", "false"), ("post[audio]", ""),
                  ("post[draft]", "1" if draft else "")]

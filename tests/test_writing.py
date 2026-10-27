@@ -31,6 +31,11 @@ NEW_WRITING = """<html><head><meta name="csrf-token" content="page-tok"></head><
     <option value="">Select Category</option><option value="Journal Entry">Journal Entry</option>
     <option value="Erotica">Erotica</option><option value="Note">Note</option>
   </select>
+  <div data-controller="form-typeahead-multi-select">
+    <input id="post_collections" type="text">
+    <div data-form-typeahead-multi-select-option data-label="Monday" data-value="mon123"></div>
+    <div data-form-typeahead-multi-select-option data-label="The Xanadu Word" data-value="xan456"></div>
+  </div>
   <input type="hidden" name="post[privacy_level]" id="post_privacy_level" value="public">
   <a href="#" data-dropdown-value-param="public" data-dropdown-label-param="FetLifers">FetLifers</a>
   <a href="#" data-dropdown-value-param="friends_and_followers">Friends &amp; Followers</a>
@@ -79,6 +84,8 @@ def test_writing_form_reads_both_tokens_and_the_live_choices():
     form = parsers.writing_form_from_html(NEW_WRITING)
     assert form == {"token": "form-tok", "csrf": "page-tok",
                     "categories": ["Journal Entry", "Erotica", "Note"],
+                    "collections": [{"name": "Monday", "uid": "mon123"},
+                                    {"name": "The Xanadu Word", "uid": "xan456"}],
                     "privacy_levels": ["public", "friends_and_followers", "friends"]}
     assert parsers.writing_form_from_html("<form action='/search'></form>") is None
 
@@ -90,14 +97,16 @@ def test_create_writing_posts_the_form_and_returns_the_writing(tmp_path):
     responses.add(responses.GET, "https://fetlife.com/Pal/posts/123", body="<h1>My title</h1>")
     fl = _authed(tmp_path)
     url = fl.create_writing("form-tok", "My title", "<p>Hi</p>", "Note", ["rope", "first time"],
-                            "friends", picture_ids=[77])
+                            "friends", picture_ids=[77], collection_uids=["collection-77"])
     assert url == "https://fetlife.com/Pal/posts/123"
     post = next(c.request for c in responses.calls if c.request.method == "POST")
     assert parse_qsl(post.body, keep_blank_values=True) == [
         ("authenticity_token", "form-tok"), ("post[title]", "My title"),
         ("post[rich_body]", "<p>Hi</p>"), ("post[category]", "Note"),
         ("post[tag_names][]", ""), ("post[tag_names][]", "rope"), ("post[tag_names][]", "first time"),
-        ("post[privacy_level]", "friends"), ("post[attachment_ids][]", "77"),
+        ("post[privacy_level]", "friends"), ("post[album_uids][]", ""),
+        ("post[album_uids][]", "collection-77"),
+        ("post[attachment_ids][]", "77"),
         ("post[audio][id]", ""), ("post[audio][consent]", "false"), ("post[audio]", ""),
         ("post[draft]", ""),
     ]
@@ -195,12 +204,15 @@ def test_cli_puts_the_text_before_the_picture(tmp_path, monkeypatch):
         def whoami(self): return Member(nickname="Pal", id="1")
         def get_writing_form(self):
             return {"token": "form-tok", "csrf": "page-tok", "categories": list(writing.CATEGORIES),
-                    "privacy_levels": list(writing.PRIVACY_LEVELS)}
+                    "privacy_levels": list(writing.PRIVACY_LEVELS),
+                    "collections": [{"name": "Word of the Week", "uid": "word-uid"}]}
         def upload_writing_picture(self, path, mime, token):
             assert token == "page-tok"
             return {"id": 9, "attachable_sgid": "sg", "src_2x": "https://cdn/p.jpg", "width": 4, "height": 3}
-        def create_writing(self, token, title, rich_body, category, tags, privacy, picture_ids, draft):
-            posted.update(token=token, rich_body=rich_body, picture_ids=picture_ids, draft=draft)
+        def create_writing(self, token, title, rich_body, category, tags, privacy, picture_ids,
+                           draft, collection_uids):
+            posted.update(token=token, rich_body=rich_body, picture_ids=picture_ids,
+                          draft=draft, collection_uids=collection_uids)
             return "https://fetlife.com/Pal/posts/drafts"
 
     monkeypatch.setattr(cli, "_client", lambda ctx: FakeClient())
@@ -208,9 +220,11 @@ def test_cli_puts_the_text_before_the_picture(tmp_path, monkeypatch):
     image.write_bytes(b"\x89PNG fake")
     result = CliRunner().invoke(cli.cli, ["--env-file", str(tmp_path / "none.env"), "post-writing",
                                           "-t", "T", "-b", "First.\n\nSecond.", "-c", "note",
-                                          "--image", str(image), "--image-consent", "--draft"])
+                                          "--image", str(image), "--image-consent", "--draft",
+                                          "--collections", "Word of the Week"])
     assert result.exit_code == 0, result.output
     body = posted["rich_body"]
     assert body.startswith("<p>First.</p><p>Second.</p><action-text-attachment sgid=\"sg\"")
     assert body.endswith("</action-text-attachment>")
     assert posted["picture_ids"] == [9] and posted["token"] == "form-tok" and posted["draft"]
+    assert posted["collection_uids"] == ["word-uid"]
