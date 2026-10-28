@@ -18,4 +18,4 @@ fetlife --env-file xanadu_kink.env engagement Xanadu_Kink --since "1 month" --co
 fetlife --env-file xanadu_kink.env friend-requests strangers.csv
 
 # 5) Use the file strangers.csv to send a welcome message to those engagers
-fetlife --env-file xanadu_kink.env message --from-csv strangers.csv --subject "A Warm Welcome From Xanadu Kink" --body-file greeting.txt --yes
+fetlife --env-file xanadu_kink.env message --from-csv strangers.csv --subject "A Warm Welcome From Xanadu Kink" --body-file assets/greeting.txt --yes

@@ -370,12 +370,12 @@ fetlife post-event -t "Rope Jam" --tagline "Bring a partner" --description-file 
 | `--cover-image FILE` | `image` (in the file's `assets/` folder) | The cover picture: jpg, png, heic, tiff or gif, at least 1200×630. FetLife shows it at 1.91:1. |
 | `--tagline` | `subtitle` | One-line tagline. |
 | `--description` / `-d`, `--description-file FILE` | `description` | The description, as text or from a text file. A blank line starts a new paragraph. |
-| `--co-host NICKNAME` | `presenters` (split on `and`, `,`, `&`) | A co-host; repeat it or comma-separate names. FetLife only lets you pick the account's **friends**. Anyone else (and the account itself) is left off, with a warning in the preview. `--no-co-hosts` ignores the file's presenters. |
+| `--co-host NICKNAME` | `cohosts` (split on `and`, `,`, `&` or spaces) | A co-host; repeat it or separate names with commas or spaces. FetLife only lets you pick the account's **friends**. Anyone else (and the account itself) is left off, with a warning in the preview. `--no-co-hosts` ignores the file's cohosts. |
 | `--category` / `-c` | `category`, if it's one of FetLife's | `Educational`, `Social`, `Sex Party`, `BDSM Party` or `Conference` (any prefix, any case). |
 | `--dress-code TEXT` | `dressCode` | The dress code. |
-| `--wheelchair-accessible` | | Mark the event wheelchair accessible. |
-| `--cost free\|paid` | `paid` if `ticketUrl` is set, else `free` | The cost menu. |
-| `--cost-details TEXT` | | The cost text: "Additional Details" for a free event, the ticket price for a paid one. |
+| `--wheelchair-accessible` | `wheelchairAccessible` | Mark the event wheelchair accessible. `--not-wheelchair-accessible` overrides a `true` in the file. |
+| `--cost free\|paid` | `cost`; without one, `paid` if `ticketUrl` is set, else `free` | The cost menu. |
+| `--cost-details TEXT` | `costDetails` | The cost text: "Additional Details" for a free event, the ticket price for a paid one. |
 | `--ticket-url URL` | `ticketUrl` | Where to buy tickets (paid events only). |
 | `--start WHEN`, `--end WHEN` | `date` + `time` | `"2026-11-07 2:00pm"` or `"2026-11-07 14:00"`. From the file, an end at or before the start (`7:00pm - 1:00am`, `12:00am - 12:00am`) is on the next day. |
 | `--timezone` | default `America/New_York` | The timezone of the start and end: an IANA name, or a unique part of FetLife's label (`Eastern`). |
@@ -388,7 +388,7 @@ fetlife post-event -t "Rope Jam" --tagline "Bring a partner" --description-file 
 | `--yes` / `-y` | | Create it without the confirmation prompt. |
 | `--json` / `-j` | | Print `{"url": …, "event_id": …}` on stdout (the preview goes to stderr). |
 
-Fields the data file doesn't have (accessibility, cost details, timezone) come only from options. The form is submitted once and never retried after a server error. If FetLife refuses it, its reasons are shown and the data file is left unchanged.
+The timezone, which the data file doesn't have, comes only from options. The form is submitted once and never retried after a server error. If FetLife refuses it, its reasons are shown and the data file is left unchanged.
 
 ### `group`
 

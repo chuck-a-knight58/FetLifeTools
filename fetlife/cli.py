@@ -1021,18 +1021,19 @@ def post_writing(ctx, title, body, category, tags, collections, image, image_con
               help="Read the description from a text file instead.")
 @click.option("--co-host", "co_hosts", multiple=True, metavar="NICKNAME",
               help="A co-host (one of the account's friends); repeat it, or separate names "
-                   "with commas.  [file: presenters]")
+                   "with commas or spaces.  [file: cohosts]")
 @click.option("--no-co-hosts", is_flag=True, default=False,
-              help="Post without co-hosts, ignoring the file's presenters.")
+              help="Post without co-hosts, ignoring the file's cohosts.")
 @click.option("--category", "-c", default=None,
               help="Educational, Social, Sex Party, BDSM Party or Conference (any prefix).  [file: category]")
 @click.option("--dress-code", default=None, help="The dress code expected.  [file: dressCode]")
-@click.option("--wheelchair-accessible", is_flag=True, default=False,
-              help="Mark the event wheelchair accessible.")
+@click.option("--wheelchair-accessible/--not-wheelchair-accessible", default=None,
+              help="Mark the event wheelchair accessible, or not.  [file: wheelchairAccessible]")
 @click.option("--cost", type=click.Choice(eventpost.COST_TYPES, case_sensitive=False), default=None,
-              help="Free or paid.  [file: paid if it has a ticketUrl, else free]")
+              help="Free or paid.  [file: cost; without one, paid if it has a ticketUrl, else free]")
 @click.option("--cost-details", default=None,
-              help="The cost text: details for a free event, the ticket price for a paid one.")
+              help="The cost text: details for a free event, the ticket price for a paid one.  "
+                   "[file: costDetails]")
 @click.option("--ticket-url", default=None, help="Where to buy tickets (paid events).  [file: ticketUrl]")
 @click.option("--start", default=None, metavar="WHEN",
               help='Start, e.g. "2026-11-07 2:00pm" or "2026-11-07 14:00".  [file: date + time]')
@@ -1063,7 +1064,7 @@ def post_event(ctx, events_file, event_id, title, cover_image, tagline, descript
 
     Give every detail as an option, or take the event from a site data file
     with `--events-file events-data.js --event-id ID`: its name, subtitle,
-    description, presenters, category, date/time, image, audience and ticket
+    description, cohosts, category, date/time, image, audience and ticket
     URL fill in the options marked [file: …], and any option given still
     wins. Once the event is created its URL is written back into that entry
     as `Url`. It shows the event and asks before creating it (--yes skips
@@ -1100,6 +1101,9 @@ def post_event(ctx, events_file, event_id, title, cover_image, tagline, descript
     ticket_url = ticket_url if ticket_url is not None else given.get("ticket_url", "")
     event_type = (event_type or given.get("type") or "").lower()
     dress_code = dress_code if dress_code is not None else given.get("dress_code")
+    cost_details = cost_details if cost_details is not None else given.get("cost_details")
+    if wheelchair_accessible is None:
+        wheelchair_accessible = given.get("wheelchair_accessible", False)
     location = location if location is not None else given.get("location")
     address = address if address is not None else given.get("address")
     city = city if city is not None else given.get("city")

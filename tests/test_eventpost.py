@@ -111,14 +111,16 @@ const EVENTS_DATA = [
         category: 'Educational',
         name: 'Virtual Dominants Meetup',
         subtitle: 'The Philosophy of Dominance',
-        presenters: 'DimpledSadist and Knight_of_Xanadu',
+        cohosts: 'DimpledSadist Knight_of_Xanadu',
         description: 'What does it mean?\\n\\nDiscussion: \\u201cIt\\'s {power}\\u201d',
         date: '2026-10-22',
         time: '8:00pm - 10:00pm',
         audience: 'Online',
         image: 'VDM.png',
         ticketUrl: '',
-        authRequired: false
+        cost: 'free',
+        authRequired: false,
+        wheelchairAccessible: false
     },
     {
         id: 'ETX112126',
@@ -129,6 +131,8 @@ const EVENTS_DATA = [
         audience: 'Members',
         ticketUrl: 'https://tickets.example/etx',
         Url: '',
+        wheelchairAccessible: true,
+        costDetails: '$40 per couple',
         dressCode: "Vanilla to the door, fetish inside",
         location: 'House of Xanadu',
         address: '4 Clubhouse Drive',
@@ -149,6 +153,11 @@ def test_read_event_finds_the_entry_and_unescapes_its_strings(tmp_path):
         eventpost.read_event(path, "NOPE")
 
 
+def test_split_names_takes_any_separator():
+    assert eventpost.split_names("A and B, C & D  E\tA") == ["A", "B", "C", "D", "E"]
+    assert eventpost.split_names("") == []
+
+
 def test_defaults_from_entry_map_the_sites_fields(tmp_path):
     path = tmp_path / "events-data.js"
     path.write_text(EVENTS_JS)
@@ -164,9 +173,20 @@ def test_defaults_from_entry_map_the_sites_fields(tmp_path):
     assert etx["ticket_url"] == "https://tickets.example/etx"
     assert etx["end"] == datetime(2026, 11, 22, 1)
     assert etx["dress_code"] == "Vanilla to the door, fetish inside"
+    assert etx["cost_details"] == "$40 per couple" and "cost_details" not in vdm
     assert etx["location"] == "House of Xanadu" and etx["address"] == "4 Clubhouse Drive"
     assert etx["city"] == "Washington, New Jersey, United States"
     assert "dress_code" not in vdm and "city" not in vdm
+    assert etx["wheelchair_accessible"] is True and vdm["wheelchair_accessible"] is False
+
+
+def test_defaults_from_entry_cost():
+    assert eventpost.defaults_from_entry({"date": "2026-11-07"}, Path("/a"))["cost"] == "free"
+    assert eventpost.defaults_from_entry({"ticketUrl": "https://t"}, Path("/a"))["cost"] == "paid"
+    assert eventpost.defaults_from_entry({"ticketUrl": "https://t", "cost": "free"}, Path("/a"))["cost"] == "free"
+    assert eventpost.defaults_from_entry({"cost": "Paid"}, Path("/a"))["cost"] == "paid"
+    with pytest.raises(FetLifeError, match="X1's cost is 'cheap'"):
+        eventpost.defaults_from_entry({"id": "X1", "cost": "cheap"}, Path("/a"))
 
 
 def test_set_event_field_adds_or_replaces_only_that_value(tmp_path):
@@ -175,9 +195,9 @@ def test_set_event_field_adds_or_replaces_only_that_value(tmp_path):
     eventpost.set_event_field(path, "VDM102226", "Url", "https://fetlife.com/events/1")
     eventpost.set_event_field(path, "ETX112126", "Url", "https://fetlife.com/events/it's")
     text = path.read_text()
-    assert ("        authRequired: false,\n        Url: 'https://fetlife.com/events/1'\n    },"
+    assert ("        wheelchairAccessible: false,\n        Url: 'https://fetlife.com/events/1'\n    },"
             in text)
-    assert "        Url: 'https://fetlife.com/events/it\\'s',\n        dressCode:" in text
+    assert "        Url: 'https://fetlife.com/events/it\\'s',\n        wheelchairAccessible:" in text
     assert eventpost.read_event(path, "ETX112126")["Url"] == "https://fetlife.com/events/it's"
     # Everything else is byte-for-byte the same.
     assert text.replace(",\n        Url: 'https://fetlife.com/events/1'", "").replace(
@@ -205,6 +225,12 @@ def test_create_event_posts_multipart_and_returns_the_event(tmp_path, monkeypatc
     method, path, kw = calls[0]
     assert (method, path) == ("POST", "/events")
     assert kw["retry_server_errors"] is False and "multipart" in kw
+
+    # Events are now addressed by date and name; a page under the event counts too.
+    slug = "https://fetlife.com/events/2026/11/07/rope-jam-abc123"
+    for landed in (slug, slug + "/invite"):
+        monkeypatch.setattr(fl, "request", lambda *a, landed=landed, **k: _Resp(200, "", landed))
+        assert fl.create_event([("event[name]", "N")]) == slug
 
     monkeypatch.setattr(fl, "request", lambda *a, **k: _Resp(
         422, "<div id='error_explanation'><ul><li>Timezone can't be blank</li></ul></div>",

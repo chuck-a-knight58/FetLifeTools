@@ -53,6 +53,9 @@ THROTTLE_STATE_TTL_HOURS = 24.0
 THROTTLE_RESUME_RELIEF = 2.0
 
 
+_EVENT_PATH_RE = re.compile(r"^/events/(?:\d{4}/\d{2}/\d{2}/[^/]+|\d+)(?=/|$)")
+
+
 class FetLifeClient:
     """A logged-in session against FetLife.
 
@@ -792,8 +795,11 @@ class FetLifeClient:
             )
         finally:
             form.close()
-        if re.search(r"/events/\d+$", urlsplit(resp.url).path):
-            return resp.url
+        # FetLife lands on the new event (or a page under it): /events/<id>, or
+        # nowadays /events/<yyyy>/<mm>/<dd>/<slug>.
+        event = _EVENT_PATH_RE.match(urlsplit(resp.url).path)
+        if event:
+            return self._url(event.group())
         errors = parsers.form_errors_from_html(resp.text)
         flash = parsers.flash_from_html(resp.text)
         raise FetLifeError(

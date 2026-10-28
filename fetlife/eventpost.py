@@ -156,9 +156,12 @@ def within(feature: dict, place: dict) -> bool:
 
 
 def split_names(text: str) -> list[str]:
-    """Nicknames from "A and B", "A, B" or "A & B", without repeats."""
+    """Nicknames from "A and B", "A, B", "A & B" or "A B", without repeats.
+
+    Nicknames can't contain spaces, so whitespace separates them too.
+    """
     names: list[str] = []
-    for name in re.split(r",|&|\band\b", text or ""):
+    for name in re.split(r",|&|\band\b|\s+", text or ""):
         name = name.strip()
         if name and name.casefold() not in {n.casefold() for n in names}:
             names.append(name)
@@ -366,10 +369,11 @@ def set_event_field(path: str | Path, event_id: str, key: str, value: str) -> No
 def defaults_from_entry(entry: dict, assets_dir: Path) -> dict:
     """What an events-data.js entry says about the event, as post-event's options.
 
-    name → title, subtitle → tagline, presenters → co-hosts, date + time →
+    name → title, subtitle → tagline, cohosts → co-hosts, date + time →
     start/end, image (in *assets_dir*) → cover image, an "Online" audience →
-    a virtual event, a ticket URL → a paid event, and dressCode, location,
-    address and cityStateCountry → the options of those names. Only what the entry
+    a virtual event, cost → cost (without one, a ticket URL means paid),
+    and dressCode, costDetails, location, address and cityStateCountry → the
+    options of those names, and wheelchairAccessible → --wheelchair-accessible. Only what the entry
     actually has is returned; the category is included only when it names
     one of FetLife's.
     """
@@ -381,8 +385,8 @@ def defaults_from_entry(entry: dict, assets_dir: Path) -> dict:
         out["tagline"] = text["subtitle"]
     if "description" in text:
         out["description"] = entry["description"]
-    if "presenters" in text:
-        out["co_hosts"] = split_names(text["presenters"])
+    if "cohosts" in text:
+        out["co_hosts"] = split_names(text["cohosts"])
     if "category" in text:
         try:
             out["category"] = category_value(text["category"])
@@ -395,12 +399,21 @@ def defaults_from_entry(entry: dict, assets_dir: Path) -> dict:
     if "audience" in text:
         out["type"] = "virtual" if text["audience"].casefold() == "online" else "in-person"
     if "ticketUrl" in text:
-        out["cost"] = "paid"
         out["ticket_url"] = text["ticketUrl"]
+    if "cost" in text:
+        if text["cost"].lower() not in COST_TYPES:
+            raise FetLifeError(f"{entry.get('id')}'s cost is {text['cost']!r}; "
+                               f"use {' or '.join(map(repr, COST_TYPES))}.")
+        out["cost"] = text["cost"].lower()
+    elif "ticketUrl" in text:
+        out["cost"] = "paid"
     elif "date" in text:
         out["cost"] = "free"
-    for key, option in [("dressCode", "dress_code"), ("location", "location"),
+    for key, option in [("dressCode", "dress_code"), ("costDetails", "cost_details"),
+                        ("location", "location"),
                         ("address", "address"), ("cityStateCountry", "city")]:
         if key in text:
             out[option] = text[key]
+    if isinstance(entry.get("wheelchairAccessible"), bool):
+        out["wheelchair_accessible"] = entry["wheelchairAccessible"]
     return out
