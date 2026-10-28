@@ -1019,6 +1019,9 @@ def post_writing(ctx, title, body, category, tags, collections, image, image_con
               help="Description; a blank line starts a new paragraph.  [file: description]")
 @click.option("--description-file", type=click.File("r", encoding="utf-8"), default=None,
               help="Read the description from a text file instead.")
+@click.option("--keep-file-description", is_flag=True, default=False,
+              help="Add --description or --description-file after the file's description "
+                   "instead of replacing it.")
 @click.option("--co-host", "co_hosts", multiple=True, metavar="NICKNAME",
               help="A co-host (one of the account's friends); repeat it, or separate names "
                    "with commas or spaces.  [file: cohosts]")
@@ -1057,7 +1060,7 @@ def post_writing(ctx, title, body, category, tags, collections, image, image_con
 @json_option
 @click.pass_context
 def post_event(ctx, events_file, event_id, title, cover_image, tagline, description, description_file,
-               co_hosts, no_co_hosts, category, dress_code, wheelchair_accessible, cost, cost_details,
+               keep_file_description, co_hosts, no_co_hosts, category, dress_code, wheelchair_accessible, cost, cost_details,
                ticket_url, start, end, tz_name, event_type, location, address, city, privacy,
                repost, dry_run, yes, json_local):
     """Create a FetLife event from the logged-in account.
@@ -1076,6 +1079,8 @@ def post_event(ctx, events_file, event_id, title, cover_image, tagline, descript
         raise FetLifeError("Give --description or --description-file, not both.")
     if description_file is not None:
         description = description_file.read()
+    if keep_file_description and not events_file:
+        raise FetLifeError("--keep-file-description needs --events-file.")
 
     entry, given = {}, {}
     if events_file:
@@ -1092,6 +1097,10 @@ def post_event(ctx, events_file, event_id, title, cover_image, tagline, descript
     tagline = " ".join((tagline or given.get("tagline") or "").split())
     if description is None:
         description = given.get("description") or ""
+    elif keep_file_description:
+        # The file's description, then a new paragraph with the given text.
+        description = "\n\n".join(part.strip("\n") for part in (given.get("description"), description)
+                                  if part and part.strip())
     cover_image = cover_image or given.get("cover_image")
     cover_type = writing.image_type(cover_image) if cover_image else None
     names = [] if no_co_hosts else (eventpost.split_names(",".join(co_hosts)) if co_hosts

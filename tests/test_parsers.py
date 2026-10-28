@@ -546,6 +546,13 @@ def test_flash_from_html():
     assert parsers.flash_from_html('<div class="text-red-500">0 / 0</div><p>ok</p>') is None
 
 
+def test_form_errors_from_html_reads_the_note_under_a_field():
+    html = ('<form><input name="event[name]" class="is-error">'
+            '<div class="text-sm text-red-500">Event with same name and similar time already exists.</div>'
+            '<div class="text-red-500"></div></form>')
+    assert parsers.form_errors_from_html(html) == ["Event with same name and similar time already exists."]
+
+
 GROUP_MEMBERS_HTML = """
 <h1><a href="/groups/88">Profania</a></h1>
 <p class="text-sm">116 members</p>

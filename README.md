@@ -370,6 +370,7 @@ fetlife post-event -t "Rope Jam" --tagline "Bring a partner" --description-file 
 | `--cover-image FILE` | `image` (in the file's `assets/` folder) | The cover picture: jpg, png, heic, tiff or gif, at least 1200×630. FetLife shows it at 1.91:1. |
 | `--tagline` | `subtitle` | One-line tagline. |
 | `--description` / `-d`, `--description-file FILE` | `description` | The description, as text or from a text file. A blank line starts a new paragraph. |
+| `--keep-file-description` | | Put the data file's description first, then a blank line and the `--description` or `--description-file` text, instead of replacing it. |
 | `--co-host NICKNAME` | `cohosts` (split on `and`, `,`, `&` or spaces) | A co-host; repeat it or separate names with commas or spaces. FetLife only lets you pick the account's **friends**. Anyone else (and the account itself) is left off, with a warning in the preview. `--no-co-hosts` ignores the file's cohosts. |
 | `--category` / `-c` | `category`, if it's one of FetLife's | `Educational`, `Social`, `Sex Party`, `BDSM Party` or `Conference` (any prefix, any case). |
 | `--dress-code TEXT` | `dressCode` | The dress code. |

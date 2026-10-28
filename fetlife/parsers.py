@@ -684,8 +684,9 @@ def form_errors_from_html(html: str) -> list[str]:
     """The validation messages a re-rendered Rails form shows, if any."""
     soup = _soup(html)
     found: list[str] = []
+    # The last selector is the red note FetLife's new forms put under a field.
     for el in soup.select("#error_explanation li, .field_with_errors + .error, "
-                          "[class*='error'] li, [data-testid*='error']"):
+                          "[class*='error'] li, [data-testid*='error'], form div.text-red-500"):
         text = _clean(el.get_text(" "))
         if text and len(text) < 300 and text not in found:
             found.append(text)

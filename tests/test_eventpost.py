@@ -281,8 +281,11 @@ def test_cli_posts_the_file_entry_and_saves_the_url_back(tmp_path, monkeypatch):
             return "https://fetlife.com/events/999"
 
     monkeypatch.setattr(cli, "_client", lambda ctx: FakeClient())
+    extra = tmp_path / "extra.txt"
+    extra.write_text("Bring questions.\n")
     result = CliRunner().invoke(cli.cli, ["--env-file", str(tmp_path / "none.env"), "post-event",
                                           "--events-file", str(path), "--event-id", "VDM102226",
+                                          "--description-file", str(extra), "--keep-file-description",
                                           "--location", "https://zoom.example/j/1",
                                           "--dress-code", "Casual", "--wheelchair-accessible", "--yes"])
     assert result.exit_code == 0, result.output
@@ -292,6 +295,7 @@ def test_cli_posts_the_file_entry_and_saves_the_url_back(tmp_path, monkeypatch):
     assert values["event[name]"] == "Virtual Dominants Meetup"
     assert values["event[tagline]"] == "The Philosophy of Dominance"
     assert values["event[rich_description]"].startswith("<p>What does it mean?</p><p>Discussion:")
+    assert values["event[rich_description]"].endswith("</p><p>Bring questions.</p>")
     assert [v for k, v in fields if k == "event[co_host_user_ids][]"] == ["", "42"]
     assert values["event[category]"] == "educational" and values["event[type]"] == "virtual"
     assert values["event[cost_type]"] == "free" and values["event[timezone]"] == "America/New_York"
