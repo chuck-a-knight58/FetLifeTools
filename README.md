@@ -12,7 +12,7 @@ FetLife sits behind Cloudflare, which blocks plain HTTP clients. To get through,
 
 - Persistent, rate-limited authenticated session (login handled once, cookies cached).
 - `whoami` — your own profile, fully populated (id, age, gender, role, orientation, avatar).
-- `profile` — look up any member by nickname or id (full data via the JSON API).
+- `profile` — look up any member by nickname or id (full data from their profile page).
 - `friends` — list a member's friends, with age/gender/role/location.
 - `relationships` — a member's vanilla and D/s relationships (and who they're with).
 - `followers` / `following` — who follows a member, and who they follow.
@@ -106,7 +106,7 @@ Global options (before the subcommand):
 
 Every command accepts `--json` (or `-j` after the subcommand). Table output uses [rich](https://github.com/Textualize/rich); JSON output is a list of objects (or a single object for one-item results) suitable for `jq`. Outputs below are **illustrative** (nicknames/values are examples).
 
-> **Command status.** `whoami`, `profile`, `friends`, `relationships`, `followers`, `following`, `discover`, `connections`, `engagement`, `friend-requests`, `message`, `post-writing`, `post-event`, `group`, `group-members`, `events-calendar`, `login`, and `raw` use FetLife's JSON API (or stable server-rendered fields) and return full data. `search`, `events`, and `event` are **experimental** — see notes on each; they were scaffolded against older markup and are awaiting the JSON endpoints the SPA now uses.
+> **Command status.** `whoami`, `profile`, `friends`, `relationships`, `followers`, `following`, `discover`, `connections`, `engagement`, `friend-requests`, `message`, `post-writing`, `post-event`, `group`, `group-members`, `events-calendar`, `login`, and `raw` read FetLife's server-rendered pages (or its JSON endpoints, where it still has them) and return full data. `search`, `events`, and `event` are **experimental** — see notes on each; they were scaffolded against older markup and are awaiting the JSON endpoints the SPA now uses.
 
 ### `login`
 
@@ -133,15 +133,15 @@ fetlife whoami
 ┏━━━━━━━━━━━┳━━━━━━━━━━┳━━━━━┳━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━┓
 ┃ nickname  ┃ id       ┃ age ┃ gender ┃ role     ┃ url                   ┃
 ┡━━━━━━━━━━━╇━━━━━━━━━━╇━━━━━╇━━━━━━━━╇━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━┩
-│ YourNick  │ 15758532 │ 48  │ Male   │ Dominant │ https://fetlife.com/… │
+│ YourNick  │ 15758532 │ 48  │ M      │ Dominant │ https://fetlife.com/… │
 └───────────┴──────────┴─────┴────────┴──────────┴───────────────────────┘
 ```
 
-`whoami --json` includes orientation, verification, supporter status, and avatar URL.
+`whoami --json` includes orientation, relationships, join date, verification, supporter status, and avatar URL.
 
 ### `profile`
 
-Look up any member by nickname or numeric id (full data via the JSON API).
+Look up any member by nickname or numeric id (full data from their profile page). "About me" isn't included: FetLife loads it separately.
 
 ```bash
 fetlife profile JohnDoe          # by nickname
@@ -511,21 +511,21 @@ fetlife raw /home > home.html
 fetlife raw /JohnDoe/friends > friends.html
 ```
 
-Prints the response body to stdout. Combine with `Accept: application/json` discovery in `client.py` to find new endpoints (see [How profiles are fetched](#how-profiles-are-fetched-the-json-api)).
+Prints the response body to stdout. Combine with `Accept: application/json` discovery in `client.py` to find new endpoints (see [How profiles are fetched](#how-profiles-are-fetched)).
 
 ## Scheduling scripts
 
-`schedule.conf` lists when to run this directory's scripts, one job per line in crontab-style fields (`minute hour day month weekday script [arguments]`; the file explains the syntax). `schedule.py` turns it into macOS launchd jobs, so they run even when no terminal is open, and catch up after the Mac wakes from sleep:
+`schedule.conf` lists when to run this directory's scripts, one job per line in crontab-style fields (`minute hour day month weekday script [arguments]`; the file explains the syntax). `schedule.py` turns it into macOS launchd jobs, so they run even when no terminal is open. A run missed while the Mac was asleep or shut down happens when it wakes or at the next login, once, however many times were missed (`logs/.<job>.last` records when each job last ran):
 
 ```bash
 python3 schedule.py check        # what schedule.conf schedules; changes nothing
 python3 schedule.py install      # schedule exactly that (rerun after every edit)
-python3 schedule.py status       # loaded? last exit code?
+python3 schedule.py status       # loaded? last run? last exit code?
 python3 schedule.py run update_community_calendar.sh   # run a job now, as launchd will
 python3 schedule.py uninstall    # remove them all
 ```
 
-Each job runs its script with `/bin/bash` in this directory, with `.venv/bin` on its PATH, and appends its output to `logs/<script>.log`. macOS keeps background jobs out of `~/Documents`, `~/Desktop` and `~/Downloads`, so keep this directory (and the Xanadu site that `update_community_calendar.sh` pushes to) elsewhere, e.g. `~/github-projects/`. A log that says `Operation not permitted` means a job touched one of those folders.
+Each job runs its script with `/bin/bash` in this directory (after waiting up to three minutes for the network, which may not be up yet just after login or wake), with `.venv/bin` on its PATH, and appends its output to `logs/<script>.log`. macOS keeps background jobs out of `~/Documents`, `~/Desktop` and `~/Downloads`, so keep this directory (and the Xanadu site that `update_community_calendar.sh` pushes to) elsewhere, e.g. `~/github-projects/`. A log that says `Operation not permitted` means a job touched one of those folders.
 
 ## How it works
 
@@ -546,15 +546,14 @@ fetlife/
 
 Because most pages require login, the parsers can't be validated against live HTML without an account. They're written defensively (structured data first, heuristic fallbacks) and isolated so that **if a command returns empty or partial results, `fetlife raw <path>` shows you the current markup** and you adjust the relevant function in `parsers.py`.
 
-### How profiles are fetched (the JSON API)
+### How profiles are fetched
 
-FetLife's profiles are a **client-side-rendered single-page app**: the server returns an HTML shell and the data is loaded afterward by JavaScript. Rather than run a headless browser, this toolkit calls **the same JSON endpoints the SPA itself uses** — the canonical page URL with an `Accept: application/json`
-header:
+FetLife used to render profiles in the browser from JSON (the page URL fetched with `Accept: application/json`). It now renders them on the server with [Hotwire](https://hotwired.dev) and answers that JSON request with 406, so this toolkit reads the same pages a browser gets. No headless browser is needed:
 
 | Data | Endpoint | Client method |
 |---|---|---|
-| Profile card | `GET /<nickname>` → `{core, currentUserRelation}` | `get_member` / `profile` |
-| Relationships | `GET /<nickname>` → `core.relationships` + `core.dsRelationships` | `get_relationships` / `relationships` |
+| Profile card | `GET /<nickname>` (or `/users/<id>`) **(HTML)**: the `<h1>` header and the label/value rows below it | `get_member` / `profile` |
+| Relationships | the same page's Relationships and D/s relationships rows | `get_relationships` / `relationships` |
 | Friends | `GET /<nickname>/friends?page=N` **(HTML)**, 20 per page | `get_friends` / `friends`; `iter_members` walks every page |
 | Followers / following | `GET /<nickname>/{followers,following}?page=N` **(HTML)** | `get_followers` `get_following` / `followers` `following` |
 | Activity feed | `GET /<nickname>/activity[/<tab>]` **(HTML)**, then `…/activity[/<tab>].turbo_stream?marker=M` for each later page | `get_activity` / `iter_posts` (the `all-posts` tab) |
@@ -566,11 +565,11 @@ header:
 | Direct message | `GET /conversations/new?with=<id>` (form + token), then `POST /conversations` | `get_message_form` / `send_message` |
 | Pictures | `GET /<nickname>/pictures` | *(easy to add)* |
 
-The relation lists and the activity feed are the exceptions: FetLife answers the JSON variant of those with a 404/406 (for any member, your own profile included), so they are read from the server-rendered page — `members_from_relations_html` and `stories_from_activity_html`. The markup carries the same data the JSON did, at the same one request per page. The feed, loves and comments are all [Hotwire](https://hotwired.dev) pages: the first page is plain HTML and each later page is the Turbo Stream that the page's lazy pagination `<turbo-frame>` would load, addressed by the `marker`/`cursor` in that frame's `src`. Every post in the feed carries a **story uid** (on its love button) that keys the loves and comments endpoints.
+Profiles, the relation lists and the activity feed are parsed by `parse_member`, `members_from_relations_html` and `stories_from_activity_html`. The feed, loves and comments are all [Hotwire](https://hotwired.dev) pages: the first page is plain HTML and each later page is the Turbo Stream that the page's lazy pagination `<turbo-frame>` would load, addressed by the `marker`/`cursor` in that frame's `src`. Every post in the feed carries a **story uid** (on its love button) that keys the loves and comments endpoints.
 
-These are **plain cookie-authenticated GETs** — no CSRF token, no request signing — so they replay directly from our `curl_cffi` session (which also clears Cloudflare). This is why full data is available for *any* member, not just the logged-in viewer. See `get_json` in `client.py`; adding the remaining endpoints is a few lines each following `get_friends`.
+These are **plain cookie-authenticated GETs** — no CSRF token, no request signing — so they replay directly from our `curl_cffi` session (which also clears Cloudflare). This is why full data is available for *any* member, not just the logged-in viewer. Adding the remaining pages is a few lines each following `get_friends`.
 
-`whoami` is the one thing that still reads the server-embedded viewer blob (now passed to `<script id="page-data">`, formerly `window.FL.user`), since it needs no nickname to identify "you".
+`whoami` reads your user id from the viewer blob every page embeds (`<script id="page-data">`, formerly `window.FL.user`; it no longer carries your nickname or profile) and then fetches your profile by id.
 
 ## `discover` — find members near a location
 
