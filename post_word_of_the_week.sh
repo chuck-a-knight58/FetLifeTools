@@ -9,7 +9,7 @@ source .venv/bin/activate
 # entry (its first line is the title, the rest the body) and, once the post
 # succeeds, removes that entry and its separator from the file.
 
-ENV_FILE=hammerbacher.env
+ENV_FILE=xanadu_kink.env
 TOPICS=assets/WOTW.txt
 
 # The top entry runs up to the first ===== line (or to the end of the file).

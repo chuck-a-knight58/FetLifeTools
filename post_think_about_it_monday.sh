@@ -7,7 +7,7 @@ source .venv/bin/activate
 # This script publishes a new think about it Monday post automatically using a text file and the signature image.
 # Each run posts the top entry of TOPICS and, once the post succeeds, removes that entry from the file.
 
-ENV_FILE=hammerbacher.env
+ENV_FILE=xanadu_kink.env
 TOPICS=assets/TAIM.txt
 
 # The top entry (the first non-blank line) and its line number.
