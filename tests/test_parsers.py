@@ -78,121 +78,76 @@ def test_authed_false_when_url_is_login():
     assert parsers.looks_authenticated(AUTHED_HTML, "https://fetlife.com/login") is False
 
 
-BOOTSTRAP_HTML = """
-<html><head><title>Knight_of_Xanadu - Kinksters | FetLife</title></head>
-<body><script>
-window.FL={};FL.user={"id":15758532,"gender":"Male","role":"Dominant",
-"orientation":"Straight","age":68,"nickname":"Knight_of_Xanadu",
-"isProfileVerified":true,"isSupporter":true,
-"avatarUrls":{"c50":"https://x/c50.jpg","c120":"https://x/c120.jpg"},
-"profileUrl":"/Knight_of_Xanadu"};
-</script></body></html>
+# A profile page as FetLife now serves it: the <h1> holds nickname, badges and
+# the "age/gender/role" line; label/value rows below hold the rest.
+PROFILE_HTML = """
+<html><head><meta property="og:image" content="https://x/avatar.jpg"></head>
+<body><main>
+<turbo-frame id="profile_more_menu_4242" src="/Example_Dom/menu"></turbo-frame>
+<div><h1>
+  <span>Example_Dom</span>
+  <span><a href="/verify" title="Verified Profile"></a></span>
+  <span><span title="FetLife Supporter"></span></span>
+  <span>52M Dom</span>
+</h1>
+<p><span><a href="/p/us/nj/trenton">Trenton</a></span><span><a href="/p/us/nj">New Jersey</a></span>
+<span><a href="/p/us">United States</a></span></p></div>
+<div><div class="xs:w-140px">Relationships</div><div><div>
+  <div> Married to <span><a href="/Example_Sub">Example_Sub</a></span></div>
+</div></div></div>
+<div><div class="xs:w-140px">D/s relationships</div><div><div>
+  <div> Owner of <span><a href="/Example_Sub">Example_Sub</a><form action="/x"><button></button></form></span></div>
+  <div> Mentor of <span><a href="/Example_Pup">Example_Pup</a></span></div>
+</div></div></div>
+<div><div class="xs:w-140px">Roles</div><div>
+  <span><span role="button">Dominant</span></span><div>Usually refers to... <a href="/kinktionary">learn more</a></div>
+  <span>, </span><span><span role="button">Rigger</span></span><div>Usually refers to...</div>
+</div></div>
+<div><div class="xs:w-140px">Orientation</div><div><span><span role="button">Straight</span></span></div></div>
+<div><div class="xs:w-140px">Active</div><div>I Live It 24/7</div></div>
+<div><div class="xs:w-140px">Looking for</div><div> Friendship, Events </div></div>
+<div><div class="xs:w-140px">Joined</div><div> March 2021 <small>#4242</small></div></div>
+</main></body></html>
 """
 
 
-def test_parse_member_from_bootstrap_when_self():
-    m = parsers.parse_member(
-        BOOTSTRAP_HTML, url="https://fetlife.com/Knight_of_Xanadu",
-        requested="Knight_of_Xanadu",
-    )
-    assert m.nickname == "Knight_of_Xanadu"
-    assert m.id == "15758532"
-    assert m.age == 68
-    assert m.gender == "Male"
-    assert m.role == "Dominant"
-    assert m.avatar_url == "https://x/c120.jpg"  # largest crop chosen
+def test_parse_member_profile_page():
+    m = parsers.parse_member(PROFILE_HTML, url="https://fetlife.com/Example_Dom")
+    assert m.nickname == "Example_Dom"
+    assert m.id == "4242"                    # from the "#4242" by the join date
+    assert (m.age, m.gender) == (52, "M")
+    assert m.role == "Dominant, Rigger"      # the Roles row, not the header's "Dom"
     assert m.orientation == "Straight"
-    assert m.verified is True
+    assert m.location == "Trenton, New Jersey, United States"
+    assert m.meta["location_parts"] == ["Trenton", "New Jersey", "United States"]
+    assert m.joined == "March 2021"
+    assert m.verified is True and m.meta["supporter"] is True
+    assert m.meta["identity"] == "52M Dom"
+    assert m.meta["looking_for"] == "Friendship, Events"
+    assert m.meta["active"] == "I Live It 24/7"
+    assert m.avatar_url == "https://x/avatar.jpg"
+    assert m.url == "https://fetlife.com/Example_Dom"
 
 
-def test_parse_member_other_profile_is_partial_with_note():
-    # FL.user (the viewer) does NOT match the requested profile → partial result.
-    m = parsers.parse_member(
-        BOOTSTRAP_HTML, url="https://fetlife.com/SomeoneElse",
-        requested="SomeoneElse",
-    )
-    assert m.nickname == "Knight_of_Xanadu"  # from <title> of that page
+def test_parse_member_relationships():
+    rels = parsers.parse_member(PROFILE_HTML, url="https://fetlife.com/Example_Dom").relationships
+    assert [(r.kind, r.status, r.status_with_connector, r.with_nickname) for r in rels] == [
+        ("relationship", "Married", "Married to", "Example_Sub"),
+        ("D/s", "Owner", "Owner of", "Example_Sub"),
+        ("D/s", "Mentor", "Mentor of", "Example_Pup"),
+    ]
+    assert rels[0].with_url == "https://fetlife.com/Example_Sub"
+
+
+def test_parse_member_sparse_profile():
+    """An organization account: no age/gender, no Roles row, no Joined row."""
+    html = """<main><turbo-frame id="profile_more_menu_77"></turbo-frame>
+      <h1><span>Some_Org</span><span>ORG<span>Organization</span></span></h1></main>"""
+    m = parsers.parse_member(html, url="https://fetlife.com/Some_Org")
+    assert m.nickname == "Some_Org" and m.id == "77"   # id from the frame
     assert m.age is None and m.gender is None
-    assert "client-side" in m.meta["note"]
-
-
-def test_member_from_bootstrap_helper():
-    m = parsers.member_from_bootstrap(
-        {"id": 5, "nickname": "X", "age": 30, "gender": "F", "role": "Switch",
-         "profileUrl": "/X", "avatarUrls": {}},
-        base_url="https://fetlife.com",
-    )
-    assert m.url == "https://fetlife.com/X"
-    assert m.avatar_url is None
-
-
-CORE_PAYLOAD = {
-    "core": {
-        "userId": 21482572,
-        "nickname": "VirginiaSunshine",
-        "identity": "60F sub",
-        "aboutHtml": "<p>Hello <b>world</b></p>\n<p>Second line</p>",
-        "joinDate": "2025-04-01T12:00:00.000Z",
-        "isLookingFor": ["friendship"],
-        "isProfileVerified": True,
-        "isSupporter": True,
-        "url": "/VirginiaSunshine",
-        "avatarUrl": "https://x/u500.jpg",
-        "roles": [{"key": "submissive", "name": "submissive"}],
-        "orientations": [{"key": "bisexual", "name": "Bisexual"}],
-        "genders": [{"key": "F", "name": "Female"}],
-        "relationships": [
-            {"status": "Monogamish", "statusWithConnector": "Monogamish with",
-             "withId": 5777959, "withNickname": "Sir2BabyGirl", "withUrl": "/Sir2BabyGirl"},
-        ],
-        "dsRelationships": [
-            {"status": "owned", "statusWithConnector": "owned by",
-             "withId": 5777959, "withNickname": "Sir2BabyGirl", "withUrl": "/Sir2BabyGirl"},
-        ],
-    },
-    "currentUserRelation": {
-        "location": [
-            {"name": "Peach Bottom"},
-            {"name": "Pennsylvania"},
-            {"name": "United States"},
-        ]
-    },
-}
-
-
-def test_member_from_core():
-    m = parsers.member_from_core(CORE_PAYLOAD, base_url="https://fetlife.com")
-    assert m.id == "21482572"
-    assert m.nickname == "VirginiaSunshine"
-    assert m.age == 60                       # parsed from identity "60F sub"
-    assert m.gender == "Female"
-    assert m.role == "submissive"
-    assert m.orientation == "Bisexual"
-    assert m.location == "Peach Bottom, Pennsylvania, United States"
-    assert m.url == "https://fetlife.com/VirginiaSunshine"
-    assert m.about == "Hello world Second line"   # HTML stripped
-    assert m.joined.startswith("2025-04-01")
-    assert m.verified is True
-
-
-def test_relationships_from_core():
-    rels = parsers.relationships_from_core(CORE_PAYLOAD, base_url="https://fetlife.com")
-    assert len(rels) == 2
-    vanilla = next(r for r in rels if r.kind == "relationship")
-    ds = next(r for r in rels if r.kind == "D/s")
-    assert vanilla.status_with_connector == "Monogamish with"
-    assert vanilla.with_nickname == "Sir2BabyGirl"
-    assert vanilla.with_url == "https://fetlife.com/Sir2BabyGirl"
-    assert ds.status == "owned" and ds.status_with_connector == "owned by"
-    # And they're attached to the parsed Member too.
-    m = parsers.member_from_core(CORE_PAYLOAD)
-    assert len(m.relationships) == 2
-
-
-def test_member_from_core_handles_missing_fields():
-    m = parsers.member_from_core({"core": {"nickname": "X"}})
-    assert m.nickname == "X"
-    assert m.age is None and m.gender is None and m.location is None
+    assert m.role == "ORG Organization"
+    assert m.location is None and m.relationships == [] and m.verified is False
 
 
 # A profile activity feed, as the HTML tab renders it: one <article> per story.
@@ -526,8 +481,6 @@ RELATION_CLOSED_HTML = """
 def test_extract_bootstrap_user_from_page_data_script():
     user = parsers.extract_bootstrap_user(PAGE_DATA_HTML)
     assert user["nickname"] == "Hammerbacher" and user["id"] == 1065304737
-    m = parsers.member_from_bootstrap(user, base_url="https://fetlife.com")
-    assert m.url == "https://fetlife.com/Hammerbacher" and m.age == 27
 
 
 def test_extract_bootstrap_user_legacy_assignment_still_works():

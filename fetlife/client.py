@@ -317,27 +317,6 @@ class FetLifeClient:
     def get(self, path: str, **kwargs) -> cffi_requests.Response:
         return self.request("GET", path, **kwargs)
 
-    def get_json(self, path: str, **kwargs) -> dict:
-        """GET *path* asking for JSON; return the parsed body.
-
-        FetLife's SPA fetches profile/friends/etc. data from the same URLs the
-        browser uses, but with ``Accept: application/json``. These are plain
-        cookie-authenticated GETs — no CSRF token or request signing required.
-        """
-        headers = {"Accept": "application/json"}
-        headers.update(kwargs.pop("headers", {}))
-        resp = self.get(path, headers=headers, **kwargs)
-        if "json" not in resp.headers.get("content-type", ""):
-            raise ParseError(
-                f"Expected JSON from {path} but got "
-                f"{resp.headers.get('content-type', 'unknown')!r} — the endpoint "
-                "may have changed."
-            )
-        try:
-            return resp.json()
-        except ValueError as exc:
-            raise ParseError(f"Invalid JSON from {path}: {exc}") from exc
-
     # ------------------------------------------------------------------ #
     # Authentication
     # ------------------------------------------------------------------ #
@@ -421,17 +400,17 @@ class FetLifeClient:
     def whoami(self) -> Member:
         """Return the currently logged-in user's own profile.
 
-        Read from the ``window.FL.user`` blob FetLife embeds on every page —
-        this is always fully populated, unlike other members' SPA profiles.
+        The user blob FetLife embeds on every page carries little more than
+        the viewer's id these days, so the profile itself is fetched by id.
         """
         self._ensure_auth()
         resp = self.get("/home")
         user = parsers.extract_bootstrap_user(resp.text)
-        if not user:
+        if not user or user.get("id") is None:
             raise parsers.ParseError(
                 "Could not locate the logged-in user data (FL.user) on /home."
             )
-        return parsers.member_from_bootstrap(user, base_url=self.config.base_url)
+        return self.get_member(str(user["id"]))
 
     def _profile_path(self, nickname_or_id: str) -> str:
         ident = str(nickname_or_id)
@@ -440,21 +419,13 @@ class FetLifeClient:
     def get_member(self, nickname_or_id: str) -> Member:
         """Fetch a member profile by nickname or numeric user id.
 
-        Uses FetLife's JSON API (``GET /<nickname>`` with an application/json
-        Accept header) — the SPA's own data source — so full data is returned
-        for any member. Falls back to HTML parsing if the API shape changes.
+        Read from the server-rendered profile page. (FetLife used to answer
+        the same URL with JSON for ``Accept: application/json``; it now
+        returns 406 Not Acceptable.)
         """
         self._ensure_auth()
-        path = self._profile_path(nickname_or_id)
-        try:
-            data = self.get_json(path)
-            return parsers.member_from_core(data, base_url=self.config.base_url)
-        except (ParseError, KeyError):
-            # Fallback: server-rendered HTML (full data only for your own page).
-            resp = self.get(path)
-            return parsers.parse_member(
-                resp.text, url=resp.url, requested=str(nickname_or_id)
-            )
+        resp = self.get(self._profile_path(nickname_or_id))
+        return parsers.parse_member(resp.text, url=resp.url)
 
     def _member_list(self, nickname_or_id: str, section: str, page: int) -> list[Member]:
         """Fetch a friends/followers/following list (all share one page shape).
@@ -834,12 +805,9 @@ class FetLifeClient:
     def get_relationships(self, nickname_or_id: str) -> list["Relationship"]:
         """List a member's relationships (vanilla and D/s).
 
-        Sourced from the same profile JSON as :meth:`get_member`, so it's a
-        single request.
+        Read from the profile page, like :meth:`get_member`.
         """
-        self._ensure_auth()
-        data = self.get_json(self._profile_path(nickname_or_id))
-        return parsers.relationships_from_core(data, base_url=self.config.base_url)
+        return self.get_member(nickname_or_id).relationships
 
     def search_members(self, query: str, page: int = 1) -> list[Member]:
         """Search members by keyword/nickname."""

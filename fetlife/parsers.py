@@ -181,44 +181,6 @@ def extract_bootstrap_user(html: str) -> dict | None:
     return None
 
 
-def _avatar_from_bootstrap(user: dict) -> str | None:
-    urls = user.get("avatarUrls")
-    if isinstance(urls, dict) and urls:
-        # Prefer the largest available crop; keys look like c50, c120, ...
-        def _size(key: str) -> int:
-            digits = re.search(r"\d+", key)
-            return int(digits.group()) if digits else 0
-
-        return urls[max(urls, key=_size)]
-    return None
-
-
-def member_from_bootstrap(user: dict, base_url: str = "") -> Member:
-    """Build a :class:`Member` from a ``window.FL.user`` dict (the viewer)."""
-    profile_url = user.get("profileUrl")
-    return Member(
-        id=str(user["id"]) if user.get("id") is not None else None,
-        nickname=user.get("nickname", ""),
-        age=user.get("age"),
-        gender=user.get("gender"),
-        role=user.get("role"),
-        orientation=user.get("orientation"),
-        url=urljoin(base_url + "/", profile_url.lstrip("/")) if profile_url else None,
-        avatar_url=_avatar_from_bootstrap(user),
-        verified=user.get("isProfileVerified"),
-        meta={"supporter": user.get("isSupporter")},
-    )
-
-
-def _names(items) -> str | None:
-    """Join the display names of a list of {key,name} objects (roles, genders...)."""
-    if not isinstance(items, list):
-        return None
-    names = [i.get("name") or i.get("key") for i in items if isinstance(i, dict)]
-    names = [n for n in names if n]
-    return ", ".join(names) or None
-
-
 def _location_parts(value) -> list[str]:
     """Return the ordered place names (city, region, country) from a location."""
     if isinstance(value, list):
@@ -234,77 +196,6 @@ def _location_names(value) -> str | None:
     """FetLife returns location as a list of place dicts (city, region, country)."""
     parts = _location_parts(value)
     return ", ".join(parts) or None
-
-
-def _html_to_text(html: str | None) -> str | None:
-    if not html:
-        return None
-    return _clean(_soup(html).get_text(" "))
-
-
-def _relationship_from_obj(obj: dict, kind: str, base_url: str = "") -> Relationship:
-    url = obj.get("withUrl")
-    return Relationship(
-        kind=kind,
-        status=obj.get("status"),
-        status_with_connector=obj.get("statusWithConnector"),
-        with_nickname=obj.get("withNickname", ""),
-        with_id=str(obj["withId"]) if obj.get("withId") is not None else None,
-        with_url=urljoin(base_url + "/", url.lstrip("/")) if url else None,
-        pending=obj.get("pending"),
-    )
-
-
-def relationships_from_core(payload: dict, base_url: str = "") -> list[Relationship]:
-    """Extract vanilla + D/s relationships from the profile ``core`` JSON."""
-    core = payload.get("core") or {}
-    out: list[Relationship] = []
-    for obj in core.get("relationships") or []:
-        if isinstance(obj, dict):
-            out.append(_relationship_from_obj(obj, "relationship", base_url))
-    for obj in core.get("dsRelationships") or []:
-        if isinstance(obj, dict):
-            out.append(_relationship_from_obj(obj, "D/s", base_url))
-    return out
-
-
-def member_from_core(payload: dict, base_url: str = "") -> Member:
-    """Build a :class:`Member` from the ``GET /<nickname>`` JSON API response.
-
-    This is the SPA's own data source, so it returns full profile data for any
-    member — not just the logged-in viewer.
-    """
-    core = payload.get("core") or {}
-    relation = payload.get("currentUserRelation") or {}
-
-    # There's no standalone age field; it's embedded in `identity` ("60F sub").
-    identity = core.get("identity") or ""
-    age_match = re.match(r"\s*(\d{1,3})", identity)
-
-    url = core.get("url")
-    return Member(
-        id=str(core["userId"]) if core.get("userId") is not None else None,
-        nickname=core.get("nickname", ""),
-        age=int(age_match.group(1)) if age_match else None,
-        gender=_names(core.get("genders")),
-        role=_names(core.get("roles")),
-        orientation=_names(core.get("orientations")),
-        location=_location_names(relation.get("location")),
-        url=urljoin(base_url + "/", url.lstrip("/")) if url else None,
-        avatar_url=core.get("avatarUrl") or core.get("smallAvatarUrl"),
-        about=_html_to_text(core.get("aboutHtml")),
-        joined=core.get("joinDate"),
-        verified=core.get("isProfileVerified"),
-        relationships=relationships_from_core(payload, base_url),
-        meta={
-            "identity": identity or None,
-            "looking_for": core.get("isLookingFor"),
-            "not_looking_for": core.get("isNotLookingFor"),
-            "supporter": core.get("isSupporter"),
-            # Ordered place names (city, region, country) for precise geocoding.
-            "location_parts": _location_parts(relation.get("location")),
-        },
-    )
 
 
 _RELATION_ID_RE = re.compile(r"^relation_user_(\d+)$")
@@ -520,62 +411,120 @@ def comments_from_stream(html: str, base_url: str = "") -> tuple[list[Member], s
     return out, cursor
 
 
-def _nickname_from_title(soup: BeautifulSoup) -> str:
-    title = soup.title.string if soup.title else None
-    if not title:
-        og = soup.find("meta", property="og:title")
-        title = og["content"] if og and og.get("content") else ""
-    # "<Nickname> - Kinksters | FetLife" -> "<Nickname>"
-    return _clean(title.split(" - ")[0].split(" | ")[0]) or ""
+# The header's member number ("#15758532"), shown beside the join date.
+_MEMBER_NUMBER_RE = re.compile(r"#(\d+)")
+# Frames on a profile named for its owner's id, should "Joined" be missing.
+_PROFILE_FRAME_ID_RE = re.compile(r"^profile_(?:more_menu|relation_button)_(\d+)")
 
 
-def _matches(user: dict, requested: str | None) -> bool:
-    if requested is None:  # caller asked for "self"
-        return True
-    req = str(requested).lstrip("/").lower()
-    return req in {
-        str(user.get("id", "")).lower(),
-        str(user.get("nickname", "")).lower(),
-        str(user.get("profileUrl", "")).lstrip("/").lower(),
-    }
+def _profile_fields(main) -> dict:
+    """The profile's "Label | value" rows (Roles, Orientation, Joined...).
+
+    Each row is a label ``<div>`` whose text is just the label, followed by a
+    sibling ``<div>`` holding the value.
+    """
+    fields = {}
+    for label in main.find_all("div", string=True):
+        name = _clean(label.string)
+        value = label.find_next_sibling("div")
+        if name and value is not None and name not in fields and len(name) <= 30:
+            fields[name] = value
+    return fields
 
 
-def parse_member(
-    html: str, url: str | None = None, requested: str | None = None
-) -> Member:
-    """Parse a profile page.
+def _popover_names(value) -> str | None:
+    """Join a Roles/Orientation row's names, leaving out their descriptions."""
+    if value is None:
+        return None
+    names = [_clean(n.get_text()) for n in value.select('span[role="button"]')]
+    return ", ".join(n for n in names if n) or _clean(value.get_text(" "))
 
-    If the page's embedded ``FL.user`` is the profile that was requested (i.e.
-    you're viewing your own profile), we return its full, structured data.
-    Otherwise only the nickname is available over plain HTTP — the rest of the
-    profile is rendered client-side — so we return a partial Member annotated
-    with that limitation rather than pretending the fields are empty.
+
+def _relationships_from_row(value, kind: str, base_url: str) -> list[Relationship]:
+    """A Relationships row: one ``<div>`` per tie, "Married to <a>nick</a>"."""
+    out: list[Relationship] = []
+    if value is None:
+        return out
+    for tie in value.find_all("div"):
+        link = tie.find("a", href=_PROFILE_HREF_RE)
+        if link is None or tie.find("div"):
+            continue
+        connector = _clean(tie.find(string=True, recursive=False))
+        out.append(Relationship(
+            kind=kind,
+            status=connector.rsplit(" ", 1)[0] if connector and " " in connector else connector,
+            status_with_connector=connector,
+            with_nickname=_clean(link.get_text()) or "",
+            with_url=urljoin(base_url + "/", link["href"].lstrip("/")),
+        ))
+    return out
+
+
+def parse_member(html: str, url: str | None = None) -> Member:
+    """Parse a server-rendered profile page (``GET /<nickname>``).
+
+    The header's ``<h1>`` holds the nickname and the "68M Dom" line, the
+    paragraph after it the location, and the rows below (Roles, Orientation,
+    Relationships, Joined...) the rest. "About me" isn't on the page.
     """
     soup = _soup(html)
-    user = extract_bootstrap_user(html)
-    if user and _matches(user, requested):
-        member = member_from_bootstrap(user, base_url=_base_from_url(url))
-        if url:
-            member.url = url
-        return member
-
-    nickname = _nickname_from_title(soup)
-    if not nickname:
+    base_url = _base_from_url(url)
+    main = soup.find("main") or soup
+    h1 = main.find("h1")
+    spans = [_clean(s.get_text(" ")) for s in h1.find_all("span", recursive=False)] if h1 else []
+    spans = [s for s in spans if s]
+    if not spans:
         raise ParseError(
             "Could not parse a nickname from the profile page. "
             "The member parser in fetlife/parsers.py likely needs updating."
         )
+    nickname = spans[0]
+    identity = spans[-1] if len(spans) > 1 else None
+    age, gender, role = _age_gender_role(identity)
+
+    place = h1.find_next_sibling("p")
+    location_parts = [_clean(a.get_text()) for a in place.find_all("a")] if place else []
+    location_parts = [p for p in location_parts if p]
+
+    fields = _profile_fields(main)
+    joined = fields.get("Joined")
+    member_id = None
+    if joined is not None:
+        number = joined.find("small")
+        m = _MEMBER_NUMBER_RE.search(number.get_text()) if number else None
+        member_id = m.group(1) if m else None
+        if number:
+            number.extract()
+    if member_id is None:
+        frame = main.find(id=_PROFILE_FRAME_ID_RE)
+        member_id = _PROFILE_FRAME_ID_RE.match(frame["id"]).group(1) if frame else None
+    if member_id is None:
+        member_id = _id_from_url(url, "users")
+
     og_image = soup.find("meta", property="og:image")
+    looking_for = fields.get("Looking for")
+    active = fields.get("Active")
     return Member(
-        id=_id_from_url(url, "users"),
+        id=member_id,
         nickname=nickname,
-        url=url,
+        age=age,
+        gender=gender,
+        role=_popover_names(fields.get("Roles")) or role,
+        orientation=_popover_names(fields.get("Orientation")),
+        location=", ".join(location_parts) or None,
+        url=url or urljoin(base_url + "/", nickname),
         avatar_url=og_image["content"] if og_image and og_image.get("content") else None,
+        joined=_clean(joined.get_text(" ")) if joined is not None else None,
+        verified=bool(h1.find("a", title="Verified Profile")),
+        relationships=(_relationships_from_row(fields.get("Relationships"), "relationship", base_url)
+                       + _relationships_from_row(fields.get("D/s relationships"), "D/s", base_url)),
         meta={
-            "note": (
-                "Only the nickname is available over plain HTTP; FetLife renders "
-                "the rest of this profile client-side. See README (SPA profiles)."
-            )
+            "identity": identity,
+            "looking_for": _clean(looking_for.get_text(" ")) if looking_for is not None else None,
+            "active": _clean(active.get_text(" ")) if active is not None else None,
+            "supporter": bool(h1.find(title="FetLife Supporter")),
+            # Ordered place names (city, region, country) for precise geocoding.
+            "location_parts": location_parts,
         },
     )
 

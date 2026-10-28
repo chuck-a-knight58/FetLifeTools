@@ -72,7 +72,7 @@ def _emit(objs, as_json: bool, columns: list[str], title: str) -> None:
         ])
     console.print(table)
 
-    # Surface any advisory note attached to a result (e.g. SPA limitation).
+    # Surface any advisory note attached to a result.
     for obj in items:
         note = getattr(obj, "meta", {}).get("note")
         if note:
