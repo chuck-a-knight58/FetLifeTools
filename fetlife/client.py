@@ -14,7 +14,7 @@ import re
 import time
 from pathlib import Path
 from typing import Iterator
-from urllib.parse import urljoin, quote_plus, urlsplit
+from urllib.parse import quote, quote_plus, urljoin, urlsplit
 
 from curl_cffi import CurlMime
 from curl_cffi import requests as cffi_requests
@@ -751,6 +751,82 @@ class FetLifeClient:
         errors = parsers.form_errors_from_html(resp.text)
         raise FetLifeError(
             "FetLife did not " + ("save the draft" if draft else "publish the writing")
+            + (": " + "; ".join(errors) if errors else f": {flash}" if flash
+               else f" (HTTP {resp.status_code}, landed on {resp.url}).")
+        )
+
+    def get_event_form(self) -> dict:
+        """The New Event form: its token and the categories, timezones, types,
+        cost types and privacy levels it offers (see
+        :func:`parsers.event_form_from_html`)."""
+        self._ensure_auth()
+        resp = self.get("/events/new")
+        form = parsers.event_form_from_html(resp.text)
+        if form is None or not form.get("token"):
+            raise ParseError("Could not find the New Event form on /events/new.")
+        return form
+
+    def find_co_host(self, nickname: str) -> dict | None:
+        """The member *nickname* as the co-host picker offers them (``{name, id}``),
+        or None. The picker only offers the account's friends."""
+        self._ensure_auth()
+        resp = self.get(
+            f"/events/co_hosts/suggestions?query={quote_plus(nickname)}",
+            headers={"Accept": "text/html", "X-Requested-With": "XMLHttpRequest",
+                     "Referer": self._url("/events/new")},
+        )
+        return next((o for o in parsers.co_host_options_from_html(resp.text)
+                     if o["name"].casefold() == nickname.casefold()), None)
+
+    def geocode(self, mapbox_token: str, query: str, types: list[str],
+                proximity: tuple[float, float] | None = None, limit: int = 5) -> list[dict]:
+        """Look *query* up in Mapbox the way the New Event form's location
+        fields do (with the key FetLife's page carries); return the raw
+        features, best first. *proximity* is a ``(longitude, latitude)`` to
+        favour results near."""
+        params = {"access_token": mapbox_token, "language": "en", "limit": str(limit),
+                  "types": ",".join(types), "autocomplete": "true"}
+        if proximity:
+            params["proximity"] = f"{proximity[0]},{proximity[1]}"
+        self._throttle()
+        resp = cffi_requests.get(
+            f"https://api.mapbox.com/geocoding/v5/mapbox.places/{quote(query, safe='')}.json",
+            params=params, impersonate=self.config.impersonate, timeout=30,
+            headers={"Referer": self.config.base_url + "/", "Origin": self.config.base_url},
+        )
+        if resp.status_code != 200:
+            raise FetLifeError(f"The location lookup for {query!r} failed (HTTP {resp.status_code}).")
+        return resp.json().get("features") or []
+
+    def create_event(self, fields: list[tuple[str, str]], cover_image: str | Path | None = None,
+                     cover_type: str | None = None) -> str:
+        """Submit the New Event form; return the new event's URL.
+
+        *fields* are the form's name/value pairs, authenticity token included
+        (see :mod:`fetlife.eventpost`); *cover_image* is uploaded as the cover
+        picture. Raises FetLifeError with the site's reasons if it's refused.
+        Never retried after a server error, so an event can't go up twice.
+        """
+        self._ensure_auth()
+        form = CurlMime()
+        try:
+            for name, value in fields:
+                form.addpart(name=name, data=value.encode("utf-8"))
+            if cover_image:
+                form.addpart(name="event[cover_image]", content_type=cover_type,
+                             filename=Path(cover_image).name, local_path=str(cover_image))
+            resp = self.request(
+                "POST", "/events", retry_server_errors=False, multipart=form,
+                headers={"Referer": self._url("/events/new"), "Origin": self.config.base_url},
+            )
+        finally:
+            form.close()
+        if re.search(r"/events/\d+$", urlsplit(resp.url).path):
+            return resp.url
+        errors = parsers.form_errors_from_html(resp.text)
+        flash = parsers.flash_from_html(resp.text)
+        raise FetLifeError(
+            "FetLife did not create the event"
             + (": " + "; ".join(errors) if errors else f": {flash}" if flash
                else f" (HTTP {resp.status_code}, landed on {resp.url}).")
         )

@@ -14,12 +14,14 @@ import sys
 import uuid
 from contextlib import nullcontext
 from datetime import datetime, timezone
+from pathlib import Path
 
 import click
 from rich.console import Console
 from rich.table import Table
 
-from . import __version__, crawl, engagement, eventcal, friending, geo, groups, messaging, writing
+from . import (__version__, crawl, engagement, eventcal, eventpost, friending, geo, groups,
+               messaging, writing)
 from .client import FetLifeClient
 from .config import Config
 from .exceptions import FetLifeError, RateLimitedError
@@ -1002,6 +1004,240 @@ def post_writing(ctx, title, body, category, tags, collections, image, image_con
         console.print(f"[green]Draft saved.[/green] Your drafts: {url}")
     else:
         console.print(f"[green]Published:[/green] {url}")
+
+
+@cli.command("post-event")
+@click.option("--events-file", type=click.Path(exists=True, dir_okay=False, writable=True), default=None,
+              help="An events-data.js file to take the event from (with --event-id); the new "
+                   "event's URL is saved back into the entry as Url.")
+@click.option("--event-id", default=None, help="The id of the entry in --events-file.")
+@click.option("--title", "-t", default=None, help="Event name.  [file: name]")
+@click.option("--cover-image", type=click.Path(exists=True, dir_okay=False, readable=True), default=None,
+              help="Cover picture (min 1200x630; FetLife shows it at 1.91:1).  [file: assets/<image>]")
+@click.option("--tagline", default=None, help="One-line tagline.  [file: subtitle]")
+@click.option("--description", "-d", default=None,
+              help="Description; a blank line starts a new paragraph.  [file: description]")
+@click.option("--description-file", type=click.File("r", encoding="utf-8"), default=None,
+              help="Read the description from a text file instead.")
+@click.option("--co-host", "co_hosts", multiple=True, metavar="NICKNAME",
+              help="A co-host (one of the account's friends); repeat it, or separate names "
+                   "with commas.  [file: presenters]")
+@click.option("--no-co-hosts", is_flag=True, default=False,
+              help="Post without co-hosts, ignoring the file's presenters.")
+@click.option("--category", "-c", default=None,
+              help="Educational, Social, Sex Party, BDSM Party or Conference (any prefix).  [file: category]")
+@click.option("--dress-code", default=None, help="The dress code expected.  [file: dressCode]")
+@click.option("--wheelchair-accessible", is_flag=True, default=False,
+              help="Mark the event wheelchair accessible.")
+@click.option("--cost", type=click.Choice(eventpost.COST_TYPES, case_sensitive=False), default=None,
+              help="Free or paid.  [file: paid if it has a ticketUrl, else free]")
+@click.option("--cost-details", default=None,
+              help="The cost text: details for a free event, the ticket price for a paid one.")
+@click.option("--ticket-url", default=None, help="Where to buy tickets (paid events).  [file: ticketUrl]")
+@click.option("--start", default=None, metavar="WHEN",
+              help='Start, e.g. "2026-11-07 2:00pm" or "2026-11-07 14:00".  [file: date + time]')
+@click.option("--end", default=None, metavar="WHEN", help="End, in the same form.  [file: date + time]")
+@click.option("--timezone", "tz_name", default=eventpost.DEFAULT_TIMEZONE, show_default=True,
+              help='The timezone of --start/--end: an IANA name or part of FetLife\'s label ("Eastern").')
+@click.option("--type", "event_type", type=click.Choice(list(eventpost.EVENT_TYPES), case_sensitive=False),
+              default=None, help="Where it happens.  [file: virtual if the audience is Online, else in-person]")
+@click.option("--location", default=None,
+              help="Name of the location (in-person) or the link to join (virtual).  [file: location]")
+@click.option("--address", default=None, help="Street address (in-person).  [file: address]")
+@click.option("--city", default=None, help='"City, State/Province/Region, Country" (in-person, virtual-local).  [file: cityStateCountry]')
+@click.option("--privacy", type=click.Choice(eventpost.PRIVACY_LEVELS, case_sensitive=False),
+              default="public", show_default=True,
+              help="public (anyone, on or off FetLife), fetlifers, friends, or private (invited only).")
+@click.option("--repost", is_flag=True, default=False,
+              help="Post even though the --events-file entry already has a Url.")
+@click.option("--dry-run", is_flag=True, default=False,
+              help="Check everything with FetLife and show the event, but don't create it.")
+@click.option("--yes", "-y", is_flag=True, default=False, help="Create it without asking first.")
+@json_option
+@click.pass_context
+def post_event(ctx, events_file, event_id, title, cover_image, tagline, description, description_file,
+               co_hosts, no_co_hosts, category, dress_code, wheelchair_accessible, cost, cost_details,
+               ticket_url, start, end, tz_name, event_type, location, address, city, privacy,
+               repost, dry_run, yes, json_local):
+    """Create a FetLife event from the logged-in account.
+
+    Give every detail as an option, or take the event from a site data file
+    with `--events-file events-data.js --event-id ID`: its name, subtitle,
+    description, presenters, category, date/time, image, audience and ticket
+    URL fill in the options marked [file: …], and any option given still
+    wins. Once the event is created its URL is written back into that entry
+    as `Url`. It shows the event and asks before creating it (--yes skips
+    that; --dry-run stops there).
+    """
+    if bool(events_file) != bool(event_id):
+        raise FetLifeError("--events-file and --event-id go together.")
+    if description is not None and description_file is not None:
+        raise FetLifeError("Give --description or --description-file, not both.")
+    if description_file is not None:
+        description = description_file.read()
+
+    entry, given = {}, {}
+    if events_file:
+        entry = eventpost.read_event(events_file, event_id)
+        if (entry.get("Url") or "").strip() and not repost:
+            raise FetLifeError(f"{event_id} already has a FetLife event: {entry['Url']} "
+                               "(--repost to create another).")
+        given = eventpost.defaults_from_entry(
+            entry, Path(events_file).resolve().parent / "assets")
+        if given.get("cover_image") and not os.path.isfile(given["cover_image"]):
+            raise FetLifeError(f"{event_id}'s image isn't there: {given['cover_image']}")
+
+    title = " ".join((title or given.get("title") or "").split())
+    tagline = " ".join((tagline or given.get("tagline") or "").split())
+    if description is None:
+        description = given.get("description") or ""
+    cover_image = cover_image or given.get("cover_image")
+    cover_type = writing.image_type(cover_image) if cover_image else None
+    names = [] if no_co_hosts else (eventpost.split_names(",".join(co_hosts)) if co_hosts
+                                    else given.get("co_hosts", []))
+    category = category or given.get("category")
+    cost = (cost or given.get("cost") or "").lower()
+    ticket_url = ticket_url if ticket_url is not None else given.get("ticket_url", "")
+    event_type = (event_type or given.get("type") or "").lower()
+    dress_code = dress_code if dress_code is not None else given.get("dress_code")
+    location = location if location is not None else given.get("location")
+    address = address if address is not None else given.get("address")
+    city = city if city is not None else given.get("city")
+    start = eventpost.parse_when(start) if start else given.get("start")
+    end = eventpost.parse_when(end) if end else given.get("end")
+
+    missing = [flag for flag, value in [("--title", title), ("--category", category), ("--cost", cost),
+                                        ("--start", start), ("--end", end), ("--type", event_type)]
+               if not value]
+    if missing:
+        raise FetLifeError("Missing " + ", ".join(missing) + ".")
+    if end <= start:
+        raise FetLifeError(f"The event ends ({end:%Y-%m-%d %H:%M}) before it starts ({start:%Y-%m-%d %H:%M}).")
+    placed = event_type in ("in-person", "virtual-local")
+    if placed and not city:
+        raise FetLifeError(f"An {event_type} event needs --city (\"City, State, Country\").")
+    if not placed:
+        city = address = None  # a worldwide virtual event has no place
+
+    fl = _client(ctx)
+    fl.on_retry = _report_retry
+    with fl:
+        me = fl.whoami()
+        account = me.nickname or f"user {me.id}"
+        form = fl.get_event_form()
+        category = eventpost.category_value(category, form["categories"] or None)
+        tz = eventpost.timezone_value(tz_name, form["timezones"]) if form["timezones"] else tz_name
+        for what, value, offered in [("event type", eventpost.EVENT_TYPES[event_type], form["types"]),
+                                     ("cost", cost, form["cost_types"]),
+                                     ("privacy level", privacy, form["privacy_levels"])]:
+            if offered and value not in offered:
+                raise FetLifeError(f"FetLife no longer offers the {what} {value!r} "
+                                   f"(it offers: {', '.join(offered)}).")
+        hosts, not_friends = [], []
+        for name in names:
+            if me.nickname and name.casefold() == me.nickname.casefold():
+                continue  # the organizer hosts already
+            found = fl.find_co_host(name)
+            if found:
+                hosts.append(found)
+            else:
+                not_friends.append(name)
+
+        # Place the event the way the form's location fields do: the city
+        # from a Mapbox lookup, and for an in-person event the street address,
+        # looked up near that city and kept only if it lies in it.
+        geo, place, unplaced = None, None, None
+        if placed:
+            if not form.get("mapbox_token"):
+                raise FetLifeError("The New Event page no longer carries its location lookup key.")
+            found = fl.geocode(form["mapbox_token"], city, ["place", "locality"], limit=1)
+            if not found:
+                raise FetLifeError(f"FetLife's location lookup can't find the city {city!r}.")
+            place = eventpost.location_feature(found[0])
+            geo = place
+            if address and event_type == "in-person":
+                lon, lat = place["position"]["longitude"], place["position"]["latitude"]
+                street = next((eventpost.location_feature(f) for f in fl.geocode(
+                    form["mapbox_token"], address, ["address", "postcode"], proximity=(lon, lat))
+                    if eventpost.within(f, place)), None)
+                if street:
+                    geo, address = street, street["address"]["streetLevel"]
+                else:
+                    unplaced, address = address, None
+            else:
+                address = None
+
+        fields = [("authenticity_token", form["token"]),
+                  ("event[name]", title),
+                  ("event[tagline]", tagline),
+                  ("event[rich_description]", writing.text_html(description)),
+                  ("event[co_host_user_ids][]", "")]
+        fields += [("event[co_host_user_ids][]", h["id"]) for h in hosts]
+        fields += [("event[category]", category),
+                   ("event[dress_code]", dress_code or ""),
+                   ("event[accessibility_attributes][wheelchair_accessible]", "0")]
+        if wheelchair_accessible:
+            fields += [("event[accessibility_attributes][wheelchair_accessible]", "1")]
+        fields += [("event[cost_type]", cost),
+                   ("event[cost]", cost_details or ""),
+                   ("event[ticket_url]", ticket_url if cost == "paid" else "")]
+        fields += eventpost.datetime_fields("start_date_time", start)
+        fields += eventpost.datetime_fields("end_date_time", end)
+        fields += [("event[timezone]", tz),
+                   ("event[geo_location]", json.dumps(geo, ensure_ascii=False) if geo else ""),
+                   ("event[type]", eventpost.EVENT_TYPES[event_type]),
+                   ("event[location]", location or ""),
+                   ("event[address]", address or ""),
+                   ("event[privacy]", privacy),
+                   ("event[invite_policy]", ""),
+                   ("event[invite_policy]", "organizers" if privacy in ("private", "friends")
+                    else "organizers_and_attendees")]
+
+        out = status_console if _as_json(ctx, json_local) else console
+        out.print(f"[bold]Event as {account}:[/bold] {title}")
+        if tagline:
+            out.print(f"  {tagline}", markup=False, highlight=False)
+        label = re.split(r" \(", form["categories"].get(category, category))[0]
+        out.print(f"  {label} · {start:%a %Y-%m-%d %I:%M%p} – {end:%a %Y-%m-%d %I:%M%p} {tz}")
+        out.print(f"  {event_type} · {cost}"
+                  + (f" ({cost_details})" if cost_details else "")
+                  + f" · {privacy}"
+                  + (" · wheelchair accessible" if wheelchair_accessible else "")
+                  + (f" · dress code: {dress_code}" if dress_code else ""), markup=False, highlight=False)
+        if location or address or place:
+            out.print("  at " + ", ".join(x for x in (location, address, place and place["address"]["label"])
+                                          if x), markup=False, highlight=False)
+        if unplaced:
+            out.print(f"  [yellow]address left off: no {unplaced!r} found in {place['address']['label']}[/yellow]",
+                      highlight=False)
+        if ticket_url and cost == "paid":
+            out.print(f"  tickets: {ticket_url}", markup=False, highlight=False)
+        if hosts:
+            out.print("  co-hosts: " + ", ".join(h["name"] for h in hosts), markup=False, highlight=False)
+        if not_friends:
+            out.print("  [yellow]not co-hosts (FetLife only offers this account's friends): "
+                      + ", ".join(not_friends) + "[/yellow]", highlight=False)
+        if cover_image:
+            out.print(f"  cover {os.path.basename(cover_image)}", markup=False, highlight=False)
+        preview = description.strip()
+        if preview:
+            out.print("  " + (preview[:300] + "…" if len(preview) > 300 else preview).replace("\n", "\n  "),
+                      markup=False, highlight=False)
+        if dry_run:
+            out.print("[dim]Dry run: nothing was created.[/dim]")
+            return
+        if not yes:
+            click.confirm(f"Create this event as {account}?", abort=True, err=True)
+
+        url = fl.create_event(fields, cover_image, cover_type)
+    if events_file:
+        eventpost.set_event_field(events_file, event_id, "Url", url)
+    if _as_json(ctx, json_local):
+        click.echo(json.dumps({"url": url, "event_id": event_id}))
+    else:
+        console.print(f"[green]Created:[/green] {url}")
+        if events_file:
+            console.print(f"[dim]Saved as {event_id}'s Url in {events_file}[/dim]")
 
 
 @cli.command()

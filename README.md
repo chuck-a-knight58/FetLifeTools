@@ -22,6 +22,7 @@ FetLife sits behind Cloudflare, which blocks plain HTTP clients. To get through,
 - `friend-requests` — send friend requests to the members listed in a CSV, with caps, a dry run and a log.
 - `message` — send a direct message (subject + body) to a member, or to everyone in a CSV, from the logged-in account.
 - `post-writing` — post a writing (title, text, category, tags, optional picture) from the logged-in account, or save it as a draft.
+- `post-event` — create a FetLife event from options or from an entry in a site data file like `events-data.js`, then save the event's URL back into that entry.
 - `search` — keyword member search _(experimental — see notes)_.
 - `events` / `event` — list events or fetch one by id _(experimental — partial data)_.
 - `events-calendar` — every event within a distance of a place between two dates, saved as the data file (`community_calendar.js`) for the HTML calendar + list page `community_calendar.html`.
@@ -80,6 +81,7 @@ fetlife engagement JohnDoe --connections friends.csv   # engagers since the last
 fetlife engagement JohnDoe --since "2 weeks" --all     # every engager, fetching the lists live
 fetlife friend-requests strangers.csv --dry-run       # who would get a request; then drop --dry-run
 fetlife message JohnDoe -s "Hi" -b "Saw you at the munch…"   # DM from the logged-in account
+fetlife post-event --events-file ../Xanadu/events-data.js --event-id VDM102226 --dry-run
 fetlife search "rope portland"
 fetlife events --place 123
 fetlife event 5551234
@@ -104,7 +106,7 @@ Global options (before the subcommand):
 
 Every command accepts `--json` (or `-j` after the subcommand). Table output uses [rich](https://github.com/Textualize/rich); JSON output is a list of objects (or a single object for one-item results) suitable for `jq`. Outputs below are **illustrative** (nicknames/values are examples).
 
-> **Command status.** `whoami`, `profile`, `friends`, `relationships`, `followers`, `following`, `discover`, `connections`, `engagement`, `friend-requests`, `message`, `post-writing`, `group`, `group-members`, `events-calendar`, `login`, and `raw` use FetLife's JSON API (or stable server-rendered fields) and return full data. `search`, `events`, and `event` are **experimental** — see notes on each; they were scaffolded against older markup and are awaiting the JSON endpoints the SPA now uses.
+> **Command status.** `whoami`, `profile`, `friends`, `relationships`, `followers`, `following`, `discover`, `connections`, `engagement`, `friend-requests`, `message`, `post-writing`, `post-event`, `group`, `group-members`, `events-calendar`, `login`, and `raw` use FetLife's JSON API (or stable server-rendered fields) and return full data. `search`, `events`, and `event` are **experimental** — see notes on each; they were scaffolded against older markup and are awaiting the JSON endpoints the SPA now uses.
 
 ### `login`
 
@@ -341,6 +343,52 @@ fetlife post-writing -t "Gallery night" -b "Photos from Friday" -c Note \
 | `--yes` / `-y` | _(off)_ | Publish without the confirmation prompt. |
 
 It prints what it's about to post and asks before publishing; drafts are saved without asking. The picture is uploaded first, then the writing is posted with it; the post itself is never retried after a server error, so a writing can't go up twice. FetLife capitalizes tag names.
+
+### `post-event`
+
+Create a FetLife event from the logged-in account (the one in your `.env`; `--env-file` posts from another), the same way the site's New Event page does. Give the details as options, or take them from an entry in a site data file such as Xanadu's `events-data.js`; once the event is created, its URL is written back into that entry as `Url`.
+
+```bash
+# From the data file: the entry fills in what it has; options fill in the rest or override it.
+fetlife --env-file xanadu_kink.env login
+fetlife --env-file xanadu_kink.env post-event \
+  --events-file ~/github-projects/Xanadu/events-data.js --event-id VDM102226 \
+  --location "https://zoom.us/j/…" --dress-code "Come as you are" --dry-run
+
+# Everything by hand.
+fetlife post-event -t "Rope Jam" --tagline "Bring a partner" --description-file jam.txt \
+  --cover-image jam.png --co-host Grr_Bear --category Social --cost paid \
+  --cost-details '$20 per person' --ticket-url https://tickets.example/jam \
+  --start "2026-11-07 2:00pm" --end "2026-11-07 4:00pm" --timezone America/New_York \
+  --type virtual --location "https://zoom.us/j/…"
+```
+
+| Option | From the file | Purpose |
+|---|---|---|
+| `--events-file FILE` + `--event-id ID` | | The entry to take the event from. Its `Url` is set to the new event once it's created. |
+| `--title` / `-t` | `name` | The event's name. |
+| `--cover-image FILE` | `image` (in the file's `assets/` folder) | The cover picture: jpg, png, heic, tiff or gif, at least 1200×630. FetLife shows it at 1.91:1. |
+| `--tagline` | `subtitle` | One-line tagline. |
+| `--description` / `-d`, `--description-file FILE` | `description` | The description, as text or from a text file. A blank line starts a new paragraph. |
+| `--co-host NICKNAME` | `presenters` (split on `and`, `,`, `&`) | A co-host; repeat it or comma-separate names. FetLife only lets you pick the account's **friends**. Anyone else (and the account itself) is left off, with a warning in the preview. `--no-co-hosts` ignores the file's presenters. |
+| `--category` / `-c` | `category`, if it's one of FetLife's | `Educational`, `Social`, `Sex Party`, `BDSM Party` or `Conference` (any prefix, any case). |
+| `--dress-code TEXT` | `dressCode` | The dress code. |
+| `--wheelchair-accessible` | | Mark the event wheelchair accessible. |
+| `--cost free\|paid` | `paid` if `ticketUrl` is set, else `free` | The cost menu. |
+| `--cost-details TEXT` | | The cost text: "Additional Details" for a free event, the ticket price for a paid one. |
+| `--ticket-url URL` | `ticketUrl` | Where to buy tickets (paid events only). |
+| `--start WHEN`, `--end WHEN` | `date` + `time` | `"2026-11-07 2:00pm"` or `"2026-11-07 14:00"`. From the file, an end at or before the start (`7:00pm - 1:00am`, `12:00am - 12:00am`) is on the next day. |
+| `--timezone` | default `America/New_York` | The timezone of the start and end: an IANA name, or a unique part of FetLife's label (`Eastern`). |
+| `--type` | `virtual` if `audience` is `Online`, else `in-person` | `in-person`, `virtual` (worldwide) or `virtual-local`. |
+| `--location TEXT` | `location` | Name of the location (in-person), or the link to join (virtual). |
+| `--address TEXT`, `--city TEXT` | `address`, `cityStateCountry` | Street address, and "City, State/Province/Region, Country". The city is required for `in-person` and `virtual-local` events. Both are placed with the Mapbox lookup the site's form uses (with the key FetLife's page carries). The address is looked up near the city and kept only if it lies in that city. Otherwise it's left off with a warning, and the event is placed by city alone. Worldwide virtual events ignore both. |
+| `--privacy` | default `public` | `public` (anyone, on or off FetLife), `fetlifers`, `friends` or `private` (invited only). Who can invite follows it, as on the site. |
+| `--dry-run` | | Check everything with FetLife (form, timezone, co-hosts) and show the event, without creating it. |
+| `--repost` | | Create the event even though the entry already has a `Url`. Without it, an entry that has one is refused, so an event can't go up twice. |
+| `--yes` / `-y` | | Create it without the confirmation prompt. |
+| `--json` / `-j` | | Print `{"url": …, "event_id": …}` on stdout (the preview goes to stderr). |
+
+Fields the data file doesn't have (accessibility, cost details, timezone) come only from options. The form is submitted once and never retried after a server error. If FetLife refuses it, its reasons are shown and the data file is left unchanged.
 
 ### `group`
 

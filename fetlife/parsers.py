@@ -687,6 +687,50 @@ def writing_form_from_html(html: str) -> dict | None:
     }
 
 
+def event_form_from_html(html: str) -> dict | None:
+    """The New Event form (``/events/new``): its token and the choices it
+    offers right now, or None when the page carries no such form.
+
+    ``categories`` and ``timezones`` are ``{value: label}``; ``types``,
+    ``cost_types`` and ``privacy_levels`` are the values the form accepts
+    (the last two come from its listbox widgets, not selects).
+    """
+    soup = _soup(html)
+    form = soup.find("form", action="/events")
+    if form is None:
+        return None
+    token = form.find("input", attrs={"name": "authenticity_token"})
+
+    def menu(name: str) -> dict[str, str]:
+        select = form.find("select", attrs={"name": name})
+        return {o.get("value"): _clean(o.get_text(" ")) for o in select.find_all("option")
+                if o.get("value")} if select else {}
+
+    def listbox(name: str) -> list[str]:
+        field = form.find("input", attrs={"name": name})
+        box = field.find_parent(attrs={"data-controller": "fl--listbox"}) if field else None
+        return [o.get("data-id") for o in box.select("[role=option][data-id]")] if box else []
+
+    return {
+        "token": token.get("value") if token else extract_csrf_token(html),
+        "categories": menu("event[category]"),
+        "timezones": menu("event[timezone]"),
+        "types": list(menu("event[type]")),
+        "cost_types": listbox("event[cost_type]"),
+        "privacy_levels": listbox("event[privacy]"),
+        # The page's key for the Mapbox lookups its location fields make.
+        "mapbox_token": (re.search(r'"mapboxToken"\s*:\s*"([^"]+)"', html) or [None, None])[1],
+    }
+
+
+def co_host_options_from_html(html: str) -> list[dict]:
+    """The members ``/events/co_hosts/suggestions`` offers: ``{name, id}`` each."""
+    soup = _soup(html)
+    return [{"name": o.get("data-label"), "id": o.get("data-value")}
+            for o in soup.select("[data-form-typeahead-multi-select-option]")
+            if o.get("data-label") and o.get("data-value") and o.get("data-disabled") != "true"]
+
+
 def form_errors_from_html(html: str) -> list[str]:
     """The validation messages a re-rendered Rails form shows, if any."""
     soup = _soup(html)
