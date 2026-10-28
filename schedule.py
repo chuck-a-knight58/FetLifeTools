@@ -6,6 +6,12 @@ Each line of schedule.conf becomes a macOS LaunchAgent
 script with /bin/bash in this directory, with .venv/bin on its PATH, writing
 its output to logs/<script>.log.
 
+Runs aren't lost while the Mac is off: launchd starts a job when it wakes
+from sleep after a missed time, and every job also starts at login. Either
+way, the job runs its script only if a scheduled time has passed since it
+last ran (logs/.<label>.last), so a run missed while the Mac was shut down
+happens at the next login, once. Several missed times make one run.
+
     python3 schedule.py check            show what schedule.conf schedules (changes nothing)
     python3 schedule.py install          schedule exactly what schedule.conf lists
     python3 schedule.py status           each scheduled job: loaded? last exit code?
@@ -15,9 +21,9 @@ its output to logs/<script>.log.
 `install` also removes the jobs of lines since deleted from schedule.conf,
 so rerun it after every edit.
 
-launchd runs a job when *either* its day or its weekday matches. For a line
-that sets both (1-7 * mon, the first Monday), launchd only gets the weekday
-and the job checks the day of the month itself when it starts.
+A line with both a day and a weekday (1-7 * mon, the first Monday) needs
+both to match. launchd would start it when either does, so it only gets the
+weekday, and the job's own check of the schedule skips the other days.
 """
 
 from __future__ import annotations
@@ -27,9 +33,12 @@ import os
 import plistlib
 import re
 import shlex
+import socket
 import subprocess
 import sys
+import time
 from dataclasses import dataclass
+from datetime import datetime, timedelta
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -51,6 +60,8 @@ FIELDS = [
     ("Weekday", 0, 7, WEEKDAYS),
 ]
 MAX_TIMES = 1000  # launchd keeps one entry per matching combination
+NETWORK_HOST = ("fetlife.com", 443)
+NETWORK_WAIT = 180  # seconds a job waits for the network after login or wake
 
 
 class ScheduleError(Exception):
@@ -65,7 +76,7 @@ class Job:
     args: list[str]
     times: list[dict]  # StartCalendarInterval entries
     spec: str
-    days: list[int] | None = None  # days of the month the job checks for itself
+    fields: dict[str, list[int] | None]  # the full schedule, None for *
 
     @property
     def plist_path(self) -> Path:
@@ -77,17 +88,44 @@ class Job:
 
     @property
     def run_now_flag(self) -> Path:
-        """Left by `schedule.py run` so the next start skips the day check."""
+        """Left by `schedule.py run` so the next start runs whether or not a time is due."""
         return LOGS / f".{self.label}.run-now"
 
+    @property
+    def stamp_path(self) -> Path:
+        """When the script last started."""
+        return LOGS / f".{self.label}.last"
+
+    def last_run(self) -> datetime | None:
+        try:
+            return datetime.fromisoformat(self.stamp_path.read_text().strip())
+        except (OSError, ValueError):
+            return None
+
+    def mark_run(self, when: datetime) -> None:
+        self.stamp_path.write_text(when.isoformat(timespec="seconds") + "\n")
+
+    def latest_time(self, now: datetime, since: datetime) -> datetime | None:
+        """The latest scheduled time after *since* and no later than *now*."""
+        f = self.fields
+        day = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        while day + timedelta(days=1) > since:
+            weekday = (day.weekday() + 1) % 7  # cron counts from Sunday
+            if ((f["Month"] is None or day.month in f["Month"])
+                    and (f["Day"] is None or day.day in f["Day"])
+                    and (f["Weekday"] is None or weekday in {w % 7 for w in f["Weekday"]})):
+                for hour in reversed(f["Hour"] or range(24)):
+                    for minute in reversed(f["Minute"] or range(60)):
+                        t = day.replace(hour=hour, minute=minute)
+                        if t <= since:
+                            return None
+                        if t <= now:
+                            return t
+            day -= timedelta(days=1)
+        return None
+
     def program(self) -> list[str]:
-        if not self.days:
-            return ["/bin/bash", str(self.script), *self.args]
-        flag = shlex.quote(str(self.run_now_flag))
-        guard = (f'if [ -e {flag} ]; then rm -f {flag}; '
-                 f'else case " {" ".join(map(str, self.days))} " in *" $(date +%-d) "*) ;; *) exit 0;; esac; fi; '
-                 'exec /bin/bash "$0" "$@"')
-        return ["/bin/bash", "-c", guard, str(self.script), *self.args]
+        return [sys.executable, str(Path(__file__).resolve()), "fire", self.label]
 
     def plist(self) -> dict:
         return {
@@ -96,6 +134,7 @@ class Job:
             "WorkingDirectory": str(HERE),
             "EnvironmentVariables": {"PATH": PATH},
             "StartCalendarInterval": self.times if len(self.times) > 1 else self.times[0],
+            "RunAtLoad": True,  # catch up at login on a time missed while shut down
             "StandardOutPath": str(self.log_path),
             "StandardErrorPath": str(self.log_path),
         }
@@ -153,11 +192,9 @@ def parse_conf(path: Path = CONF) -> list[Job]:
             script = (HERE / words[5]).resolve()
             if not script.is_file():
                 raise ScheduleError(f"no such script: {words[5]}")
-            days = None
             fields = dict(choices)
             if fields["Day"] is not None and fields["Weekday"] is not None:
                 # launchd would start on either; give it the weekday, check the day.
-                days = fields["Day"]
                 choices = [(key, None if key == "Day" else vals) for key, vals in choices]
             limited = [(key, vals) for key, vals in choices if vals is not None]
             times = [dict(zip([k for k, _ in limited], combo))
@@ -171,7 +208,7 @@ def parse_conf(path: Path = CONF) -> list[Job]:
         stem = re.sub(r"[^A-Za-z0-9_.-]+", "-", script.stem)
         labels[stem] = labels.get(stem, 0) + 1
         label = PREFIX + stem + (f"-{labels[stem]}" if labels[stem] > 1 else "")
-        jobs.append(Job(n, label, script, words[6:], times, " ".join(words[:5]), days))
+        jobs.append(Job(n, label, script, words[6:], times, " ".join(words[:5]), fields))
     return jobs
 
 
@@ -199,7 +236,8 @@ def cmd_check(jobs: list[Job]) -> None:
               + f"\n{'':<20} → {job.label}, {len(job.times)} time{'s' if len(job.times) != 1 else ''}"
                 f" per cycle, log {job.log_path.relative_to(HERE)}"
               + (f"\n{'':<20}   (launchd starts it on the weekday; it runs only on day"
-                 f" {','.join(map(str, job.days))} of the month)" if job.days else ""))
+                 f" {','.join(map(str, job.fields['Day']))} of the month)"
+                 if job.fields["Day"] is not None and job.fields["Weekday"] is not None else ""))
 
 
 def cmd_install(jobs: list[Job]) -> None:
@@ -211,8 +249,12 @@ def cmd_install(jobs: list[Job]) -> None:
             _unload(old)
             old.unlink()
             print(f"removed   {old.stem}")
+    now = datetime.now()
     for job in jobs:
         _unload(job.plist_path)  # a reload picks up the new schedule
+        job.run_now_flag.unlink(missing_ok=True)
+        if job.last_run() is None:
+            job.mark_run(now)  # a new job starts with the next time, not a past one
         with open(job.plist_path, "wb") as fh:
             plistlib.dump(job.plist(), fh)
         result = _launchctl("bootstrap", _domain(), str(job.plist_path))
@@ -237,8 +279,11 @@ def cmd_status(jobs: list[Job]) -> None:
         loaded = bool(out)
         exit_code = re.search(r"last exit code = (.+)", out)
         state = re.search(r"\n\s*state = (.+)", out)
+        last = (LOGS / f".{plist.stem}.last")
+        last = last.read_text().strip().replace("T", " ")[:16] if last.exists() else "never"
         print(f"{plist.stem:<45} {'loaded' if loaded else 'NOT loaded':<11}"
               f" {('state ' + state.group(1)) if state else '':<16}"
+              f" last run {last:<17}"
               f" {('last exit ' + exit_code.group(1)) if exit_code else ''}"
               + ("" if plist.stem in listed else "   (no longer in schedule.conf: run install)"))
     for label in sorted(listed - {p.stem for p in _installed()}):
@@ -250,18 +295,57 @@ def cmd_run(jobs: list[Job], name: str) -> None:
     if not matches:
         raise ScheduleError(f"{name!r} isn't scheduled in {CONF.name}")
     for job in matches:
-        if job.days:
-            LOGS.mkdir(exist_ok=True)
-            job.run_now_flag.touch()
+        LOGS.mkdir(exist_ok=True)
+        job.run_now_flag.touch()
         result = _launchctl("kickstart", f"{_domain()}/{job.label}")
         if result.returncode != 0:
             raise ScheduleError(f"couldn't start {job.label} (is it installed?): {result.stderr.strip()}")
         print(f"started {job.label}; output in {job.log_path.relative_to(HERE)}")
 
 
+def _wait_for_network() -> None:
+    """Right after login or wake the Wi-Fi may not be up yet; give it a few minutes."""
+    deadline = time.monotonic() + NETWORK_WAIT
+    while True:
+        try:
+            socket.create_connection(NETWORK_HOST, timeout=10).close()
+            return
+        except OSError:
+            if time.monotonic() > deadline:
+                print(f"still no network after {NETWORK_WAIT}s; running anyway", flush=True)
+                return
+            time.sleep(10)
+
+
+def cmd_fire(jobs: list[Job], label: str) -> None:
+    """launchd's entry point: run the script if a scheduled time has passed since it last ran."""
+    job = next((j for j in jobs if j.label == label), None)
+    if job is None:
+        raise ScheduleError(f"{label} isn't in {CONF.name} any more; run install")
+    now = datetime.now()
+    if job.run_now_flag.exists():
+        job.run_now_flag.unlink()
+        why = "run by hand"
+    else:
+        last = job.last_run()
+        if last is None:  # never ran here: count from now
+            job.mark_run(now)
+            return
+        due = job.latest_time(now, last)
+        if due is None:
+            return
+        why = (f"scheduled {due:%a %b %-d %H:%M}"
+               + (", missed while the Mac was off or asleep" if now - due > timedelta(minutes=5) else ""))
+    job.mark_run(now)  # before running, so a failing script doesn't rerun at every login
+    print(f"--- {now:%Y-%m-%d %H:%M} {job.script.name} ({why})", flush=True)
+    _wait_for_network()
+    os.execv("/bin/bash", ["/bin/bash", str(job.script), *job.args])
+
+
 def main(argv: list[str]) -> int:
-    commands = ("check", "install", "status", "run", "uninstall")
-    if not argv or argv[0] not in commands or (argv[0] == "run") != (len(argv) == 2) or len(argv) > 2:
+    commands = ("check", "install", "status", "run", "uninstall", "fire")
+    if (not argv or argv[0] not in commands or (argv[0] in ("run", "fire")) != (len(argv) == 2)
+            or len(argv) > 2):
         print(__doc__.strip(), file=sys.stderr)
         return 2
     try:
@@ -275,6 +359,8 @@ def main(argv: list[str]) -> int:
             cmd_install(jobs)
         elif argv[0] == "status":
             cmd_status(jobs)
+        elif argv[0] == "fire":
+            cmd_fire(jobs, argv[1])
         else:
             cmd_run(jobs, argv[1])
     except ScheduleError as e:

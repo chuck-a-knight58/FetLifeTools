@@ -43,3 +43,6 @@ runs/
 hammersbacher.env
 xanadu_kink.env
 .env
+
+# Scheduler state (last-run stamps, run-now flags)
+logs/.com.fetlifetools.*
