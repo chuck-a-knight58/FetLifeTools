@@ -370,10 +370,14 @@ def defaults_from_entry(entry: dict, assets_dir: Path) -> dict:
     """What an events-data.js entry says about the event, as post-event's options.
 
     name → title, subtitle → tagline, cohosts → co-hosts, date + time →
-    start/end, image (in *assets_dir*) → cover image, an "Online" audience →
+    start/end, coverImage (a path; ~ expands, relative is from the data file's
+    folder, *assets_dir*'s parent) or else image (in *assets_dir*) → cover
+    image, descriptionFile (a path, likewise) → --description-file, an
+    "Online" audience →
     a virtual event, cost → cost (without one, a ticket URL means paid),
     and dressCode, costDetails, location, address and cityStateCountry → the
-    options of those names, and wheelchairAccessible → --wheelchair-accessible. Only what the entry
+    options of those names, and wheelchairAccessible and requestOnly →
+    --wheelchair-accessible and --request-only. Only what the entry
     actually has is returned; the category is included only when it names
     one of FetLife's.
     """
@@ -394,7 +398,11 @@ def defaults_from_entry(entry: dict, assets_dir: Path) -> dict:
             pass
     if "date" in text and "time" in text:
         out["start"], out["end"] = times_from_range(text["date"], text["time"])
-    if "image" in text:
+    if "descriptionFile" in text:
+        out["description_file"] = str(assets_dir.parent / Path(text["descriptionFile"]).expanduser())
+    if "coverImage" in text:
+        out["cover_image"] = str(assets_dir.parent / Path(text["coverImage"]).expanduser())
+    elif "image" in text:
         out["cover_image"] = str(assets_dir / text["image"])
     if "audience" in text:
         out["type"] = "virtual" if text["audience"].casefold() == "online" else "in-person"
@@ -416,4 +424,6 @@ def defaults_from_entry(entry: dict, assets_dir: Path) -> dict:
             out[option] = text[key]
     if isinstance(entry.get("wheelchairAccessible"), bool):
         out["wheelchair_accessible"] = entry["wheelchairAccessible"]
+    if isinstance(entry.get("requestOnly"), bool):
+        out["request_only"] = entry["requestOnly"]
     return out

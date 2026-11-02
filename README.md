@@ -367,10 +367,10 @@ fetlife post-event -t "Rope Jam" --tagline "Bring a partner" --description-file 
 |---|---|---|
 | `--events-file FILE` + `--event-id ID` | | The entry to take the event from. Its `Url` is set to the new event once it's created. |
 | `--title` / `-t` | `name` | The event's name. |
-| `--cover-image FILE` | `image` (in the file's `assets/` folder) | The cover picture: jpg, png, heic, tiff or gif, at least 1200×630. FetLife shows it at 1.91:1. |
+| `--cover-image FILE` | `coverImage` (a path; `~` works, and a relative one is from the data file's folder), else `image` (in the file's `assets/` folder) | The cover picture: jpg, png, heic, tiff or gif, at least 1200×630. FetLife shows it at 1.91:1. |
 | `--tagline` | `subtitle` | One-line tagline. |
-| `--description` / `-d`, `--description-file FILE` | `description` | The description, as text or from a text file. A blank line starts a new paragraph. |
-| `--keep-file-description` | | Put the data file's description first, then a blank line and the `--description` or `--description-file` text, instead of replacing it. |
+| `--description` / `-d`, `--description-file FILE` | `description`; `descriptionFile` (a path, like `coverImage`) acts as `--description-file` | The description, as text or from a text file. A blank line starts a new paragraph. |
+| `--keep-file-description` | | Put the data file's description first, then a blank line and the `--description`, `--description-file` or `descriptionFile` text, instead of replacing it. |
 | `--co-host NICKNAME` | `cohosts` (split on `and`, `,`, `&` or spaces) | A co-host; repeat it or separate names with commas or spaces. FetLife only lets you pick the account's **friends**. Anyone else (and the account itself) is left off, with a warning in the preview. `--no-co-hosts` ignores the file's cohosts. |
 | `--category` / `-c` | `category`, if it's one of FetLife's | `Educational`, `Social`, `Sex Party`, `BDSM Party` or `Conference` (any prefix, any case). |
 | `--dress-code TEXT` | `dressCode` | The dress code. |
@@ -384,6 +384,7 @@ fetlife post-event -t "Rope Jam" --tagline "Bring a partner" --description-file 
 | `--location TEXT` | `location` | Name of the location (in-person), or the link to join (virtual). |
 | `--address TEXT`, `--city TEXT` | `address`, `cityStateCountry` | Street address, and "City, State/Province/Region, Country". The city is required for `in-person` and `virtual-local` events. Both are placed with the Mapbox lookup the site's form uses (with the key FetLife's page carries). The address is looked up near the city and kept only if it lies in that city. Otherwise it's left off with a warning, and the event is placed by city alone. Worldwide virtual events ignore both. |
 | `--privacy` | default `public` | `public` (anyone, on or off FetLife), `fetlifers`, `friends` or `private` (invited only). Who can invite follows it, as on the site. |
+| `--request-only` | `requestOnly` | Make it a Request-Only Event: members have to request to attend, and you approve or deny each request. `--not-request-only` overrides a `true` in the file. |
 | `--dry-run` | | Check everything with FetLife (form, timezone, co-hosts) and show the event, without creating it. |
 | `--repost` | | Create the event even though the entry already has a `Url`. Without it, an entry that has one is refused, so an event can't go up twice. |
 | `--yes` / `-y` | | Create it without the confirmation prompt. |

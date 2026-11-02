@@ -132,6 +132,7 @@ const EVENTS_DATA = [
         ticketUrl: 'https://tickets.example/etx',
         Url: '',
         wheelchairAccessible: true,
+        requestOnly: true,
         costDetails: '$40 per couple',
         dressCode: "Vanilla to the door, fetish inside",
         location: 'House of Xanadu',
@@ -178,6 +179,18 @@ def test_defaults_from_entry_map_the_sites_fields(tmp_path):
     assert etx["city"] == "Washington, New Jersey, United States"
     assert "dress_code" not in vdm and "city" not in vdm
     assert etx["wheelchair_accessible"] is True and vdm["wheelchair_accessible"] is False
+    assert etx["request_only"] is True and "request_only" not in vdm
+
+
+def test_defaults_from_entry_cover_image_prefers_cover_image_over_image():
+    def cover(entry):
+        return eventpost.defaults_from_entry(entry, Path("/site/assets"))["cover_image"]
+    assert cover({"coverImage": "covers/wide.jpg", "image": "sq.png"}) == "/site/covers/wide.jpg"
+    assert cover({"coverImage": "~/wide.jpg"}) == str(Path("~/wide.jpg").expanduser())
+    assert cover({"coverImage": "/abs/wide.jpg"}) == "/abs/wide.jpg"
+    assert cover({"image": "sq.png"}) == "/site/assets/sq.png"
+    assert eventpost.defaults_from_entry({"descriptionFile": "~/d.txt"}, Path("/site/assets"))[
+        "description_file"] == str(Path("~/d.txt").expanduser())
 
 
 def test_defaults_from_entry_cost():
@@ -287,7 +300,8 @@ def test_cli_posts_the_file_entry_and_saves_the_url_back(tmp_path, monkeypatch):
                                           "--events-file", str(path), "--event-id", "VDM102226",
                                           "--description-file", str(extra), "--keep-file-description",
                                           "--location", "https://zoom.example/j/1",
-                                          "--dress-code", "Casual", "--wheelchair-accessible", "--yes"])
+                                          "--dress-code", "Casual", "--wheelchair-accessible", "--request-only",
+                                          "--yes"])
     assert result.exit_code == 0, result.output
     fields = posted["fields"]
     values = dict(fields)
@@ -300,6 +314,7 @@ def test_cli_posts_the_file_entry_and_saves_the_url_back(tmp_path, monkeypatch):
     assert values["event[category]"] == "educational" and values["event[type]"] == "virtual"
     assert values["event[cost_type]"] == "free" and values["event[timezone]"] == "America/New_York"
     assert [v for k, v in fields if k.endswith("[wheelchair_accessible]")] == ["0", "1"]
+    assert values["event[request_only]"] == "1"
     assert values["event[dress_code]"] == "Casual"
     assert values["event[location]"] == "https://zoom.example/j/1"
     assert values["event[start_date_time(4i)]"] == "08" and values["event[start_date_time(6i)]"] == "PM"
@@ -312,6 +327,54 @@ def test_cli_posts_the_file_entry_and_saves_the_url_back(tmp_path, monkeypatch):
                                          "--events-file", str(path), "--event-id", "VDM102226", "--yes"])
     assert again.exit_code != 0
     assert "already has a FetLife event" in str(again.exception) + again.output
+
+
+def test_cli_takes_the_description_from_the_entrys_description_file(tmp_path, monkeypatch):
+    from click.testing import CliRunner
+
+    from fetlife import cli
+    from fetlife.models import Member
+
+    class FakeClient:
+        on_retry = None
+        def __enter__(self): return self
+        def __exit__(self, *exc): return False
+        def whoami(self): return Member(nickname="Knight_of_Xanadu", id="1")
+        def get_event_form(self): return parsers.event_form_from_html(NEW_EVENT)
+
+    monkeypatch.setattr(cli, "_client", lambda ctx: FakeClient())
+    path = tmp_path / "events-data.js"
+    path.write_text("""const events = [
+    {
+        id: 'VSM010627',
+        category: 'Educational',
+        name: 'Virtual Submissives Meetup',
+        description: 'Tonight: contracts.',
+        descriptionFile: 'series.txt',
+        date: '2027-01-06',
+        time: '8:00pm - 10:00pm',
+        audience: 'Online'
+    }
+];
+""")
+    (tmp_path / "series.txt").write_text("Every first Wednesday.\n")
+
+    def preview(*extra):
+        result = CliRunner().invoke(cli.cli, ["--env-file", str(tmp_path / "none.env"), "post-event",
+                                              "--events-file", str(path), "--event-id", "VSM010627",
+                                              "--dry-run", *extra])
+        assert result.exit_code == 0, result.output
+        return result.output
+
+    assert "Every first Wednesday." in preview() and "Tonight" not in preview()
+    kept = preview("--keep-file-description")
+    assert kept.index("Tonight: contracts.") < kept.index("Every first Wednesday.")
+    assert "By hand." in preview("-d", "By hand.") and "Every first" not in preview("-d", "By hand.")
+
+    (tmp_path / "series.txt").unlink()
+    missing = CliRunner().invoke(cli.cli, ["--env-file", str(tmp_path / "none.env"), "post-event",
+                                           "--events-file", str(path), "--event-id", "VSM010627", "--dry-run"])
+    assert missing.exit_code != 0 and "descriptionFile can't be read" in str(missing.exception)
 
 
 def test_cli_explicit_options_override_the_file_and_missing_ones_are_named(tmp_path, monkeypatch):

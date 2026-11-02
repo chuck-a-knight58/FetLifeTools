@@ -1018,7 +1018,7 @@ def post_writing(ctx, title, body, category, tags, collections, image, image_con
 @click.option("--description", "-d", default=None,
               help="Description; a blank line starts a new paragraph.  [file: description]")
 @click.option("--description-file", type=click.File("r", encoding="utf-8"), default=None,
-              help="Read the description from a text file instead.")
+              help="Read the description from a text file instead.  [file: descriptionFile]")
 @click.option("--keep-file-description", is_flag=True, default=False,
               help="Add --description or --description-file after the file's description "
                    "instead of replacing it.")
@@ -1052,6 +1052,9 @@ def post_writing(ctx, title, body, category, tags, collections, image, image_con
 @click.option("--privacy", type=click.Choice(eventpost.PRIVACY_LEVELS, case_sensitive=False),
               default="public", show_default=True,
               help="public (anyone, on or off FetLife), fetlifers, friends, or private (invited only).")
+@click.option("--request-only/--not-request-only", default=None,
+              help="Members have to request to attend, and you approve or deny each request.  "
+                   "[file: requestOnly]")
 @click.option("--repost", is_flag=True, default=False,
               help="Post even though the --events-file entry already has a Url.")
 @click.option("--dry-run", is_flag=True, default=False,
@@ -1062,7 +1065,7 @@ def post_writing(ctx, title, body, category, tags, collections, image, image_con
 def post_event(ctx, events_file, event_id, title, cover_image, tagline, description, description_file,
                keep_file_description, co_hosts, no_co_hosts, category, dress_code, wheelchair_accessible, cost, cost_details,
                ticket_url, start, end, tz_name, event_type, location, address, city, privacy,
-               repost, dry_run, yes, json_local):
+               request_only, repost, dry_run, yes, json_local):
     """Create a FetLife event from the logged-in account.
 
     Give every detail as an option, or take the event from a site data file
@@ -1092,6 +1095,11 @@ def post_event(ctx, events_file, event_id, title, cover_image, tagline, descript
             entry, Path(events_file).resolve().parent / "assets")
         if given.get("cover_image") and not os.path.isfile(given["cover_image"]):
             raise FetLifeError(f"{event_id}'s image isn't there: {given['cover_image']}")
+        if description is None and given.get("description_file"):
+            try:
+                description = Path(given["description_file"]).read_text(encoding="utf-8")
+            except OSError as e:
+                raise FetLifeError(f"{event_id}'s descriptionFile can't be read: {e}") from e
 
     title = " ".join((title or given.get("title") or "").split())
     tagline = " ".join((tagline or given.get("tagline") or "").split())
@@ -1113,6 +1121,8 @@ def post_event(ctx, events_file, event_id, title, cover_image, tagline, descript
     cost_details = cost_details if cost_details is not None else given.get("cost_details")
     if wheelchair_accessible is None:
         wheelchair_accessible = given.get("wheelchair_accessible", False)
+    if request_only is None:
+        request_only = given.get("request_only", False)
     location = location if location is not None else given.get("location")
     address = address if address is not None else given.get("address")
     city = city if city is not None else given.get("city")
@@ -1201,8 +1211,10 @@ def post_event(ctx, events_file, event_id, title, cover_image, tagline, descript
                    ("event[type]", eventpost.EVENT_TYPES[event_type]),
                    ("event[location]", location or ""),
                    ("event[address]", address or ""),
-                   ("event[privacy]", privacy),
-                   ("event[invite_policy]", ""),
+                   ("event[privacy]", privacy)]
+        if request_only:
+            fields += [("event[request_only]", "1")]
+        fields += [("event[invite_policy]", ""),
                    ("event[invite_policy]", "organizers" if privacy in ("private", "friends")
                     else "organizers_and_attendees")]
 
@@ -1215,6 +1227,7 @@ def post_event(ctx, events_file, event_id, title, cover_image, tagline, descript
         out.print(f"  {event_type} · {cost}"
                   + (f" ({cost_details})" if cost_details else "")
                   + f" · {privacy}"
+                  + (" · request only" if request_only else "")
                   + (" · wheelchair accessible" if wheelchair_accessible else "")
                   + (f" · dress code: {dress_code}" if dress_code else ""), markup=False, highlight=False)
         if location or address or place:
