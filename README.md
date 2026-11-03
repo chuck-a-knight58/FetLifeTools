@@ -367,9 +367,9 @@ fetlife post-event -t "Rope Jam" --tagline "Bring a partner" --description-file 
 |---|---|---|
 | `--events-file FILE` + `--event-id ID` | | The entry to take the event from. Its `Url` is set to the new event once it's created. |
 | `--title` / `-t` | `name` | The event's name. |
-| `--cover-image FILE` | `coverImage` (a path; `~` works, and a relative one is from the data file's folder), else `image` (in the file's `assets/` folder) | The cover picture: jpg, png, heic, tiff or gif, at least 1200×630. FetLife shows it at 1.91:1. |
+| `--cover-image FILE` | `coverImage`, else `image` | The cover picture: jpg, png, heic, tiff or gif, at least 1200×630. FetLife shows it at 1.91:1. |
 | `--tagline` | `subtitle` | One-line tagline. |
-| `--description` / `-d`, `--description-file FILE` | `description`; `descriptionFile` (a path, like `coverImage`) acts as `--description-file` | The description, as text or from a text file. A blank line starts a new paragraph. |
+| `--description` / `-d`, `--description-file FILE` | `description`; `descriptionFile` acts as `--description-file` | The description, as text or from a text file. A blank line starts a new paragraph. |
 | `--keep-file-description` | | Put the data file's description first, then a blank line and the `--description`, `--description-file` or `descriptionFile` text, instead of replacing it. |
 | `--co-host NICKNAME` | `cohosts` (split on `and`, `,`, `&` or spaces) | A co-host; repeat it or separate names with commas or spaces. FetLife only lets you pick the account's **friends**. Anyone else (and the account itself) is left off, with a warning in the preview. `--no-co-hosts` ignores the file's cohosts. |
 | `--category` / `-c` | `category`, if it's one of FetLife's | `Educational`, `Social`, `Sex Party`, `BDSM Party` or `Conference` (any prefix, any case). |
@@ -389,6 +389,8 @@ fetlife post-event -t "Rope Jam" --tagline "Bring a partner" --description-file 
 | `--repost` | | Create the event even though the entry already has a `Url`. Without it, an entry that has one is refused, so an event can't go up twice. |
 | `--yes` / `-y` | | Create it without the confirmation prompt. |
 | `--json` / `-j` | | Print `{"url": …, "event_id": …}` on stdout (the preview goes to stderr). |
+
+Files the entry names (`coverImage`, `image`, `descriptionFile`) are found through `ASSETS_PATH`, a list of folders separated by `:` like `PATH`, set in the environment or your `.env` file. An absolute or `~` path is used as it is. Anything else is looked for in each `ASSETS_PATH` folder in turn, then in the data file's `assets/` folder, then in the data file's own folder, and the first match wins.
 
 The timezone, which the data file doesn't have, comes only from options. The form is submitted once and never retried after a server error. If FetLife refuses it, its reasons are shown and the data file is left unchanged.
 

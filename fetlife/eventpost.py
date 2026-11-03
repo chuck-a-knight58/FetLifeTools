@@ -10,6 +10,7 @@ fields. :class:`~fetlife.client.FetLifeClient` does the requests.
 
 from __future__ import annotations
 
+import os
 import re
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta
@@ -366,14 +367,32 @@ def set_event_field(path: str | Path, event_id: str, key: str, value: str) -> No
     path.write_text(src, encoding="utf-8")
 
 
+def find_asset(name: str, assets_dir: Path) -> str:
+    """The file an events-data.js entry calls *name*.
+
+    An absolute or ``~`` path is taken as it is. Anything else is looked for
+    in each folder of the ``ASSETS_PATH`` environment variable (separated like
+    ``PATH``), then in *assets_dir*, then in its parent (the data file's
+    folder). The first one that exists wins; when none does, it's the path in
+    *assets_dir*, for the caller to report as missing.
+    """
+    path = Path(name).expanduser()
+    if path.is_absolute():
+        return str(path)
+    searched = [Path(d).expanduser() for d in os.environ.get("ASSETS_PATH", "").split(os.pathsep) if d]
+    for folder in [*searched, assets_dir, assets_dir.parent]:
+        if (folder / path).is_file():
+            return str(folder / path)
+    return str(assets_dir / path)
+
+
 def defaults_from_entry(entry: dict, assets_dir: Path) -> dict:
     """What an events-data.js entry says about the event, as post-event's options.
 
     name → title, subtitle → tagline, cohosts → co-hosts, date + time →
-    start/end, coverImage (a path; ~ expands, relative is from the data file's
-    folder, *assets_dir*'s parent) or else image (in *assets_dir*) → cover
-    image, descriptionFile (a path, likewise) → --description-file, an
-    "Online" audience →
+    start/end, coverImage or else image → cover image, descriptionFile →
+    --description-file (all three found by :func:`find_asset`), an "Online"
+    audience →
     a virtual event, cost → cost (without one, a ticket URL means paid),
     and dressCode, costDetails, location, address and cityStateCountry → the
     options of those names, and wheelchairAccessible and requestOnly →
@@ -399,11 +418,11 @@ def defaults_from_entry(entry: dict, assets_dir: Path) -> dict:
     if "date" in text and "time" in text:
         out["start"], out["end"] = times_from_range(text["date"], text["time"])
     if "descriptionFile" in text:
-        out["description_file"] = str(assets_dir.parent / Path(text["descriptionFile"]).expanduser())
+        out["description_file"] = find_asset(text["descriptionFile"], assets_dir)
     if "coverImage" in text:
-        out["cover_image"] = str(assets_dir.parent / Path(text["coverImage"]).expanduser())
+        out["cover_image"] = find_asset(text["coverImage"], assets_dir)
     elif "image" in text:
-        out["cover_image"] = str(assets_dir / text["image"])
+        out["cover_image"] = find_asset(text["image"], assets_dir)
     if "audience" in text:
         out["type"] = "virtual" if text["audience"].casefold() == "online" else "in-person"
     if "ticketUrl" in text:

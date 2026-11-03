@@ -182,10 +182,55 @@ def test_defaults_from_entry_map_the_sites_fields(tmp_path):
     assert etx["request_only"] is True and "request_only" not in vdm
 
 
-def test_defaults_from_entry_cover_image_prefers_cover_image_over_image():
+def test_find_asset_searches_assets_path_then_the_data_files_folders(tmp_path, monkeypatch):
+    first, second, site = tmp_path / "first", tmp_path / "second", tmp_path / "site"
+    (site / "assets").mkdir(parents=True)
+    first.mkdir()
+    second.mkdir()
+    (second / "both.jpg").touch()
+    (first / "both.jpg").touch()
+    (second / "second.jpg").touch()
+    (site / "assets" / "both.jpg").touch()
+    (site / "assets" / "local.jpg").touch()
+    (site / "top.txt").touch()
+    assets = site / "assets"
+
+    monkeypatch.setenv("ASSETS_PATH", f"{first}::{second}")
+    assert eventpost.find_asset("both.jpg", assets) == str(first / "both.jpg")
+    assert eventpost.find_asset("second.jpg", assets) == str(second / "second.jpg")
+    assert eventpost.find_asset("local.jpg", assets) == str(assets / "local.jpg")
+    assert eventpost.find_asset("top.txt", assets) == str(site / "top.txt")
+    assert eventpost.find_asset("gone.jpg", assets) == str(assets / "gone.jpg")
+    assert eventpost.find_asset(str(second / "second.jpg"), assets) == str(second / "second.jpg")
+
+    # A ~ in ASSETS_PATH is expanded even if the shell left it alone.
+    monkeypatch.setenv("HOME", str(tmp_path))
+    monkeypatch.setenv("ASSETS_PATH", "~/second")
+    assert eventpost.find_asset("second.jpg", assets) == str(second / "second.jpg")
+
+    monkeypatch.delenv("ASSETS_PATH")
+    assert eventpost.find_asset("both.jpg", assets) == str(assets / "both.jpg")
+
+
+def test_defaults_from_entry_resolves_every_file_through_assets_path(tmp_path, monkeypatch):
+    (tmp_path / "wide.jpg").touch()
+    (tmp_path / "sq.png").touch()
+    (tmp_path / "about.txt").touch()
+    monkeypatch.setenv("ASSETS_PATH", str(tmp_path))
+    both = eventpost.defaults_from_entry({"coverImage": "wide.jpg", "image": "sq.png",
+                                          "descriptionFile": "about.txt"}, Path("/site/assets"))
+    assert both["cover_image"] == str(tmp_path / "wide.jpg")
+    assert both["description_file"] == str(tmp_path / "about.txt")
+    assert eventpost.defaults_from_entry({"image": "sq.png"}, Path("/site/assets"))["cover_image"] == str(
+        tmp_path / "sq.png")
+
+
+def test_defaults_from_entry_cover_image_prefers_cover_image_over_image(monkeypatch):
+    monkeypatch.delenv("ASSETS_PATH", raising=False)
+
     def cover(entry):
         return eventpost.defaults_from_entry(entry, Path("/site/assets"))["cover_image"]
-    assert cover({"coverImage": "covers/wide.jpg", "image": "sq.png"}) == "/site/covers/wide.jpg"
+    assert cover({"coverImage": "covers/wide.jpg", "image": "sq.png"}) == "/site/assets/covers/wide.jpg"
     assert cover({"coverImage": "~/wide.jpg"}) == str(Path("~/wide.jpg").expanduser())
     assert cover({"coverImage": "/abs/wide.jpg"}) == "/abs/wide.jpg"
     assert cover({"image": "sq.png"}) == "/site/assets/sq.png"

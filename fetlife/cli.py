@@ -1094,12 +1094,12 @@ def post_event(ctx, events_file, event_id, title, cover_image, tagline, descript
         given = eventpost.defaults_from_entry(
             entry, Path(events_file).resolve().parent / "assets")
         if given.get("cover_image") and not os.path.isfile(given["cover_image"]):
-            raise FetLifeError(f"{event_id}'s image isn't there: {given['cover_image']}")
+            raise FetLifeError(f"{event_id}'s image isn't there: {given['cover_image']} (check ASSETS_PATH)")
         if description is None and given.get("description_file"):
             try:
                 description = Path(given["description_file"]).read_text(encoding="utf-8")
             except OSError as e:
-                raise FetLifeError(f"{event_id}'s descriptionFile can't be read: {e}") from e
+                raise FetLifeError(f"{event_id}'s descriptionFile can't be read: {e} (check ASSETS_PATH)") from e
 
     title = " ".join((title or given.get("title") or "").split())
     tagline = " ".join((tagline or given.get("tagline") or "").split())

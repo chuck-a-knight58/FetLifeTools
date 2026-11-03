@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export ASSETS_PATH=~/github-projects/FetLifeTools:~/github-projects/FetLifeTools/assets:~/github-projects/Xanadu:~/github-projects/Xanadu/assets
+
 cd ~/github-projects/FetLifeTools
 source .venv/bin/activate
 
