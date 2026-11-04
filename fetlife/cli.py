@@ -20,8 +20,8 @@ import click
 from rich.console import Console
 from rich.table import Table
 
-from . import (__version__, crawl, engagement, eventcal, eventpost, friending, geo, groups,
-               messaging, writing)
+from . import (__version__, crawl, engagement, eventcal, eventinvite, eventpost, friending, geo,
+               groups, messaging, writing)
 from .client import FetLifeClient
 from .config import Config
 from .exceptions import FetLifeError, RateLimitedError
@@ -760,6 +760,103 @@ def _message_many(ctx, fl, csv_file, subject, body, dry_run, yes, limit, pause, 
             status_console.print("[dim]stopping; the log is intact — rerun later to continue.[/dim]")
             ctx.exit(EXIT_RATE_LIMITED)
     status_console.print("[dim]" + " · ".join(f"{v} {k}" for k, v in counts.items()) + "[/dim]")
+
+
+def _invite_tables(report: eventinvite.Report, title: str) -> None:
+    """The Invitees table, then its counts."""
+    if report.invitees:
+        _emit(report.invitees, False, ["nickname", "relation", "action", "reason"], title)
+    else:
+        console.print(f"[yellow]{title}: none.[/yellow]")
+    counts: dict[str, int] = {}
+    for invitee in report.invitees:
+        counts[invitee.action] = counts.get(invitee.action, 0) + 1
+    if counts:
+        status_console.print("[dim]" + " · ".join(f"{v} {k}" for k, v in counts.items()) + "[/dim]")
+
+
+@cli.command("invite-to-event")
+@click.argument("event_url")
+@click.argument("group_id")
+@click.option("--DryRun", "--dry-run", "dry_run", is_flag=True, default=False,
+              help="Report who would be invited; send nothing.")
+@click.option("--yes", "-y", is_flag=True, default=False, help="Skip the confirmation prompt.")
+@json_option
+@click.pass_context
+def invite_to_event(ctx, event_url, group_id, dry_run, yes, json_local):
+    """Invite your connections who are in a group to an event.
+
+    EVENT_URL is the event's page. GROUP_ID is the group's numeric id or URL.
+    Reads the logged-in account's friends, followers and following (UserMembers)
+    and the group's members. Reports the group members outside UserMembers
+    (NonMembers), and invites the group members inside it (Invitees).
+
+    FetLife only offers invites to friends, followers and past RSVPs, and caps
+    the friends and followers per its "invites left"; anyone else is reported
+    as skipped, with the reason. Without --DryRun or --yes it asks before
+    sending.
+
+    This is for users who own the group and manage its event, not a way for
+    non-managers of an event to invite others. Use --env-file to pick the
+    managing account.
+    """
+    m = re.search(r"\d+", group_id)
+    if not m:
+        raise FetLifeError(f"{group_id!r} isn't a group id or group URL.")
+    as_json = _as_json(ctx, json_local)
+
+    failure = None
+    fl = _client(ctx)
+    fl.on_retry = _report_retry
+    with fl:
+        report = eventinvite.prepare(
+            fl, event_url, m.group(),
+            on_status=lambda line: status_console.print(f"[dim]{line} · requests {fl.requests}[/dim]"),
+        )
+        event, group = report.event, report.group
+        chosen = sum(1 for i in report.invitees if i.action == friending.WOULD_SEND)
+
+        if not as_json:
+            console.print(f"[bold]Event:[/bold] {event.name}  {event.url}"
+                          + (f"  ({event.start})" if event.start else ""))
+            console.print(f"[bold]Group:[/bold] {group.name or group.id}"
+                          f" · {report.group_member_count} members")
+            console.print(f"[bold]Account:[/bold] {report.account}"
+                          f" · {report.user_member_count} friends, followers and following"
+                          f" · {report.form.limit} invites left"
+                          + (" · DRY RUN" if dry_run else ""))
+            if report.non_members:
+                _emit(report.non_members, False, ["nickname", "age", "gender", "role", "location"],
+                      f"NonMembers ({len(report.non_members)})")
+            else:
+                console.print("[yellow]NonMembers: none.[/yellow]")
+
+        if not dry_run and chosen:
+            if not as_json:
+                _invite_tables(report, f"Invitees ({len(report.invitees)})")
+            if not yes:
+                click.confirm(f"Invite {chosen} member(s) to “{event.name}” as {report.account}?",
+                              abort=True, err=True)
+            failure = eventinvite.send(fl, report)
+
+    if as_json:
+        console.print_json(json.dumps({
+            "account": report.account,
+            "dry_run": dry_run,
+            "event": {"id": event.id, "name": event.name, "url": event.url, "start": event.start},
+            "group": {"id": group.id, "name": group.name},
+            "invites_left": report.form.limit,
+            "non_members": [dataclasses.asdict(n) for n in report.non_members],
+            "invitees": [dataclasses.asdict(i) for i in report.invitees],
+        }))
+    else:
+        _invite_tables(report, f"Invitees ({len(report.invitees)})"
+                       + (" · not sent, dry run" if dry_run else ""))
+    if failure is not None:
+        err_console.print(f"Error: {failure}")
+        status_console.print("[dim]if that was a server error the invitations may still have "
+                             "gone out; --DryRun shows where each member stands.[/dim]")
+        ctx.exit(EXIT_RATE_LIMITED if isinstance(failure, RateLimitedError) else 1)
 
 
 @cli.command()

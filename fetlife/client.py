@@ -28,7 +28,8 @@ from .exceptions import (
     RateLimitedError,
 )
 from .models import (
-    Event, Group, GroupMembersPage, Member, ProfileRelation, Relationship, Story,
+    Event, EventInviteForm, EventInviteRow, Group, GroupMembersPage, Member,
+    ProfileRelation, Relationship, Story,
 )
 from . import parsers
 
@@ -867,6 +868,75 @@ class FetLifeClient:
         self._ensure_auth()
         resp = self.get(f"/events/{event_id}")
         return parsers.parse_event(resp.text, url=resp.url)
+
+    def get_event_by_url(self, event_url: str) -> Event:
+        """Fetch an event from its page URL (or a bare numeric id)."""
+        self._ensure_auth()
+        ident = event_url.strip()
+        path = f"/events/{ident}" if ident.isdigit() else urlsplit(ident).path
+        found = _EVENT_PATH_RE.match(path)
+        if not found:
+            raise FetLifeError(f"{event_url!r} isn't a FetLife event URL.")
+        resp = self.get(found.group())
+        return parsers.parse_event(resp.text, url=resp.url)
+
+    def get_event_invite_form(self, event_id: str) -> EventInviteForm | None:
+        """The event's invite modal, or None if this account can't invite to it
+        (FetLife answers 401 or 404, or renders no form)."""
+        self._ensure_auth()
+        try:
+            resp = self.get(f"/events/{event_id}/invitations/new",
+                            headers={"Turbo-Frame": "event-invite-modal-body"})
+        except NotFoundError:
+            return None
+        if resp.status_code >= 400:
+            return None
+        return parsers.event_invite_form_from_html(resp.text)
+
+    def iter_event_invite_rows(self, event_id: str, tab: str) -> Iterator[EventInviteRow]:
+        """Every row of an invite list (``friends``, ``followers`` or
+        ``previously_rsvpd``), following its lazy pagination frames. Each path is
+        read once, so a list that repeats a page can't loop forever."""
+        self._ensure_auth()
+        path: str | None = f"/events/{event_id}/invitations/suggestions/{tab}?page=1"
+        frame = f"invite-{tab}-list"
+        visited: set[str] = set()
+        while path and path not in visited:
+            visited.add(path)
+            resp = self.get(path, headers={"Turbo-Frame": frame})
+            rows, following = parsers.event_invite_rows_from_html(resp.text)
+            yield from rows
+            frame, path = following or (None, None)
+
+    def send_event_invites(self, form: EventInviteForm, past_rsvp_ids: list[str],
+                           friend_ids: list[str]) -> None:
+        """Submit the invite modal for these user ids, as the site's button does.
+
+        *friend_ids* count against ``form.limit``, which is enforced here too.
+        Never retried after a server error, so nobody is invited twice. Raises
+        FetLifeError if the site refuses; the caller checks who got invited by
+        re-reading the lists, since the answer is only a Turbo Stream for the page.
+        """
+        if len(friend_ids) > form.limit:
+            raise FetLifeError(f"{len(friend_ids)} invites is over FetLife's limit of {form.limit}.")
+        self._ensure_auth()
+        data = [("authenticity_token", form.token)]
+        if form.has_past_rsvps:
+            data.append(("previously_rsvpd[all_selected]", "false"))
+            data += [("previously_rsvpd[checked_users][]", i) for i in past_rsvp_ids]
+        data += [("friends_and_followers[checked_users][]", i) for i in friend_ids]
+        resp = self.request(
+            "POST", form.action, retry_server_errors=False, data=data,
+            headers={"Accept": "text/vnd.turbo-stream.html, text/html, application/xhtml+xml",
+                     "X-CSRF-Token": form.token, "Origin": self.config.base_url,
+                     "Referer": self._url(form.action)},
+        )
+        if resp.status_code >= 400:
+            errors = parsers.form_errors_from_html(resp.text)
+            raise FetLifeError(
+                f"FetLife refused the invitations (HTTP {resp.status_code})"
+                + (": " + "; ".join(errors) if errors else ".")
+            )
 
     def get_group(self, group_id: str) -> Group:
         """Fetch a single group by id."""

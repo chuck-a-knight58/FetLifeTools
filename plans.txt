@@ -1,0 +1,14 @@
+Let's create a new command.
+Given:
+  an event page URL, for example https://fetlife.com/events/2026/11/21/escape-to-xanadu-thanksgiving-play-party-gqkqfi and
+  a group the event is managed by, for example https://fetlife.com/groups/317599
+1) Find all Friends, Follwers and Following of the user using this command, call these UserMembers
+2) Find all members of the above mentioned group, call these GroupMemebers
+3) Find all GroupMembers not in UserMembers, call these NonMembers
+4) Find all UserMembers in GroupMembers, call these Invitees
+5) Display the list of all non-members
+6) Send all Invitees an invitation to the event listed
+Report NonMembers
+Report Invitees
+Report event the invitations are being sent for
+Ise --DryRun and --yes options to control whether or not it actually performs a send for the invitations 

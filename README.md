@@ -21,6 +21,7 @@ FetLife sits behind Cloudflare, which blocks plain HTTP clients. To get through,
 - `engagement` — who loves/comments on a member's posts without being a friend or follower.
 - `friend-requests` — send friend requests to the members listed in a CSV, with caps, a dry run and a log.
 - `message` — send a direct message (subject + body) to a member, or to everyone in a CSV, from the logged-in account.
+- `invite-to-event` — invite your friends, followers and following who are in a group to an event, and report the group members you aren't connected to.
 - `post-writing` — post a writing (title, text, category, tags, optional picture) from the logged-in account, or save it as a draft.
 - `post-event` — create a FetLife event from options or from an entry in a site data file like `events-data.js`, then save the event's URL back into that entry.
 - `search` — keyword member search _(experimental — see notes)_.
@@ -106,7 +107,7 @@ Global options (before the subcommand):
 
 Every command accepts `--json` (or `-j` after the subcommand). Table output uses [rich](https://github.com/Textualize/rich); JSON output is a list of objects (or a single object for one-item results) suitable for `jq`. Outputs below are **illustrative** (nicknames/values are examples).
 
-> **Command status.** `whoami`, `profile`, `friends`, `relationships`, `followers`, `following`, `discover`, `connections`, `engagement`, `friend-requests`, `message`, `post-writing`, `post-event`, `group`, `group-members`, `events-calendar`, `login`, and `raw` read FetLife's server-rendered pages (or its JSON endpoints, where it still has them) and return full data. `search`, `events`, and `event` are **experimental** — see notes on each; they were scaffolded against older markup and are awaiting the JSON endpoints the SPA now uses.
+> **Command status.** `whoami`, `profile`, `friends`, `relationships`, `followers`, `following`, `discover`, `connections`, `engagement`, `friend-requests`, `message`, `invite-to-event`, `post-writing`, `post-event`, `group`, `group-members`, `events-calendar`, `login`, and `raw` read FetLife's server-rendered pages (or its JSON endpoints, where it still has them) and return full data. `search`, `events`, and `event` are **experimental** — see notes on each; they were scaffolded against older markup and are awaiting the JSON endpoints the SPA now uses.
 
 ### `login`
 
@@ -315,6 +316,45 @@ skipped     Extra_One                over --limit 10
 ```
 
 Throttling (HTTP 429) stops the run with exit code 75; the log is intact, so rerunning later continues where it stopped. Always `--dry-run` a new list first — it resolves every member and shows exactly who would be messaged. The member is resolved by nickname or numeric id. FetLife bounces the compose page for members who don't accept messages from your account (privacy settings, blocks); those are reported and nothing is sent. Subject is limited to 255 characters. `-y`/`--yes` skips the prompt for scripted use.
+
+### `invite-to-event`
+
+Invite the members of a group who are your connections to an event, and see which group members aren't. `GROUP_ID` is the numeric id or the group's URL.
+
+> **Who this is for.** This command is for users who own the group and manage its event. It isn't a way for non-managers of an event to invite others. Run it from the managing account, using `--env-file` if that isn't your default.
+
+```bash
+# See who would be invited; nothing is sent.
+fetlife --env-file xanadu_kink.env invite-to-event --DryRun \
+  https://fetlife.com/events/2026/11/21/escape-to-xanadu-thanksgiving-play-party-gqkqfi \
+  https://fetlife.com/groups/317599
+
+# Send, after a prompt. Add --yes to skip the prompt.
+fetlife --env-file xanadu_kink.env invite-to-event EVENT_URL GROUP_ID
+```
+
+| Name | Who they are | What happens |
+|---|---|---|
+| UserMembers | The logged-in account's friends, followers and following | |
+| GroupMembers | The group's members | |
+| NonMembers | GroupMembers not in UserMembers | Listed |
+| Invitees | GroupMembers in UserMembers | Invited, where FetLife allows it |
+
+It prints the event, the NonMembers and the Invitees with what happened to each. The sending account is left out of both lists. Members are matched by nickname, because group member lists show no user ids.
+
+FetLife decides who can actually be invited, so an Invitee can still be `skipped`, with the reason shown:
+
+- **Already invited or responded.** The reason is what the site's invite list says, such as `Invite pending`, `Going` or `Interested`. This is also why a rerun never invites anyone twice, and why the command keeps no log.
+- **Following only.** The site's invite list has Friends, Followers and Past RSVPs tabs, so someone you only follow can be invited only if they are a past RSVP.
+- **Over the invite limit.** Friends and Followers picks count against the "invites left" the site shows for the event. Past RSVPs don't count, so the command sends them under the site's Past RSVPs option.
+
+| Option | Purpose |
+|---|---|
+| `--DryRun`, `--dry-run` | Report who would be invited; send nothing. Wins over `--yes`. |
+| `--yes`, `-y` | Skip the confirmation prompt. |
+| `--json`, `-j` | Print the event, group, NonMembers and Invitees as one JSON object. |
+
+If FetLife offers the account no invite form for the event, the command stops before reading any lists. All invitations go in one submit, like the site's button; afterwards the invite lists are read again, and anyone still offered an invite is reported as `failed`. Reading all the lists takes one request per page (20 connections or 20 group members a page), so a large account takes minutes. Throttling before the send stops the run with exit code 75 and nothing sent, because partial lists would give wrong results.
 
 ### `post-writing`
 

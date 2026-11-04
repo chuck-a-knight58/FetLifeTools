@@ -23,7 +23,8 @@ from bs4 import BeautifulSoup
 
 from .exceptions import ParseError
 from .models import (
-    Event, Group, GroupMembersPage, Member, ProfileRelation, Relationship, Story,
+    Event, EventInviteForm, EventInviteRow, Group, GroupMembersPage, Member,
+    ProfileRelation, Relationship, Story,
 )
 
 _PARSER = "lxml"
@@ -744,9 +745,61 @@ def parse_member_search(html: str, base_url: str = "") -> list[Member]:
 # --------------------------------------------------------------------------- #
 # Event parsing
 # --------------------------------------------------------------------------- #
+_EVENT_FRAME_ID_RE = re.compile(r'id="(?:event_rsvp_bar|hero_menu_event)_(\d+)"')
+_INVITE_NEXT_FRAME_RE = re.compile(r"^invite-\w+-page-\d+$")
+
+
+def event_invite_form_from_html(html: str) -> EventInviteForm | None:
+    """The invite modal's form, or None if the page doesn't have one.
+
+    Raises ParseError when the form is there but its token or limit can't be
+    read: invitations must not go out against a limit nobody could check.
+    """
+    soup = _soup(html)
+    form = soup.find("form", id="event-invite-modal-form")
+    if form is None:
+        return None
+    token = form.find("input", attrs={"name": "authenticity_token"})
+    holder = soup.find(attrs={"data-invite-modal-limit-value": True})
+    try:
+        limit = int(holder["data-invite-modal-limit-value"])
+        return EventInviteForm(
+            action=form["action"],
+            token=token["value"],
+            limit=limit,
+            has_past_rsvps=soup.find(attrs={"data-tab-name": "previously_rsvpd"}) is not None,
+        )
+    except (KeyError, TypeError, ValueError) as exc:
+        raise ParseError("Could not read the event's invite form.") from exc
+
+
+def event_invite_rows_from_html(html: str) -> tuple[list[EventInviteRow], tuple[str, str] | None]:
+    """One page of an invite list: its rows, and the next page's ``(frame id, path)``."""
+    soup = _soup(html)
+    rows: list[EventInviteRow] = []
+    for box in soup.select("input[type=checkbox][data-user-id]"):
+        label = box.find_parent("label")
+        name = label.select_one("div.font-bold span") if label else None
+        if name is None:
+            continue
+        status = label.select_one("span.italic")
+        rows.append(EventInviteRow(
+            user_id=box["data-user-id"],
+            nickname=_clean(name.get_text()),
+            selectable=box.get("data-selectable") == "true",
+            past_attendee=(box.get("data-namespace") == "previously_rsvpd"
+                           or box.get("data-past-attendee") == "true"),
+            status=_clean(status.get_text()) if status else None,
+        ))
+    frame = soup.find("turbo-frame", id=_INVITE_NEXT_FRAME_RE, src=True)
+    return rows, (frame["id"], frame["src"]) if frame else None
+
+
 def parse_event(html: str, url: str | None = None) -> Event:
     soup = _soup(html)
-    event = Event(url=url, id=_id_from_url(url, "events"))
+    # The page's own frames carry the numeric id; a /events/2026/11/21/slug URL doesn't.
+    frame_id = _EVENT_FRAME_ID_RE.search(html)
+    event = Event(url=url, id=frame_id.group(1) if frame_id else _id_from_url(url, "events"))
 
     for obj in _json_ld(soup):
         if obj.get("@type") == "Event":

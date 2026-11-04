@@ -117,6 +117,29 @@ class Event:
 
 
 @dataclass
+class EventInviteForm:
+    """The site's invite modal for an event (``/events/ID/invitations/new``)."""
+
+    action: str
+    token: str
+    # Invites left for Friends/Followers picks. FetLife doesn't count past RSVPs.
+    limit: int
+    has_past_rsvps: bool = False
+
+
+@dataclass
+class EventInviteRow:
+    """One member the invite modal lists, and whether it offers them an invite."""
+
+    user_id: str
+    nickname: str
+    selectable: bool = False
+    past_attendee: bool = False
+    # What the row says instead of a location: "Invite pending", "Going"...
+    status: str | None = None
+
+
+@dataclass
 class Group:
     """A FetLife group."""
 
