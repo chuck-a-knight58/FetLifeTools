@@ -935,13 +935,17 @@ def event(ctx: click.Context, event_id: str, json_local: bool) -> None:
 @click.option("--images/--no-images", default=False, show_default=True,
               help="Include the event pictures (embedded in the data file, so it's bigger; "
                    "FetLife's picture links won't load outside FetLife).")
+@click.option("--virtual/--no-virtual", default=True, show_default=True,
+              help="Also include every virtual event in the dates (FetLife's Virtual tab, "
+                   "worldwide; not limited by --radius).")
 @click.pass_context
-def events_calendar(ctx, center, radius, units, start, end, out_path, title, images):
+def events_calendar(ctx, center, radius, units, start, end, out_path, title, images, virtual):
     """Save the events within --radius of --center as data for the HTML calendar.
 
     Covers every event running on any day from --start to --end (inclusive),
     including multi-day events that began earlier; by default three
-    months, starting on the 1st of this month. The page has a calendar (Overview,
+    months, starting on the 1st of this month. Unless --no-virtual is given,
+    every virtual event in those dates is added too, wherever it's hosted. The page has a calendar (Overview,
     Month, Week and Day layouts; clicking a date opens that day's list in a
     new tab) and a list view, a category legend that doubles as a filter,
     and a text filter. This writes only the data, community_calendar.js; the
@@ -979,6 +983,11 @@ def events_calendar(ctx, center, radius, units, start, end, out_path, title, ima
         result = eventcal.gather_events(fl, coord, radius, units, start, end,
                                         place_name=center, on_progress=on_progress)
         status_console.print()  # end the progress line
+        if virtual and not result.rate_limited:
+            status_console.print("[dim]virtual events:[/dim]")
+            online = eventcal.gather_virtual_events(fl, start, end, on_progress=on_progress)
+            status_console.print()  # end the progress line
+            result = eventcal.merge_results(result, online)
         if images:
             embedded = eventcal.embed_images(
                 fl.session, result.events, referer=config.base_url + "/",

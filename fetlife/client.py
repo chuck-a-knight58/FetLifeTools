@@ -853,7 +853,22 @@ class FetLifeClient:
         }
         if place_name:
             params["search[place_name]"] = place_name
-        resp = self.get("/events/near", params=params)
+        yield from self._iter_event_days("/events/near", params)
+
+    def iter_events_virtual(self, from_date: str) -> Iterator[list[Event]]:
+        """Pages of the virtual event search (``/events/virtual``, the site's
+        Virtual tab) from *from_date* (``YYYY-MM-DD``) onward, in date order.
+
+        Virtual events aren't tied to a place, so this lists them worldwide.
+        Its pages are laid out like the near-me search's; see
+        :meth:`iter_events_near`.
+        """
+        self._ensure_auth()
+        yield from self._iter_event_days("/events/virtual", {"from_date": from_date})
+
+    def _iter_event_days(self, path: str, params: dict) -> Iterator[list[Event]]:
+        """Follow a day-by-day event search's lazy pagination frame to the end."""
+        resp = self.get(path, params=params)
         while True:
             events, next_path = parsers.events_near_from_html(
                 resp.text, base_url=self.config.base_url

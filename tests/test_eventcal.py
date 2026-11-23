@@ -158,6 +158,10 @@ class StubClient:
                 raise page
             yield page
 
+    def iter_events_virtual(self, from_date):
+        self.calls.append((from_date, "virtual"))
+        yield from self.searches.get(("virtual", from_date), [])
+
 
 def test_gather_keeps_events_overlapping_the_dates_and_stops_past_the_end():
     fl = StubClient({"2026-10-13": [
@@ -216,6 +220,30 @@ def test_gather_returns_what_it_has_when_rate_limited():
     r = eventcal.gather_events(fl, (0, 0), 50, "mi", date(2026, 10, 13), date(2026, 11, 13))
     assert [e.name for e in r.events] == ["munch"]
     assert r.rate_limited and r.through == "2026-10-13"
+
+
+def test_gather_virtual_marks_events_and_merges_with_local_ones():
+    local = _ev("2026-10-13", "munch")
+    fl = StubClient({
+        "2026-10-13": [[local, _ev("2026-10-14", "class")], [_ev("2026-10-30", "x")]],
+        ("virtual", "2026-10-13"): [[_ev("2026-10-13", "zoom"), _ev("2026-10-15", "chat")],
+                                    [_ev("2026-10-30", "y")]],
+    })
+    near = eventcal.gather_events(fl, (0, 0), 50, "mi", date(2026, 10, 13), date(2026, 10, 20))
+    online = eventcal.gather_virtual_events(fl, date(2026, 10, 13), date(2026, 10, 20))
+    assert ("2026-10-13", "virtual") in fl.calls
+    assert [e.meta.get("virtual") for e in online.events] == [True, True]
+    assert not local.meta.get("virtual")
+
+    merged = eventcal.merge_results(near, online)
+    assert [e.name for e in merged.events] == ["munch", "zoom", "class", "chat"]
+    assert merged.pages == near.pages + online.pages and not merged.rate_limited
+
+    events, config = _page_data(eventcal.render_data_js(merged.events, date(2026, 10, 13),
+                                                        date(2026, 10, 20), "X", 50, "mi"))
+    assert [(e["name"], e["virtual"], e["venue"]) for e in events] == [
+        ("munch", False, None), ("zoom", True, "Virtual"), ("class", False, None), ("chat", True, "Virtual")]
+    assert "4 events (2 virtual)" in config["subtitle"]
 
 
 # --------------------------------------------------------------------------- #

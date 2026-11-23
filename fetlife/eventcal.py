@@ -14,7 +14,7 @@ import calendar
 import json
 from dataclasses import dataclass, field
 from datetime import date, datetime, timedelta
-from typing import Callable, Optional
+from typing import Callable, Iterable, Optional
 
 from .exceptions import RateLimitedError
 from .models import Event
@@ -84,7 +84,56 @@ def gather_events(
     on_progress: Optional[Callable[[Progress], None]] = None,
 ) -> Result:
     """Every event within *radius* of *center* that runs on any day from
-    *start* to *end* (inclusive), in start-date order.
+    *start* to *end* (inclusive), in start-date order. See :func:`_gather`.
+    """
+    range_meters = radius * METERS_PER_UNIT[units]
+    return _gather(
+        lambda from_date: fl.iter_events_near(center[0], center[1], range_meters,
+                                              from_date, place_name=place_name),
+        start, end, on_progress)
+
+
+def gather_virtual_events(
+    fl,
+    start: date,
+    end: date,
+    on_progress: Optional[Callable[[Progress], None]] = None,
+) -> Result:
+    """Every virtual event (worldwide) that runs on any day from *start* to
+    *end* (inclusive), in start-date order, each marked ``meta["virtual"]``.
+    See :func:`_gather`.
+    """
+    result = _gather(fl.iter_events_virtual, start, end, on_progress)
+    for event in result.events:
+        event.meta["virtual"] = True
+    return result
+
+
+def merge_results(*results: Result) -> Result:
+    """One result holding every event of *results* (each URL once), in
+    start-date order."""
+    found: dict[str, Event] = {}
+    merged = Result()
+    for result in results:
+        for event in result.events:
+            found.setdefault(event.url, event)
+        merged.pages += result.pages
+        merged.rate_limited = merged.rate_limited or result.rate_limited
+        if result.through and (merged.through is None or result.through > merged.through):
+            merged.through = result.through
+    merged.events = sorted(found.values(), key=lambda e: e.start or "")
+    return merged
+
+
+def _gather(
+    pages_from: Callable[[str], Iterable[list[Event]]],
+    start: date,
+    end: date,
+    on_progress: Optional[Callable[[Progress], None]] = None,
+) -> Result:
+    """Every event a day-by-day search lists that runs on any day from
+    *start* to *end* (inclusive), in start-date order. *pages_from* takes a
+    ``YYYY-MM-DD`` date and yields the search's pages from that day on.
 
     A multi-day event that began before *start* but is still running counts.
     Pages are read until one lists only days past *end* (a page can add
@@ -97,13 +146,11 @@ def gather_events(
     lo, hi = _iso(start), _iso(end)
     found: dict[str, Event] = {}
     result = Result()
-    range_meters = radius * METERS_PER_UNIT[units]
     from_date = start
     try:
         while from_date <= end:
             listed_any = False
-            for events in fl.iter_events_near(center[0], center[1], range_meters,
-                                              _iso(from_date), place_name=place_name):
+            for events in pages_from(_iso(from_date)):
                 result.pages += 1
                 listed_in_range = False
                 for event in events:
@@ -176,11 +223,12 @@ def _payload(event: Event) -> dict:
         "category": event.category or "Other",
         "cost": event.cost,
         "when": event.when,
-        "venue": event.location,
+        "venue": event.location or ("Virtual" if event.meta.get("virtual") else None),
         "city": event.address,
         "rsvps": event.going_count,
         # Only embedded pictures: a plain CDN link won't load outside FetLife.
         "image": event.image_url if (event.image_url or "").startswith("data:") else None,
+        "virtual": bool(event.meta.get("virtual")),
     }
 
 
@@ -217,6 +265,9 @@ def render_data_js(
     span = (f"{start:%b} {start.day} – {end:%b} {end.day}, {end.year}" if start.year == end.year
             else f"{start:%b} {start.day}, {start.year} – {end:%b} {end.day}, {end.year}")
     count = f"{len(events)} event{'s' if len(events) != 1 else ''}"
+    virtual = sum(1 for e in events if e.meta.get("virtual"))
+    if virtual:
+        count += f" ({virtual} virtual)"
     config = {
         "title": title or f"Events near {place}",
         "subtitle": f"Within {radius:g} {units} of {place} · {span} · {count}",
@@ -242,6 +293,7 @@ DATA_HEADER = """\
 //   category    - FetLife's category (colors and the legend come from it)
 //   cost, when, venue, city, rsvps - as the event's card shows them (or null)
 //   image       - an embedded picture (data: URI), or null
+//   virtual     - true for an online event (from FetLife's Virtual tab)
 // CONFIG: the page's heading (title, subtitle, generated), the dates it
 //   covers (start, end), and the color of each category (colors).
 
