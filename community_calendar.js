@@ -8,23 +8,11 @@
 //   category    - FetLife's category (colors and the legend come from it)
 //   cost, when, venue, city, rsvps - as the event's card shows them (or null)
 //   image       - an embedded picture (data: URI), or null
+//   virtual     - true for an online event (from FetLife's Virtual tab)
 // CONFIG: the page's heading (title, subtitle, generated), the dates it
 //   covers (start, end), and the color of each category (colors).
 
 var EVENTS = [
-    {
-        "url": "https://fetlife.com/events/2026/11/14/cinekink-nyc-bound-etc-qg2nbp",
-        "name": "CineKink NYC: Bound, Etc",
-        "start": "2026-11-14",
-        "end": "2026-11-14",
-        "category": "Conference / Festival",
-        "cost": null,
-        "when": "Sat, Nov 14 at 5:30 PM",
-        "venue": "The Center",
-        "city": "New York City, New York, United States",
-        "rsvps": 27,
-        "image": null
-    },
     {
         "url": "https://fetlife.com/events/2026/11/14/lasc-party-at-the_lodge-t4olv3",
         "name": "LASC Party at The_LODGE",
@@ -36,7 +24,8 @@ var EVENTS = [
         "venue": null,
         "city": "Dover Plains, New York, United States",
         "rsvps": 48,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/geekaholic-november-14th-board-game-munch-uz2e7s",
@@ -49,7 +38,8 @@ var EVENTS = [
         "venue": "Prime Produce",
         "city": "Manhattan, New York, United States",
         "rsvps": 144,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/november-14th-fuck-party-near-lawrenceville-nj-not-far-from-philly-aycrjn",
@@ -62,7 +52,8 @@ var EVENTS = [
         "venue": "Lawrenceville Hotel",
         "city": "Lawrenceville, New Jersey, United States",
         "rsvps": 48,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/new-hope-pa-hodgepodge-felk7t",
@@ -75,7 +66,8 @@ var EVENTS = [
         "venue": "see description",
         "city": "New Hope, Pennsylvania, United States",
         "rsvps": 34,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/breeding-ground-2-jersey-city-wfmb4p",
@@ -88,7 +80,8 @@ var EVENTS = [
         "venue": "Courtyard",
         "city": "Jersey City, New York, United States",
         "rsvps": 39,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/fem-slut-for-you-tkyvdn",
@@ -101,7 +94,8 @@ var EVENTS = [
         "venue": "apartment or hotel",
         "city": "Carteret, New Jersey, United States",
         "rsvps": 9,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/hotel-fun-with-lily-roberts-hjs-cucks-filba8",
@@ -114,7 +108,8 @@ var EVENTS = [
         "venue": "Hotel Room",
         "city": "Nanuet, New York, United States",
         "rsvps": 19,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/hosting-sex-party-saddle-brook-mspkwf",
@@ -127,7 +122,8 @@ var EVENTS = [
         "venue": null,
         "city": "Saddle Brook, New Jersey, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/cd-trans-allies-social-rqrubh",
@@ -140,7 +136,8 @@ var EVENTS = [
         "venue": "The Venue",
         "city": "Bethlehem, Pennsylvania, United States",
         "rsvps": 68,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/sj-d-s-play-party-sv4qif",
@@ -153,7 +150,8 @@ var EVENTS = [
         "venue": "The Lodge",
         "city": "West Berlin, New Jersey, United States",
         "rsvps": 74,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/naked-game-night-men-male-only-pywjup",
@@ -166,7 +164,8 @@ var EVENTS = [
         "venue": null,
         "city": "Elizabeth, New Jersey, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/fluids-saturday-play-party-for-trans-cds-and-admirers-in-hell-s-kitchen-h8ye0b",
@@ -179,7 +178,8 @@ var EVENTS = [
         "venue": "Adam's Club",
         "city": "Manhattan, New York, United States",
         "rsvps": 84,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/the-res-erection-r7tlva",
@@ -192,7 +192,8 @@ var EVENTS = [
         "venue": "The Convent PHL",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 20,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/cinekink-nyc-mergings-pdojoj",
@@ -205,7 +206,8 @@ var EVENTS = [
         "venue": "The Center",
         "city": "New York City, New York, United States",
         "rsvps": 25,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/girls-nite-out-cum-join-us-ca8ljm",
@@ -218,7 +220,8 @@ var EVENTS = [
         "venue": "private",
         "city": "East Rutherford, New Jersey, United States",
         "rsvps": 10,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/kinky-tastings-leoikb",
@@ -231,7 +234,8 @@ var EVENTS = [
         "venue": "The Church",
         "city": "New Paltz, New York, United States",
         "rsvps": 151,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/sex-party-the-erotic-art-show-new-york-city-qjbsum",
@@ -244,7 +248,8 @@ var EVENTS = [
         "venue": "Secret Location (revealed with RSVP)",
         "city": "New York City, New York, United States",
         "rsvps": 56,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/friendsgiving-swing-party-9nmhyx",
@@ -257,7 +262,8 @@ var EVENTS = [
         "venue": "T B A",
         "city": "Woodbridge, New Jersey, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/operation-swing-time-a-salute-to-those-who-served-gpeimn",
@@ -270,7 +276,8 @@ var EVENTS = [
         "venue": null,
         "city": "Glen Gardner, New Jersey, United States",
         "rsvps": 12,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/masque-glow-hard-or-go-home-uveols",
@@ -283,7 +290,8 @@ var EVENTS = [
         "venue": "Prism ~ Please reach out if you're unfamiliar with our address • Arts District",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 197,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/femdom-peg-play-watch-party-3doms-53henw",
@@ -296,7 +304,8 @@ var EVENTS = [
         "venue": "hotel party",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 67,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/cozy-onyx-nyne-bar-night-ldb8xf",
@@ -309,7 +318,8 @@ var EVENTS = [
         "venue": "LAMBDA Lounge NY",
         "city": "New York City, New York, United States",
         "rsvps": 39,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/daddies-lil-fucktoy-newbie-nympho-ageplay-gangbang-brooklyn-nyc-ycoyjb",
@@ -322,7 +332,8 @@ var EVENTS = [
         "venue": null,
         "city": "New York City, New York, United States",
         "rsvps": 110,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/rope-jam-with-sassy-gklzqc",
@@ -335,7 +346,8 @@ var EVENTS = [
         "venue": "Coil & Cord Studio",
         "city": "Brooklyn, New York, United States",
         "rsvps": 26,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/philly-hotel-orgy-party-2uerk3",
@@ -348,7 +360,8 @@ var EVENTS = [
         "venue": "Private Location",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 9,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/elizabeth-nj-pump-n-dump-jwovlj",
@@ -361,7 +374,8 @@ var EVENTS = [
         "venue": "Elizabeth motel tbd",
         "city": "Elizabeth, New Jersey, United States",
         "rsvps": 6,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/blindfold-teasing-late-night-kaxchb",
@@ -374,7 +388,8 @@ var EVENTS = [
         "venue": "apa hotel",
         "city": "Iselin, New Jersey, United States",
         "rsvps": 5,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/the-queen-of-pennsylvania-2026-gang-bang-party-contest-8-30pm-1am-g6qvxw",
@@ -387,7 +402,8 @@ var EVENTS = [
         "venue": "Private Hotel Location",
         "city": "Audubon, Pennsylvania, United States",
         "rsvps": 109,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/secret-pleasures-hot-wife-party-lm5voy",
@@ -400,7 +416,8 @@ var EVENTS = [
         "venue": "Secret Pleasures is at the Back Door of the Wi Fi Cafe",
         "city": "Emmaus, Pennsylvania, United States",
         "rsvps": 101,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/hard-fast-and-loud-presents-faire-play-swords-and-seduction-1x8dnl",
@@ -413,7 +430,8 @@ var EVENTS = [
         "venue": "Saints and Sinners Emery Street Philadelphia",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 106,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/november-kinky-kickback-ao38fy",
@@ -426,7 +444,8 @@ var EVENTS = [
         "venue": "The Nest",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 101,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/cd-trans-allies-after-party-rsy3cp",
@@ -439,7 +458,8 @@ var EVENTS = [
         "venue": "The Venue",
         "city": "Bethlehem, Pennsylvania, United States",
         "rsvps": 67,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/club-labyrinth-swinging-kink-saturday-cpls-60-guys-120-ladies-free-midtown-9pm-4am-mrstus",
@@ -452,7 +472,8 @@ var EVENTS = [
         "venue": "TBA",
         "city": "New York City, New York, United States",
         "rsvps": 84,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/nepa-bear-den-bear-chest-flannel-dance-xx3ggh",
@@ -465,7 +486,8 @@ var EVENTS = [
         "venue": "12 Penny Saloon",
         "city": "Moosic, Pennsylvania, United States",
         "rsvps": 18,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/primal-a-kinky-tantra-play-party-175c6y",
@@ -478,7 +500,8 @@ var EVENTS = [
         "venue": "Address given in email confirmation. Please contact us if paying at door.",
         "city": "New York City, New York, United States",
         "rsvps": 65,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/unicorn-hunt-couples-unicorns-only-bronx-nyc-dtcfxg",
@@ -491,7 +514,8 @@ var EVENTS = [
         "venue": null,
         "city": "Bronx, New York, United States",
         "rsvps": 38,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/unicorn-hunt-wafugo",
@@ -504,7 +528,8 @@ var EVENTS = [
         "venue": "Sexy Couples Lounge",
         "city": "Bronx, New York, United States",
         "rsvps": 4,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/little-black-dress-party-r6rpax",
@@ -517,7 +542,8 @@ var EVENTS = [
         "venue": "Moxie Modern",
         "city": "Long Branch, New Jersey, United States",
         "rsvps": 11,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/the-diamond-club-nyc-presents-horny-cougars-wicked-hot-wives-lustful-salacious-saturday-edition-gmzdch",
@@ -530,72 +556,8 @@ var EVENTS = [
         "venue": "THE DIAMOND CLUB NYC [2ND FLOOR]",
         "city": "New York City, New York, United States",
         "rsvps": 52,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/14/stripper-saturday-fall-edition-oamaax",
-        "name": "STRIPPER SATURDAY: FALL EDITION",
-        "start": "2026-11-14",
-        "end": "2026-11-15",
-        "category": "Sex Party",
-        "cost": null,
-        "when": "Nov 14 – 15 · Sat 10:00 PM – Sun 7:00 AM",
-        "venue": null,
-        "city": "Brooklyn, New York, United States",
-        "rsvps": 27,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/14/slutty-slippery-pussy-saturday-84jpoa",
-        "name": "SLUTTY SLIPPERY PUSSY SATURDAY",
-        "start": "2026-11-14",
-        "end": "2026-11-15",
-        "category": "Sex Party",
-        "cost": null,
-        "when": "Nov 14 – 15 · Sat 10:00 PM – Sun 10:00 AM",
-        "venue": "DYCKMAN DOLLS",
-        "city": "New York City, New York, United States",
-        "rsvps": 16,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/14/sexy-sluts-saturday-36efcp",
-        "name": "SEXY SLUTS SATURDAY",
-        "start": "2026-11-14",
-        "end": "2026-11-15",
-        "category": "Sex Party",
-        "cost": null,
-        "when": "Nov 14 – 15 · Sat 10:00 PM – Sun 10:00 AM",
-        "venue": null,
-        "city": "Bronx, New York, United States",
-        "rsvps": 8,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/14/birthday-affair-v6tel6",
-        "name": "BIRTHDAY AFFAIR",
-        "start": "2026-11-14",
-        "end": "2026-11-15",
-        "category": "Sex Party",
-        "cost": null,
-        "when": "Nov 14 – 15 · Sat 11:00 PM – Sun 10:00 AM",
-        "venue": "Brooklyn n",
-        "city": "New York City, New York, United States",
-        "rsvps": 48,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/14/fun-everything-goes-time-casino-wilkes-barre-49inq8",
-        "name": "Fun everything goes time Casino wilkes barre",
-        "start": "2026-11-14",
-        "end": "2026-11-15",
-        "category": "Social",
-        "cost": "Free",
-        "when": "Nov 14 – 15 · Sat 11:00 PM – Sun 11:00 AM",
-        "venue": "Mohegan Sun Casino",
-        "city": "Plains Township, Pennsylvania, United States",
-        "rsvps": 6,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/woodbridge-hotel-play-5-couples-a1ud0y",
@@ -608,7 +570,78 @@ var EVENTS = [
         "venue": "Woodbridge",
         "city": "Woodbridge, New Jersey, United States",
         "rsvps": 54,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/14/stripper-saturday-fall-edition-oamaax",
+        "name": "STRIPPER SATURDAY: FALL EDITION",
+        "start": "2026-11-14",
+        "end": "2026-11-15",
+        "category": "Sex Party",
+        "cost": null,
+        "when": "Nov 14 – 15 · Sat 10:00 PM – Sun 7:00 AM",
+        "venue": null,
+        "city": "Brooklyn, New York, United States",
+        "rsvps": 27,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/14/slutty-slippery-pussy-saturday-84jpoa",
+        "name": "SLUTTY SLIPPERY PUSSY SATURDAY",
+        "start": "2026-11-14",
+        "end": "2026-11-15",
+        "category": "Sex Party",
+        "cost": null,
+        "when": "Nov 14 – 15 · Sat 10:00 PM – Sun 10:00 AM",
+        "venue": "DYCKMAN DOLLS",
+        "city": "New York City, New York, United States",
+        "rsvps": 16,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/14/sexy-sluts-saturday-36efcp",
+        "name": "SEXY SLUTS SATURDAY",
+        "start": "2026-11-14",
+        "end": "2026-11-15",
+        "category": "Sex Party",
+        "cost": null,
+        "when": "Nov 14 – 15 · Sat 10:00 PM – Sun 10:00 AM",
+        "venue": null,
+        "city": "Bronx, New York, United States",
+        "rsvps": 8,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/14/birthday-affair-v6tel6",
+        "name": "BIRTHDAY AFFAIR",
+        "start": "2026-11-14",
+        "end": "2026-11-15",
+        "category": "Sex Party",
+        "cost": null,
+        "when": "Nov 14 – 15 · Sat 11:00 PM – Sun 10:00 AM",
+        "venue": "Brooklyn n",
+        "city": "New York City, New York, United States",
+        "rsvps": 48,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/14/fun-everything-goes-time-casino-wilkes-barre-49inq8",
+        "name": "Fun everything goes time Casino wilkes barre",
+        "start": "2026-11-14",
+        "end": "2026-11-15",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Nov 14 – 15 · Sat 11:00 PM – Sun 11:00 AM",
+        "venue": "Mohegan Sun Casino",
+        "city": "Plains Township, Pennsylvania, United States",
+        "rsvps": 6,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/hot-chocolate-nights-ng4mmy",
@@ -621,7 +654,8 @@ var EVENTS = [
         "venue": "TBA",
         "city": "East Hanover, New Jersey, United States",
         "rsvps": 109,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/cum-baste-her-face-bdsm-bukkake-creampie-party-687mht",
@@ -634,7 +668,8 @@ var EVENTS = [
         "venue": null,
         "city": "Brooklyn, New York, United States",
         "rsvps": 69,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/last-stop-sinners-paradise-rsvp-now-free-entry-see-details-below-df4po8",
@@ -647,7 +682,8 @@ var EVENTS = [
         "venue": "Sinners Paradise Club",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 161,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/nsd-takes-new-york-5kd0cw",
@@ -660,7 +696,8 @@ var EVENTS = [
         "venue": "Private Residence",
         "city": "Brooklyn, New York, United States",
         "rsvps": 203,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/xxx-adult-entertainment-team-presents-nsd-new-york-city-takeover-the-bronx-nyc-s1ucju",
@@ -673,7 +710,8 @@ var EVENTS = [
         "venue": null,
         "city": "Bronx, New York, United States",
         "rsvps": 80,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/da-anniversary-party-pc6bk4",
@@ -686,7 +724,8 @@ var EVENTS = [
         "venue": null,
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 31,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/rump-shaker-5qpsqs",
@@ -699,7 +738,8 @@ var EVENTS = [
         "venue": "Bar XIII",
         "city": "Wilmington, Delaware, United States",
         "rsvps": 114,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/medusa-s-playhouse-presents-red-carpet-gala-3rd-anniversary-red-carpet-gala-trlpbw",
@@ -712,7 +752,8 @@ var EVENTS = [
         "venue": "MEDUSAS PLAYHOUSE",
         "city": "West Babylon, New York, United States",
         "rsvps": 37,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/sneaky-link-saturdays-late-night-creepin-edition-10pm-3am-in-midtown-nyc-100-entry-ntwc0i",
@@ -725,7 +766,8 @@ var EVENTS = [
         "venue": "JULIETTE'S PLAYPEN (Midtown)",
         "city": "Manhattan, New York, United States",
         "rsvps": 119,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/lifefstyle_drop_box-wnu1m8",
@@ -738,7 +780,8 @@ var EVENTS = [
         "venue": "exact address disclosed upon donation",
         "city": "Rahway, New Jersey, United States",
         "rsvps": 35,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/mature-bottom-and-ts-sex-party-fyqlew",
@@ -751,7 +794,8 @@ var EVENTS = [
         "venue": "grand concourse",
         "city": "New York City, New York, United States",
         "rsvps": 1,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/saturdays-are-4-sexxx-evdrze",
@@ -764,7 +808,8 @@ var EVENTS = [
         "venue": "stacks play house",
         "city": "New York City, New York, United States",
         "rsvps": 4,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/solenya-bang-gafjkx",
@@ -777,7 +822,8 @@ var EVENTS = [
         "venue": "the G spot",
         "city": "New York City, New York, United States",
         "rsvps": 1,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/spotlight-saturdays-fpdjpg",
@@ -790,7 +836,8 @@ var EVENTS = [
         "venue": "secrets",
         "city": "New York City, New York, United States",
         "rsvps": 11,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/glory-hole-slutty-fun-z5rchb",
@@ -803,7 +850,8 @@ var EVENTS = [
         "venue": null,
         "city": "New York City, New York, United States",
         "rsvps": 8,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/bukkake-event-2awjd2",
@@ -816,7 +864,8 @@ var EVENTS = [
         "venue": null,
         "city": "Mahwah, New Jersey, United States",
         "rsvps": 4,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/14/saturday-night-isn-t-over-after-hours-4am-8am-7oficl",
@@ -829,7 +878,78 @@ var EVENTS = [
         "venue": "JULIETTE'S PLAYPEN (Midtown)",
         "city": "Manhattan, New York, United States",
         "rsvps": 34,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/14/pop-up-saturday-night-at-the-library-movie-night-pulp-fiction-hnkgd6",
+        "name": "Pop Up Saturday Night at the Library: Movie Night Pulp Fiction",
+        "start": "2026-11-14",
+        "end": "2026-11-14",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Sat, Nov 14 at 7:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 33,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/14/moscow-sparke-virtual-munch-sgrjyi",
+        "name": "Moscow SPARKE Virtual Munch",
+        "start": "2026-11-14",
+        "end": "2026-11-14",
+        "category": "Social",
+        "cost": null,
+        "when": "Sat, Nov 14 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 13,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/14/open-lounge-and-kink-time-u1mn5o",
+        "name": "Open Lounge and Kink Time",
+        "start": "2026-11-14",
+        "end": "2026-11-14",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Sat, Nov 14 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 24,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/14/abby-s-saturday-night-discord-party-quxv4e",
+        "name": "Abby's Saturday Night DISCORD Party",
+        "start": "2026-11-14",
+        "end": "2026-11-14",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Sat, Nov 14 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 28,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/14/middles-story-time-hmsgec",
+        "name": "middles story time",
+        "start": "2026-11-14",
+        "end": "2026-11-14",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Sat, Nov 14 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 19,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/philly-play-party-godemu",
@@ -842,7 +962,8 @@ var EVENTS = [
         "venue": "High end hotel in Philly",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 4,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/catch-me-the-afties-after-hours-gangbang-brooklyn-nyc-gjq8uk",
@@ -855,7 +976,8 @@ var EVENTS = [
         "venue": null,
         "city": "New York City, New York, United States",
         "rsvps": 26,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/cath-me-the-afties-after-hours-gangbang-brooklyn-nyc-gewrwy",
@@ -868,7 +990,8 @@ var EVENTS = [
         "venue": null,
         "city": "New York City, New York, United States",
         "rsvps": 18,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/morning-bi-fuck-fest-ftgqen",
@@ -881,7 +1004,8 @@ var EVENTS = [
         "venue": "PRIVATE RESIDENCES BUILDING",
         "city": "New York City, New York, United States",
         "rsvps": 7,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/the-after-hours-turnup-gos3jh",
@@ -894,7 +1018,8 @@ var EVENTS = [
         "venue": "stacks play house",
         "city": "New York City, New York, United States",
         "rsvps": 8,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/make-me-cum-sbntom",
@@ -907,7 +1032,8 @@ var EVENTS = [
         "venue": "near you",
         "city": "Cherry Hill, New Jersey, United States",
         "rsvps": 24,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/dance-meets-tantra-x-new-york-1-day-immersion-mbaqc9",
@@ -920,7 +1046,8 @@ var EVENTS = [
         "venue": "Private Location",
         "city": "New York City, New York, United States",
         "rsvps": 11,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/board-game-munch-nov-15th-w9n8di",
@@ -933,7 +1060,8 @@ var EVENTS = [
         "venue": "Manayunk Home",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 26,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/philly-pet-group-munch-tattooed-mom-dvsjhz",
@@ -946,7 +1074,8 @@ var EVENTS = [
         "venue": "Tattooed Moms",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 42,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/i-d-rather-be-blue-25-50-off-on-anything-blue-in-the-store-jewelry-pewter-clothes-etc-snacks-n6ayph",
@@ -959,7 +1088,8 @@ var EVENTS = [
         "venue": "Samco Boutique",
         "city": "Edgewater Park, New Jersey, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/sunday-is-funday-bna-jh1bsm",
@@ -972,7 +1102,8 @@ var EVENTS = [
         "venue": "Berlin News Agency",
         "city": "West Berlin, New Jersey, United States",
         "rsvps": 110,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/kpid-members-only-irish-tea-pnyfx9",
@@ -985,7 +1116,8 @@ var EVENTS = [
         "venue": "Irish Eyes Co",
         "city": "Lititz, Pennsylvania, United States",
         "rsvps": 14,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/service-submission-for-women-and-nb-gq-subs-kkmhat",
@@ -998,7 +1130,8 @@ var EVENTS = [
         "venue": "The FemDom Foundry in Fishtown",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 71,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/playtime-workshop-series-impact-play-pftooo",
@@ -1011,7 +1144,8 @@ var EVENTS = [
         "venue": "Less Dead Studio",
         "city": "Poughkeepsie, New York, United States",
         "rsvps": 39,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/boba-east-nyc-munch-kagw4s",
@@ -1024,7 +1158,8 @@ var EVENTS = [
         "venue": null,
         "city": "New York City, New York, United States",
         "rsvps": 27,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/cum-n-go-hxrzoj",
@@ -1037,7 +1172,8 @@ var EVENTS = [
         "venue": "private space",
         "city": "Queens, New York, United States",
         "rsvps": 12,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/lehigh-valley-skittles-littles-parallel-play-craft-munch-zbvwhm",
@@ -1050,7 +1186,8 @@ var EVENTS = [
         "venue": null,
         "city": "Bethlehem, Pennsylvania, United States",
         "rsvps": 26,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/november-2026-monthly-social-pool-party-at-innthrall-for-members-3xqkta",
@@ -1063,7 +1200,8 @@ var EVENTS = [
         "venue": "InnThrall - Your Kinky B&B",
         "city": "Shillington, Pennsylvania, United States",
         "rsvps": 13,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/southjerseynerds-munch-qgd6mx",
@@ -1076,7 +1214,8 @@ var EVENTS = [
         "venue": "Top Deck Games",
         "city": "Ashland, New Jersey, United States",
         "rsvps": 61,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/sapphic-rope-brunch-7m7mjo",
@@ -1089,7 +1228,8 @@ var EVENTS = [
         "venue": "Shibari Café",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 64,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/so-tiny-consensual-sph-play-rmaumy",
@@ -1102,7 +1242,8 @@ var EVENTS = [
         "venue": "Secret Location",
         "city": "Manhattan, New York, United States",
         "rsvps": 77,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/drawminatrix-bdsm-fetish-figure-drawing-1iebi5",
@@ -1115,7 +1256,8 @@ var EVENTS = [
         "venue": "Secret Location",
         "city": "Manhattan, New York, United States",
         "rsvps": 37,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/bedroom-ties-bondage-intro-by-andromeda-1ts3by",
@@ -1128,7 +1270,8 @@ var EVENTS = [
         "venue": "Secret Bar Location",
         "city": "Manhattan, New York, United States",
         "rsvps": 43,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/cinekink-nyc-bring-it-vmdchn",
@@ -1141,7 +1284,8 @@ var EVENTS = [
         "venue": "B Scene",
         "city": "New York City, New York, United States",
         "rsvps": 52,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/free-use-slut-gangbang-qw799o",
@@ -1154,7 +1298,8 @@ var EVENTS = [
         "venue": "tba",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 42,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/sunday-fire-head-glory-hole-eke5kv",
@@ -1167,7 +1312,8 @@ var EVENTS = [
         "venue": "private glory hole",
         "city": "Mount Laurel, New Jersey, United States",
         "rsvps": 1,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/eating-ass-and-pussy-and-five-bbc-s-available-for-for-horny-women-s5nxxm",
@@ -1180,7 +1326,8 @@ var EVENTS = [
         "venue": "private location uptown Manhattan",
         "city": "Inwood, New York, United States",
         "rsvps": 3,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/football-and-fucking-w4gsfl",
@@ -1193,7 +1340,8 @@ var EVENTS = [
         "venue": "tba",
         "city": "Edison, New Jersey, United States",
         "rsvps": 87,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/the-yap-l-11-15-l-a-neurodivergent-munch-sunday-return-to-prev-venue-bjovvi",
@@ -1206,7 +1354,8 @@ var EVENTS = [
         "venue": null,
         "city": "Manhattan, New York, United States",
         "rsvps": 15,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/impact-101-a-bdsm-workshop-on-impact-play-lpmwzq",
@@ -1219,7 +1368,8 @@ var EVENTS = [
         "venue": "Secret Location",
         "city": "Manhattan, New York, United States",
         "rsvps": 42,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/hotel-shenanigans-pt1he6",
@@ -1232,7 +1382,8 @@ var EVENTS = [
         "venue": "Homewood Suites by Hilton",
         "city": "Lancaster, Pennsylvania, United States",
         "rsvps": 14,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/dinner-at-hox-nov-2026-open-house-xcvd4s",
@@ -1245,7 +1396,8 @@ var EVENTS = [
         "venue": "HOX ( House of X )",
         "city": "Matamoras, Pennsylvania, United States",
         "rsvps": 30,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/taillor-happy-hour-mixer-yzhk6b",
@@ -1258,7 +1410,8 @@ var EVENTS = [
         "venue": "Secret Bar Location",
         "city": "Manhattan, New York, United States",
         "rsvps": 63,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/stamford-pump-n-dump-bvrzs4",
@@ -1271,7 +1424,8 @@ var EVENTS = [
         "venue": "Red Carpet inn room 236",
         "city": "Stamford, Connecticut, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/euro-slut-dp-gangbang-crown-heights-brooklyn-2h9g0h",
@@ -1284,7 +1438,8 @@ var EVENTS = [
         "venue": null,
         "city": "Brooklyn, New York, United States",
         "rsvps": 28,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/sunday-funday-fuck-slut-1hcyje",
@@ -1297,7 +1452,8 @@ var EVENTS = [
         "venue": "Condominium Apartments",
         "city": "South Plainfield, New Jersey, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/my-friend-wants-a-3-hole-gangbang-ikioue",
@@ -1310,59 +1466,8 @@ var EVENTS = [
         "venue": null,
         "city": "New York City, New York, United States",
         "rsvps": 16,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/15/nyc-meets-nyc-5yzozw",
-        "name": "NYC MEETS NYC",
-        "start": "2026-11-15",
-        "end": "2026-11-17",
-        "category": "Sex Party",
-        "cost": "Free",
-        "when": "Nov 15 – 18 · Sun 7:00 PM – Wed 2:00 AM",
-        "venue": "BIG ZAYS PLAY HOUSE",
-        "city": "New York City, New York, United States",
-        "rsvps": 67,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/15/laughs-giggles-ladies-only-foxjhz",
-        "name": "Laughs & Giggles Ladies ONLY",
-        "start": "2026-11-15",
-        "end": "2026-11-20",
-        "category": "Sex Party",
-        "cost": null,
-        "when": "Nov 15 – 21 · Sun 10:00 PM – Sat 4:00 AM",
-        "venue": "Secret Location given once rsvp",
-        "city": "Philadelphia, Pennsylvania, United States",
-        "rsvps": 19,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/15/couples-single-ladies-soire-gznbfa",
-        "name": "couples & single ladies soire",
-        "start": "2026-11-15",
-        "end": "2026-11-16",
-        "category": "Sex Party",
-        "cost": "Free",
-        "when": "Nov 15 – 16 · Sun 10:00 PM – Mon 10:00 AM",
-        "venue": null,
-        "city": "New York City, New York, United States",
-        "rsvps": 17,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/15/fuck-my-fiancee-vvezz5",
-        "name": "fuck my fiancee",
-        "start": "2026-11-15",
-        "end": "2026-11-16",
-        "category": "Sex Party",
-        "cost": "Free",
-        "when": "Nov 15 – 17 · Sun 11:00 PM – Tue 3:00 AM",
-        "venue": "city club hotel nyc",
-        "city": "New York City, New York, United States",
-        "rsvps": 131,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/taillor-rope-share-bdsm-skillshare-event-ekzdfj",
@@ -1375,7 +1480,64 @@ var EVENTS = [
         "venue": "The Crown",
         "city": "Brooklyn, New York, United States",
         "rsvps": 44,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/15/nyc-meets-nyc-5yzozw",
+        "name": "NYC MEETS NYC",
+        "start": "2026-11-15",
+        "end": "2026-11-17",
+        "category": "Sex Party",
+        "cost": "Free",
+        "when": "Nov 15 – 18 · Sun 7:00 PM – Wed 2:00 AM",
+        "venue": "BIG ZAYS PLAY HOUSE",
+        "city": "New York City, New York, United States",
+        "rsvps": 67,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/15/laughs-giggles-ladies-only-foxjhz",
+        "name": "Laughs & Giggles Ladies ONLY",
+        "start": "2026-11-15",
+        "end": "2026-11-20",
+        "category": "Sex Party",
+        "cost": null,
+        "when": "Nov 15 – 21 · Sun 10:00 PM – Sat 4:00 AM",
+        "venue": "Secret Location given once rsvp",
+        "city": "Philadelphia, Pennsylvania, United States",
+        "rsvps": 19,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/15/couples-single-ladies-soire-gznbfa",
+        "name": "couples & single ladies soire",
+        "start": "2026-11-15",
+        "end": "2026-11-16",
+        "category": "Sex Party",
+        "cost": "Free",
+        "when": "Nov 15 – 16 · Sun 10:00 PM – Mon 10:00 AM",
+        "venue": null,
+        "city": "New York City, New York, United States",
+        "rsvps": 17,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/15/fuck-my-fiancee-vvezz5",
+        "name": "fuck my fiancee",
+        "start": "2026-11-15",
+        "end": "2026-11-16",
+        "category": "Sex Party",
+        "cost": "Free",
+        "when": "Nov 15 – 17 · Sun 11:00 PM – Tue 3:00 AM",
+        "venue": "city club hotel nyc",
+        "city": "New York City, New York, United States",
+        "rsvps": 131,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/sissy-cd-fun-tbtt6x",
@@ -1388,7 +1550,8 @@ var EVENTS = [
         "venue": "to be determined",
         "city": "Springfield, Pennsylvania, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/latina-sunday-pump-n-dump-splbkj",
@@ -1401,7 +1564,8 @@ var EVENTS = [
         "venue": "xxx",
         "city": "Belleville, New Jersey, United States",
         "rsvps": 46,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/sunday-scary-s-xuzefc",
@@ -1414,7 +1578,8 @@ var EVENTS = [
         "venue": "The G spot",
         "city": "New York City, New York, United States",
         "rsvps": 4,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/caligula-ny-presents-sinful-sunday-night-swinger-social-sexy-fall-2026-edition-u4snpf",
@@ -1427,7 +1592,8 @@ var EVENTS = [
         "venue": "CALIGULA NY",
         "city": "New York City, New York, United States",
         "rsvps": 55,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/the-perfect-swapping-queens-9rpwpf",
@@ -1440,7 +1606,8 @@ var EVENTS = [
         "venue": "Undisclosed location — address given to confirmed guests day-of",
         "city": "New York City, New York, United States",
         "rsvps": 14,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/darkroom-with-a-cd-with-wig-tqqyzz",
@@ -1453,7 +1620,8 @@ var EVENTS = [
         "venue": "RED CARPET INN",
         "city": "Berlin, New Jersey, United States",
         "rsvps": 4,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/beach-vibes-only-virtual-munch-16cyay",
@@ -1466,7 +1634,8 @@ var EVENTS = [
         "venue": "Virtual",
         "city": "New York City, New York, United States",
         "rsvps": 24,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/anon-hotel-cumdump-4lvkoe",
@@ -1479,7 +1648,8 @@ var EVENTS = [
         "venue": "Rodeway Inn- Brooklawn",
         "city": "Brooklawn, New Jersey, United States",
         "rsvps": 1,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/temptation-has-no-labels-czkmd8",
@@ -1492,7 +1662,8 @@ var EVENTS = [
         "venue": null,
         "city": "Brooklyn, New York, United States",
         "rsvps": 64,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/15/after-fight-play-party-t5bd3x",
@@ -1505,20 +1676,442 @@ var EVENTS = [
         "venue": "The Play House",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 25,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
-        "url": "https://fetlife.com/events/2026/11/16/cath-me-the-afties-after-hours-gangbang-brooklyn-nyc-hycjdi",
-        "name": "“Cath Me @ The Afties” After Hours Gangbang Brooklyn NYC",
-        "start": "2026-11-16",
-        "end": "2026-11-16",
-        "category": "Sex Party",
+        "url": "https://fetlife.com/events/2026/11/15/short-bamboo-restraint-systems-dtdgzw",
+        "name": "Short Bamboo Restraint Systems",
+        "start": "2026-11-15",
+        "end": "2026-11-15",
+        "category": "Educational",
         "cost": null,
-        "when": "Mon, Nov 16 at 12:00 AM",
-        "venue": null,
-        "city": "Brooklyn, New York, United States",
+        "when": "Sun, Nov 15 at 7:00 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 53,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/15/no-thank-you-mommy-healing-through-ageplay-vv4wxh",
+        "name": "No Thank You, Mommy! Healing Through Ageplay",
+        "start": "2026-11-15",
+        "end": "2026-11-15",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Nov 15 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 86,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/15/virtual-training-serving-at-decorum-alliance-communitea-12-6-unhcui",
+        "name": "VIRTUAL Training: Serving at Decorum Alliance CommUniTea 12/6",
+        "start": "2026-11-15",
+        "end": "2026-11-15",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sun, Nov 15 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 25,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/15/sadistic-mocking-the-delicious-art-of-making-someone-ridiculous-with-dr_molotov-vwqe62",
+        "name": "Sadistic Mocking: The delicious art of making someone ridiculous - with Dr_Molotov",
+        "start": "2026-11-15",
+        "end": "2026-11-15",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Nov 15 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": null,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/15/a-very-wicked-christmas-venusian-society-s-advent-calendar-launch-kailuv",
+        "name": "A Very Wicked Christmas: Venusian Society's Advent Calendar Launch",
+        "start": "2026-11-15",
+        "end": "2026-11-15",
+        "category": "Social",
+        "cost": null,
+        "when": "Sun, Nov 15 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 53,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/15/delightspace-keep-calm-and-decolonize-oa2rp2",
+        "name": "DelightSpace: Keep Calm and Decolonize",
+        "start": "2026-11-15",
+        "end": "2026-11-15",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sun, Nov 15 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 21,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/15/art-bomb-week-49-featuring-neko_kitsune-n90j3a",
+        "name": "Art Bomb Week 49 - Featuring Neko_Kitsune",
+        "start": "2026-11-15",
+        "end": "2026-11-21",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Nov 15 – 21 · Sun 12:00 PM – Sat 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 307,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/15/consent-discussion-group-for-men-gtj1rn",
+        "name": "Consent Discussion Group for Men",
+        "start": "2026-11-15",
+        "end": "2026-11-15",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Nov 15 at 12:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 25,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/15/fuxworth-slut-training-sessions-atlo5c",
+        "name": "FUXWORTH SLUT TRAINING SESSIONS",
+        "start": "2026-11-15",
+        "end": "2026-11-15",
+        "category": "BDSM Party",
+        "cost": null,
+        "when": "Sun, Nov 15 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 35,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/15/energy-hygiene-for-power-dynamics-sgzdjh",
+        "name": "ENERGY HYGIENE FOR POWER DYNAMICS",
+        "start": "2026-11-15",
+        "end": "2026-11-15",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Nov 15 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 8,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/15/pk-moral-sensitivity-or-when-being-good-hurts-6vggul",
+        "name": "PK: Moral Sensitivity, or When Being Good Hurts",
+        "start": "2026-11-15",
+        "end": "2026-11-15",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Nov 15 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 362,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/15/porking-the-pig-intro-to-piggy-play-with-the_lady_v-o3lz7s",
+        "name": "Porking the Pig: Intro to Piggy Play with @The_Lady_V",
+        "start": "2026-11-15",
+        "end": "2026-11-15",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Nov 15 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 162,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/15/online-intentional-relationships-communication-strategies-for-couples-bksjkg",
+        "name": "ONLINE: Intentional Relationships: Communication Strategies for Couples",
+        "start": "2026-11-15",
+        "end": "2026-11-15",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Nov 15 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 201,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/15/calling-all-crafters-4ajahp",
+        "name": "Calling All Crafters",
+        "start": "2026-11-15",
+        "end": "2026-11-15",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Sun, Nov 15 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 46,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/15/real-talk-consent-culture-for-leather-kink-lifestyle-folks-7qkmoc",
+        "name": "Real Talk: Consent Culture for Leather, Kink, & Lifestyle Folks",
+        "start": "2026-11-15",
+        "end": "2026-11-15",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Nov 15 at 2:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 60,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/15/when-no-is-not-a-safeword-seo1pf",
+        "name": "When \"No\" is Not a Safeword",
+        "start": "2026-11-15",
+        "end": "2026-11-15",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Nov 15 at 3:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 25,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/15/weekly-virtual-support-group-gglamu",
+        "name": "Weekly Virtual Support Group",
+        "start": "2026-11-15",
+        "end": "2026-11-15",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Sun, Nov 15 at 3:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": null,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/15/adhd-on-both-sides-of-the-slash-cvxc0r",
+        "name": "ADHD on Both Sides of the Slash",
+        "start": "2026-11-15",
+        "end": "2026-11-15",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Nov 15 at 4:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": null,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/15/high-protocol-tea-discussion-and-training-zoom-meeting-for-domme-scouts-and-brownies-troop-13-cgmvi3",
+        "name": "High Protocol Tea discussion and training -Zoom meeting for Domme Scouts and brownies troop 13",
+        "start": "2026-11-15",
+        "end": "2026-11-15",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sun, Nov 15 at 5:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 40,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/15/good-boys-femdom-network-rlgpqd",
+        "name": "GOOD BOYS FEMDOM NETWORK",
+        "start": "2026-11-15",
+        "end": "2026-11-15",
+        "category": "BDSM Party",
+        "cost": null,
+        "when": "Sun, Nov 15 at 5:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 61,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/15/kink-lovers-kinky-truth-or-dare-smfw1y",
+        "name": "Kink Lovers - Kinky Truth or Dare",
+        "start": "2026-11-15",
+        "end": "2026-11-15",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Sun, Nov 15 at 5:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 27,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/15/the-munch-for-s-type-men-and-friends-m6nzix",
+        "name": "The Munch for s-type Men And Friends",
+        "start": "2026-11-15",
+        "end": "2026-11-15",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Sun, Nov 15 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 16,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/15/sun-nov-15-7-9pm-et-the-pain-we-want-essential-skills-for-masochism-edzqsl",
+        "name": "Sun Nov 15 @ 7–9pm ET: The Pain We Want: Essential Skills for Masochism",
+        "start": "2026-11-15",
+        "end": "2026-11-15",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Nov 15 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 35,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/15/silk-and-candlelight-tasting-gl0ydt",
+        "name": "silk and candlelight tasting",
+        "start": "2026-11-15",
+        "end": "2026-11-15",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Sun, Nov 15 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": null,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/15/virtual-community-gathering-sunday-dinner-wputxo",
+        "name": "Virtual Community Gathering Sunday Dinner",
+        "start": "2026-11-15",
+        "end": "2026-11-15",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Sun, Nov 15 at 7:30 PM",
+        "venue": "Virtual",
+        "city": null,
         "rsvps": 15,
-        "image": null
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/15/dallas-black-munch-virtual-ucn9zr",
+        "name": "Dallas Black Munch Virtual",
+        "start": "2026-11-15",
+        "end": "2026-11-15",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Sun, Nov 15 at 7:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 12,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/15/thee-book-club-exymf9",
+        "name": "Thee Book Club",
+        "start": "2026-11-15",
+        "end": "2026-11-15",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Sun, Nov 15 at 7:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 6,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/15/uv-strip-vr-battle-to-the-almost-nude-2-electric-bugaloo-tfpuva",
+        "name": "UV Strip VR Battle to the Almost Nude 2: Electric Bugaloo",
+        "start": "2026-11-15",
+        "end": "2026-11-15",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sun, Nov 15 at 7:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": null,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/15/cfnm-cam-jo-session-zqfkbs",
+        "name": "CFNM-Cam JO session!",
+        "start": "2026-11-15",
+        "end": "2026-11-15",
+        "category": "Sex Party",
+        "cost": "Free",
+        "when": "Sun, Nov 15 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 19,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/15/virtual-rec-practicing-polyamory-through-an-intersectional-lens-w-thaddeus-day-m-s-lpc-219isv",
+        "name": "VIRTUAL & REC: \"Practicing Polyamory Through an Intersectional Lens\" w/ Thaddeus Day, M.S. LPC",
+        "start": "2026-11-15",
+        "end": "2026-11-15",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Nov 15 at 9:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 190,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/15/before-the-collar-power-exchange-isn-t-plug-play-recorded-rnbfg4",
+        "name": "Before the Collar: Power Exchange Isn't Plug & Play (Recorded)",
+        "start": "2026-11-15",
+        "end": "2026-11-15",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Nov 15 at 10:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 40,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/11/16/cum-n-go-y3cuet",
@@ -1531,7 +2124,8 @@ var EVENTS = [
         "venue": null,
         "city": "Bronx, New York, United States",
         "rsvps": 45,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/16/redd-gangbang-1i66wc",
@@ -1544,7 +2138,8 @@ var EVENTS = [
         "venue": null,
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 6,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/16/fun-at-fantasy4us-pggniy",
@@ -1557,7 +2152,8 @@ var EVENTS = [
         "venue": "Fantasy4us",
         "city": "Laurence Harbor, New Jersey, United States",
         "rsvps": 29,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/16/latina-sissy-hosting-bbcs-in-elizabeth-motel-dtbihg",
@@ -1570,7 +2166,8 @@ var EVENTS = [
         "venue": "Royal motel",
         "city": "Elizabeth, New Jersey, United States",
         "rsvps": 12,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/16/all-hands-on-d-ck-an-erotic-voyage-joint-w-man-group-pglujt",
@@ -1583,7 +2180,8 @@ var EVENTS = [
         "venue": "Address given in email confirmation. Please contact us if paying at door.",
         "city": "New York City, New York, United States",
         "rsvps": 22,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/16/cd-and-trans-gangbang-rsc9wo",
@@ -1596,7 +2194,8 @@ var EVENTS = [
         "venue": "49th and between 9th and 10th avenue…Exact address will be given out once critera met…",
         "city": "Manhattan, New York, United States",
         "rsvps": 33,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/16/females-wanted-cum-get-laid-tfzdqb",
@@ -1609,7 +2208,8 @@ var EVENTS = [
         "venue": "near you",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 59,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/16/captured-cock-to-use-07u1hk",
@@ -1622,7 +2222,8 @@ var EVENTS = [
         "venue": "Greendoor in Bethlehelm PA",
         "city": "Bethlehem, Pennsylvania, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/16/open-rope-practice-coil-cord-11-16-t0b4ka",
@@ -1635,7 +2236,8 @@ var EVENTS = [
         "venue": "Coil & Cord Studio",
         "city": "Brooklyn, New York, United States",
         "rsvps": 18,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/16/honey-hole-mom-gangbang-brooklyn-5hkw0g",
@@ -1648,7 +2250,8 @@ var EVENTS = [
         "venue": null,
         "city": "Brooklyn, New York, United States",
         "rsvps": 21,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/16/bdsm-101-tkl-community-education-series-4iz7nu",
@@ -1661,7 +2264,8 @@ var EVENTS = [
         "venue": "The Moon Tavern",
         "city": "Scranton, Pennsylvania, United States",
         "rsvps": 116,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/16/weekday-rope-share-hioa6u",
@@ -1674,7 +2278,8 @@ var EVENTS = [
         "venue": null,
         "city": "Lancaster, Pennsylvania, United States",
         "rsvps": 20,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/16/transexualx-monday-play-party-6pm-to-12am-yqown7",
@@ -1687,7 +2292,8 @@ var EVENTS = [
         "venue": "RainbowPlaygroundNYC",
         "city": "New York City, New York, United States",
         "rsvps": 114,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/16/howling-wolf-munch-i1cvrt",
@@ -1700,7 +2306,8 @@ var EVENTS = [
         "venue": "BJ'S Restaurant and Brewhouse",
         "city": "Toms River, New Jersey, United States",
         "rsvps": 44,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/16/heart-to-heart-mental-health-and-relationships-xlevjp",
@@ -1713,7 +2320,8 @@ var EVENTS = [
         "venue": "Triangle Community Center",
         "city": "Norwalk, Connecticut, United States",
         "rsvps": 49,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/16/mate-s-mingles-k2xqi0",
@@ -1726,7 +2334,8 @@ var EVENTS = [
         "venue": "Miller’s Ale House",
         "city": "Media, Pennsylvania, United States",
         "rsvps": 60,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/16/limerick-board-game-munch-gamer-s-heaven-ltiu2d",
@@ -1739,7 +2348,8 @@ var EVENTS = [
         "venue": "Gamer's Heaven",
         "city": "Limerick, Pennsylvania, United States",
         "rsvps": 16,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/16/feb-s-game-night-qjy65a",
@@ -1752,7 +2362,8 @@ var EVENTS = [
         "venue": null,
         "city": "Paramus, New Jersey, United States",
         "rsvps": 36,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/16/the-quiet-chapter-dcnnct",
@@ -1765,7 +2376,8 @@ var EVENTS = [
         "venue": "Prism ~ Reach out if unfamiliar with our location. Arts District",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 136,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/16/game-on-pants-off-76ers-vs-nets-64qn6h",
@@ -1778,7 +2390,8 @@ var EVENTS = [
         "venue": null,
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 28,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/16/femdom-wrestling-a-bdsm-wrestling-workshop-wmtdrn",
@@ -1791,7 +2404,8 @@ var EVENTS = [
         "venue": "The Crown",
         "city": "Brooklyn, New York, United States",
         "rsvps": 60,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/16/erotic-couples-massage-tantric-eros-energetic-squirting-ri7xai",
@@ -1804,7 +2418,8 @@ var EVENTS = [
         "venue": "Address given in email confirmation. Please contact us if paying at door.",
         "city": "New York City, New York, United States",
         "rsvps": 44,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/16/venus-deity-yoga-and-astroerotics-tm-rql1i5",
@@ -1817,7 +2432,8 @@ var EVENTS = [
         "venue": "Address given in email confirmation. Please contact us if paying at door.",
         "city": "New York City, New York, United States",
         "rsvps": 10,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/16/glory-hole-dick-sucking-event-at7djl",
@@ -1830,7 +2446,8 @@ var EVENTS = [
         "venue": "private location",
         "city": "Cherry Hill, New Jersey, United States",
         "rsvps": 2,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/16/monday-night-with-mandy-and-ria-jral2h",
@@ -1843,7 +2460,8 @@ var EVENTS = [
         "venue": null,
         "city": "East Rutherford, New Jersey, United States",
         "rsvps": 42,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/16/beyond-the-pose-the-art-of-flow-movement-in-photography-0mbdhp",
@@ -1856,7 +2474,8 @@ var EVENTS = [
         "venue": "Virtual",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 42,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/16/wrestling-201-an-advanced-bdsm-workshop-rzcxzx",
@@ -1869,7 +2488,8 @@ var EVENTS = [
         "venue": "The Crown",
         "city": "Brooklyn, New York, United States",
         "rsvps": 29,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/16/lifestyle_drop_box-afvape",
@@ -1882,7 +2502,8 @@ var EVENTS = [
         "venue": "LDB LOFT",
         "city": "Rahway, New Jersey, United States",
         "rsvps": 38,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/16/monday-play-date-znmnod",
@@ -1895,7 +2516,8 @@ var EVENTS = [
         "venue": null,
         "city": "Bronx, New York, United States",
         "rsvps": 24,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/16/monday-play-date-udevt6",
@@ -1908,7 +2530,8 @@ var EVENTS = [
         "venue": null,
         "city": "New York City, New York, United States",
         "rsvps": 17,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/16/no-names-just-vibes-cnc-edition-2j5yck",
@@ -1921,7 +2544,8 @@ var EVENTS = [
         "venue": null,
         "city": "Brooklyn, New York, United States",
         "rsvps": 20,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/16/late-night-urinal-cock-cleaning-xsptuv",
@@ -1934,7 +2558,8 @@ var EVENTS = [
         "venue": "Pig’s Backyard",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 2,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/16/anon-cute-cd-hosting-in-kop-pa-tonight-hgg41s",
@@ -1947,7 +2572,8 @@ var EVENTS = [
         "venue": "hotel",
         "city": "King of Prussia, Pennsylvania, United States",
         "rsvps": 1,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/16/the-ny-tea-party-jexjfs",
@@ -1960,7 +2586,232 @@ var EVENTS = [
         "venue": "Inwood",
         "city": "New York City, New York, United States",
         "rsvps": 24,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/16/420-livestream-party-session-byob-bring-ya-own-blunts-byot-bring-ya-own-toys-qtnftn",
+        "name": "420 LIVESTREAM PARTY SESSION (BYOB BRING YA OWN BLUNTS BYOT BRING YA OWN TOYS",
+        "start": "2026-11-16",
+        "end": "2026-11-16",
+        "category": "Social",
+        "cost": null,
+        "when": "Mon, Nov 16 at 1:00 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 62,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/16/virtual-lunch-munch-11-16-26-must-be-active-on-discord-server-qczo52",
+        "name": "Virtual Lunch Munch 11/16/26 (MUST be active on discord server)",
+        "start": "2026-11-16",
+        "end": "2026-11-16",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Mon, Nov 16 at 11:00 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 15,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/16/a-very-wicked-christmas-venusian-society-s-advent-calendar-launch-day-2-pnfw14",
+        "name": "A Very Wicked Christmas: Venusian Society's Advent Calendar Launch Day 2",
+        "start": "2026-11-16",
+        "end": "2026-11-16",
+        "category": "Social",
+        "cost": null,
+        "when": "Mon, Nov 16 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 32,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/16/recovery-in-the-lifestyle-ritl-virtual-meeting-with-aca-focus-fzrrjz",
+        "name": "Recovery in the Lifestyle (RitL) Virtual Meeting with ACA Focus",
+        "start": "2026-11-16",
+        "end": "2026-11-16",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Mon, Nov 16 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 1,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/16/the-neuroscience-of-drop-with-ember-solaris-ubwcz5",
+        "name": "The Neuroscience of Drop with Ember Solaris",
+        "start": "2026-11-16",
+        "end": "2026-11-16",
+        "category": "Educational",
+        "cost": null,
+        "when": "Mon, Nov 16 at 6:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 391,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/16/magick-tickle-munch-for-kinksters-ohnsbs",
+        "name": "Magick Tickle Munch For Kinksters",
+        "start": "2026-11-16",
+        "end": "2026-11-16",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Mon, Nov 16 at 6:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 37,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/16/hybrid-tes-november-board-meeting-hioowx",
+        "name": "HYBRID - TES November Board Meeting",
+        "start": "2026-11-16",
+        "end": "2026-11-16",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Mon, Nov 16 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 14,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/16/bdsm-as-a-healing-space-techniques-for-trauma-survivors-pfwtjc",
+        "name": "BDSM as a Healing Space: Techniques for Trauma Survivors",
+        "start": "2026-11-16",
+        "end": "2026-11-16",
+        "category": "Educational",
+        "cost": null,
+        "when": "Mon, Nov 16 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 104,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/16/a-prelude-of-grace-gravitas-option-2-5swxld",
+        "name": "A Prelude of Grace & Gravitas (Option 2)",
+        "start": "2026-11-16",
+        "end": "2026-11-16",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Mon, Nov 16 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 11,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/16/poly-support-zoom-call-for-poly-partners-yij2ww",
+        "name": "Poly Support Zoom Call (for POLY partners)",
+        "start": "2026-11-16",
+        "end": "2026-11-16",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Mon, Nov 16 at 7:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 3,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/16/monday-virtual-community-gathering-coi7qx",
+        "name": "Monday Virtual Community Gathering",
+        "start": "2026-11-16",
+        "end": "2026-11-16",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Mon, Nov 16 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 51,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/16/u-b-k-munch-dom-or-predator-when-power-becomes-a-weapon-egenxv",
+        "name": "U.B.K. Munch- DOM OR PREDATOR? WHEN POWER BECOMES A WEAPON",
+        "start": "2026-11-16",
+        "end": "2026-11-16",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Mon, Nov 16 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 37,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/16/llc-presents-we-re-aware-now-what-by-hannahthescribe-zoom-35aqgg",
+        "name": "LLC Presents: \"We're Aware, Now What?\" by HannahTheScribe (ZOOM)",
+        "start": "2026-11-16",
+        "end": "2026-11-16",
+        "category": "Educational",
+        "cost": null,
+        "when": "Mon, Nov 16 at 8:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 330,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/16/online-mindfuck-me-fear-psychological-edge-play-with-jamie-joy-tduujg",
+        "name": "ONLINE: Mindfuck Me: Fear & Psychological Edge Play with Jamie Joy",
+        "start": "2026-11-16",
+        "end": "2026-11-16",
+        "category": "Educational",
+        "cost": null,
+        "when": "Mon, Nov 16 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 246,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/16/monday-yoga-sb2tma",
+        "name": "Monday yoga",
+        "start": "2026-11-16",
+        "end": "2026-11-16",
+        "category": "Educational",
+        "cost": null,
+        "when": "Mon, Nov 16 at 9:15 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 52,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/16/sfdsdg-november-16th-2026-meeting-over-zoom-ja2iol",
+        "name": "SFDsDG November 16th 2026 Meeting over Zoom",
+        "start": "2026-11-16",
+        "end": "2026-11-16",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Mon, Nov 16 at 10:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 33,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/11/17/stuff-the-t-s-cd-s-sisters-gangbang-biksac",
@@ -1973,7 +2824,8 @@ var EVENTS = [
         "venue": "cozy apartment",
         "city": "Irvington, New Jersey, United States",
         "rsvps": 40,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/17/tuesday-bbw-fuck-slut-jikouu",
@@ -1986,7 +2838,8 @@ var EVENTS = [
         "venue": "Condominium Apartments",
         "city": "South Plainfield, New Jersey, United States",
         "rsvps": 29,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/17/south-jersey-connections-munch-november-ullvir",
@@ -1999,7 +2852,8 @@ var EVENTS = [
         "venue": "Splitz Bar & Grill (attached to Laurel Lanes)",
         "city": "Maple Shade, New Jersey, United States",
         "rsvps": 275,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/17/new-york-north-nj-munch-o0o0pw",
@@ -2012,7 +2866,8 @@ var EVENTS = [
         "venue": "To be given in DM after RSVP closing date",
         "city": "Ramsey, New Jersey, United States",
         "rsvps": 10,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/17/after-work-shenanigans-6pm-11pm-tuesday-100-entry-sihpld",
@@ -2025,7 +2880,8 @@ var EVENTS = [
         "venue": "Juliette\"s PlayPen (Midtown)",
         "city": "Manhattan, New York, United States",
         "rsvps": 102,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/17/after-work-turnxxxed-up-e0mlph",
@@ -2038,7 +2894,8 @@ var EVENTS = [
         "venue": "stacks play house",
         "city": "New York City, New York, United States",
         "rsvps": 6,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/17/kinky-friend-s-fete-munch-nj-osmjy3",
@@ -2051,7 +2908,8 @@ var EVENTS = [
         "venue": null,
         "city": "Clifton, New Jersey, United States",
         "rsvps": 65,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/17/tethered-tuesday-philly-s-weekly-rope-community-lab-7ffdtd",
@@ -2064,7 +2922,8 @@ var EVENTS = [
         "venue": "The Nest",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 41,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/17/november-2026-noc-munch-zqafb1",
@@ -2077,7 +2936,8 @@ var EVENTS = [
         "venue": null,
         "city": "Norristown, Pennsylvania, United States",
         "rsvps": 14,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/17/the-poughkeepsie-munch-vrbevg",
@@ -2090,7 +2950,8 @@ var EVENTS = [
         "venue": "Palace Diner",
         "city": "Poughkeepsie, New York, United States",
         "rsvps": 44,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/17/obsidian-piayground-the-art-of-fire-bipoc-workshop-and-jam-ugihlo",
@@ -2103,7 +2964,8 @@ var EVENTS = [
         "venue": "Address given in email confirmation. Please contact us if paying at door.",
         "city": "New York City, New York, United States",
         "rsvps": 24,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/17/seeking-masc-a-sapphic-dating-experience-byuv3o",
@@ -2116,7 +2978,8 @@ var EVENTS = [
         "venue": null,
         "city": "New York City, New York, United States",
         "rsvps": 65,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/17/rope-yoga-solo-flow-november-edition-zuezce",
@@ -2129,7 +2992,8 @@ var EVENTS = [
         "venue": "Prism Arts",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 51,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/17/queer-kiss-cuddles-a-bi-pansexual-experience-69emq4",
@@ -2142,7 +3006,8 @@ var EVENTS = [
         "venue": "Address given in email confirmation. Please contact us if paying at door.",
         "city": "New York City, New York, United States",
         "rsvps": 38,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/17/rope-for-sex-intimacy-workshop-jam-svqcdl",
@@ -2155,7 +3020,8 @@ var EVENTS = [
         "venue": "Address given in email confirmation. Please contact us if paying at door.",
         "city": "New York City, New York, United States",
         "rsvps": 49,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/17/the-art-of-foot-worship-for-femdoms-subs-eegwih",
@@ -2168,7 +3034,8 @@ var EVENTS = [
         "venue": "Goddess Realm",
         "city": "New York City, New York, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/17/fluids-tuesday-play-party-for-trans-cds-and-admirers-in-hell-s-kitchen-l4crbo",
@@ -2181,7 +3048,8 @@ var EVENTS = [
         "venue": "Adam's Club",
         "city": "Manhattan, New York, United States",
         "rsvps": 72,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/17/smush-whip-cream-pies-in-my-face-n5rwef",
@@ -2194,7 +3062,8 @@ var EVENTS = [
         "venue": "Holiday Inn Princeton",
         "city": "Princeton, New Jersey, United States",
         "rsvps": 7,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/17/hotwife-filthy-gb-bukkake-birthday-party-yq9drc",
@@ -2207,7 +3076,8 @@ var EVENTS = [
         "venue": null,
         "city": "Woodbridge, New Jersey, United States",
         "rsvps": 213,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/17/secret-pleasures-tuesday-titties-tushies-party-8pm-to-12am-iilwhl",
@@ -2220,7 +3090,8 @@ var EVENTS = [
         "venue": "Secret Pleasures at the Back Door of the Wi Fi Cafe",
         "city": "Emmaus, Pennsylvania, United States",
         "rsvps": 123,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/17/taillor-ten-celebrating-10-years-of-femdom-power-tekool",
@@ -2233,7 +3104,8 @@ var EVENTS = [
         "venue": "Lower Manhattan",
         "city": "Manhattan, New York, United States",
         "rsvps": 118,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/17/dirty-sexy-bingo-vpwbif",
@@ -2246,7 +3118,8 @@ var EVENTS = [
         "venue": "Bar XIII",
         "city": "Wilmington, Delaware, United States",
         "rsvps": 143,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/17/anything-goes-3-hole-cum-slut-gangbang-bbc-blc-htiyv2",
@@ -2259,7 +3132,8 @@ var EVENTS = [
         "venue": null,
         "city": "Ridgefield Park, New Jersey, United States",
         "rsvps": 12,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/17/cum-alut-for-you-yu5peq",
@@ -2272,7 +3146,8 @@ var EVENTS = [
         "venue": "my apartment",
         "city": "Carteret, New Jersey, United States",
         "rsvps": 3,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/17/hotel-sex-party-with-sexy-latina-tiffany-iu5kvs",
@@ -2285,7 +3160,8 @@ var EVENTS = [
         "venue": "Elmhurst Queens hotel",
         "city": "Queens, New York, United States",
         "rsvps": 14,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/17/lifestyle_drop_box-znuvfe",
@@ -2298,7 +3174,8 @@ var EVENTS = [
         "venue": "LDB LOFT",
         "city": "Rahway, New Jersey, United States",
         "rsvps": 23,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/17/trans-gangbang-2hggzl",
@@ -2311,7 +3188,8 @@ var EVENTS = [
         "venue": null,
         "city": "Edison, New Jersey, United States",
         "rsvps": 7,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/17/taboo-daddy-cnc-dvp-bukkake-creampie-gangbang-eqz3gp",
@@ -2324,7 +3202,8 @@ var EVENTS = [
         "venue": null,
         "city": "Brooklyn, New York, United States",
         "rsvps": 13,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/17/mrs-bettys-mfm-aar4tx",
@@ -2337,7 +3216,8 @@ var EVENTS = [
         "venue": "Bettys Fun house",
         "city": "Iselin, New Jersey, United States",
         "rsvps": 2,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/17/bbc-hotel-play-rzcfw8",
@@ -2350,7 +3230,288 @@ var EVENTS = [
         "venue": null,
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 3,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/17/sexy-south-asian-feet-telegram-uqzjun",
+        "name": "Sexy South Asian Feet! - Telegram!!!",
+        "start": "2026-11-17",
+        "end": "2026-11-23",
+        "category": "BDSM Party",
+        "cost": "Free",
+        "when": "Nov 17 – 23 · Tue 9:30 AM – Mon 10:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 35,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/17/online-8-tools-from-the-polyamory-toolkit-w-dawn-lacpvx",
+        "name": "ONLINE: 8 Tools from The Polyamory Toolkit w/Dawn",
+        "start": "2026-11-17",
+        "end": "2026-11-17",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Nov 17 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 52,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/17/a-very-wicked-christmas-venusian-society-s-advent-calendar-launch-day-3-swtjfe",
+        "name": "A Very Wicked Christmas: Venusian Society's Advent Calendar Launch Day 3",
+        "start": "2026-11-17",
+        "end": "2026-11-17",
+        "category": "Social",
+        "cost": null,
+        "when": "Tue, Nov 17 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 6,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/17/rope-for-nerds-modular-thinking-frictions-epi1g1",
+        "name": "Rope for Nerds: Modular Thinking & Frictions",
+        "start": "2026-11-17",
+        "end": "2026-11-17",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Nov 17 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 54,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/17/ne-pas-jouer-avec-la-nourriture-b7gxw2",
+        "name": "(Ne pas) Jouer avec la nourriture",
+        "start": "2026-11-17",
+        "end": "2026-11-17",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Nov 17 at 1:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 3,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/17/knaughty-navigators-iceland-2027-interest-list-is-open-g3t4lc",
+        "name": "KNAUGHTY NAVIGATORS: ICELAND 2027 INTEREST LIST IS OPEN",
+        "start": "2026-11-17",
+        "end": "2026-11-17",
+        "category": "Social",
+        "cost": null,
+        "when": "Tue, Nov 17 at 6:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 24,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/17/nyc-caregivers-littles-formerly-known-as-ddlg-virtual-game-night-codenames-rgbyqo",
+        "name": "NYC Caregivers - littles (formerly known as Ddlg) Virtual Game Night (Codenames)",
+        "start": "2026-11-17",
+        "end": "2026-11-17",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Tue, Nov 17 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 42,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/17/the-etiquette-of-being-mean-embarrassment-and-humiliation-play-with-miss-mackenzee-recording-tib0xg",
+        "name": "The Etiquette of Being Mean: Embarrassment and Humiliation Play with Miss Mackenzee +Recording",
+        "start": "2026-11-17",
+        "end": "2026-11-17",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Nov 17 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": null,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/17/tes-online-community-organizing-1sccpq",
+        "name": "TES Online – Community Organizing",
+        "start": "2026-11-17",
+        "end": "2026-11-17",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Nov 17 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 57,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/17/chaos-collective-tango-tuesday-11-17-vzawt7",
+        "name": "Chaos Collective Tango Tuesday 11/17",
+        "start": "2026-11-17",
+        "end": "2026-11-17",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Tue, Nov 17 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 130,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/17/femmes-burning-flowers-seshhh-now-on-tuesdays-hx9bad",
+        "name": "FEMMES Burning Flowers Seshhh -Now on Tuesdays!",
+        "start": "2026-11-17",
+        "end": "2026-11-17",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Tue, Nov 17 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 11,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/17/weeknight-hangout-for-friends-update-nlhbso",
+        "name": "Weeknight Hangout for Friends - Update",
+        "start": "2026-11-17",
+        "end": "2026-11-17",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Tue, Nov 17 at 7:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 27,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/17/house-of-koch-dominant-roundtable-vzzrh0",
+        "name": "House Of Koch - Dominant Roundtable",
+        "start": "2026-11-17",
+        "end": "2026-11-17",
+        "category": "Social",
+        "cost": null,
+        "when": "Tue, Nov 17 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 16,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/17/delicious-agony-basics-of-humiliation-play-with-doctor-bubbles-and-kitkat-ann-1oo1ed",
+        "name": "Delicious Agony: Basics of Humiliation Play with Doctor Bubbles and Kitkat Ann",
+        "start": "2026-11-17",
+        "end": "2026-11-17",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Nov 17 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 338,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/17/online-class-primal-identity-a-guided-self-discovery-workshop-nlc9gf",
+        "name": "[ONLINE CLASS] Primal Identity: A Guided Self-Discovery Workshop",
+        "start": "2026-11-17",
+        "end": "2026-11-17",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Nov 17 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 82,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/17/online-finding-your-power-the-10-sides-of-what-gets-called-d-s-with-lee-harrington-ccfeie",
+        "name": "ONLINE: Finding Your Power: The 10 Sides of What Gets Called D/s with Lee Harrington",
+        "start": "2026-11-17",
+        "end": "2026-11-17",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Nov 17 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 248,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/17/ceo-coo-a-business-dynamic-in-a-lifestyle-power-exchange-d6fz7r",
+        "name": "CEO/coo, a business dynamic in a lifestyle power exchange",
+        "start": "2026-11-17",
+        "end": "2026-11-17",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Nov 17 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 116,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/17/kinky-conversations-eclipse-virtual-munch-umsrg5",
+        "name": "Kinky Conversations: Eclipse Virtual Munch",
+        "start": "2026-11-17",
+        "end": "2026-11-17",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Tue, Nov 17 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 46,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/17/male-friendship-distance-and-the-men-we-stop-reach-a-free-weekly-online-discussion-space-for-men-lkyccf",
+        "name": "Male Friendship, Distance, and the Men We Stop Reach : A free weekly online discussion space for men",
+        "start": "2026-11-17",
+        "end": "2026-11-17",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Tue, Nov 17 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 137,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/17/mast-seattle-november-virtual-meeting-at-the-sacred-edge-surrender-service-and-meaning-in-bdsm-r3isis",
+        "name": "MAsT Seattle November Virtual Meeting: At the Sacred Edge: Surrender, Service, and Meaning in BDSM",
+        "start": "2026-11-17",
+        "end": "2026-11-17",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Tue, Nov 17 at 10:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 97,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/daddy-daycare-midnight-gangbang-party-brooklyn-tmt9fq",
@@ -2363,7 +3524,8 @@ var EVENTS = [
         "venue": null,
         "city": "Brooklyn, New York, United States",
         "rsvps": 17,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/bottom-looking-for-play-59iqtr",
@@ -2376,7 +3538,8 @@ var EVENTS = [
         "venue": "Castle Hill Bronx",
         "city": "Bronx, New York, United States",
         "rsvps": 2,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/breakfast-and-head-play-and-gang-bang-party-10am-3pm-rsvp-now-and-get-10-off-entry-fee-m9gb8h",
@@ -2389,7 +3552,8 @@ var EVENTS = [
         "venue": "Sinners Paradise Club",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 83,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/cock-worshipping-bdpssr",
@@ -2402,7 +3566,8 @@ var EVENTS = [
         "venue": "Boston book store",
         "city": "Bridgeport, Connecticut, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/breakfast-in-paradise-zapt6d",
@@ -2415,7 +3580,8 @@ var EVENTS = [
         "venue": "Sinner’s Paradise",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 131,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/happy-hump-day-bna-vizq3h",
@@ -2428,7 +3594,8 @@ var EVENTS = [
         "venue": "Berlin News Agency",
         "city": "West Berlin, New Jersey, United States",
         "rsvps": 91,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/2-girl-lunchtime-gangbang-yp3fts",
@@ -2441,7 +3608,8 @@ var EVENTS = [
         "venue": "Hotel",
         "city": "Secaucus, New Jersey, United States",
         "rsvps": 159,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/secret-pleasures-lunchtime-play-party-12pm-to-3pm-jpxclr",
@@ -2454,7 +3622,8 @@ var EVENTS = [
         "venue": "Secret Pleasures is at the Back Door of the Wi Fi Cafe",
         "city": "Emmaus, Pennsylvania, United States",
         "rsvps": 154,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/slipawayandplay-all-male-events-vpxwze",
@@ -2467,7 +3636,8 @@ var EVENTS = [
         "venue": "Info given after your email address is supplied.",
         "city": "East Rutherford, New Jersey, United States",
         "rsvps": 54,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/learn-to-how-squirt-6mcp92",
@@ -2480,7 +3650,8 @@ var EVENTS = [
         "venue": null,
         "city": "Princeton, New Jersey, United States",
         "rsvps": 4,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/no-names-just-vibes-day-party-a5esow",
@@ -2493,7 +3664,8 @@ var EVENTS = [
         "venue": null,
         "city": "Brooklyn, New York, United States",
         "rsvps": 4,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/tgurl-dark-room-cum-dump-ghze1g",
@@ -2506,7 +3678,8 @@ var EVENTS = [
         "venue": null,
         "city": "Woodbridge, New Jersey, United States",
         "rsvps": 46,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/cnc-wednesday-2-in-newark-zlzyve",
@@ -2519,7 +3692,8 @@ var EVENTS = [
         "venue": "Robert Treat",
         "city": "Newark, New Jersey, United States",
         "rsvps": 39,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/little-scouts-troop-1776-november-munch-pgrhyt",
@@ -2532,7 +3706,8 @@ var EVENTS = [
         "venue": "Old City, Provided with free registration",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 20,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/kinksters-klimbing-in-lic-november-18th-6czgqz",
@@ -2545,7 +3720,8 @@ var EVENTS = [
         "venue": "Movement LIC",
         "city": "Queens, New York, United States",
         "rsvps": 24,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/the-south-jersey-social-november-18-2026-fy4td5",
@@ -2558,7 +3734,8 @@ var EVENTS = [
         "venue": "Buena Connection Brewing Company",
         "city": "Buena, New Jersey, United States",
         "rsvps": 85,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/rockland-county-femdom-munch-zxghuy",
@@ -2571,7 +3748,8 @@ var EVENTS = [
         "venue": "Given three days before the munch",
         "city": "Nanuet, New York, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/the-cookout-munch-fnqwvp",
@@ -2584,7 +3762,8 @@ var EVENTS = [
         "venue": "G-Host Bar and Lounge",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 95,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/101-shibari-for-beginners-leisure-tying-rcjhfl",
@@ -2597,7 +3776,8 @@ var EVENTS = [
         "venue": "The Zen Den",
         "city": "New York City, New York, United States",
         "rsvps": 7,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/hotwife-gangbang-5twmap",
@@ -2610,7 +3790,8 @@ var EVENTS = [
         "venue": "mellville",
         "city": "Brentwood, New York, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/get-nasty-ent-presents-hump-day-pleasures-wkrrhu",
@@ -2623,7 +3804,8 @@ var EVENTS = [
         "venue": null,
         "city": "Bronx, New York, United States",
         "rsvps": 7,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/perfect-day-to-fuck-my-throat-gloryhole-bliwr5",
@@ -2636,7 +3818,8 @@ var EVENTS = [
         "venue": "discreet location",
         "city": "Mount Laurel, New Jersey, United States",
         "rsvps": 2,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/bi-bash-fuck-fest-6kopwt",
@@ -2649,7 +3832,8 @@ var EVENTS = [
         "venue": "PRIVATE RESIDENCE BUILDING",
         "city": "New York City, New York, United States",
         "rsvps": 7,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/femme-dom-game-night-an-inclusive-femdom-munch-d1truv",
@@ -2662,7 +3846,8 @@ var EVENTS = [
         "venue": "Talon Bar (Downstairs titled No Exit)",
         "city": "Brooklyn, New York, United States",
         "rsvps": 205,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/the-gathering-a-noir-collective-social-xrnfax",
@@ -2675,7 +3860,8 @@ var EVENTS = [
         "venue": null,
         "city": "Manhattan, New York, United States",
         "rsvps": 26,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/wed-nov-18-2026-long-island-community-munch-ucxu4w",
@@ -2688,7 +3874,8 @@ var EVENTS = [
         "venue": "Main Event",
         "city": "East Farmingdale, Farmingdale, New York, United States",
         "rsvps": 52,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/tap-into-your-inner-sissy-wvhkxm",
@@ -2701,7 +3888,8 @@ var EVENTS = [
         "venue": "Times Square",
         "city": "New York City, New York, United States",
         "rsvps": 42,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/harness-lab-strappados-qblicc",
@@ -2714,7 +3902,8 @@ var EVENTS = [
         "venue": "Coil & Cord Studio",
         "city": "Brooklyn, New York, United States",
         "rsvps": 20,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/poly-connections-game-night-gahuob",
@@ -2727,7 +3916,8 @@ var EVENTS = [
         "venue": "Address given in email confirmation. Please contact us if paying at door.",
         "city": "New York City, New York, United States",
         "rsvps": 52,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/submissive-round-table-conflict-resolution-repair-26z3hz",
@@ -2740,7 +3930,8 @@ var EVENTS = [
         "venue": "The Venue",
         "city": "Bethlehem, Pennsylvania, United States",
         "rsvps": 34,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/link-s-november-spanksgiving-munch-xkgmvd",
@@ -2753,7 +3944,8 @@ var EVENTS = [
         "venue": "Arooga's",
         "city": "Manor Township, Pennsylvania, United States",
         "rsvps": 247,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/nasty-nerds-book-club-meeting-6-tdhct1",
@@ -2766,7 +3958,8 @@ var EVENTS = [
         "venue": "Viewmont Diner",
         "city": "Scranton, Pennsylvania, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/the-essex-county-munch-bloomfield-ffzbyi",
@@ -2779,7 +3972,8 @@ var EVENTS = [
         "venue": "Six Points Pub",
         "city": "Bloomfield, New Jersey, United States",
         "rsvps": 91,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/kinky-improv-roleplay-fantasy-building-semylf",
@@ -2792,7 +3986,8 @@ var EVENTS = [
         "venue": "Address given in email confirmation. Please contact us if paying at door.",
         "city": "New York City, New York, United States",
         "rsvps": 46,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/virtual-boldly-bottoming-popup-a-focus-on-assessing-risk-in-breath-play-xlkwvw",
@@ -2805,7 +4000,8 @@ var EVENTS = [
         "venue": "Virtual",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 44,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/bijinx-movember-jsolhe",
@@ -2818,7 +4014,8 @@ var EVENTS = [
         "venue": "Franky Bradleys",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 20,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/chocolate-drops-t9yvsx",
@@ -2831,7 +4028,8 @@ var EVENTS = [
         "venue": "ramada",
         "city": "East Orange, New Jersey, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/decolonizing-polyamory-pe0yj0",
@@ -2844,7 +4042,8 @@ var EVENTS = [
         "venue": "Pagan's Paradise - Union Square",
         "city": "New York City, New York, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/thirst-men-male-only-ygmn5c",
@@ -2857,7 +4056,8 @@ var EVENTS = [
         "venue": null,
         "city": "Elizabeth, New Jersey, United States",
         "rsvps": 7,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/who-s-hootie-the-newbie-newbie-nympho-gangbang-brooklyn-nyc-384u9z",
@@ -2870,7 +4070,8 @@ var EVENTS = [
         "venue": null,
         "city": "Brooklyn, New York, United States",
         "rsvps": 50,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/watersports-mr4taf",
@@ -2883,7 +4084,8 @@ var EVENTS = [
         "venue": "The Crown",
         "city": "Brooklyn, New York, United States",
         "rsvps": 53,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/lifestyle_drop_box-c1wt8v",
@@ -2896,7 +4098,8 @@ var EVENTS = [
         "venue": "LDB LOFT",
         "city": "Rahway, New Jersey, United States",
         "rsvps": 46,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/wed-nov-18-2026-lics-weekly-wednesday-slosh-a7gogn",
@@ -2909,7 +4112,8 @@ var EVENTS = [
         "venue": "Mr. Beery's",
         "city": "Bethpage, New York, United States",
         "rsvps": 35,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/club-labyrinth-anything-goes-wednesdays-couples-40-guys-80-ladies-free-couples-singles-iff4fb",
@@ -2922,7 +4126,8 @@ var EVENTS = [
         "venue": "TBA",
         "city": "New York City, New York, United States",
         "rsvps": 92,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/the-diamond-club-nyc-presents-sensual-seduction-2026-wet-wild-wednesday-edition-qutavd",
@@ -2935,7 +4140,8 @@ var EVENTS = [
         "venue": "THE DIAMOND CLUB NYC [2ND FLOOR]",
         "city": "New York City, New York, United States",
         "rsvps": 69,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/bark-rooms-at-club-philly-0acxki",
@@ -2948,7 +4154,8 @@ var EVENTS = [
         "venue": "Club Philly",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 33,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/magic-kingdom-bang-idvjif",
@@ -2961,7 +4168,8 @@ var EVENTS = [
         "venue": "the G spot",
         "city": "New York City, New York, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/kinky-cannamunch-cyber-cypher-bibbidy-bobbidy-bong-jgll05",
@@ -2974,7 +4182,8 @@ var EVENTS = [
         "venue": "Virtual",
         "city": "New York City, New York, United States",
         "rsvps": 56,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/just-in-indian-bang-party-in-paradise-10pm-2am-rsvp-now-and-get-10-off-entry-fee-rhp0vw",
@@ -2987,7 +4196,8 @@ var EVENTS = [
         "venue": "Sinners Paradise Club",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 65,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/doomsday-hump-day-game-night-jfbupo",
@@ -3000,7 +4210,8 @@ var EVENTS = [
         "venue": "The Play House",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 42,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/yacht-in-stamford-harbor-fun-skegwe",
@@ -3013,7 +4224,8 @@ var EVENTS = [
         "venue": null,
         "city": "Stamford, Connecticut, United States",
         "rsvps": 2,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/no-names-just-vibes-cnc-edition-uwj3uq",
@@ -3026,7 +4238,8 @@ var EVENTS = [
         "venue": null,
         "city": "Brooklyn, New York, United States",
         "rsvps": 22,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/hotel-party-gaxmtd",
@@ -3039,7 +4252,8 @@ var EVENTS = [
         "venue": "dm for location",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 2,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/its-wifey-birthday-wvrshr",
@@ -3052,7 +4266,8 @@ var EVENTS = [
         "venue": null,
         "city": "Scranton, Pennsylvania, United States",
         "rsvps": 3,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/18/gangbang-in-bushwick-vf19fj",
@@ -3065,7 +4280,400 @@ var EVENTS = [
         "venue": "bushwick/bed stuy",
         "city": "Brooklyn, New York, United States",
         "rsvps": 2,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/18/fun-munch-montreal-nude-vjcaf3",
+        "name": "Fun munch montreal (nude)",
+        "start": "2026-11-18",
+        "end": "2026-11-18",
+        "category": "Sex Party",
+        "cost": "Free",
+        "when": "Tue, Nov 17 at 2:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 50,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/18/bbc-vs-thick-milf-uqizvs",
+        "name": "BBC VS THICK MILF",
+        "start": "2026-11-18",
+        "end": "2026-11-24",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Nov 18 – 25 · Wed 4:00 PM – Wed 3:00 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 93,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/18/a-very-wicked-christmas-venusian-society-s-advent-calendar-launch-day-4-3gbf6o",
+        "name": "A Very Wicked Christmas: Venusian Society's Advent Calendar Launch Day 4",
+        "start": "2026-11-18",
+        "end": "2026-11-18",
+        "category": "Social",
+        "cost": null,
+        "when": "Wed, Nov 18 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 2,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/18/virtual-play-xxx-mjxci5",
+        "name": "Virtual Play XXX",
+        "start": "2026-11-18",
+        "end": "2026-11-18",
+        "category": "BDSM Party",
+        "cost": "Free",
+        "when": "Wed, Nov 18 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 26,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/18/communicating-with-ropes-zeq3vb",
+        "name": "Communicating with Ropes",
+        "start": "2026-11-18",
+        "end": "2026-11-18",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Nov 18 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 23,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/18/pk-black-fire-and-soul-zvp7vq",
+        "name": "PK: Black Fire and Soul",
+        "start": "2026-11-18",
+        "end": "2026-11-18",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Nov 18 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 150,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/18/it-ain-t-all-whips-and-chains-virtual-gpgbyo",
+        "name": "It Ain't All Whips and Chains VIRTUAL",
+        "start": "2026-11-18",
+        "end": "2026-11-18",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Wed, Nov 18 at 6:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 26,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/18/shibari-for-suspension-series-soft-skill-2-rope-handling-practice-drills-3vf5zh",
+        "name": "Shibari for Suspension series, soft skill 2: rope handling practice drills",
+        "start": "2026-11-18",
+        "end": "2026-11-18",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Nov 18 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 9,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/18/petplay-and-the-less-typical-animals-a-guided-discussion-x1vnuq",
+        "name": "Petplay and the less typical animals: A guided discussion",
+        "start": "2026-11-18",
+        "end": "2026-11-18",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Wed, Nov 18 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 41,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/18/curso-online-maestria-en-responsabilidad-dominante-o5sew4",
+        "name": "Curso Online: Maestría en Responsabilidad Dominante",
+        "start": "2026-11-18",
+        "end": "2026-11-18",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Nov 18 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 29,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/18/batman417-s-social-virtual-community-gathering-from-the-batcave-wgxm9m",
+        "name": "Batman417's Social Virtual Community Gathering From The Batcave",
+        "start": "2026-11-18",
+        "end": "2026-11-18",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Wed, Nov 18 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 37,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/18/care-when-there-is-no-after-ongoing-care-for-persistent-power-dynamics-online-workshop-smkdjc",
+        "name": "Care When There Is No “After”: Ongoing Care For Persistent Power Dynamics - Online Workshop",
+        "start": "2026-11-18",
+        "end": "2026-11-18",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Nov 18 at 7:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 174,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/18/nov-rke-book-discussion-group-online-initiation-sex-wizards-book-1-by-alethea-faust-b7d3px",
+        "name": "Nov. RKE Book Discussion Group Online - Initiation: Sex Wizards, Book 1 by Alethea Faust.",
+        "start": "2026-11-18",
+        "end": "2026-11-18",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Wed, Nov 18 at 7:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 11,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/18/sister-submissives-talk-mocfha",
+        "name": "Sister Submissives Talk!",
+        "start": "2026-11-18",
+        "end": "2026-11-18",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Wed, Nov 18 at 7:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 8,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/18/mono-poly-support-zoom-call-for-mono-partners-84p4wl",
+        "name": "Mono Poly Support Zoom Call (for MONO partners)",
+        "start": "2026-11-18",
+        "end": "2026-11-18",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Wed, Nov 18 at 7:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 2,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/18/cjlc-presents-the-librarian-speaks-tcsydv",
+        "name": "CJLC Presents: The Librarian Speaks",
+        "start": "2026-11-18",
+        "end": "2026-11-18",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Nov 18 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 76,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/18/leather-pride-night-4z1x3s",
+        "name": "Leather Pride Night",
+        "start": "2026-11-18",
+        "end": "2026-11-18",
+        "category": "Social",
+        "cost": null,
+        "when": "Wed, Nov 18 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": null,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/18/fem-fetish-creators-phone-camera-basics-webinar-with-lady-wu-ezjapk",
+        "name": "Fem Fetish Creators: Phone Camera Basics Webinar with Lady Wu",
+        "start": "2026-11-18",
+        "end": "2026-11-18",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Wed, Nov 18 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 43,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/18/tarot-tea-confessions-lns0at",
+        "name": "Tarot, Tea & Confessions",
+        "start": "2026-11-18",
+        "end": "2026-11-18",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Wed, Nov 18 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 31,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/18/ask-a-titleholder-anything-e3moqt",
+        "name": "Ask A Titleholder Anything!",
+        "start": "2026-11-18",
+        "end": "2026-11-18",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Wed, Nov 18 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 113,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/18/tome-eaters-book-devouring-club-djijci",
+        "name": "Tome Eaters: Book Devouring Club",
+        "start": "2026-11-18",
+        "end": "2026-11-18",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Wed, Nov 18 at 8:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 7,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/18/virtual-sexy-intersections-anti-oppression-sex-positivity-presented-by-sex-positive-world-iewliy",
+        "name": "VIRTUAL: \"Sexy Intersections: Anti-Oppression & Sex Positivity!\" presented by Sex Positive World!",
+        "start": "2026-11-18",
+        "end": "2026-11-18",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Nov 18 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 113,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/18/online-invisible-toybox-xhnzzi",
+        "name": "ONLINE: Invisible Toybox",
+        "start": "2026-11-18",
+        "end": "2026-11-18",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Nov 18 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 165,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/18/tangle-s-consent-kitchen-l-online-zoom-l-cg9pi2",
+        "name": "Tangle's Consent Kitchen | 𝐎𝐧𝐥𝐢𝐧𝐞/𝐙𝐨𝐨𝐦 |",
+        "start": "2026-11-18",
+        "end": "2026-11-18",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Nov 18 at 10:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": null,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/18/tangle-s-consent-kitchen-online-fooig5",
+        "name": "Tangle's Consent Kitchen - Online",
+        "start": "2026-11-18",
+        "end": "2026-11-18",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Nov 18 at 10:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 2,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/18/monthly-virtual-peep-show-with-milfqueen-maestro-jsdblk",
+        "name": "Monthly VIRTUAL Peep Show with Milfqueen & Maestro",
+        "start": "2026-11-18",
+        "end": "2026-11-18",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Nov 18 at 10:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 157,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/18/pdx-recovery-in-the-lifestyle-virtual-zoom-ymg20o",
+        "name": "PDX-Recovery in the Lifestyle - Virtual ZOOM",
+        "start": "2026-11-18",
+        "end": "2026-11-18",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Wed, Nov 18 at 10:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 3,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/18/a-bedtime-story-with-mister-mick-dkjuax",
+        "name": "A Bedtime Story with Mister-Mick",
+        "start": "2026-11-18",
+        "end": "2026-11-18",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Thu, Nov 19 at 12:00 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 37,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/11/19/ronkonkoma-orgy-now-right-now-pzkyff",
@@ -3078,7 +4686,8 @@ var EVENTS = [
         "venue": "ronkonkoma",
         "city": "Ronkonkoma, New York, United States",
         "rsvps": 8,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/19/after-midnight-till-mornin-newbie-gangbang-zmm4ig",
@@ -3091,7 +4700,8 @@ var EVENTS = [
         "venue": null,
         "city": "Brooklyn, New York, United States",
         "rsvps": 6,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/19/slipawayandplay-all-male-events-0jait1",
@@ -3104,7 +4714,8 @@ var EVENTS = [
         "venue": "Info given after your email address is supplied.",
         "city": "East Rutherford, New Jersey, United States",
         "rsvps": 67,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/19/thong-thursday-bna-powxlu",
@@ -3117,7 +4728,8 @@ var EVENTS = [
         "venue": "Berlin News Agency",
         "city": "West Berlin, New Jersey, United States",
         "rsvps": 110,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/19/sexual-health-testing-free-vdnokk",
@@ -3130,7 +4742,8 @@ var EVENTS = [
         "venue": "Cupids Boutique",
         "city": "Deer Park, New York, United States",
         "rsvps": 79,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/19/midday-mischief-12pm-4pm-thursday-in-midtown-manhattan-100-entry-bhd7gw",
@@ -3143,7 +4756,8 @@ var EVENTS = [
         "venue": "JULIETTE'S PLAYPEN (Midtown)",
         "city": "Manhattan, New York, United States",
         "rsvps": 122,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/19/midday-madness-xxx-lfnenq",
@@ -3156,7 +4770,8 @@ var EVENTS = [
         "venue": "stacks play house",
         "city": "New York City, New York, United States",
         "rsvps": 8,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/19/medusas-playhouse-presents-afternoon-with-sexy-sophy-wczwjb",
@@ -3169,7 +4784,8 @@ var EVENTS = [
         "venue": "Medusas Playhouse",
         "city": "West Babylon, New York, United States",
         "rsvps": 38,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/19/mench-please-only-ladies-theydies-trans-jinky-kews-manhattan-pre-munch-hour-0tztzd",
@@ -3182,7 +4798,8 @@ var EVENTS = [
         "venue": "Given to approved attendees 24 hrs in advance",
         "city": "New York City, New York, United States",
         "rsvps": 24,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/19/reading-pa-meet-greet-november-19-nl6isx",
@@ -3195,7 +4812,8 @@ var EVENTS = [
         "venue": "Craft 2700",
         "city": "Hyde Park, Pennsylvania, United States",
         "rsvps": 99,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/19/monty-munch-jny6md",
@@ -3208,7 +4826,8 @@ var EVENTS = [
         "venue": "Miller's Ale House",
         "city": "Willow Grove, Pennsylvania, United States",
         "rsvps": 136,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/19/talk-turkey-to-me-it-s-time-for-the-jinky-kews-manhattan-november-munch-and-mingle-pijtty",
@@ -3221,7 +4840,8 @@ var EVENTS = [
         "venue": "The Hugh",
         "city": "New York City, New York, United States",
         "rsvps": 117,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/19/back-up-link-reading-pa-meet-greet-november-19-nezgl8",
@@ -3234,7 +4854,8 @@ var EVENTS = [
         "venue": "Craft 2700",
         "city": "Reading, Pennsylvania, United States",
         "rsvps": 98,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/19/asylum-13-presents-solid-state-4qcs6b",
@@ -3247,7 +4868,8 @@ var EVENTS = [
         "venue": "Bar XIII",
         "city": "Wilmington, Delaware, United States",
         "rsvps": 136,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/19/money-101-the-financial-order-of-operations-jt82or",
@@ -3260,7 +4882,8 @@ var EVENTS = [
         "venue": "Virtual",
         "city": "New York City, New York, United States",
         "rsvps": 53,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/19/carbondale-pennsylvania-ssttrk",
@@ -3273,7 +4896,8 @@ var EVENTS = [
         "venue": null,
         "city": "Scranton, Pennsylvania, United States",
         "rsvps": 42,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/19/tight-hole-event-4v8uph",
@@ -3286,7 +4910,8 @@ var EVENTS = [
         "venue": null,
         "city": "Bronx, New York, United States",
         "rsvps": 9,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/19/philly-sex-party-rwfy9x",
@@ -3299,7 +4924,8 @@ var EVENTS = [
         "venue": "Philadelphia",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 20,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/19/glory-hole-dick-sucking-zpexx4",
@@ -3312,7 +4938,8 @@ var EVENTS = [
         "venue": "private location",
         "city": "Mount Laurel, New Jersey, United States",
         "rsvps": 8,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/19/building-tension-ropeshare-nov-26-3wxgai",
@@ -3325,7 +4952,8 @@ var EVENTS = [
         "venue": "Less Dead Studio",
         "city": "Poughkeepsie, New York, United States",
         "rsvps": 39,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/19/nj-diaper-peeps-pub-trivia-thursday-night-girfwc",
@@ -3338,7 +4966,8 @@ var EVENTS = [
         "venue": "Shannon Rose Irish Pub- Ramsey",
         "city": "Ramsey, New Jersey, United States",
         "rsvps": 148,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/19/gen-z-munch-ages-18-29-age-restricted-event-rfwyib",
@@ -3351,7 +4980,8 @@ var EVENTS = [
         "venue": null,
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 42,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/19/november-trancesylvania-hypnosis-kink-skill-share-amnesia-h7swu5",
@@ -3364,7 +4994,8 @@ var EVENTS = [
         "venue": "The Nest, Fishtown, Philadelphia, PA",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 45,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/19/queens-kinksters-munch-jv2jql",
@@ -3377,7 +5008,8 @@ var EVENTS = [
         "venue": "Bohemian Hall & Beer Garden",
         "city": "Queens, New York, United States",
         "rsvps": 190,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/19/impact-play-workshop-wucdrq",
@@ -3390,33 +5022,8 @@ var EVENTS = [
         "venue": "address emailed upon ticket purchase",
         "city": "New York City, New York, United States",
         "rsvps": 30,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/19/transgirl-freak-off-qrkth5",
-        "name": "Transgirl freak off",
-        "start": "2026-11-19",
-        "end": "2026-11-21",
-        "category": "Sex Party",
-        "cost": null,
-        "when": "Nov 19 – 21 · Thu 10:00 PM – Sat 9:00 AM",
-        "venue": null,
-        "city": "Philadelphia, Pennsylvania, United States",
-        "rsvps": 17,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/19/all-trans-sex-party-near-thr-airport-dont-miss-out-oupxsg",
-        "name": "ALL TRANS SEX PARTY NEAR THR AIRPORT DONT MISS OUT",
-        "start": "2026-11-19",
-        "end": "2026-11-21",
-        "category": "Sex Party",
-        "cost": null,
-        "when": "Nov 19 – 21 · Thu 10:05 PM – Sat 11:00 AM",
-        "venue": "NYC TAKES OVER PHILLY ENT",
-        "city": "Philadelphia, Pennsylvania, United States",
-        "rsvps": 5,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/19/punki-presents-leather-happy-hour-lwfzbp",
@@ -3429,7 +5036,8 @@ var EVENTS = [
         "venue": "the gay bearburger",
         "city": "New York City, New York, United States",
         "rsvps": 71,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/19/brunswick-munch-qsdtki",
@@ -3442,215 +5050,36 @@ var EVENTS = [
         "venue": null,
         "city": "North Brunswick, New Jersey, United States",
         "rsvps": 66,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
-        "url": "https://fetlife.com/events/2026/11/19/scarlet-lab-s-4nication-thursday-after-work-swingers-play-party-jhxrob",
-        "name": "Scarlet Lab's 4Nication Thursday After Work Swingers Play Party!",
+        "url": "https://fetlife.com/events/2026/11/19/transgirl-freak-off-qrkth5",
+        "name": "Transgirl freak off",
         "start": "2026-11-19",
-        "end": "2026-11-19",
+        "end": "2026-11-21",
         "category": "Sex Party",
         "cost": null,
-        "when": "Thu, Nov 19 at 7:00 PM",
-        "venue": "3rd Floor",
-        "city": "New York City, New York, United States",
-        "rsvps": 141,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/19/westchester-munch-dd-s-diner-nov-19th-e1lzus",
-        "name": "Westchester Munch - DD's Diner - Nov 19th",
-        "start": "2026-11-19",
-        "end": "2026-11-19",
-        "category": "Social",
-        "cost": "Free",
-        "when": "Thu, Nov 19 at 7:00 PM",
-        "venue": "DD's Diner",
-        "city": "Ossining, New York, United States",
-        "rsvps": 32,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/19/crazy-head-back-2-back-orgasms-uyakuz",
-        "name": "CRAZY HEAD - back 2 back orgasms!!",
-        "start": "2026-11-19",
-        "end": "2026-11-19",
-        "category": "Sex Party",
-        "cost": "Free",
-        "when": "Thu, Nov 19 at 7:00 PM",
-        "venue": "Philadlephia Hotel Downtown - given day of",
-        "city": "Philadelphia, Pennsylvania, United States",
-        "rsvps": 43,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/19/carnal-creatures-primal-the-human-animal-xkkglo",
-        "name": "Carnal Creatures (Primal: The Human Animal)",
-        "start": "2026-11-19",
-        "end": "2026-11-19",
-        "category": "Educational",
-        "cost": null,
-        "when": "Thu, Nov 19 at 7:30 PM",
-        "venue": "Address given in email confirmation. Please contact us if paying at door.",
-        "city": "New York City, New York, United States",
-        "rsvps": 21,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/19/tyke-stop-november-goo-goo-gobble-gobble-s5sx8j",
-        "name": "Tyke Stop November; Goo Goo Gobble Gobble",
-        "start": "2026-11-19",
-        "end": "2026-11-19",
-        "category": "Social",
-        "cost": "Free",
-        "when": "Thu, Nov 19 at 8:00 PM",
-        "venue": "The Bike Stop",
-        "city": "Philadelphia, Pennsylvania, United States",
-        "rsvps": 25,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/19/secret-pleasures-thirsty-thursday-gangbang-party-8pm-to-12am-rueojk",
-        "name": "Secret Pleasures - Thirsty Thursday Gangbang Party - 8pm to 12am",
-        "start": "2026-11-19",
-        "end": "2026-11-19",
-        "category": "Sex Party",
-        "cost": null,
-        "when": "Thu, Nov 19 at 8:00 PM",
-        "venue": "Secret Pleasures at the Back Door of the Wi Fi Cafe",
-        "city": "Emmaus, Pennsylvania, United States",
-        "rsvps": 138,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/19/make-it-clap-thursday-dont-miss-this-swingers-lifestyle-event-thursday-h65cn0",
-        "name": "MAKE IT CLAP THURSDAY DONT MISS THIS SWINGERS LIFESTYLE EVENT THURSDAY",
-        "start": "2026-11-19",
-        "end": "2026-11-19",
-        "category": "Sex Party",
-        "cost": null,
-        "when": "Thu, Nov 19 at 8:00 PM",
-        "venue": "love lust",
-        "city": "Paterson, New Jersey, United States",
-        "rsvps": 39,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/19/labyrinth-orgy-thursdays-long-play-open-9-3-midtown-couples-40-singles-80-ladies-free-plwqkw",
-        "name": "LABYRINTH + ORGY THURSDAYS *LONG PLAY* + OPEN 9-3 + MIDTOWN + COUPLES $40, SINGLES $80, LADIES FREE",
-        "start": "2026-11-19",
-        "end": "2026-11-19",
-        "category": "Sex Party",
-        "cost": null,
-        "when": "Thu, Nov 19 at 9:00 PM",
-        "venue": "TBA",
-        "city": "New York City, New York, United States",
-        "rsvps": 84,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/19/caligula-ny-presents-one-night-stand-swinger-fling-thursday-edition-8sektm",
-        "name": "CALIGULA NY PRESENTS: \"ONE NIGHT STAND\" [SWINGER FLING THURSDAY EDITION]",
-        "start": "2026-11-19",
-        "end": "2026-11-19",
-        "category": "Sex Party",
-        "cost": null,
-        "when": "Thu, Nov 19 at 9:00 PM",
-        "venue": "CALIGULA NY",
-        "city": "New York City, New York, United States",
-        "rsvps": 69,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/19/nov-19th-a-sinfully-seductive-dark-burlesque-risque-variety-show-thrills-chills-rcavii",
-        "name": "Nov. 19th || A Sinfully Seductive Dark Burlesque & Risque Variety Show || THRILLS & CHILLS",
-        "start": "2026-11-19",
-        "end": "2026-11-19",
-        "category": "Social",
-        "cost": null,
-        "when": "Thu, Nov 19 at 9:00 PM",
-        "venue": "QXTs Night Club",
-        "city": "Newark, New Jersey, United States",
-        "rsvps": 49,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/19/six-stars-bang-y28nrg",
-        "name": "SIX STARS BANG",
-        "start": "2026-11-19",
-        "end": "2026-11-19",
-        "category": "Sex Party",
-        "cost": null,
-        "when": "Thu, Nov 19 at 9:00 PM",
-        "venue": "the G spot",
-        "city": "New York City, New York, United States",
-        "rsvps": 13,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/19/the-stuffin-latina-gangbang-play-party-crown-heights-brooklyn-nyc-euqbxy",
-        "name": "“The Stuffin” Latina Gangbang Play Party Crown Heights Brooklyn NYC",
-        "start": "2026-11-19",
-        "end": "2026-11-19",
-        "category": "Sex Party",
-        "cost": null,
-        "when": "Thu, Nov 19 at 9:30 PM",
-        "venue": "Crown Heights",
-        "city": "Brooklyn, New York, United States",
-        "rsvps": 141,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/19/gang-bang-night-in-paradise-a-thursday-night-of-pure-ecstasy-rsvp-now-and-get-10-off-entree-fee-skva7k",
-        "name": "Gang Bang night in Paradise, A Thursday night of pure ecstasy, RSVP NOW and get $10 off entree fee!",
-        "start": "2026-11-19",
-        "end": "2026-11-19",
-        "category": "Sex Party",
-        "cost": null,
-        "when": "Thu, Nov 19 at 10:00 PM",
-        "venue": "Sinners Paradise Club",
-        "city": "Philadelphia, Pennsylvania, United States",
-        "rsvps": 53,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/19/fun-in-paradise-afterdark-20kasr",
-        "name": "Fun In Paradise AFTERDARK",
-        "start": "2026-11-19",
-        "end": "2026-11-19",
-        "category": "Sex Party",
-        "cost": null,
-        "when": "Thu, Nov 19 at 10:00 PM",
-        "venue": "Sinner’s Paradise",
-        "city": "Philadelphia, Pennsylvania, United States",
-        "rsvps": 143,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/19/thick-thursdays-in-the-bx-4sqzja",
-        "name": "Thick Thursdays in the BX",
-        "start": "2026-11-19",
-        "end": "2026-11-19",
-        "category": "Sex Party",
-        "cost": null,
-        "when": "Thu, Nov 19 at 10:00 PM",
+        "when": "Nov 19 – 21 · Thu 10:00 PM – Sat 9:00 AM",
         "venue": null,
-        "city": "Bronx, New York, United States",
-        "rsvps": 4,
-        "image": null
+        "city": "Philadelphia, Pennsylvania, United States",
+        "rsvps": 17,
+        "image": null,
+        "virtual": false
     },
     {
-        "url": "https://fetlife.com/events/2026/11/19/thirsty-thursday-kmgixd",
-        "name": "THIRSTY THURSDAY",
+        "url": "https://fetlife.com/events/2026/11/19/all-trans-sex-party-near-thr-airport-dont-miss-out-oupxsg",
+        "name": "ALL TRANS SEX PARTY NEAR THR AIRPORT DONT MISS OUT",
         "start": "2026-11-19",
-        "end": "2026-11-19",
+        "end": "2026-11-21",
         "category": "Sex Party",
         "cost": null,
-        "when": "Thu, Nov 19 at 10:00 PM",
-        "venue": "LIBERTY AVE EAST NY",
-        "city": "Brooklyn, New York, United States",
-        "rsvps": 13,
-        "image": null
+        "when": "Nov 19 – 21 · Thu 10:05 PM – Sat 11:00 AM",
+        "venue": "NYC TAKES OVER PHILLY ENT",
+        "city": "Philadelphia, Pennsylvania, United States",
+        "rsvps": 5,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/19/gloryhole-fun-lwifyl",
@@ -3663,33 +5092,680 @@ var EVENTS = [
         "venue": "flatbush bk",
         "city": "New York City, New York, United States",
         "rsvps": 71,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
-        "url": "https://fetlife.com/events/2026/11/20/weekend-playcation-kinksgiving-2026-drmomr",
-        "name": "Weekend Playcation Kinksgiving 2026",
-        "start": "2026-11-20",
-        "end": "2026-11-23",
-        "category": "Conference / Festival",
-        "cost": null,
-        "when": "Nov 20 – 23 · Fri 3:00 PM – Mon 10:00 AM",
-        "venue": "Provided to attendees only",
-        "city": "Thornhurst, Pennsylvania, United States",
-        "rsvps": 46,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/20/meetup-dweoe3",
-        "name": "Meetup",
-        "start": "2026-11-20",
-        "end": "2026-11-23",
+        "url": "https://fetlife.com/events/2026/11/19/scarlet-lab-s-4nication-thursday-after-work-swingers-play-party-jhxrob",
+        "name": "Scarlet Lab's 4Nication Thursday After Work Swingers Play Party!",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
         "category": "Sex Party",
         "cost": null,
-        "when": "Nov 20 – 23 · Fri 5:00 PM – Mon 11:00 AM",
-        "venue": "willow grove",
-        "city": "Willow Grove, Pennsylvania, United States",
+        "when": "Thu, Nov 19 at 7:00 PM",
+        "venue": "3rd Floor",
+        "city": "New York City, New York, United States",
+        "rsvps": 141,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/westchester-munch-dd-s-diner-nov-19th-e1lzus",
+        "name": "Westchester Munch - DD's Diner - Nov 19th",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Thu, Nov 19 at 7:00 PM",
+        "venue": "DD's Diner",
+        "city": "Ossining, New York, United States",
+        "rsvps": 32,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/crazy-head-back-2-back-orgasms-uyakuz",
+        "name": "CRAZY HEAD - back 2 back orgasms!!",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Sex Party",
+        "cost": "Free",
+        "when": "Thu, Nov 19 at 7:00 PM",
+        "venue": "Philadlephia Hotel Downtown - given day of",
+        "city": "Philadelphia, Pennsylvania, United States",
+        "rsvps": 43,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/carnal-creatures-primal-the-human-animal-xkkglo",
+        "name": "Carnal Creatures (Primal: The Human Animal)",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Educational",
+        "cost": null,
+        "when": "Thu, Nov 19 at 7:30 PM",
+        "venue": "Address given in email confirmation. Please contact us if paying at door.",
+        "city": "New York City, New York, United States",
+        "rsvps": 21,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/tyke-stop-november-goo-goo-gobble-gobble-s5sx8j",
+        "name": "Tyke Stop November; Goo Goo Gobble Gobble",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Thu, Nov 19 at 8:00 PM",
+        "venue": "The Bike Stop",
+        "city": "Philadelphia, Pennsylvania, United States",
+        "rsvps": 25,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/secret-pleasures-thirsty-thursday-gangbang-party-8pm-to-12am-rueojk",
+        "name": "Secret Pleasures - Thirsty Thursday Gangbang Party - 8pm to 12am",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Sex Party",
+        "cost": null,
+        "when": "Thu, Nov 19 at 8:00 PM",
+        "venue": "Secret Pleasures at the Back Door of the Wi Fi Cafe",
+        "city": "Emmaus, Pennsylvania, United States",
+        "rsvps": 138,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/make-it-clap-thursday-dont-miss-this-swingers-lifestyle-event-thursday-h65cn0",
+        "name": "MAKE IT CLAP THURSDAY DONT MISS THIS SWINGERS LIFESTYLE EVENT THURSDAY",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Sex Party",
+        "cost": null,
+        "when": "Thu, Nov 19 at 8:00 PM",
+        "venue": "love lust",
+        "city": "Paterson, New Jersey, United States",
+        "rsvps": 39,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/labyrinth-orgy-thursdays-long-play-open-9-3-midtown-couples-40-singles-80-ladies-free-plwqkw",
+        "name": "LABYRINTH + ORGY THURSDAYS *LONG PLAY* + OPEN 9-3 + MIDTOWN + COUPLES $40, SINGLES $80, LADIES FREE",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Sex Party",
+        "cost": null,
+        "when": "Thu, Nov 19 at 9:00 PM",
+        "venue": "TBA",
+        "city": "New York City, New York, United States",
+        "rsvps": 84,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/caligula-ny-presents-one-night-stand-swinger-fling-thursday-edition-8sektm",
+        "name": "CALIGULA NY PRESENTS: \"ONE NIGHT STAND\" [SWINGER FLING THURSDAY EDITION]",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Sex Party",
+        "cost": null,
+        "when": "Thu, Nov 19 at 9:00 PM",
+        "venue": "CALIGULA NY",
+        "city": "New York City, New York, United States",
+        "rsvps": 69,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/nov-19th-a-sinfully-seductive-dark-burlesque-risque-variety-show-thrills-chills-rcavii",
+        "name": "Nov. 19th || A Sinfully Seductive Dark Burlesque & Risque Variety Show || THRILLS & CHILLS",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Social",
+        "cost": null,
+        "when": "Thu, Nov 19 at 9:00 PM",
+        "venue": "QXTs Night Club",
+        "city": "Newark, New Jersey, United States",
+        "rsvps": 49,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/six-stars-bang-y28nrg",
+        "name": "SIX STARS BANG",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Sex Party",
+        "cost": null,
+        "when": "Thu, Nov 19 at 9:00 PM",
+        "venue": "the G spot",
+        "city": "New York City, New York, United States",
+        "rsvps": 13,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/the-stuffin-latina-gangbang-play-party-crown-heights-brooklyn-nyc-euqbxy",
+        "name": "“The Stuffin” Latina Gangbang Play Party Crown Heights Brooklyn NYC",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Sex Party",
+        "cost": null,
+        "when": "Thu, Nov 19 at 9:30 PM",
+        "venue": "Crown Heights",
+        "city": "Brooklyn, New York, United States",
+        "rsvps": 141,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/gang-bang-night-in-paradise-a-thursday-night-of-pure-ecstasy-rsvp-now-and-get-10-off-entree-fee-skva7k",
+        "name": "Gang Bang night in Paradise, A Thursday night of pure ecstasy, RSVP NOW and get $10 off entree fee!",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Sex Party",
+        "cost": null,
+        "when": "Thu, Nov 19 at 10:00 PM",
+        "venue": "Sinners Paradise Club",
+        "city": "Philadelphia, Pennsylvania, United States",
+        "rsvps": 53,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/fun-in-paradise-afterdark-20kasr",
+        "name": "Fun In Paradise AFTERDARK",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Sex Party",
+        "cost": null,
+        "when": "Thu, Nov 19 at 10:00 PM",
+        "venue": "Sinner’s Paradise",
+        "city": "Philadelphia, Pennsylvania, United States",
+        "rsvps": 143,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/thick-thursdays-in-the-bx-4sqzja",
+        "name": "Thick Thursdays in the BX",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Sex Party",
+        "cost": null,
+        "when": "Thu, Nov 19 at 10:00 PM",
+        "venue": null,
+        "city": "Bronx, New York, United States",
+        "rsvps": 4,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/thirsty-thursday-kmgixd",
+        "name": "THIRSTY THURSDAY",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Sex Party",
+        "cost": null,
+        "when": "Thu, Nov 19 at 10:00 PM",
+        "venue": "LIBERTY AVE EAST NY",
+        "city": "Brooklyn, New York, United States",
+        "rsvps": 13,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/bottom-responsibility-agency-accountability-and-risk-literacy-in-kink-with-sarai311-npvimw",
+        "name": "Bottom Responsibility: Agency, Accountability, and Risk Literacy in Kink with @Sarai311",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Nov 18 at 5:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 599,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/coworking-hours-kdh0mu",
+        "name": "Coworking Hours",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Social",
+        "cost": null,
+        "when": "Thu, Nov 19 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 4,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/weekly-grounding-gejtod",
+        "name": "Weekly Grounding",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Thu, Nov 19 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 14,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/cfnm-cam-jo-session-njd7ds",
+        "name": "CFNM-Cam JO session!",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Sex Party",
+        "cost": "Free",
+        "when": "Thu, Nov 19 at 1:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 9,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/14-zauberhaft-bdsm-online-stammtisch-3wloom",
+        "name": "14. Zauberhaft BDSM ONLINE Stammtisch",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Thu, Nov 19 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 4,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/age-play-a-round-table-discussion-kcocxk",
+        "name": "Age Play - a round table discussion",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Thu, Nov 19 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 20,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/free-online-shibari-class-harness-therapy-butterfly-harness-edition-ubrgmb",
+        "name": "[FREE Online Shibari Class] Harness Therapy: Butterfly Harness Edition",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Thu, Nov 19 at 3:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 331,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/livestream-anal-total-eu-hidazv",
+        "name": "LIVESTREAM - ANAL Total EU",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "BDSM Party",
+        "cost": null,
+        "when": "Thu, Nov 19 at 3:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 40,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/kinky-first-aid-kit-rope-edition-2gwesa",
+        "name": "Kinky First Aid Kit - Rope Edition",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Educational",
+        "cost": null,
+        "when": "Thu, Nov 19 at 4:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 11,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/shaken-when-kink-changes-how-you-see-yourself-others-and-your-world-with-ember-solaris-8zbykr",
+        "name": "Shaken: When Kink Changes How You See Yourself, Others, and Your World with Ember Solaris",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Educational",
+        "cost": null,
+        "when": "Thu, Nov 19 at 6:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 340,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/vid-group-play-cum-over-and-over-again-u87ad2",
+        "name": "vid group play cum over and over again",
+        "start": "2026-11-19",
+        "end": "2026-11-21",
+        "category": "Sex Party",
+        "cost": null,
+        "when": "Nov 19 – 22 · Thu 6:00 PM – Sun 3:00 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 105,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/edge-left-of-the-slash-lkvgwz",
+        "name": "EDGE: Left of the Slash",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Thu, Nov 19 at 6:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 29,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/tit-for-tat-make-them-moan-and-scream-shz7fs",
+        "name": "Tit for Tat: Make Them Moan and Scream",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Educational",
+        "cost": null,
+        "when": "Thu, Nov 19 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 50,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/munch-time-come-join-f3zis7",
+        "name": "Munch time come join",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Thu, Nov 19 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 9,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/sip-puff-virtual-happy-hour-y2zex6",
+        "name": "Sip & Puff virtual Happy Hour",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Thu, Nov 19 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 21,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/virtual-workshop-sitting-with-masochism-exploring-the-why-bdsm-kink-class-erx9yn",
+        "name": "Virtual Workshop - \"Sitting with Masochism: Exploring the Why\" (BDSM/Kink Class)",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Educational",
+        "cost": null,
+        "when": "Thu, Nov 19 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 156,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/below-the-belt-an-online-pelvic-floor-dor-men-2asbad",
+        "name": "Below the Belt: an online pelvic floor dor men",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Educational",
+        "cost": null,
+        "when": "Thu, Nov 19 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 7,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/online-class-building-your-risk-profile-w-rhapsody_in_blue-open-to-18-epf9lh",
+        "name": "ONLINE CLASS: Building Your Risk Profile w/ @Rhapsody_in_Blue (OPEN TO 18+)",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Educational",
+        "cost": null,
+        "when": "Thu, Nov 19 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 39,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/pussy-torture-online-class-live-ec5fu0",
+        "name": "Pussy Torture ONLINE Class LIVE!",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Educational",
+        "cost": null,
+        "when": "Thu, Nov 19 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 37,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/virtual-munch-7hu9jk",
+        "name": "Virtual Munch",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Thu, Nov 19 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 27,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/virtual-class-ethics-of-power-applying-leadership-principles-in-bdsm-dynamics-rv8lpr",
+        "name": "Virtual Class - Ethics of Power: Applying Leadership Principles in BDSM Dynamics",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Thu, Nov 19 at 7:15 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 174,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/k-e-a-n-canada-events-kink-without-a-script-7w3qh7",
+        "name": "K-E-A-N Canada Events -KINK WITHOUT A SCRIPT!",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Educational",
+        "cost": null,
+        "when": "Thu, Nov 19 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 122,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/empowering-adult-learners-thursday-series-6siqoa",
+        "name": "Empowering Adult Learners Thursday Series",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Educational",
+        "cost": null,
+        "when": "Thu, Nov 19 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/the-perversion-project-presents-from-awareness-to-alignment-week-two-srhf5j",
+        "name": "The Perversion Project Presents: From Awareness to Alignment — Week Two",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Thu, Nov 19 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 295,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/muncie-virtual-truth-or-dare-slosh-ryicli",
+        "name": "Muncie Virtual Truth or Dare Slosh",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Thu, Nov 19 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 38,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/kinky-q-a-november-zdt13w",
+        "name": "Kinky Q&A November",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Educational",
+        "cost": null,
+        "when": "Thu, Nov 19 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 77,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/virtual-dominants-meetup-olxl47",
+        "name": "Virtual Dominants Meetup",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Thu, Nov 19 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 34,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/plus-ones-a-moderated-virtual-support-group-for-friends-family-and-partners-of-abdls-n7pgrh",
+        "name": "Plus Ones: A moderated virtual support group for friends, family, and partners of ABDLs",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Thu, Nov 19 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 3,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/november-19th-18-00-pst-virtual-recordedl-age-play-202-going-beyond-with-miss-chris-bokc0z",
+        "name": "November 19th, 18:00 PST - Virtual & Recorded| Age Play 202: Going Beyond with Miss Chris",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Educational",
+        "cost": null,
+        "when": "Thu, Nov 19 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 90,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/online-the-art-of-the-blowjob-with-lilithfoxx-eqzdbb",
+        "name": "ONLINE: The Art of the Blowjob with Lilithfoxx",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Educational",
+        "cost": null,
+        "when": "Thu, Nov 19 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 151,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/virtual-bliss-briefings-presents-community-unpacked-session-7-how-to-vet-people-bwlrbi",
+        "name": "Virtual Bliss Briefings Presents~ Community Unpacked-Session 7- How to Vet People",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Thu, Nov 19 at 9:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 26,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/19/summoned-2027-community-partnership-collaboration-call-qdm6nn",
+        "name": "SUMMONED 2027 | Community Partnership & Collaboration Call",
+        "start": "2026-11-19",
+        "end": "2026-11-19",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Thu, Nov 19 at 9:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 70,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/mischief-after-midnight-gangbang-vhqssp",
@@ -3702,7 +5778,8 @@ var EVENTS = [
         "venue": null,
         "city": "Brooklyn, New York, United States",
         "rsvps": 33,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/newbie-freaky-fun-friday-bna-j8cfli",
@@ -3715,7 +5792,8 @@ var EVENTS = [
         "venue": "Berlin News Agency",
         "city": "West Berlin, New Jersey, United States",
         "rsvps": 116,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/the-matinee-our-open-play-party-mbqvq2",
@@ -3728,7 +5806,8 @@ var EVENTS = [
         "venue": "The Venue",
         "city": "Bethlehem, Pennsylvania, United States",
         "rsvps": 64,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/free-mid-day-gang-bang-friday-szwikp",
@@ -3741,7 +5820,22 @@ var EVENTS = [
         "venue": "Swann Inn Motel",
         "city": "Linden, New Jersey, United States",
         "rsvps": 111,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/20/weekend-playcation-kinksgiving-2026-drmomr",
+        "name": "Weekend Playcation Kinksgiving 2026",
+        "start": "2026-11-20",
+        "end": "2026-11-23",
+        "category": "Conference / Festival",
+        "cost": null,
+        "when": "Nov 20 – 23 · Fri 3:00 PM – Mon 10:00 AM",
+        "venue": "Provided to attendees only",
+        "city": "Thornhurst, Pennsylvania, United States",
+        "rsvps": 46,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/drawminatrix-bdsm-fetish-figure-drawing-9thfcw",
@@ -3754,7 +5848,8 @@ var EVENTS = [
         "venue": "Secret Location",
         "city": "Manhattan, New York, United States",
         "rsvps": 50,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/roleplay-otk-spanking-kink-acting-class-c14k1x",
@@ -3767,7 +5862,22 @@ var EVENTS = [
         "venue": "Secret Location",
         "city": "Manhattan, New York, United States",
         "rsvps": 64,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/20/meetup-dweoe3",
+        "name": "Meetup",
+        "start": "2026-11-20",
+        "end": "2026-11-23",
+        "category": "Sex Party",
+        "cost": null,
+        "when": "Nov 20 – 23 · Fri 5:00 PM – Mon 11:00 AM",
+        "venue": "willow grove",
+        "city": "Willow Grove, Pennsylvania, United States",
+        "rsvps": null,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/sensual-explorations-a-bdsm-workshop-on-sensory-play-lcenqd",
@@ -3780,7 +5890,8 @@ var EVENTS = [
         "venue": "Secret Location",
         "city": "Manhattan, New York, United States",
         "rsvps": 62,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/ballistic-bliss-madame-lilith-s-cbt-lesson-vgmni7",
@@ -3793,7 +5904,8 @@ var EVENTS = [
         "venue": "Secret Location",
         "city": "Manhattan, New York, United States",
         "rsvps": 46,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/after-5-vibe-meet-greet-couples-and-females-only-fqrzs4",
@@ -3806,7 +5918,8 @@ var EVENTS = [
         "venue": "Sicklerville New Jersey",
         "city": "Sicklerville, New Jersey, United States",
         "rsvps": 16,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/mastcliftonnj-s-cigar-social-location-tbd-vsguxc",
@@ -3819,7 +5932,8 @@ var EVENTS = [
         "venue": "TBD",
         "city": "Clifton, New Jersey, United States",
         "rsvps": 14,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/tng-munch-monster-mini-golf-mgvgue",
@@ -3832,7 +5946,8 @@ var EVENTS = [
         "venue": "Monster Mini Golf",
         "city": "Allentown, Pennsylvania, United States",
         "rsvps": 45,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/lccne-meeting-and-play-party-wptajo",
@@ -3845,7 +5960,8 @@ var EVENTS = [
         "venue": "The Church",
         "city": "New Paltz, New York, United States",
         "rsvps": 69,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/crossdressers-anonymous-ry1fvr",
@@ -3858,7 +5974,8 @@ var EVENTS = [
         "venue": "Secret Bar Location",
         "city": "Manhattan, New York, United States",
         "rsvps": 76,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/nostalgic-at-the-redhook-pinball-museum-djcsau",
@@ -3871,7 +5988,8 @@ var EVENTS = [
         "venue": null,
         "city": "Brooklyn, New York, United States",
         "rsvps": 47,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/business-then-pleasure-rj3ncr",
@@ -3884,7 +6002,8 @@ var EVENTS = [
         "venue": null,
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/emotional-dark-room-41fm5k",
@@ -3897,7 +6016,8 @@ var EVENTS = [
         "venue": "will be provided",
         "city": "Manhattan, New York, United States",
         "rsvps": 24,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/hookah-lounge-munch-ldphmm",
@@ -3910,7 +6030,8 @@ var EVENTS = [
         "venue": null,
         "city": "Westbury, New York, United States",
         "rsvps": 28,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/transexualx-friday-play-party-6pm-to-2am-ciw7at",
@@ -3923,7 +6044,8 @@ var EVENTS = [
         "venue": "RainbowPlaygroundNYC",
         "city": "New York City, New York, United States",
         "rsvps": 130,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/the-hidden-bi-session-friday-6pm-10pm-80-entry-lpw8wk",
@@ -3936,7 +6058,8 @@ var EVENTS = [
         "venue": "Juliette's PlayPen (Midtown)",
         "city": "Manhattan, New York, United States",
         "rsvps": 128,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/gang-bang-at-the-swann-inn-dvhys5",
@@ -3949,7 +6072,8 @@ var EVENTS = [
         "venue": "Swann Inn Motel",
         "city": "Linden, New Jersey, United States",
         "rsvps": 24,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/rope-bondage-101-class-sold-out-qvb3pi",
@@ -3962,7 +6086,8 @@ var EVENTS = [
         "venue": "Romantasy Bookstore / Fantasy Gifts",
         "city": "Lumberton, New Jersey, United States",
         "rsvps": 42,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/tie-zap-and-chat-y3ruzw",
@@ -3975,7 +6100,8 @@ var EVENTS = [
         "venue": "The Studio (location given with payment, do not share)",
         "city": "Bethlehem, Pennsylvania, United States",
         "rsvps": 33,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/it-s-a-90-s-bdsm-party-rsqadg",
@@ -3988,7 +6114,8 @@ var EVENTS = [
         "venue": "The Kink Lair",
         "city": "Scranton, Pennsylvania, United States",
         "rsvps": 150,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/vyxn-s-playground-sip-spank-8533bw",
@@ -4001,7 +6128,8 @@ var EVENTS = [
         "venue": "The Office Brooklyn",
         "city": "Brooklyn, New York, United States",
         "rsvps": 25,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/perfect-day-to-fuck-my-throat-gloryhole-4wjq5n",
@@ -4014,7 +6142,8 @@ var EVENTS = [
         "venue": "discreet location",
         "city": "Mount Laurel, New Jersey, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/hosting-a-gb-this-friday-in-bellmawr-new-jersey-zxf9q4",
@@ -4027,7 +6156,8 @@ var EVENTS = [
         "venue": null,
         "city": "Bellmawr, New Jersey, United States",
         "rsvps": 43,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/yummy-brooklyn-bipoc-kinky-burlesque-erotic-sideshow-h4shms",
@@ -4040,7 +6170,8 @@ var EVENTS = [
         "venue": null,
         "city": "Brooklyn, New York, United States",
         "rsvps": 75,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/open-dungeon-play-party-skill-share-and-bottoming-opportunities-fc49ov",
@@ -4053,7 +6184,8 @@ var EVENTS = [
         "venue": "Church",
         "city": "New Paltz, New York, United States",
         "rsvps": 128,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/femdom-token-party-bondage-wc3h1o",
@@ -4066,7 +6198,8 @@ var EVENTS = [
         "venue": "The Crown",
         "city": "Brooklyn, New York, United States",
         "rsvps": 73,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/new-jersey-trans-tgirl-shemale-crossdresser-transexual-transvestite-transgender-admirer-part-mb4ugu",
@@ -4079,7 +6212,8 @@ var EVENTS = [
         "venue": "Holmdel Sports Bar & Motor Inn",
         "city": "Holmdel, New Jersey, United States",
         "rsvps": 930,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/sensation-nyc-an-intimate-bdsm-play-party-for-partners-playmates-qubzub",
@@ -4092,7 +6226,8 @@ var EVENTS = [
         "venue": "Studio125",
         "city": "Manhattan, New York, United States",
         "rsvps": 40,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/rope-speed-scening-11-20-rtrkpw",
@@ -4105,7 +6240,8 @@ var EVENTS = [
         "venue": "Coil & Cord Studio",
         "city": "Brooklyn, New York, United States",
         "rsvps": 16,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/raw-creampie-freaky-fridays-cum-pump-dump-smash-dash-hotwife-gangbang-party-in-the-bx-1rsh7o",
@@ -4118,7 +6254,8 @@ var EVENTS = [
         "venue": "THE BRONX BNB — CHILL LAID BACK BNB",
         "city": "Bronx, New York, United States",
         "rsvps": 23,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/junglebooyz-present-friendsgiving-420-meet-up-soical-qhxizq",
@@ -4131,7 +6268,8 @@ var EVENTS = [
         "venue": "fishtown phila",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 12,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/gangbang-party-for-2-sexy-latinas-xi09kf",
@@ -4144,7 +6282,8 @@ var EVENTS = [
         "venue": "Elmhurst Queens",
         "city": "Queens, New York, United States",
         "rsvps": 33,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/bangsgiving-pt-3-newbie-november-exhibitionist-play-party-gangbang-brooklyn-ny-hehtcl",
@@ -4157,7 +6296,8 @@ var EVENTS = [
         "venue": null,
         "city": "Brooklyn, New York, United States",
         "rsvps": 52,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/anything-goes-3-hole-cum-slut-gangbang-bbc-blc-wwx6gh",
@@ -4170,7 +6310,8 @@ var EVENTS = [
         "venue": null,
         "city": "Yonkers, New York, United States",
         "rsvps": 12,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/bang-kock-s-fisnet-fantasies-xxx-party-the-erotic-bi-friendly-club-takeover-9pm-3am-gdslfj",
@@ -4183,7 +6324,8 @@ var EVENTS = [
         "venue": "ROLEPLAY CLUB in Philly!",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 503,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/friday-vibes-azpfxk",
@@ -4196,7 +6338,8 @@ var EVENTS = [
         "venue": null,
         "city": "Glen Gardner, New Jersey, United States",
         "rsvps": 18,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/the-nyte-life-episode-9-sex-kink-fantasy-stuff-that-turkey-edition-u1ubgp",
@@ -4209,7 +6352,8 @@ var EVENTS = [
         "venue": "L.I.C.K. Manor HQ",
         "city": "Melville, New York, United States",
         "rsvps": 180,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/saints-sinners-pansexual-pop-up-strip-club-party-a4fzmq",
@@ -4222,7 +6366,8 @@ var EVENTS = [
         "venue": "Gemini & Scorpio Loft",
         "city": "Brooklyn, New York, United States",
         "rsvps": 92,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/club-labyrinth-debauchery-cpls-60-guys-100-girls-free-9pm-4am-midtown-couples-singles-lpwwix",
@@ -4235,7 +6380,8 @@ var EVENTS = [
         "venue": "TBA",
         "city": "New York City, New York, United States",
         "rsvps": 79,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/dancegasm-party-dance-play-rvewze",
@@ -4248,7 +6394,8 @@ var EVENTS = [
         "venue": "(see email)",
         "city": "New York City, New York, United States",
         "rsvps": 70,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/sexy-ryder-s-farewell-gangbang-nb9jl7",
@@ -4261,7 +6408,8 @@ var EVENTS = [
         "venue": "private Location Near Woodbridge",
         "city": "Iselin, New Jersey, United States",
         "rsvps": 86,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/1st-gangbang-32ioip",
@@ -4274,7 +6422,8 @@ var EVENTS = [
         "venue": "East New York",
         "city": "Brooklyn, New York, United States",
         "rsvps": 65,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/iselin-nj-main-event-1zslnf",
@@ -4287,7 +6436,8 @@ var EVENTS = [
         "venue": "Iseline NJ Area",
         "city": "Iselin, New Jersey, United States",
         "rsvps": 171,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/the-diamond-club-nyc-presents-en-fuego-friday-a-sexy-latin-swinger-playfest-with-dj-snoop-ucom8p",
@@ -4300,7 +6450,8 @@ var EVENTS = [
         "venue": "THE DIAMOND CLUB NYC [2ND FLOOR]",
         "city": "New York City, New York, United States",
         "rsvps": 60,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/secret-pleasures-fishnet-friday-party-ixva9r",
@@ -4312,8 +6463,9 @@ var EVENTS = [
         "when": "Fri, Nov 20 at 9:00 PM",
         "venue": "Secret Pleasures is at the Back Door of the Wi Fi Cafe",
         "city": "Emmaus, Pennsylvania, United States",
-        "rsvps": 161,
-        "image": null
+        "rsvps": 160,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/caligula-ny-presents-cougars-milfs-hot-wives-fornication-friday-edition-with-dj-banton-1rtnva",
@@ -4326,7 +6478,8 @@ var EVENTS = [
         "venue": "CALIGULA NY",
         "city": "New York City, New York, United States",
         "rsvps": 72,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/gangbang-jessy-april-gjjjlm",
@@ -4339,7 +6492,8 @@ var EVENTS = [
         "venue": "tba",
         "city": "Emmaus, Pennsylvania, United States",
         "rsvps": 105,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/bi-sexual-couples-party-8umggj",
@@ -4352,7 +6506,8 @@ var EVENTS = [
         "venue": "Swann Inn Hotel",
         "city": "Linden, New Jersey, United States",
         "rsvps": 13,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/wanna-get-cucked-cdrlf5",
@@ -4365,7 +6520,8 @@ var EVENTS = [
         "venue": "Pussy Palace",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 13,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/gangbang-for-bbw-rskvwr",
@@ -4378,7 +6534,8 @@ var EVENTS = [
         "venue": "new york",
         "city": "New York City, New York, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/friday-fun-and-gangbang-sdrnwo",
@@ -4391,7 +6548,8 @@ var EVENTS = [
         "venue": null,
         "city": "Garden City, New York, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/vortex-goth-night-tonight-november-20th-w-qxts-jackpot-mike-saga-more-ezjljr",
@@ -4404,7 +6562,8 @@ var EVENTS = [
         "venue": "Warehouse on Watts - Downstairs",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 93,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/friday-nighy-gangbang-ljorxd",
@@ -4417,7 +6576,8 @@ var EVENTS = [
         "venue": "queens hotel",
         "city": "Queens, New York, United States",
         "rsvps": 27,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/tag-team-train-cc0fth",
@@ -4430,7 +6590,8 @@ var EVENTS = [
         "venue": "my house",
         "city": "Hackensack, New Jersey, United States",
         "rsvps": 27,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/friendsgiving-pre-thanksgiving-event-at-sinners-paradise-free-2027-membership-included-rsvp-now-adskgp",
@@ -4443,7 +6604,8 @@ var EVENTS = [
         "venue": "Sinners Paradise Club",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 107,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/upscale-sex-party-in-insane-manhattan-ph-fri-nov-20-fit-upscale-couples-single-women-only-pxh1qw",
@@ -4456,7 +6618,8 @@ var EVENTS = [
         "venue": "Dreamy Penthouse",
         "city": "New York City, New York, United States",
         "rsvps": 73,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/feast-qtbipoc-play-party-sprarh",
@@ -4469,7 +6632,8 @@ var EVENTS = [
         "venue": "Private Dungeon in Ridgewood",
         "city": "Brooklyn, New York, United States",
         "rsvps": 6,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/medusas-playhouse-presents-fantasy-fridays-open-to-all-couples-and-singles-males-females-couples-75s83w",
@@ -4482,7 +6646,8 @@ var EVENTS = [
         "venue": "MEDUSAS PLAYHOUSE",
         "city": "West Babylon, New York, United States",
         "rsvps": 44,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/desires-den-a5heiu",
@@ -4495,7 +6660,8 @@ var EVENTS = [
         "venue": null,
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 51,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/queens-pump-and-dump-at-kew-motor-inn-hq6wtq",
@@ -4508,7 +6674,8 @@ var EVENTS = [
         "venue": "kew motor inn",
         "city": "New York City, New York, United States",
         "rsvps": 12,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/miss-dior-x-newark-nj-play-party-succoe",
@@ -4521,7 +6688,8 @@ var EVENTS = [
         "venue": "Hotel",
         "city": "Newark, New Jersey, United States",
         "rsvps": 73,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/masked-after-dark-4e2zkr",
@@ -4534,7 +6702,8 @@ var EVENTS = [
         "venue": null,
         "city": "Brooklyn, New York, United States",
         "rsvps": 41,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/lifestyle_drop_box-ehmpce",
@@ -4547,7 +6716,8 @@ var EVENTS = [
         "venue": "LDB LOFT",
         "city": "Rahway, New Jersey, United States",
         "rsvps": 24,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/miami-nights-in-bx-af72oz",
@@ -4560,7 +6730,8 @@ var EVENTS = [
         "venue": null,
         "city": "Bronx, New York, United States",
         "rsvps": 14,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/panty-pantry-gangbang-party-staten-island-rclrjb",
@@ -4573,7 +6744,8 @@ var EVENTS = [
         "venue": null,
         "city": "New York City, New York, United States",
         "rsvps": 8,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/tsecretsociety-presents-dkqpfd",
@@ -4586,7 +6758,8 @@ var EVENTS = [
         "venue": "n/a",
         "city": "Brooklyn, New York, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/freak-fest-fridays-late-night-creepin-edition-11pm-4am-entry-100-before-12am-cjgsl8",
@@ -4599,7 +6772,8 @@ var EVENTS = [
         "venue": "JULIETTE'S PLAYPEN (Midtown)",
         "city": "Manhattan, New York, United States",
         "rsvps": 99,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/20/blkoutcomitte-presents-freaksgiving-the-playground-longue-5scsvq",
@@ -4612,7 +6786,344 @@ var EVENTS = [
         "venue": "inside dreams",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 39,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/20/cfnm-cam-jo-session-qlumob",
+        "name": "CFNM-Cam JO session!",
+        "start": "2026-11-20",
+        "end": "2026-11-20",
+        "category": "Sex Party",
+        "cost": "Free",
+        "when": "Fri, Nov 20 at 7:30 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 17,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/20/the-sexual-longevity-protocol-pelvic-floor-health-jw392k",
+        "name": "The Sexual Longevity Protocol: Pelvic Floor Health",
+        "start": "2026-11-20",
+        "end": "2026-11-20",
+        "category": "Educational",
+        "cost": null,
+        "when": "Fri, Nov 20 at 11:00 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 4,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/20/monthly-online-orgy-9ohmbn",
+        "name": "Monthly Online Orgy",
+        "start": "2026-11-20",
+        "end": "2026-11-20",
+        "category": "Sex Party",
+        "cost": "Free",
+        "when": "Fri, Nov 20 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 209,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/20/intent-impact-insight-sharps-with-mrfox-gkgmr9",
+        "name": "Intent, Impact, Insight & Sharps with @MrFox",
+        "start": "2026-11-20",
+        "end": "2026-11-20",
+        "category": "Educational",
+        "cost": null,
+        "when": "Fri, Nov 20 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": null,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/20/the-care-portal-bsudwg",
+        "name": "The Care Portal",
+        "start": "2026-11-20",
+        "end": "2026-11-20",
+        "category": "Educational",
+        "cost": null,
+        "when": "Fri, Nov 20 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 12,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/20/girl-gurl-virtual-goon-day-for-ladies-fem-types-only-sshdm9",
+        "name": "Girl/Gurl Virtual Goon Day (For Ladies & Fem Types Only)",
+        "start": "2026-11-20",
+        "end": "2026-11-20",
+        "category": "Sex Party",
+        "cost": "Free",
+        "when": "Fri, Nov 20 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 6,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/20/email-button-qa-evening-social-cb4srl",
+        "name": "Email Button QA Evening Social",
+        "start": "2026-11-20",
+        "end": "2026-11-20",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Fri, Nov 20 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": null,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/20/email-layout-qa-evening-social-vf4ybb",
+        "name": "Email Layout QA Evening Social",
+        "start": "2026-11-20",
+        "end": "2026-11-20",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Fri, Nov 20 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": null,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/20/email-layout-qa-gmail-social-qme5k5",
+        "name": "Email Layout QA Gmail Social",
+        "start": "2026-11-20",
+        "end": "2026-11-20",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Fri, Nov 20 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": null,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/20/online-friday-lunch-open-to-everyone-11-20-2026-qkdqbt",
+        "name": "Online Friday Lunch (open to everyone) - 11/20/2026",
+        "start": "2026-11-20",
+        "end": "2026-11-20",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Fri, Nov 20 at 2:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 23,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/20/flair-forbidden-women-in-charge-virtual-weekend-conference-lgua9m",
+        "name": "FLAIR Forbidden Women in Charge Virtual Weekend Conference",
+        "start": "2026-11-20",
+        "end": "2026-11-22",
+        "category": "Conference / Festival",
+        "cost": null,
+        "when": "Nov 20 – 22 · Fri 5:00 PM – Sun 6:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 397,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/20/friday-masturbation-party-3tm6js",
+        "name": "friday masturbation party",
+        "start": "2026-11-20",
+        "end": "2026-11-20",
+        "category": "Sex Party",
+        "cost": "Free",
+        "when": "Fri, Nov 20 at 5:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 28,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/20/exclusive-virtual-orgy-4tpeah",
+        "name": "Exclusive Virtual Orgy",
+        "start": "2026-11-20",
+        "end": "2026-11-20",
+        "category": "Sex Party",
+        "cost": "Free",
+        "when": "Fri, Nov 20 at 6:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 54,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/20/connection-in-my-mind-demisexual-truths-in-a-touch-first-world-with-mz_locs-m7bfun",
+        "name": "Connection in my Mind: Demisexual Truths in a touch first world with Mz_Locs",
+        "start": "2026-11-20",
+        "end": "2026-11-20",
+        "category": "Educational",
+        "cost": null,
+        "when": "Fri, Nov 20 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 130,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/20/conversatorio-abierto-conociendo-conclave-bdsm-dominicano-hbip5d",
+        "name": "Conversatorio Abierto: Conociendo Cónclave BDSM Dominicano",
+        "start": "2026-11-20",
+        "end": "2026-11-20",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Fri, Nov 20 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 34,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/20/dymy-community-event-kinky-pictionary-vhwm8e",
+        "name": "DYMY Community Event - Kinky Pictionary",
+        "start": "2026-11-20",
+        "end": "2026-11-20",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Fri, Nov 20 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 12,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/20/lingerie-bedtime-stories-pillow-talk-with-venus-dqveam",
+        "name": "Lingerie Bedtime Stories Pillow Talk with Venus",
+        "start": "2026-11-20",
+        "end": "2026-11-20",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Fri, Nov 20 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 59,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/20/open-lounge-and-kink-time-uaup8d",
+        "name": "Open Lounge and Kink Time",
+        "start": "2026-11-20",
+        "end": "2026-11-20",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Fri, Nov 20 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": null,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/20/abby-s-friday-night-discord-party-wrrlah",
+        "name": "Abby's Friday Night Discord Party",
+        "start": "2026-11-20",
+        "end": "2026-11-20",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Fri, Nov 20 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 35,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/20/online-submissive-forum-when-wanting-more-takes-over-recognizing-sub-frenzy-l-submissive-guide-etnr2d",
+        "name": "ONLINE Submissive Forum - When Wanting More Takes Over: Recognizing Sub Frenzy | Submissive Guide",
+        "start": "2026-11-20",
+        "end": "2026-11-20",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Fri, Nov 20 at 8:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 127,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/20/isolation-storytime-afterparty-2026-11-20-r8efdg",
+        "name": "Isolation Storytime Afterparty - 2026-11-20",
+        "start": "2026-11-20",
+        "end": "2026-11-20",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Fri, Nov 20 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 3,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/20/beach-vibes-only-girl-s-night-virtual-munch-ndalv5",
+        "name": "Beach Vibes Only - Girl's Night Virtual Munch",
+        "start": "2026-11-20",
+        "end": "2026-11-20",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Fri, Nov 20 at 9:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 19,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/20/house-blue-flames-presents-kinky-bedtime-stories-ykdkk1",
+        "name": "House Blue Flames presents Kinky Bedtime Stories",
+        "start": "2026-11-20",
+        "end": "2026-11-20",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Fri, Nov 20 at 10:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 18,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/20/friday-night-all-you-people-are-crazy-munch-7jfde1",
+        "name": "Friday Night all you people are crazy...munch",
+        "start": "2026-11-20",
+        "end": "2026-11-20",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Fri, Nov 20 at 10:50 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 2,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/friday-freakfest-xxx-e9vucx",
@@ -4625,7 +7136,8 @@ var EVENTS = [
         "venue": "stacks play house",
         "city": "New York City, New York, United States",
         "rsvps": 3,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/super-max-after-party-in-iselin-eixaaf",
@@ -4638,7 +7150,8 @@ var EVENTS = [
         "venue": "private Location Near Woodbridge",
         "city": "Iselin, New Jersey, United States",
         "rsvps": 4,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/my-suck-party-ygv14b",
@@ -4651,7 +7164,8 @@ var EVENTS = [
         "venue": "my hotel Mount Laurel, New Jersey",
         "city": "Mount Laurel, New Jersey, United States",
         "rsvps": 50,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/cum-kiss-a-imate-hzv0g0",
@@ -4664,7 +7178,8 @@ var EVENTS = [
         "venue": "Eastern Correctional Facility",
         "city": "Napanoch, New York, United States",
         "rsvps": 4,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/saturday-morning-party-at-berlin-news-november-21st-axjyc3",
@@ -4677,7 +7192,8 @@ var EVENTS = [
         "venue": "Berlin News Agency",
         "city": "West Berlin, New Jersey, United States",
         "rsvps": 247,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/freaks-on-foot-a-weekly-walking-social-oc4sse",
@@ -4690,7 +7206,8 @@ var EVENTS = [
         "venue": "Enola Low Grade Trail – Turkey Hill Trailhead",
         "city": "Conestoga, Pennsylvania, United States",
         "rsvps": 37,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/the-pedicure-party-k3imrw",
@@ -4703,7 +7220,8 @@ var EVENTS = [
         "venue": "Private Space",
         "city": "Norwalk, Connecticut, United States",
         "rsvps": 6,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/meet-and-greet-with-sexycompanionai-7svx3h",
@@ -4716,7 +7234,8 @@ var EVENTS = [
         "venue": null,
         "city": "Limerick, Pennsylvania, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/gangbang-this-fat-booty-ts-bitch-obyffl",
@@ -4729,7 +7248,8 @@ var EVENTS = [
         "venue": "hotel",
         "city": "New York City, New York, United States",
         "rsvps": 18,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/sloppy-seconds-saturday-vzuunq",
@@ -4742,7 +7262,8 @@ var EVENTS = [
         "venue": "private location near Woodbridge",
         "city": "Iselin, New Jersey, United States",
         "rsvps": 14,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/iselin-morning-after-party-9gmhce",
@@ -4755,7 +7276,8 @@ var EVENTS = [
         "venue": "Iseline NJ Area",
         "city": "Iselin, New Jersey, United States",
         "rsvps": 73,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/worshipping-white-daddies-cocks-9x5iwi",
@@ -4768,7 +7290,8 @@ var EVENTS = [
         "venue": "adult playtime boutique",
         "city": "New Hampton, New York, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/kpid-members-only-teas-and-ties-rope-share-wo9ffl",
@@ -4781,7 +7304,8 @@ var EVENTS = [
         "venue": "given to approved attendees",
         "city": "Lancaster, Pennsylvania, United States",
         "rsvps": 24,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/body-bamboo-floor-foundations-8yzu9o",
@@ -4794,7 +7318,8 @@ var EVENTS = [
         "venue": "Coil & Cord Studio",
         "city": "Brooklyn, New York, United States",
         "rsvps": 21,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/naked-yoga-new-york-6ioawm",
@@ -4807,7 +7332,8 @@ var EVENTS = [
         "venue": "Address given in email confirmation. Please contact us if paying at door.",
         "city": "New York City, New York, United States",
         "rsvps": 36,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/njtog-november-eating-adventure-11-21-2026-attendance-limited-poutte",
@@ -4820,7 +7346,8 @@ var EVENTS = [
         "venue": "TBA",
         "city": "Manville, New Jersey, United States",
         "rsvps": 15,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/sting-nyc-a-gay-men-s-spanking-impact-play-party-ndkkx1",
@@ -4833,7 +7360,8 @@ var EVENTS = [
         "venue": "Studio125",
         "city": "Manhattan, New York, United States",
         "rsvps": 21,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/very-last-minute-pump-and-dump-yiufmu",
@@ -4846,7 +7374,8 @@ var EVENTS = [
         "venue": "Red Carpet Inn Norwalk, CT",
         "city": "Norwalk, Connecticut, United States",
         "rsvps": 16,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/nyc-tng-ages-18-35-weekend-munch-november-2026-zkvnam",
@@ -4859,7 +7388,8 @@ var EVENTS = [
         "venue": "Cellar Dog",
         "city": "Manhattan, New York, United States",
         "rsvps": 123,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/if-they-re-screaming-they-re-breathing-dngau9",
@@ -4872,7 +7402,8 @@ var EVENTS = [
         "venue": "Temple NYC",
         "city": "Brooklyn, New York, United States",
         "rsvps": 43,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/stage-clear-iv-hakmnh",
@@ -4885,7 +7416,8 @@ var EVENTS = [
         "venue": "Underground Arts",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 54,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/friendsgiving-meet-n-greet-day-party-jdwa8d",
@@ -4898,7 +7430,8 @@ var EVENTS = [
         "venue": "Sexy Couples Lounge",
         "city": "Bronx, New York, United States",
         "rsvps": 23,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/nyc-and-nnj-black-men-suck-party-ya3gyu",
@@ -4911,7 +7444,8 @@ var EVENTS = [
         "venue": "Peivate Garage near Nyc and NJ",
         "city": "Fort Lee, New Jersey, United States",
         "rsvps": 8,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/consent-connection-communication-for-couples-navigating-consensual-non-monogamy-4konr1",
@@ -4924,7 +7458,8 @@ var EVENTS = [
         "venue": "Less Dead Studio",
         "city": "Poughkeepsie, New York, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/knotty-new-york-rope-practice-for-queer-men-j2kqgz",
@@ -4937,7 +7472,8 @@ var EVENTS = [
         "venue": null,
         "city": "Manhattan, New York, United States",
         "rsvps": 7,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/body-bamboo-stick-y-situations-partial-suspensions-rjhclc",
@@ -4950,7 +7486,22 @@ var EVENTS = [
         "venue": "Coil & Cord Studio",
         "city": "Brooklyn, New York, United States",
         "rsvps": 14,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/21/friendsgiving-meet-n-greet-day-party-vgp2fl",
+        "name": "Friendsgiving meet n greet Day party!",
+        "start": "2026-11-21",
+        "end": "2026-11-21",
+        "category": "Sex Party",
+        "cost": null,
+        "when": "Sat, Nov 21 at 3:00 PM",
+        "venue": "Sexy couples lounge",
+        "city": "Bronx, New York, United States",
+        "rsvps": 10,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/gangbang-at-cupid-s-arcade-in-kutztown-coip69",
@@ -4963,7 +7514,8 @@ var EVENTS = [
         "venue": "Cupid’s Arcade",
         "city": "Kutztown, Pennsylvania, United States",
         "rsvps": 55,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/she-got-blacked-xxx-daytime-gang-bang-party-3-30pm-8pm-927lln",
@@ -4976,7 +7528,8 @@ var EVENTS = [
         "venue": "Private hotel",
         "city": "Mount Laurel, New Jersey, United States",
         "rsvps": 132,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/kiki-munch-udbrbj",
@@ -4989,7 +7542,8 @@ var EVENTS = [
         "venue": "Two locals brewery",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 67,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/newbie-couple-saturday-berlin-news-agency-thklkm",
@@ -5002,7 +7556,8 @@ var EVENTS = [
         "venue": null,
         "city": "West Berlin, New Jersey, United States",
         "rsvps": 150,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/chubby-femboy-free-night-ovsgai",
@@ -5015,7 +7570,8 @@ var EVENTS = [
         "venue": "MPlace",
         "city": "Manalapan, New Jersey, United States",
         "rsvps": 12,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/sensory-play-how-people-learn-sold-out-hbmv7m",
@@ -5028,7 +7584,8 @@ var EVENTS = [
         "venue": "Mischief Manor",
         "city": "Wharton, New Jersey, United States",
         "rsvps": 48,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/the-wild-bunch-presents-stuffed-thighs-buttered-biscuits-tbbc0q",
@@ -5041,7 +7598,8 @@ var EVENTS = [
         "venue": "Secret Hotel",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 270,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/swirl-city-s-thanksgiving-feast-house-party-iudv8i",
@@ -5054,7 +7612,8 @@ var EVENTS = [
         "venue": "East Greenville",
         "city": "East Greenville, Pennsylvania, United States",
         "rsvps": 141,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/now-closed-no-new-guest-will-be-added-lmmpvm",
@@ -5067,7 +7626,8 @@ var EVENTS = [
         "venue": null,
         "city": "Fishkill, New York, United States",
         "rsvps": 13,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/bi-orgy-w7uql3",
@@ -5080,7 +7640,8 @@ var EVENTS = [
         "venue": "tbd",
         "city": "Toms River, New Jersey, United States",
         "rsvps": 42,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/game-night-after-dark-saifue",
@@ -5093,7 +7654,8 @@ var EVENTS = [
         "venue": "Garibaldi Bar & Lounge",
         "city": "New York City, New York, United States",
         "rsvps": 18,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/latex-leather-dark-desires-a-fetish-wear-social-3njara",
@@ -5106,7 +7668,8 @@ var EVENTS = [
         "venue": "The Venue",
         "city": "Bethlehem, Pennsylvania, United States",
         "rsvps": 43,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/goddess-worship-with-bats-violet-itv8u6",
@@ -5119,7 +7682,8 @@ var EVENTS = [
         "venue": "location given after ticket purchase",
         "city": "Brooklyn, New York, United States",
         "rsvps": 61,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/escape-to-xanadu-thanksgiving-play-party-sold-out-gqkqfi",
@@ -5132,7 +7696,8 @@ var EVENTS = [
         "venue": "Revealed on your Forbidden Ticket Receipt",
         "city": "New Jersey, United States",
         "rsvps": 60,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/nyc-kinky-gamers-munch-november-21-2026-j6uabr",
@@ -5145,7 +7710,8 @@ var EVENTS = [
         "venue": "Bel Aire Diner",
         "city": "New York City, New York, United States",
         "rsvps": 46,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/fluids-saturday-play-party-for-trans-cds-and-admirers-in-hell-s-kitchen-dg94t9",
@@ -5158,7 +7724,8 @@ var EVENTS = [
         "venue": "Adam's Club",
         "city": "Manhattan, New York, United States",
         "rsvps": 69,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/latina-ts-cumdump-fv1hjl",
@@ -5171,7 +7738,8 @@ var EVENTS = [
         "venue": "hotel",
         "city": "Manhattan, New York, United States",
         "rsvps": 44,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/nyclf-card-game-night-or-board-games-november-11-21-2026-7-30-pm-11pm-hosted-by-nyc_outlaw-4kmx0q",
@@ -5184,7 +7752,8 @@ var EVENTS = [
         "venue": "Skyline diner",
         "city": "New York City, New York, United States",
         "rsvps": 64,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/barnlesque-v-hoik2c",
@@ -5197,7 +7766,8 @@ var EVENTS = [
         "venue": "Barnstormers Theater",
         "city": "Ridley Park, Pennsylvania, United States",
         "rsvps": 12,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/porn-star-playtime-kcpyxg",
@@ -5209,8 +7779,9 @@ var EVENTS = [
         "when": "Sat, Nov 21 at 7:30 PM",
         "venue": null,
         "city": "Rutherford, New Jersey, United States",
-        "rsvps": 41,
-        "image": null
+        "rsvps": 40,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/fetish-night-6ab2on",
@@ -5223,98 +7794,8 @@ var EVENTS = [
         "venue": "12Penny Saloon",
         "city": "Moosic, Pennsylvania, United States",
         "rsvps": 179,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/21/pumpkin-spice-everything-kinky-november-party-jpehc8",
-        "name": "PUMPKIN SPICE & EVERYTHING KINKY (November Party)",
-        "start": "2026-11-21",
-        "end": "2026-11-21",
-        "category": "BDSM Party",
-        "cost": null,
-        "when": "Sat, Nov 21 at 8:00 PM",
-        "venue": null,
-        "city": "Wharton, New Jersey, United States",
-        "rsvps": 41,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/21/pre-impact-munch-nov-21-nyc-eehxox",
-        "name": "Pre-IMPACT! Munch - Nov 21 - NYC",
-        "start": "2026-11-21",
-        "end": "2026-11-21",
-        "category": "Social",
-        "cost": "Free",
-        "when": "Sat, Nov 21 at 8:00 PM",
-        "venue": "Nancy Whiskey Pub",
-        "city": "Manhattan, New York, United States",
-        "rsvps": 96,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/21/the-palace-saga-an-interactive-play-performance-the-palace-9jewdd",
-        "name": "THE PALACE SAGA AN INTERACTIVE PLAY/ PERFORMANCE @THE PALACE",
-        "start": "2026-11-21",
-        "end": "2026-11-21",
-        "category": "Sex Party",
-        "cost": null,
-        "when": "Sat, Nov 21 at 8:00 PM",
-        "venue": "THE PALACE",
-        "city": "Burlington, New Jersey, United States",
-        "rsvps": 179,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/21/uncovered-a-sapphic-cd-ns-olx06q",
-        "name": "Uncovered: A Sapphic CD/ns",
-        "start": "2026-11-21",
-        "end": "2026-11-21",
-        "category": "BDSM Party",
-        "cost": null,
-        "when": "Sat, Nov 21 at 8:00 PM",
-        "venue": null,
-        "city": "Queens, New York, United States",
-        "rsvps": 106,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/21/leather-leaves-sanctuary-the-nest-nov-play-party-qrjtxm",
-        "name": "Leather & Leaves Sanctuary @The Nest - Nov play party",
-        "start": "2026-11-21",
-        "end": "2026-11-21",
-        "category": "BDSM Party",
-        "cost": null,
-        "when": "Sat, Nov 21 at 8:00 PM",
-        "venue": "The Nest (exact address given upon registration)",
-        "city": "Philadelphia, Pennsylvania, United States",
-        "rsvps": 360,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/21/black-friday-con-fuego-zauo3b",
-        "name": "Black Friday con Fuego",
-        "start": "2026-11-21",
-        "end": "2026-11-21",
-        "category": "Sex Party",
-        "cost": null,
-        "when": "Sat, Nov 21 at 8:00 PM",
-        "venue": null,
-        "city": "Glen Gardner, New Jersey, United States",
-        "rsvps": 5,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/21/bipoc-rope-jam-11-21-kx7qho",
-        "name": "BIPOC Rope Jam - 11/21",
-        "start": "2026-11-21",
-        "end": "2026-11-21",
-        "category": "BDSM Party",
-        "cost": null,
-        "when": "Sat, Nov 21 at 8:00 PM",
-        "venue": "Coil & Cord Studio",
-        "city": "Brooklyn, New York, United States",
-        "rsvps": 25,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/bloodrave-nyc-770p7l",
@@ -5327,7 +7808,8 @@ var EVENTS = [
         "venue": "Saint Vitus",
         "city": "New York City, New York, United States",
         "rsvps": 34,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/p-rn-theater-social-male-man-identified-only-pc4m5e",
@@ -5340,7 +7822,8 @@ var EVENTS = [
         "venue": "Address given in email confirmation. Please contact us if paying at door.",
         "city": "New York City, New York, United States",
         "rsvps": 19,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/secret-pleasures-naughty-school-girl-party-c5wxd5",
@@ -5353,7 +7836,8 @@ var EVENTS = [
         "venue": "Secret Pleasures is at the Back Door of the Wi Fi Cafe",
         "city": "Emmaus, Pennsylvania, United States",
         "rsvps": 60,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/thighs-wide-open-2026-cum-get-some-leftovers-yib08s",
@@ -5366,7 +7850,8 @@ var EVENTS = [
         "venue": null,
         "city": "New York City, New York, United States",
         "rsvps": 96,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/latex-leather-dark-desires-the-after-hours-play-affair-7basba",
@@ -5379,7 +7864,8 @@ var EVENTS = [
         "venue": "The Venue",
         "city": "Bethlehem, Pennsylvania, United States",
         "rsvps": 44,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/noir-desire-d5qqdj",
@@ -5392,7 +7878,8 @@ var EVENTS = [
         "venue": null,
         "city": "Edison, New Jersey, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/ligangbang-thanksgiving-fun-lwdkre",
@@ -5405,7 +7892,8 @@ var EVENTS = [
         "venue": "TBA",
         "city": "Melville, New York, United States",
         "rsvps": 85,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/swing-in-style-smzp5f",
@@ -5418,7 +7906,8 @@ var EVENTS = [
         "venue": null,
         "city": "Linden, New Jersey, United States",
         "rsvps": 129,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/clue-a-kinky-murder-mystery-play-party-4dotu4",
@@ -5431,7 +7920,8 @@ var EVENTS = [
         "venue": null,
         "city": "New York City, New York, United States",
         "rsvps": 102,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/tasty-delights-fort-lee-nj-vtxlum",
@@ -5444,7 +7934,8 @@ var EVENTS = [
         "venue": null,
         "city": "Fort Lee, New Jersey, United States",
         "rsvps": 252,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/club-labyrinth-swinging-kink-saturday-cpls-60-guys-120-ladies-free-midtown-9pm-4am-kgqucf",
@@ -5457,7 +7948,8 @@ var EVENTS = [
         "venue": "TBA",
         "city": "New York City, New York, United States",
         "rsvps": 85,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/societe-anonyme-converge-kink-fetish-mixer-dance-party-ipy2a6",
@@ -5470,7 +7962,8 @@ var EVENTS = [
         "venue": "Onyx Room @ House of Yes",
         "city": "New York City, New York, United States",
         "rsvps": 58,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/couples-freak-fest-game-nite-fdr7v0",
@@ -5483,7 +7976,8 @@ var EVENTS = [
         "venue": null,
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 13,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/fall-into-lynsanity-aai78s",
@@ -5496,7 +7990,8 @@ var EVENTS = [
         "venue": "hotel info will be shared closer to date",
         "city": "Edison, New Jersey, United States",
         "rsvps": 22,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/hotwife-gangbang-fun-fu1rcu",
@@ -5509,7 +8004,8 @@ var EVENTS = [
         "venue": "DM",
         "city": "Newburgh, New York, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/faded-sedated-x-rated-exhibitionist-play-party-gangbang-brooklyn-ny-zfl6il",
@@ -5522,7 +8018,8 @@ var EVENTS = [
         "venue": null,
         "city": "Brooklyn, New York, United States",
         "rsvps": 48,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/sensual-sexy-scorpio-bash-the-4-w-s-uqe5kv",
@@ -5535,7 +8032,8 @@ var EVENTS = [
         "venue": "Scorpio Manor",
         "city": "Hillside, New Jersey, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/camo-party-etoiry",
@@ -5548,7 +8046,8 @@ var EVENTS = [
         "venue": "Medusa's Playhouse",
         "city": "West Babylon, New York, United States",
         "rsvps": 126,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/impact-sat-nov-21st-nyc-s-longest-running-play-party-0kig7m",
@@ -5561,7 +8060,8 @@ var EVENTS = [
         "venue": "The Diamond Club",
         "city": "Manhattan, New York, United States",
         "rsvps": 393,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/men-in-black-the-sinners-edition-rsvp-now-free-entry-kbkzzr",
@@ -5574,7 +8074,8 @@ var EVENTS = [
         "venue": "Sinners Paradise Club",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 93,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/gotica-s-fetish-rave-night-voex2u",
@@ -5587,7 +8088,8 @@ var EVENTS = [
         "venue": "QXT'S NIGHTCLUB",
         "city": "Newark, New Jersey, United States",
         "rsvps": 76,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/tsecretsociety-presents-f9lrqe",
@@ -5600,7 +8102,8 @@ var EVENTS = [
         "venue": "n/a",
         "city": "New York City, New York, United States",
         "rsvps": 44,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/medusas-playhouse-my-frisky-business-presents-camo-party-yrffhh",
@@ -5613,7 +8116,8 @@ var EVENTS = [
         "venue": "MEDUSAS PLAYHOUSE",
         "city": "West Babylon, New York, United States",
         "rsvps": 41,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/feast-flirt-freak-friendsgiving-play-party-bronx-nyc-xsgruc",
@@ -5626,7 +8130,8 @@ var EVENTS = [
         "venue": null,
         "city": "Bronx, New York, United States",
         "rsvps": 35,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/kinksgiving-2tgj4j",
@@ -5639,7 +8144,8 @@ var EVENTS = [
         "venue": "the VIBEZ",
         "city": "Hillside, New Jersey, United States",
         "rsvps": 16,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/sneaky-link-saturdays-late-night-creepin-edition-10pm-3am-in-midtown-nyc-100-entry-n8prpy",
@@ -5652,7 +8158,8 @@ var EVENTS = [
         "venue": "JULIETTE'S PLAYPEN (Midtown)",
         "city": "Manhattan, New York, United States",
         "rsvps": 106,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/bad-behavior-the-adult-nightlife-party-buvwe6",
@@ -5665,7 +8172,8 @@ var EVENTS = [
         "venue": "Garibaldi de Noche",
         "city": "New York City, New York, United States",
         "rsvps": 17,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/feast-flirt-freak-friendsgiving-after-party-zzjq9j",
@@ -5678,7 +8186,8 @@ var EVENTS = [
         "venue": "Sexy couples lounge",
         "city": "Bronx, New York, United States",
         "rsvps": 5,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/lifefstyle_drop_box-odels3",
@@ -5691,7 +8200,8 @@ var EVENTS = [
         "venue": "exact address disclosed upon donation",
         "city": "Rahway, New Jersey, United States",
         "rsvps": 24,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/fem-slut-for-you-9bl3cw",
@@ -5704,7 +8214,8 @@ var EVENTS = [
         "venue": "my apartment",
         "city": "Carteret, New Jersey, United States",
         "rsvps": 5,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/the-after-dark-experience-9f4tes",
@@ -5717,7 +8228,8 @@ var EVENTS = [
         "venue": null,
         "city": "Brooklyn, New York, United States",
         "rsvps": 28,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/singles-couples-orgy-good-looking-only-rejpb8",
@@ -5730,7 +8242,8 @@ var EVENTS = [
         "venue": "midtown west huge loft",
         "city": "Manhattan, New York, United States",
         "rsvps": 3,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/sexy-saturday-night-fun-4dpik3",
@@ -5743,7 +8256,8 @@ var EVENTS = [
         "venue": "stacks play house",
         "city": "New York City, New York, United States",
         "rsvps": 2,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/pregame-at-novvas-house-h7wopo",
@@ -5756,7 +8270,8 @@ var EVENTS = [
         "venue": "tilden houses",
         "city": "New York City, New York, United States",
         "rsvps": 7,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/raw-creampie-sexxxy-saturdays-cum-pump-dump-smash-dash-hotwife-gangbang-party-in-the-bx-tpusvn",
@@ -5769,7 +8284,8 @@ var EVENTS = [
         "venue": "THE BRONX BNB — CHILL LAID BACK BNB",
         "city": "Bronx, New York, United States",
         "rsvps": 8,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/two-girl-gangbang-3yjbus",
@@ -5782,7 +8298,8 @@ var EVENTS = [
         "venue": "PHL",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 88,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/come-join-me-and-my-friends-eating-pussy-party-fhmnby",
@@ -5795,7 +8312,8 @@ var EVENTS = [
         "venue": "The palace",
         "city": "Queens, New York, United States",
         "rsvps": 1,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/21/saturday-night-isn-t-over-after-hours-4am-8am-9gylw6",
@@ -5808,7 +8326,288 @@ var EVENTS = [
         "venue": "JULIETTE'S PLAYPEN (Midtown)",
         "city": "Manhattan, New York, United States",
         "rsvps": 89,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/21/exclusive-virtual-orgy-group-mf5iqk",
+        "name": "Exclusive Virtual Orgy Group",
+        "start": "2026-11-21",
+        "end": "2026-11-22",
+        "category": "Sex Party",
+        "cost": "Free",
+        "when": "Nov 21 – 23 · Sat 2:00 AM – Mon 12:59 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 164,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/21/gang-bang-party-pmaxee",
+        "name": "GANG BANG PARTY",
+        "start": "2026-11-21",
+        "end": "2026-11-21",
+        "category": "Sex Party",
+        "cost": "Free",
+        "when": "Sat, Nov 21 at 7:30 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 153,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/21/test-event-3-yftkul",
+        "name": "Test event 3",
+        "start": "2026-11-21",
+        "end": "2026-11-21",
+        "category": "Social",
+        "cost": null,
+        "when": "Sat, Nov 21 at 10:00 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 4,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/21/all-bodies-virtual-naked-yoga-fktfnj",
+        "name": "All Bodies Virtual Naked Yoga",
+        "start": "2026-11-21",
+        "end": "2026-11-21",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Nov 21 at 10:30 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 37,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/21/online-body-positive-daylight-nudist-exhibitionist-pranayama-practice-ydapqt",
+        "name": "Online Body Positive Daylight Nudist/Exhibitionist Pranayama Practice",
+        "start": "2026-11-21",
+        "end": "2026-11-21",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Nov 21 at 11:00 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 26,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/21/consent-and-leadership-6-harm-creates-responsibility-a-guide-to-consent-incidents-233c0w",
+        "name": "Consent and Leadership 6: Harm Creates Responsibility: A Guide to Consent Incidents",
+        "start": "2026-11-21",
+        "end": "2026-11-21",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Nov 21 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 92,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/21/conscious-conversations-conditioning-vs-choice-bgqhib",
+        "name": "Conscious Conversations | Conditioning vs. Choice",
+        "start": "2026-11-21",
+        "end": "2026-11-21",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sat, Nov 21 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 113,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/21/conscious-conversations-month-2-week-9-conditioning-vs-choice-rjkyem",
+        "name": "Conscious Conversations | Month 2 : week 9 | Conditioning vs. Choice",
+        "start": "2026-11-21",
+        "end": "2026-11-21",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sat, Nov 21 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 131,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/21/jedi-mind-kink-i3xh3e",
+        "name": "Jedi Mind Kink",
+        "start": "2026-11-21",
+        "end": "2026-11-21",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Nov 21 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 40,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/21/needle-play-101-what-you-need-to-know-before-starting-needle-play-and-demo-online-wghypm",
+        "name": "Needle play 101 - What you need to know before starting needle play and demo [Online]",
+        "start": "2026-11-21",
+        "end": "2026-11-21",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Nov 21 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": null,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/21/bleed-on-impact-blood-impact-play-with-ms_kitten_-nepgyi",
+        "name": "Bleed on Impact: Blood Impact Play with @MS_KITTEN_",
+        "start": "2026-11-21",
+        "end": "2026-11-21",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Nov 21 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 410,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/21/online-service-chats-a-generation-apart-pofqiq",
+        "name": "ONLINE Service Chats - A Generation Apart",
+        "start": "2026-11-21",
+        "end": "2026-11-21",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sat, Nov 21 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 33,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/21/dancing-with-myself-auto-sensuality-eros-and-kink-xnssxe",
+        "name": "Dancing With Myself: Auto-Sensuality, Eros, and Kink",
+        "start": "2026-11-21",
+        "end": "2026-11-21",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Nov 21 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 180,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/21/hard-conversations-scene-negotiation-dominance-mastermind-group-g3yxbs",
+        "name": "Hard Conversations & Scene Negotiation @ Dominance Mastermind Group",
+        "start": "2026-11-21",
+        "end": "2026-11-21",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sat, Nov 21 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 9,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/21/virtual-masturbation-session-73rw9c",
+        "name": "Virtual Masturbation Session",
+        "start": "2026-11-21",
+        "end": "2026-11-21",
+        "category": "Sex Party",
+        "cost": null,
+        "when": "Sat, Nov 21 at 2:43 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 10,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/21/online-m-s-dynamics-102-the-power-of-ritual-srgmdd",
+        "name": "ONLINE: M/s Dynamics 102: The Power of Ritual",
+        "start": "2026-11-21",
+        "end": "2026-11-21",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Nov 21 at 5:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 217,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/21/morals-love-shack-pop-up-vzkqr1",
+        "name": "morals love shack pop up",
+        "start": "2026-11-21",
+        "end": "2026-11-21",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Sat, Nov 21 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 12,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/21/saturday-night-at-the-library-movie-night-8xuf0d",
+        "name": "Saturday Night at the Library: Movie Night",
+        "start": "2026-11-21",
+        "end": "2026-11-21",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Sat, Nov 21 at 7:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 25,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/21/philly-black-munch-10-year-anniversary-3suiyv",
+        "name": "Philly Black Munch 10 year Anniversary",
+        "start": "2026-11-21",
+        "end": "2026-11-21",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Sat, Nov 21 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 83,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/21/open-lounge-and-kink-time-r9iljf",
+        "name": "Open Lounge and Kink Time",
+        "start": "2026-11-21",
+        "end": "2026-11-21",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Sat, Nov 21 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 16,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/11/22/mischief-after-midnight-2-girl-gangbang-qxkntq",
@@ -5821,7 +8620,8 @@ var EVENTS = [
         "venue": null,
         "city": "Brooklyn, New York, United States",
         "rsvps": 18,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/22/morning-relaxation-fun-azijln",
@@ -5834,7 +8634,8 @@ var EVENTS = [
         "venue": "the Element",
         "city": "Spring Valley, New York, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/22/who-says-the-party-has-to-end-after-xxx-party-nhfz80",
@@ -5847,7 +8648,8 @@ var EVENTS = [
         "venue": "stacks play house",
         "city": "New York City, New York, United States",
         "rsvps": 13,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/22/the-after-dark-experience-h1heyt",
@@ -5860,7 +8662,8 @@ var EVENTS = [
         "venue": null,
         "city": "Brooklyn, New York, United States",
         "rsvps": 13,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/22/gang-bang-my-fiance-ssuuc7",
@@ -5872,8 +8675,9 @@ var EVENTS = [
         "when": "Sun, Nov 22 at 6:00 AM",
         "venue": "hotel TBD",
         "city": "Farmingdale, New York, United States",
-        "rsvps": 104,
-        "image": null
+        "rsvps": 103,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/22/my-private-anal-gangbang-yquxb4",
@@ -5886,7 +8690,8 @@ var EVENTS = [
         "venue": null,
         "city": "Brooklyn, New York, United States",
         "rsvps": 15,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/22/nomad-coffee-munch-returns-ivo5ka",
@@ -5899,7 +8704,8 @@ var EVENTS = [
         "venue": null,
         "city": "Ambler, Pennsylvania, United States",
         "rsvps": 37,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/22/lv-little-scouts-november-nerdy-crafternoon-jfe4j4",
@@ -5912,7 +8718,8 @@ var EVENTS = [
         "venue": null,
         "city": "Allentown, Pennsylvania, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/22/euphoria-expo-shea9x",
@@ -5925,7 +8732,8 @@ var EVENTS = [
         "venue": "3 dollar bill bk",
         "city": "Brooklyn, New York, United States",
         "rsvps": 341,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/22/kpid-members-only-parlor-games-improv-edition-game-day-xrztcc",
@@ -5938,7 +8746,8 @@ var EVENTS = [
         "venue": "given to approved attendees",
         "city": "Mount Joy, Pennsylvania, United States",
         "rsvps": 18,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/22/kinkster-s-craft-club-november-2026-nznfh9",
@@ -5951,7 +8760,8 @@ var EVENTS = [
         "venue": null,
         "city": "Wharton, New Jersey, United States",
         "rsvps": 12,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/22/new-york-city-kinky-speed-dating-mixer-male-dom-submissive-edition-yixi1u",
@@ -5964,7 +8774,8 @@ var EVENTS = [
         "venue": null,
         "city": "Manhattan, New York, United States",
         "rsvps": 157,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/22/sunday-is-funday-bna-wpni48",
@@ -5977,7 +8788,8 @@ var EVENTS = [
         "venue": "Berlin News Agency",
         "city": "West Berlin, New Jersey, United States",
         "rsvps": 104,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/22/ritual-practice-impact-skills-clinic-november-philly-t5eh04",
@@ -5990,7 +8802,8 @@ var EVENTS = [
         "venue": "Private Venue",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 93,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/22/intro-to-leathercraft-make-a-leather-collar-edxzyy",
@@ -6003,7 +8816,8 @@ var EVENTS = [
         "venue": "Coil & Cord Studio",
         "city": "Brooklyn, New York, United States",
         "rsvps": 36,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/22/tavern-13-a-dungeons-and-dragons-event-mzfznr",
@@ -6016,7 +8830,8 @@ var EVENTS = [
         "venue": "Bar XIII",
         "city": "Wilmington, Delaware, United States",
         "rsvps": 36,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/22/pussy-throat-is-hosting-another-suck-off-bridgeport-ct-11-22-from-2-8pm-vtovhw",
@@ -6029,7 +8844,8 @@ var EVENTS = [
         "venue": "Boston Book & Video",
         "city": "Bridgeport, Connecticut, United States",
         "rsvps": 19,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/22/queens-pump-n-dump-kew-motor-inn-4uu5la",
@@ -6042,7 +8858,8 @@ var EVENTS = [
         "venue": "kew motor inn",
         "city": "New York City, New York, United States",
         "rsvps": 7,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/22/queer-cuddles-an-alphabet-mafia-cuddle-party-dz830s",
@@ -6055,7 +8872,8 @@ var EVENTS = [
         "venue": "Talon Bar: No Exit",
         "city": "New York City, New York, United States",
         "rsvps": 95,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/22/nappy-nibbles-nyc-an-abdl-social-snacks-community-gathering-iy6ofh",
@@ -6068,7 +8886,8 @@ var EVENTS = [
         "venue": "Studio125",
         "city": "Manhattan, New York, United States",
         "rsvps": 29,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/22/newbie-gangbang-wvzg4h",
@@ -6081,7 +8900,8 @@ var EVENTS = [
         "venue": null,
         "city": "Brooklyn, New York, United States",
         "rsvps": 9,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/22/annual-friendsgiving-1ujdnl",
@@ -6094,163 +8914,8 @@ var EVENTS = [
         "venue": null,
         "city": "Dover Plains, New York, United States",
         "rsvps": 59,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/22/slipawayandplay-all-male-events-m0qdys",
-        "name": "Slipawayandplay All Male events",
-        "start": "2026-11-22",
-        "end": "2026-11-22",
-        "category": "Sex Party",
-        "cost": null,
-        "when": "Sun, Nov 22 at 4:00 PM",
-        "venue": "Info given once your send us your email address!",
-        "city": "Morristown, New Jersey, United States",
-        "rsvps": 49,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/22/eagles-vs-steelers-watch-party-play-party-l7sohi",
-        "name": "Eagles Vs Steelers Watch Party + Play Party",
-        "start": "2026-11-22",
-        "end": "2026-11-22",
-        "category": "Sex Party",
-        "cost": "Free",
-        "when": "Sun, Nov 22 at 4:00 PM",
-        "venue": null,
-        "city": "Philadelphia, Pennsylvania, United States",
-        "rsvps": null,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/22/dick-her-down-the-day-party-gangbang-play-party-crown-heights-brooklyn-nyc-cmzcpz",
-        "name": "Dick Her Down @ The Day Party Gangbang Play Party Crown Heights Brooklyn NYC",
-        "start": "2026-11-22",
-        "end": "2026-11-22",
-        "category": "Sex Party",
-        "cost": null,
-        "when": "Sun, Nov 22 at 4:30 PM",
-        "venue": "Crown Heights",
-        "city": "Brooklyn, New York, United States",
-        "rsvps": 9,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/22/the-moth-house-social-powerpoint-night-v57ky0",
-        "name": "The Moth House Social - Powerpoint Night",
-        "start": "2026-11-22",
-        "end": "2026-11-22",
-        "category": "Social",
-        "cost": null,
-        "when": "Sun, Nov 22 at 5:00 PM",
-        "venue": null,
-        "city": "Summit, New Jersey, United States",
-        "rsvps": 20,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/22/wonderland-rope-share-and-massage-lab-qfipy8",
-        "name": "Wonderland Rope Share and Massage Lab",
-        "start": "2026-11-22",
-        "end": "2026-11-22",
-        "category": "Educational",
-        "cost": null,
-        "when": "Sun, Nov 22 at 5:00 PM",
-        "venue": "The Hall of Fame Luxe",
-        "city": "Queens, New York, United States",
-        "rsvps": 126,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/22/sunday-suck-day-hlory-hole-party-md3qu5",
-        "name": "sunday suck day hlory hole party",
-        "start": "2026-11-22",
-        "end": "2026-11-22",
-        "category": "Sex Party",
-        "cost": "Free",
-        "when": "Sun, Nov 22 at 5:00 PM",
-        "venue": "Private Glory Hole",
-        "city": "Cherry Hill, New Jersey, United States",
-        "rsvps": 1,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/22/the-mini-market-tops-only-event-ayfu5h",
-        "name": "The Mini Market [TOPS ONLY EVENT]",
-        "start": "2026-11-22",
-        "end": "2026-11-22",
-        "category": "Sex Party",
-        "cost": "Free",
-        "when": "Sun, Nov 22 at 6:00 PM",
-        "venue": null,
-        "city": "Philadelphia, Pennsylvania, United States",
-        "rsvps": 46,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/22/sugar-spice-friendsgiving-m-g-thankful-dirty-and-a-little-flirty-gd5xrw",
-        "name": "Sugar & Spice Friendsgiving M&G Thankful, dirty and a little flirty!",
-        "start": "2026-11-22",
-        "end": "2026-11-22",
-        "category": "Social",
-        "cost": null,
-        "when": "Sun, Nov 22 at 6:00 PM",
-        "venue": "Fun Dungeon",
-        "city": "Phoenixville, Pennsylvania, United States",
-        "rsvps": 87,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/22/call-the-babysitter-nyc-abdl-littles-playtime-movie-night-owoqss",
-        "name": "Call The Babysitter NYC — ABDL Littles Playtime & Movie Night",
-        "start": "2026-11-22",
-        "end": "2026-11-22",
-        "category": "BDSM Party",
-        "cost": null,
-        "when": "Sun, Nov 22 at 6:00 PM",
-        "venue": "Studio125",
-        "city": "Manhattan, New York, United States",
-        "rsvps": 37,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/22/gang-bang-for-my-girl-pwzb3c",
-        "name": "gang bang for my girl",
-        "start": "2026-11-22",
-        "end": "2026-11-22",
-        "category": "Sex Party",
-        "cost": null,
-        "when": "Sun, Nov 22 at 6:00 PM",
-        "venue": null,
-        "city": "New York City, New York, United States",
-        "rsvps": 24,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/22/petite-latina-cd-hosting-0rl5i5",
-        "name": "petite latina cd hosting",
-        "start": "2026-11-22",
-        "end": "2026-11-23",
-        "category": "Educational",
-        "cost": "Free",
-        "when": "Nov 22 – 24 · Sun 6:00 PM – Tue 3:00 AM",
-        "venue": "days inn",
-        "city": "Absecon, New Jersey, United States",
-        "rsvps": 12,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/22/cum-slut-for-you-u6nmbq",
-        "name": "cum slut for you",
-        "start": "2026-11-22",
-        "end": "2026-11-22",
-        "category": "Sex Party",
-        "cost": "Free",
-        "when": "Sun, Nov 22 at 6:00 PM",
-        "venue": "my apartment",
-        "city": "Carteret, New Jersey, United States",
-        "rsvps": 6,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/22/sunday-funday-open-play-spades-night-qzp6hy",
@@ -6263,7 +8928,176 @@ var EVENTS = [
         "venue": null,
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 33,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/slipawayandplay-all-male-events-m0qdys",
+        "name": "Slipawayandplay All Male events",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Sex Party",
+        "cost": null,
+        "when": "Sun, Nov 22 at 4:00 PM",
+        "venue": "Info given once your send us your email address!",
+        "city": "Morristown, New Jersey, United States",
+        "rsvps": 49,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/eagles-vs-steelers-watch-party-play-party-l7sohi",
+        "name": "Eagles Vs Steelers Watch Party + Play Party",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Sex Party",
+        "cost": "Free",
+        "when": "Sun, Nov 22 at 4:00 PM",
+        "venue": null,
+        "city": "Philadelphia, Pennsylvania, United States",
+        "rsvps": null,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/dick-her-down-the-day-party-gangbang-play-party-crown-heights-brooklyn-nyc-cmzcpz",
+        "name": "Dick Her Down @ The Day Party Gangbang Play Party Crown Heights Brooklyn NYC",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Sex Party",
+        "cost": null,
+        "when": "Sun, Nov 22 at 4:30 PM",
+        "venue": "Crown Heights",
+        "city": "Brooklyn, New York, United States",
+        "rsvps": 9,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/the-moth-house-social-powerpoint-night-v57ky0",
+        "name": "The Moth House Social - Powerpoint Night",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Social",
+        "cost": null,
+        "when": "Sun, Nov 22 at 5:00 PM",
+        "venue": null,
+        "city": "Summit, New Jersey, United States",
+        "rsvps": 20,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/wonderland-rope-share-and-massage-lab-qfipy8",
+        "name": "Wonderland Rope Share and Massage Lab",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Nov 22 at 5:00 PM",
+        "venue": "The Hall of Fame Luxe",
+        "city": "Queens, New York, United States",
+        "rsvps": 126,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/sunday-suck-day-hlory-hole-party-md3qu5",
+        "name": "sunday suck day hlory hole party",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Sex Party",
+        "cost": "Free",
+        "when": "Sun, Nov 22 at 5:00 PM",
+        "venue": "Private Glory Hole",
+        "city": "Cherry Hill, New Jersey, United States",
+        "rsvps": 1,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/the-mini-market-tops-only-event-ayfu5h",
+        "name": "The Mini Market [TOPS ONLY EVENT]",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Sex Party",
+        "cost": "Free",
+        "when": "Sun, Nov 22 at 6:00 PM",
+        "venue": null,
+        "city": "Philadelphia, Pennsylvania, United States",
+        "rsvps": 46,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/sugar-spice-friendsgiving-m-g-thankful-dirty-and-a-little-flirty-gd5xrw",
+        "name": "Sugar & Spice Friendsgiving M&G Thankful, dirty and a little flirty!",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Social",
+        "cost": null,
+        "when": "Sun, Nov 22 at 6:00 PM",
+        "venue": "Fun Dungeon",
+        "city": "Phoenixville, Pennsylvania, United States",
+        "rsvps": 87,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/call-the-babysitter-nyc-abdl-littles-playtime-movie-night-owoqss",
+        "name": "Call The Babysitter NYC — ABDL Littles Playtime & Movie Night",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "BDSM Party",
+        "cost": null,
+        "when": "Sun, Nov 22 at 6:00 PM",
+        "venue": "Studio125",
+        "city": "Manhattan, New York, United States",
+        "rsvps": 37,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/gang-bang-for-my-girl-pwzb3c",
+        "name": "gang bang for my girl",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Sex Party",
+        "cost": null,
+        "when": "Sun, Nov 22 at 6:00 PM",
+        "venue": null,
+        "city": "New York City, New York, United States",
+        "rsvps": 24,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/petite-latina-cd-hosting-0rl5i5",
+        "name": "petite latina cd hosting",
+        "start": "2026-11-22",
+        "end": "2026-11-23",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Nov 22 – 24 · Sun 6:00 PM – Tue 3:00 AM",
+        "venue": "days inn",
+        "city": "Absecon, New Jersey, United States",
+        "rsvps": 12,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/cum-slut-for-you-u6nmbq",
+        "name": "cum slut for you",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Sex Party",
+        "cost": "Free",
+        "when": "Sun, Nov 22 at 6:00 PM",
+        "venue": "my apartment",
+        "city": "Carteret, New Jersey, United States",
+        "rsvps": 6,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/22/looking-for-guardians-hosts-for-play-party-in-lower-hudson-valley-rockland-westchester-orange-npfxv9",
@@ -6276,7 +9110,8 @@ var EVENTS = [
         "venue": "Private Till Invited",
         "city": "Peekskill, New York, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/22/t4t-rope-night-gmuidj",
@@ -6289,7 +9124,8 @@ var EVENTS = [
         "venue": "Coil & Cord Studio",
         "city": "Brooklyn, New York, United States",
         "rsvps": 17,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/22/club-sinister-presents-kink-sundays-193mqp",
@@ -6302,7 +9138,8 @@ var EVENTS = [
         "venue": "Club Sinister",
         "city": "West Babylon, New York, United States",
         "rsvps": 37,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/22/impact-playdate-iipesy",
@@ -6315,7 +9152,8 @@ var EVENTS = [
         "venue": "The Crown",
         "city": "Brooklyn, New York, United States",
         "rsvps": 6,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/22/the-diamond-club-nyc-presents-spicy-swinger-sundays-sexy-fall-edition-sxkuwp",
@@ -6328,7 +9166,8 @@ var EVENTS = [
         "venue": "THE DIAMOND CLUB NYC [2ND FLOOR]",
         "city": "New York City, New York, United States",
         "rsvps": 62,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/22/caligula-ny-presents-sinful-sunday-night-swinger-social-sexy-fall-2026-edition-xkpt4h",
@@ -6341,7 +9180,8 @@ var EVENTS = [
         "venue": "CALIGULA NY",
         "city": "New York City, New York, United States",
         "rsvps": 49,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/22/happy-time-w47jcc",
@@ -6354,7 +9194,8 @@ var EVENTS = [
         "venue": null,
         "city": "Bronx, New York, United States",
         "rsvps": 3,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/22/billysub-pymlul",
@@ -6367,7 +9208,8 @@ var EVENTS = [
         "venue": "boston book adult store",
         "city": "Bridgeport, Connecticut, United States",
         "rsvps": 2,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/22/ebony-hotwife-gang-bang-party-4-sunday-funday-cum-pump-dump-smash-dash-in-the-bx-s7ue3j",
@@ -6380,7 +9222,8 @@ var EVENTS = [
         "venue": "THE BRONX BNB — CHILL LAID BACK BNB",
         "city": "Bronx, New York, United States",
         "rsvps": 9,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/22/slip-inside-surprise-goddess-worship-gangbang-brooklyn-ny-ot8czl",
@@ -6393,7 +9236,8 @@ var EVENTS = [
         "venue": null,
         "city": "Brooklyn, New York, United States",
         "rsvps": 28,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/22/nyc-takeover-philly-all-trans-women-fuck-fest-cnz9fd",
@@ -6406,7 +9250,540 @@ var EVENTS = [
         "venue": "NYC SLUTS TAKE OVER PHILLY",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 7,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/or-what-brats-and-the-people-who-love-us-with-hispurplerose-wzqdly",
+        "name": "Or What? Brats and The People Who Love Us with @HisPurpleRose",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Nov 21 at 6:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 338,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/truth-or-dare-m7kuq7",
+        "name": "truth or dare",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Sex Party",
+        "cost": "Free",
+        "when": "Sun, Nov 22 at 1:00 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": null,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/exclusive-virtual-orgy-cddnv2",
+        "name": "Exclusive Virtual Orgy",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Sex Party",
+        "cost": "Free",
+        "when": "Sun, Nov 22 at 3:00 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 108,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/online-workshop-pokey-pokey-playing-with-needles-for-owies-and-pretties-beginner-friendly-huprhz",
+        "name": "Online Workshop: Pokey-Pokey: Playing With Needles For Owies and Pretties (Beginner Friendly)",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Nov 22 at 9:30 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 410,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/le-royaume-des-fantasme-de-maitresse-morgane-3qu0tt",
+        "name": "le royaume des fantasme de maitresse Morgane",
+        "start": "2026-11-22",
+        "end": "2026-11-26",
+        "category": "Sex Party",
+        "cost": "Free",
+        "when": "Nov 22 – 26 · Sun 12:00 PM – Thu 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 55,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/art-bomb-week-50-featuring-white-lotus-hnl9yz",
+        "name": "Art Bomb Week 50 - Featuring White-Lotus",
+        "start": "2026-11-22",
+        "end": "2026-11-28",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Nov 22 – 28 · Sun 12:00 PM – Sat 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 246,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/fonwd-the-listening-circle-mental-health-virtual-social-qmnttp",
+        "name": "FONWD The Listening Circle Mental health virtual social",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Social",
+        "cost": null,
+        "when": "Sun, Nov 22 at 10:00 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 12,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/consent-advocate-training-part-2-gt1zuy",
+        "name": "Consent Advocate Training Part 2",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Nov 22 at 11:00 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 93,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/online-zoom-meeting-in-person-sunday-morning-practice-9-45-am-mt-0kc0ih",
+        "name": "Online (Zoom Meeting) & In-Person Sunday Morning Practice 9:45 am MT",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sun, Nov 22 at 11:45 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 15,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/polyam-parenting-community-group-boeim9",
+        "name": "Polyam Parenting Community Group",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sun, Nov 22 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 6,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/delightspace-the-practice-of-freedom-3jtgwh",
+        "name": "DelightSpace: The Practice of Freedom",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sun, Nov 22 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 22,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/table-it-conversational-safewords-int-l-master-slave-2026-master-damascus-and-slave-demir-okfole",
+        "name": "\"Table It: Conversational Safewords\", Int'l Master/Slave 2026, Master Damascus and slave Demir",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sun, Nov 22 at 12:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 26,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/got-milk-breed-me-milk-me-keep-me-hucow-play-with-ms_kitten_-2pzcxw",
+        "name": "Got Milk? Breed Me, Milk Me, Keep Me: Hucow Play with @MS_KITTEN_",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Nov 22 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 305,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/ready-set-prep-clinical-training-umznrh",
+        "name": "Ready, Set, PrEP! — Clinical Training!",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Nov 22 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 24,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/the-responsibilities-of-an-impact-bottom-a-k-a-how-to-get-your-ass-beat-with-princexxchanny-rec-qtdbkv",
+        "name": "The Responsibilities of an Impact Bottom a.k.a How to Get Your Ass Beat! with PrinceXxChanny +Rec",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Nov 22 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 126,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/online-building-confidence-in-the-bedroom-own-your-energy-y8elcp",
+        "name": "ONLINE: Building Confidence in the Bedroom: Own Your Energy",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Nov 22 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 163,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/online-w-sarai311-mast-houston-grief-and-endings-in-unnamed-power-exchanges-utqo8a",
+        "name": "*ONLINE* w/ @Sarai311 [MAsT: Houston] Grief and Endings in Unnamed Power Exchanges",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sun, Nov 22 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 118,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/discovering-dominance-online-class-live-dfy7vl",
+        "name": "Discovering Dominance ONLINE Class LIVE",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Nov 22 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 14,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/swinging-the-bible-belt-sex-and-d-s-in-the-bible-at-the-dark-lair-with-sir-guy-7afxdb",
+        "name": "Swinging the Bible Belt: Sex and D/s in the Bible at The Dark Lair with Sir Guy",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sun, Nov 22 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 85,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/adornment-agony-the-art-of-chain-bondage-with-chess-mating-4mgpam",
+        "name": "Adornment & Agony: the Art of Chain Bondage with Chess Mating",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Nov 22 at 3:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 39,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/weekly-virtual-support-group-f0ddwg",
+        "name": "Weekly Virtual Support Group",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Sun, Nov 22 at 3:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 1,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/full-toilet-slave-livestream-eu-namotm",
+        "name": "FULL TOILET SLAVE - LIVESTREAM EU",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "BDSM Party",
+        "cost": null,
+        "when": "Sun, Nov 22 at 3:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 35,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/mutual-misconduct-conversations-that-should-ve-stayed-private-1eosqv",
+        "name": "Mutual Misconduct | Conversations That Should've Stayed Private",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sun, Nov 22 at 3:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 73,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/mast-pensacola-rtuf1q",
+        "name": "MAsT:Pensacola",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sun, Nov 22 at 4:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 46,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/discovering-your-place-in-power-roles-identity-dynamics-oy0swt",
+        "name": "Discovering Your Place in Power- Roles, Identity, & Dynamics",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sun, Nov 22 at 4:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 90,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/virtual-munch-by-dirty-books-for-dirty-minds-aomnbq",
+        "name": "Virtual Munch by Dirty Books for Dirty Minds",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Sun, Nov 22 at 4:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 70,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/online-welcome-to-the-public-kink-scene-8xxeg0",
+        "name": "ONLINE: Welcome to the Public Kink Scene",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Nov 22 at 5:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 142,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/kink-lovers-kinky-truth-or-dare-chmdgr",
+        "name": "Kink Lovers - Kinky Truth or Dare",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Sun, Nov 22 at 5:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 25,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/the-toy-chest-submissive-bottom-shared-experience-discussion-vtpxmo",
+        "name": "The Toy Chest - Submissive/bottom shared experience discussion.",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sun, Nov 22 at 6:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 17,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/little_librarian-s-storytime-volcanoes-pneoqm",
+        "name": "Little_Librarian's Storytime: Volcanoes",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sun, Nov 22 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 15,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/sun-nov-22-7-9pm-et-first-aid-for-kink-with-dio-r6jl0g",
+        "name": "Sun Nov 22 @ 7–9pm ET: First Aid for Kink — with Dio",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Nov 22 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 41,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/virtual-community-gathering-sunday-dinner-beuqxp",
+        "name": "Virtual Community Gathering Sunday Dinner",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Sun, Nov 22 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 20,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/pop-up-sunday-night-at-the-library-8siepj",
+        "name": "Pop Up Sunday Night at the Library",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Sun, Nov 22 at 7:15 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 33,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/case-study-service-in-the-kneel-b6twmt",
+        "name": "CASE Study: Service in the Kneel",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sun, Nov 22 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 84,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/ritl-la-in-person-threshold_la-and-zoom-qweidd",
+        "name": "RitL LA In Person @Threshold_LA and Zoom",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sun, Nov 22 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 10,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/open-lounge-and-kink-time-y1dfzb",
+        "name": "Open Lounge and Kink Time",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Sun, Nov 22 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 14,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/extreme-bdsm-live-on-snap-live-vc-65i7ae",
+        "name": "Extreme BDSM Live On Snap Live VC",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "BDSM Party",
+        "cost": null,
+        "when": "Sun, Nov 22 at 9:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 6,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/22/the-aftermath-the-scene-ends-care-doesn-t-recorded-nmyhyi",
+        "name": "The Aftermath: The Scene Ends, Care Doesn't. (Recorded)",
+        "start": "2026-11-22",
+        "end": "2026-11-22",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Nov 22 at 10:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 38,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/11/23/gh-orgy-nly8fs",
@@ -6419,98 +9796,8 @@ var EVENTS = [
         "venue": "Hilton Hotel",
         "city": "Jersey City, New York, United States",
         "rsvps": 14,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/23/bbc-oral-worship-party-mqzivj",
-        "name": "BBC oral worship party",
-        "start": "2026-11-23",
-        "end": "2026-11-24",
-        "category": "Sex Party",
-        "cost": "Free",
-        "when": "Nov 23 – 25 · Mon 1:00 PM – Wed 3:00 AM",
-        "venue": "bbc garage",
-        "city": "New York City, New York, United States",
-        "rsvps": 2,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/23/taboo-ts-girl-first-gangbang-brooklyn-pol8v4",
-        "name": "Taboo TS Girl First Gangbang Brooklyn",
-        "start": "2026-11-23",
-        "end": "2026-11-23",
-        "category": "Sex Party",
-        "cost": null,
-        "when": "Mon, Nov 23 at 3:15 AM",
-        "venue": null,
-        "city": "Brooklyn, New York, United States",
-        "rsvps": 5,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/23/all-night-action-with-big-booty-milf-9vwe4c",
-        "name": "all night action with big booty milf",
-        "start": "2026-11-23",
-        "end": "2026-11-23",
-        "category": "Sex Party",
-        "cost": null,
-        "when": "Mon, Nov 23 at 6:30 AM",
-        "venue": null,
-        "city": "Somerset, New Jersey, United States",
-        "rsvps": 310,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/23/slipawayandplay-all-male-events-tgg7fn",
-        "name": "Slipawayandplay all male events",
-        "start": "2026-11-23",
-        "end": "2026-11-23",
-        "category": "Sex Party",
-        "cost": null,
-        "when": "Mon, Nov 23 at 9:30 AM",
-        "venue": "Info given after your email address is supplied.",
-        "city": "Morristown, New Jersey, United States",
-        "rsvps": 68,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/23/redd-gangbang-pwt2ju",
-        "name": "redd gangbang",
-        "start": "2026-11-23",
-        "end": "2026-11-23",
-        "category": "Sex Party",
-        "cost": null,
-        "when": "Mon, Nov 23 at 10:00 AM",
-        "venue": null,
-        "city": "Philadelphia, Pennsylvania, United States",
-        "rsvps": 11,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/23/my-private-anal-gangbang-3mjhsj",
-        "name": "My private anal gangbang",
-        "start": "2026-11-23",
-        "end": "2026-11-23",
-        "category": "Sex Party",
-        "cost": null,
-        "when": "Mon, Nov 23 at 2:00 PM",
-        "venue": null,
-        "city": "Brooklyn, New York, United States",
-        "rsvps": 13,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/23/discreet-gloryhole-zfsffv",
-        "name": "discreet gloryhole",
-        "start": "2026-11-23",
-        "end": "2026-11-23",
-        "category": "Sex Party",
-        "cost": "Free",
-        "when": "Mon, Nov 23 at 2:31 PM",
-        "venue": "discreet home",
-        "city": "North Brunswick, New Jersey, United States",
-        "rsvps": 8,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/23/bi-play-party-pjbtw2",
@@ -6523,7 +9810,106 @@ var EVENTS = [
         "venue": "next to 30th st station center city",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 3,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/23/taboo-ts-girl-first-gangbang-brooklyn-pol8v4",
+        "name": "Taboo TS Girl First Gangbang Brooklyn",
+        "start": "2026-11-23",
+        "end": "2026-11-23",
+        "category": "Sex Party",
+        "cost": null,
+        "when": "Mon, Nov 23 at 3:15 AM",
+        "venue": null,
+        "city": "Brooklyn, New York, United States",
+        "rsvps": 5,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/23/all-night-action-with-big-booty-milf-9vwe4c",
+        "name": "all night action with big booty milf",
+        "start": "2026-11-23",
+        "end": "2026-11-23",
+        "category": "Sex Party",
+        "cost": null,
+        "when": "Mon, Nov 23 at 6:30 AM",
+        "venue": null,
+        "city": "Somerset, New Jersey, United States",
+        "rsvps": 310,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/23/slipawayandplay-all-male-events-tgg7fn",
+        "name": "Slipawayandplay all male events",
+        "start": "2026-11-23",
+        "end": "2026-11-23",
+        "category": "Sex Party",
+        "cost": null,
+        "when": "Mon, Nov 23 at 9:30 AM",
+        "venue": "Info given after your email address is supplied.",
+        "city": "Morristown, New Jersey, United States",
+        "rsvps": 68,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/23/redd-gangbang-pwt2ju",
+        "name": "redd gangbang",
+        "start": "2026-11-23",
+        "end": "2026-11-23",
+        "category": "Sex Party",
+        "cost": null,
+        "when": "Mon, Nov 23 at 10:00 AM",
+        "venue": null,
+        "city": "Philadelphia, Pennsylvania, United States",
+        "rsvps": 11,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/23/bbc-oral-worship-party-mqzivj",
+        "name": "BBC oral worship party",
+        "start": "2026-11-23",
+        "end": "2026-11-24",
+        "category": "Sex Party",
+        "cost": "Free",
+        "when": "Nov 23 – 25 · Mon 1:00 PM – Wed 3:00 AM",
+        "venue": "bbc garage",
+        "city": "New York City, New York, United States",
+        "rsvps": 2,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/23/my-private-anal-gangbang-3mjhsj",
+        "name": "My private anal gangbang",
+        "start": "2026-11-23",
+        "end": "2026-11-23",
+        "category": "Sex Party",
+        "cost": null,
+        "when": "Mon, Nov 23 at 2:00 PM",
+        "venue": null,
+        "city": "Brooklyn, New York, United States",
+        "rsvps": 13,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/23/discreet-gloryhole-zfsffv",
+        "name": "discreet gloryhole",
+        "start": "2026-11-23",
+        "end": "2026-11-23",
+        "category": "Sex Party",
+        "cost": "Free",
+        "when": "Mon, Nov 23 at 2:31 PM",
+        "venue": "discreet home",
+        "city": "North Brunswick, New Jersey, United States",
+        "rsvps": 8,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/23/open-rope-practice-coil-cord-11-23-jteojz",
@@ -6536,7 +9922,8 @@ var EVENTS = [
         "venue": "Coil & Cord Studio",
         "city": "Brooklyn, New York, United States",
         "rsvps": 10,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/23/the-west-nyack-munch-event-monday-november-23rd-always-the-4th-monday-of-the-month-2fppbu",
@@ -6549,7 +9936,8 @@ var EVENTS = [
         "venue": "Dave & Busters",
         "city": "West Nyack, New York, United States",
         "rsvps": 159,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/23/microbondage-with-anoxia-and-kasm-kefupl",
@@ -6562,7 +9950,8 @@ var EVENTS = [
         "venue": "Shibari Cafe",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/23/transexualx-monday-play-party-6pm-to-12am-nurycz",
@@ -6574,8 +9963,9 @@ var EVENTS = [
         "when": "Mon, Nov 23 at 6:00 PM",
         "venue": "RainbowPlaygroundNYC",
         "city": "New York City, New York, United States",
-        "rsvps": 104,
-        "image": null
+        "rsvps": 105,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/23/bdsm-kink-gangbang-bi-yjtpfg",
@@ -6587,8 +9977,9 @@ var EVENTS = [
         "when": "Mon, Nov 23 at 6:00 PM",
         "venue": "red roof",
         "city": "Mount Laurel, New Jersey, United States",
-        "rsvps": 18,
-        "image": null
+        "rsvps": 19,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/23/bbc-blowbang-xtfdto",
@@ -6601,7 +9992,8 @@ var EVENTS = [
         "venue": "bbc garage",
         "city": "Englewood, New Jersey, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/23/non-monogamous-nerds-unite-university-city-u8jege",
@@ -6613,8 +10005,9 @@ var EVENTS = [
         "when": "Mon, Nov 23 at 6:30 PM",
         "venue": null,
         "city": "Philadelphia, Pennsylvania, United States",
-        "rsvps": 44,
-        "image": null
+        "rsvps": 45,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/23/erotic-hypnosis-spiritual-hypnosis-hnntc2",
@@ -6627,7 +10020,8 @@ var EVENTS = [
         "venue": "near Union Square",
         "city": "New York City, New York, United States",
         "rsvps": 43,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/23/erotic-hypnosis-spiritual-hypnosis-sbhliw",
@@ -6640,7 +10034,8 @@ var EVENTS = [
         "venue": "Address given in email confirmation. Please contact us if paying at door.",
         "city": "New York City, New York, United States",
         "rsvps": 22,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/23/meaningful-service-for-d-s-class-ek12mz",
@@ -6653,7 +10048,8 @@ var EVENTS = [
         "venue": "HMU Loft",
         "city": "Manhattan, New York, United States",
         "rsvps": 128,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/23/kinky-craft-collective-november-munch-87lrmg",
@@ -6666,7 +10062,8 @@ var EVENTS = [
         "venue": "Town and Country Diner",
         "city": "Bordentown, New Jersey, United States",
         "rsvps": 61,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/23/nj-rope-lab-formerly-nj-rope-bite-an-open-event-cepggu",
@@ -6679,7 +10076,8 @@ var EVENTS = [
         "venue": "The Pride Center of NJ",
         "city": "Highland Park, New Jersey, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/23/dr-who-movie-experience-xfd58h",
@@ -6692,7 +10090,8 @@ var EVENTS = [
         "venue": "AMC Cherry Hill",
         "city": "Cherry Hill, New Jersey, United States",
         "rsvps": 35,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/23/drip-a-bdsm-wax-play-workshop-owqafi",
@@ -6705,7 +10104,8 @@ var EVENTS = [
         "venue": "The Crown",
         "city": "Brooklyn, New York, United States",
         "rsvps": 46,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/23/nj-rope-lab-formerly-nj-rope-bite-final-approval-required-list-mhvyk8",
@@ -6718,7 +10118,8 @@ var EVENTS = [
         "venue": "The Pride Center of NJ",
         "city": "Highland Park, New Jersey, United States",
         "rsvps": 38,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/23/daddies-lil-fucktoys-newbie-nympho-gloryhole-gangbang-brooklyn-nyc-q5gs1v",
@@ -6730,8 +10131,9 @@ var EVENTS = [
         "when": "Mon, Nov 23 at 7:00 PM",
         "venue": null,
         "city": "Brooklyn, New York, United States",
-        "rsvps": 36,
-        "image": null
+        "rsvps": 46,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/23/hotwife-gb-bukkake-pre-thanksgiving-event-bxx7hb",
@@ -6743,8 +10145,9 @@ var EVENTS = [
         "when": "Mon, Nov 23 at 7:30 PM",
         "venue": null,
         "city": "Manhattan, New York, United States",
-        "rsvps": 88,
-        "image": null
+        "rsvps": 89,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/23/tantric-edge-communal-energetic-release-8s5iub",
@@ -6756,8 +10159,9 @@ var EVENTS = [
         "when": "Mon, Nov 23 at 7:30 PM",
         "venue": "Address given in email confirmation. Please contact us if paying at door.",
         "city": "New York City, New York, United States",
-        "rsvps": 35,
-        "image": null
+        "rsvps": 34,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/23/fetish-figure-drawing-spanksgiving-food-drive-edition-n0eyih",
@@ -6770,7 +10174,8 @@ var EVENTS = [
         "venue": "Talon Bar",
         "city": "New York City, New York, United States",
         "rsvps": 9,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/23/ts-hosting-pump-n-dump-in-eny-capakz",
@@ -6783,7 +10188,8 @@ var EVENTS = [
         "venue": null,
         "city": "Brooklyn, New York, United States",
         "rsvps": 89,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/23/peg-fest-a-bdsm-educational-workshop-mifqay",
@@ -6796,7 +10202,8 @@ var EVENTS = [
         "venue": "The Crown",
         "city": "Brooklyn, New York, United States",
         "rsvps": 64,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/23/lifestyle_drop_box-htkbtk",
@@ -6809,7 +10216,8 @@ var EVENTS = [
         "venue": "LDB LOFT",
         "city": "Rahway, New Jersey, United States",
         "rsvps": 35,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/23/hosting-kinky-dirty-truth-or-dare-5zexar",
@@ -6822,7 +10230,8 @@ var EVENTS = [
         "venue": null,
         "city": "Hackensack, New Jersey, United States",
         "rsvps": 1,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/23/put-the-p-in-the-bag-p3xczp",
@@ -6834,8 +10243,9 @@ var EVENTS = [
         "when": "Mon, Nov 23 at 10:00 PM",
         "venue": "ENY",
         "city": "Brooklyn, New York, United States",
-        "rsvps": 11,
-        "image": null
+        "rsvps": 14,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/23/big-dick-only-gangbang-at7efq",
@@ -6848,7 +10258,288 @@ var EVENTS = [
         "venue": "mount motel",
         "city": "Lawrenceville, New Jersey, United States",
         "rsvps": 7,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/23/exclusive-virtual-orgy-group-weqnoi",
+        "name": "Exclusive Virtual Orgy Group",
+        "start": "2026-11-23",
+        "end": "2026-11-23",
+        "category": "Sex Party",
+        "cost": "Free",
+        "when": "Mon, Nov 23 at 9:00 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 64,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/23/virtual-lunch-munch-11-23-26-must-be-active-on-discord-server-pnnl3n",
+        "name": "Virtual Lunch Munch 11/23/26 (MUST be active on discord server)",
+        "start": "2026-11-23",
+        "end": "2026-11-23",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Mon, Nov 23 at 11:00 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 13,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/23/coworking-hours-jrr5lq",
+        "name": "Coworking Hours",
+        "start": "2026-11-23",
+        "end": "2026-11-23",
+        "category": "Social",
+        "cost": null,
+        "when": "Mon, Nov 23 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 5,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/23/online-guided-meditation-a-harvest-of-gratitude-w-dawn-xrmhat",
+        "name": "ONLINE - Guided Meditation - A Harvest of Gratitude w/Dawn",
+        "start": "2026-11-23",
+        "end": "2026-11-23",
+        "category": "Educational",
+        "cost": null,
+        "when": "Mon, Nov 23 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 43,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/23/virtual-masturbation-zone-mdhozz",
+        "name": "Virtual Masturbation Zone",
+        "start": "2026-11-23",
+        "end": "2026-11-23",
+        "category": "Sex Party",
+        "cost": "Free",
+        "when": "Mon, Nov 23 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 16,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/23/finding-sustainable-agreements-in-open-relationships-xbiasy",
+        "name": "Finding Sustainable Agreements in Open Relationships",
+        "start": "2026-11-23",
+        "end": "2026-11-23",
+        "category": "Educational",
+        "cost": null,
+        "when": "Mon, Nov 23 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 26,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/23/gimp-week-the-first-day-tchwlg",
+        "name": "Gimp Week - The first Day",
+        "start": "2026-11-23",
+        "end": "2026-11-23",
+        "category": "BDSM Party",
+        "cost": "Free",
+        "when": "Mon, Nov 23 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 187,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/23/expanded-orgasm-workshop-online-2ac0zd",
+        "name": "Expanded Orgasm Workshop Online",
+        "start": "2026-11-23",
+        "end": "2026-11-23",
+        "category": "Educational",
+        "cost": null,
+        "when": "Mon, Nov 23 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 8,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/23/qa-48478-event-rename-chat-card-f1l9zs",
+        "name": "QA 48478 event rename chat card",
+        "start": "2026-11-23",
+        "end": "2026-11-23",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Mon, Nov 23 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 2,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/23/recovery-in-the-lifestyle-ritl-virtual-meeting-with-aca-focus-ils7kh",
+        "name": "Recovery in the Lifestyle (RitL) Virtual Meeting with ACA Focus",
+        "start": "2026-11-23",
+        "end": "2026-11-23",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Mon, Nov 23 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 3,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/23/for-women-only-discover-bodysex-free-online-showing-monday-11-23-26-6-pm-cst-vmdcsb",
+        "name": "FOR WOMEN ONLY - Discover Bodysex FREE Online Showing Monday, 11/23/26 6 pm CST.",
+        "start": "2026-11-23",
+        "end": "2026-11-23",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Mon, Nov 23 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 8,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/23/virtual-full-moon-ceremony-2n98kz",
+        "name": "virtual full moon ceremony",
+        "start": "2026-11-23",
+        "end": "2026-11-25",
+        "category": "Educational",
+        "cost": null,
+        "when": "Nov 23 – 25 · Mon 7:00 PM – Wed 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 11,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/23/captain-kink-s-corner-11-23-5fu4mn",
+        "name": "Captain Kink's Corner 11/23",
+        "start": "2026-11-23",
+        "end": "2026-11-23",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Mon, Nov 23 at 7:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 24,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/23/bpd-ptsd-m-s-rusayb",
+        "name": "BPD, PTSD, & M/s",
+        "start": "2026-11-23",
+        "end": "2026-11-23",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Mon, Nov 23 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 58,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/23/u-b-k-munch-the-unseen-restraints-black-kink-cultural-conditioning-ld7q2t",
+        "name": "U.B.K. Munch-The Unseen Restraints: Black Kink & Cultural Conditioning",
+        "start": "2026-11-23",
+        "end": "2026-11-23",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Mon, Nov 23 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 34,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/23/online-naughty-by-nature-profitable-by-design-navigating-kink-as-a-profession-cwr2cm",
+        "name": "ONLINE: Naughty By Nature, Profitable By Design: Navigating Kink As A Profession",
+        "start": "2026-11-23",
+        "end": "2026-11-23",
+        "category": "Educational",
+        "cost": null,
+        "when": "Mon, Nov 23 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 176,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/23/monday-yoga-bpchco",
+        "name": "Monday yoga",
+        "start": "2026-11-23",
+        "end": "2026-11-23",
+        "category": "Educational",
+        "cost": null,
+        "when": "Mon, Nov 23 at 9:15 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 40,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/23/masturbate-on-zoom-very-girl-and-couple-friendly-onvirl",
+        "name": "masturbate on zoom very girl and couple friendly",
+        "start": "2026-11-23",
+        "end": "2026-11-23",
+        "category": "Sex Party",
+        "cost": "Free",
+        "when": "Mon, Nov 23 at 9:15 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 29,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/23/online-beginning-rope-with-blue-kwsxc2",
+        "name": "ONLINE Beginning Rope with Blue",
+        "start": "2026-11-23",
+        "end": "2026-11-23",
+        "category": "Educational",
+        "cost": null,
+        "when": "Mon, Nov 23 at 10:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 19,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/24/cath-me-the-afties-after-hours-gangbang-brooklyn-nyc-hycjdi",
+        "name": "“Cath Me @ The Afties” After Hours Gangbang Brooklyn NYC",
+        "start": "2026-11-24",
+        "end": "2026-11-24",
+        "category": "Sex Party",
+        "cost": null,
+        "when": "Tue, Nov 24 at 12:00 AM",
+        "venue": null,
+        "city": "Brooklyn, New York, United States",
+        "rsvps": 15,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/24/sickday-cbg3mj",
@@ -6861,7 +10552,8 @@ var EVENTS = [
         "venue": "tbd",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 4,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/24/colombian-lunch-time-cum-and-go-34xwlb",
@@ -6873,8 +10565,9 @@ var EVENTS = [
         "when": "Tue, Nov 24 at 10:00 AM",
         "venue": null,
         "city": "Elmwood Park, New Jersey, United States",
-        "rsvps": 61,
-        "image": null
+        "rsvps": 62,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/24/daytime-playtime-kntbi9",
@@ -6887,7 +10580,8 @@ var EVENTS = [
         "venue": "The Gallery in South Amboy",
         "city": "South Amboy, New Jersey, United States",
         "rsvps": 2,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/24/afternoon-delights-in-ny-qahtkt",
@@ -6899,8 +10593,9 @@ var EVENTS = [
         "when": "Tue, Nov 24 at 11:00 AM",
         "venue": null,
         "city": "West Babylon, New York, United States",
-        "rsvps": 143,
-        "image": null
+        "rsvps": 144,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/24/tuesday-bbw-fuck-slut-jncurb",
@@ -6913,7 +10608,8 @@ var EVENTS = [
         "venue": "Condominium Apartments",
         "city": "South Plainfield, New Jersey, United States",
         "rsvps": 51,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/24/tuesday-nov-24-new-york-city-cd-trans-looking-for-partners-for-fun-jpoej3",
@@ -6925,8 +10621,9 @@ var EVENTS = [
         "when": "Tue, Nov 24 at 11:00 AM",
         "venue": "Henry Lu",
         "city": "New York City, New York, United States",
-        "rsvps": 30,
-        "image": null
+        "rsvps": 31,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/24/pre-thanksgiving-suck-off-ek0t7n",
@@ -6939,7 +10636,8 @@ var EVENTS = [
         "venue": null,
         "city": "New York City, New York, United States",
         "rsvps": 5,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/24/the-middle-ground-munch-barcade-fishtown-vpfest",
@@ -6952,7 +10650,8 @@ var EVENTS = [
         "venue": "Barcade Fishtown",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 205,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/24/queer-slosh-h0hnj6",
@@ -6965,7 +10664,8 @@ var EVENTS = [
         "venue": null,
         "city": "Shavertown, Pennsylvania, United States",
         "rsvps": 16,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/24/november-philly-western-suburbs-munch-pwsm-adzhfb",
@@ -6978,7 +10678,8 @@ var EVENTS = [
         "venue": "Valley House - Malvern",
         "city": "Charlestown Township, Pennsylvania, United States",
         "rsvps": 43,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/24/jules-s-game-nite-location-only-given-if-you-confirm-you-are-going-nh5jit",
@@ -6991,7 +10692,8 @@ var EVENTS = [
         "venue": null,
         "city": "Pearl River, New York, United States",
         "rsvps": 28,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/24/liminal-jersey-social-munch-0bqr6f",
@@ -7004,7 +10706,8 @@ var EVENTS = [
         "venue": "The Saloon",
         "city": "Lambertville, New Jersey, United States",
         "rsvps": 9,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/24/friends-fun-and-football-sbl1et",
@@ -7017,7 +10720,8 @@ var EVENTS = [
         "venue": "lower Bergen county",
         "city": "Lyndhurst, New Jersey, United States",
         "rsvps": 2,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/24/19-and-horny-first-time-group-bi-pkay-come-crack-me-open-be-my-honor-djo021",
@@ -7030,7 +10734,22 @@ var EVENTS = [
         "venue": "cross county mall yonkers",
         "city": "Yonkers, New York, United States",
         "rsvps": 1,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/24/after-work-shenanigans-6pm-11pm-tuesday-100-entry-lvvpfd",
+        "name": "AFTER-WORK SHENANIGANS: 6pm-11pm TUESDAY. $100 entry",
+        "start": "2026-11-24",
+        "end": "2026-11-24",
+        "category": "Sex Party",
+        "cost": null,
+        "when": "Tue, Nov 24 at 6:00 PM",
+        "venue": "Juliette\"s PlayPen (Midtown)",
+        "city": "Manhattan, New York, United States",
+        "rsvps": 8,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/24/what-s-going-on-back-there-a-guide-to-tying-behind-your-back-2en50n",
@@ -7043,7 +10762,8 @@ var EVENTS = [
         "venue": "Shibari Cafe, please DM for location",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 31,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/24/tethered-tuesday-philly-s-weekly-rope-community-lab-yscjug",
@@ -7055,8 +10775,9 @@ var EVENTS = [
         "when": "Tue, Nov 24 at 6:30 PM",
         "venue": "The Nest",
         "city": "Philadelphia, Pennsylvania, United States",
-        "rsvps": 22,
-        "image": null
+        "rsvps": 23,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/24/tantalizing-tuesday-play-party-urfxx3",
@@ -7069,7 +10790,8 @@ var EVENTS = [
         "venue": "The Kink Lair",
         "city": "Scranton, Pennsylvania, United States",
         "rsvps": 119,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/24/smothering-101-nnxkzo",
@@ -7082,7 +10804,8 @@ var EVENTS = [
         "venue": "The Crown",
         "city": "Brooklyn, New York, United States",
         "rsvps": 68,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/24/rope-at-rockbar-presented-by-knottyny-mmh1qf",
@@ -7095,7 +10818,8 @@ var EVENTS = [
         "venue": "Rockbar",
         "city": "Manhattan, New York, United States",
         "rsvps": 8,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/24/queer-massage-magic-a-tantric-bi-pansexual-experience-xnjx95",
@@ -7108,7 +10832,8 @@ var EVENTS = [
         "venue": "Address given in email confirmation. Please contact us if paying at door.",
         "city": "New York City, New York, United States",
         "rsvps": 31,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/24/chest-harness-fundamentals-thi4ab",
@@ -7121,7 +10846,8 @@ var EVENTS = [
         "venue": "Coil & Cord Studio",
         "city": "Brooklyn, New York, United States",
         "rsvps": 17,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/24/route-40-munch-november-2026-pyhv6u",
@@ -7134,7 +10860,8 @@ var EVENTS = [
         "venue": "Route 40 Diner",
         "city": "Bear, Delaware, United States",
         "rsvps": 32,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/24/skylands-munch-november-2026-h8blog",
@@ -7147,7 +10874,8 @@ var EVENTS = [
         "venue": "Black River Barn",
         "city": "Randolph, New Jersey, United States",
         "rsvps": 44,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/24/fluids-tuesday-play-party-for-trans-cds-and-admirers-in-hell-s-kitchen-hklx69",
@@ -7160,7 +10888,8 @@ var EVENTS = [
         "venue": "Adam's Club",
         "city": "Manhattan, New York, United States",
         "rsvps": 52,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/24/secret-pleasures-tuesday-titties-tushies-party-8pm-to-12am-emfcih",
@@ -7172,8 +10901,9 @@ var EVENTS = [
         "when": "Tue, Nov 24 at 8:00 PM",
         "venue": "Secret Pleasures at the Back Door of the Wi Fi Cafe",
         "city": "Emmaus, Pennsylvania, United States",
-        "rsvps": 102,
-        "image": null
+        "rsvps": 104,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/24/dirty-sexy-bingo-pajama-party-xl4gea",
@@ -7186,7 +10916,8 @@ var EVENTS = [
         "venue": "Bar XIII",
         "city": "Wilmington, Delaware, United States",
         "rsvps": 175,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/24/tease-me-tuesday-play-party-bronx-nyc-pf198s",
@@ -7199,7 +10930,8 @@ var EVENTS = [
         "venue": null,
         "city": "Bronx, New York, United States",
         "rsvps": 11,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/24/threshold-the-art-of-the-tickle-0aofhh",
@@ -7212,7 +10944,8 @@ var EVENTS = [
         "venue": null,
         "city": "Brooklyn, New York, United States",
         "rsvps": 50,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/24/the-nyte-life-virtual-munch-on-nov-24th-9pm-evk6ne",
@@ -7225,7 +10958,8 @@ var EVENTS = [
         "venue": "Virtual",
         "city": "New York City, New York, United States",
         "rsvps": 9,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/24/tease-me-tuesday-diz9oq",
@@ -7238,7 +10972,358 @@ var EVENTS = [
         "venue": "Sexy couples lounge",
         "city": "Bronx, New York, United States",
         "rsvps": 3,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/24/e-femdom-munch_play-k88ith",
+        "name": "E-FEMDOM MUNCH_PLAY",
+        "start": "2026-11-24",
+        "end": "2026-11-24",
+        "category": "BDSM Party",
+        "cost": null,
+        "when": "Tue, Nov 24 at 3:00 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 68,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/24/tying-solo-skills-lab-2-f6wkk2",
+        "name": "Tying Solo: Skills Lab #2",
+        "start": "2026-11-24",
+        "end": "2026-11-24",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Nov 24 at 4:00 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": null,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/24/finding-your-power-as-a-sub-xswe9f",
+        "name": "Finding Your Power as a Sub",
+        "start": "2026-11-24",
+        "end": "2026-11-24",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Nov 24 at 11:00 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 46,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/24/gimp-week-live-feed-and-end-of-day-mistress-event-palvay",
+        "name": "Gimp Week - Live Feed and end of day Mistress Event",
+        "start": "2026-11-24",
+        "end": "2026-11-24",
+        "category": "BDSM Party",
+        "cost": "Free",
+        "when": "Tue, Nov 24 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 10,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/24/building-confidence-as-a-new-or-anxious-rope-top-wh10mz",
+        "name": "Building Confidence as a New (or Anxious) Rope Top",
+        "start": "2026-11-24",
+        "end": "2026-11-24",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Nov 24 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 54,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/24/online-free-learn-practice-ties-chat-drink-tea-w-origami-2-hgkyv6",
+        "name": "ONLINE FREE Learn & Practice Ties + Chat & Drink Tea w Origami ;)) #2",
+        "start": "2026-11-24",
+        "end": "2026-11-24",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Tue, Nov 24 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 47,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/24/discussion-24th-november-2026-ethics-in-power-dynamics-involving-disability-rk4bch",
+        "name": "Discussion 24th November 2026: “Ethics in power dynamics involving disability\"",
+        "start": "2026-11-24",
+        "end": "2026-11-24",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Tue, Nov 24 at 2:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 57,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/24/non-stop-erotic-book-club-november-review-0zvczs",
+        "name": "Non-stop Erotic Book club - November Review",
+        "start": "2026-11-24",
+        "end": "2026-11-24",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Tue, Nov 24 at 2:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 47,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/24/le-salon-de-deesse-aume-le-pouvoir-des-masques-kuosqw",
+        "name": "LE SALON DE DÉESSE AUME — LE POUVOIR DES MASQUES",
+        "start": "2026-11-24",
+        "end": "2026-11-24",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Tue, Nov 24 at 3:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 61,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/24/cum-n-see-l9si7q",
+        "name": "Cum n See",
+        "start": "2026-11-24",
+        "end": "2026-11-24",
+        "category": "BDSM Party",
+        "cost": null,
+        "when": "Tue, Nov 24 at 5:33 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 20,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/24/online-right-side-atl-social-gd2t3x",
+        "name": "ONLINE: Right Side ATL Social",
+        "start": "2026-11-24",
+        "end": "2026-11-24",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Tue, Nov 24 at 6:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 38,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/24/gah-meal-time-0b92gp",
+        "name": "GAH - Meal Time",
+        "start": "2026-11-24",
+        "end": "2026-11-24",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Tue, Nov 24 at 6:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 20,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/24/chaos-collective-tango-tuesday-11-24-kz8n23",
+        "name": "Chaos Collective Tango Tuesday 11/24",
+        "start": "2026-11-24",
+        "end": "2026-11-24",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Tue, Nov 24 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 124,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/24/red-flags-green-flags-online-class-rlkor4",
+        "name": "Red Flags, Green Flags Online Class",
+        "start": "2026-11-24",
+        "end": "2026-11-24",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Nov 24 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 12,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/24/femmes-burning-flowers-seshhh-now-on-tuesdays-6cxczy",
+        "name": "FEMMES Burning Flowers Seshhh -Now on Tuesdays!",
+        "start": "2026-11-24",
+        "end": "2026-11-24",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Tue, Nov 24 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 3,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/24/he-presents-pixelated-pleasure-digital-safety-online-play-by-crowsnest-free-virtual-rmbdge",
+        "name": "HE Presents: Pixelated Pleasure - Digital Safety & Online Play by crowsnest (Free & Virtual)",
+        "start": "2026-11-24",
+        "end": "2026-11-24",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Nov 24 at 7:15 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": null,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/24/northern-lights-littles-virtual-munch-november-2026-nll-2y9yrs",
+        "name": "Northern Lights Littles Virtual Munch: November 2026 (NLL)",
+        "start": "2026-11-24",
+        "end": "2026-11-24",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Tue, Nov 24 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 14,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/24/live-office-hours-w-midori-x8r1z0",
+        "name": "LIVE: Office Hours w/ Midori",
+        "start": "2026-11-24",
+        "end": "2026-11-24",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Tue, Nov 24 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 1,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/24/read-post-vetted-event-power-exchange-together-kootenays-201-301-virtual-discussion-24-nov-26-hl5jnt",
+        "name": "READ POST!! Vetted Event - Power Exchange Together - Kootenays 201/301 Virtual discussion 24 Nov 26",
+        "start": "2026-11-24",
+        "end": "2026-11-24",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Tue, Nov 24 at 8:20 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 12,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/24/let-s-talk-poly-enm-0fopdy",
+        "name": "Let's Talk Poly/ENM",
+        "start": "2026-11-24",
+        "end": "2026-11-24",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Tue, Nov 24 at 8:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 19,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/24/cshs-book-club-d52tj6",
+        "name": "CSHS Book Club",
+        "start": "2026-11-24",
+        "end": "2026-11-24",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Nov 24 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 5,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/24/online-the-protocol-game-with-sinclair-sexsmith-8h4qrn",
+        "name": "ONLINE: The Protocol Game with Sinclair Sexsmith",
+        "start": "2026-11-24",
+        "end": "2026-11-24",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Nov 24 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 136,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/24/eclipse-the-dominants-discourse-wbewyv",
+        "name": "Eclipse: The Dominants' Discourse",
+        "start": "2026-11-24",
+        "end": "2026-11-24",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Tue, Nov 24 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 28,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/24/going-home-for-the-holidays-without-erasing-yourself-a-free-weekly-online-discussion-space-for-men-nvbdct",
+        "name": "Going home for the holidays without erasing yourself: A free weekly online discussion space for men",
+        "start": "2026-11-24",
+        "end": "2026-11-24",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Tue, Nov 24 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 98,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/24/p-u-r-g-e-an-immersive-somatic-liberation-ritual-jt4iqd",
+        "name": "P.U.R.G.E. An Immersive Somatic Liberation Ritual",
+        "start": "2026-11-24",
+        "end": "2026-11-24",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Nov 24 at 10:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 3,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/11/25/sinners-paradise-pre-thanksgiving-gang-bang-party-10am-3pm-rsvp-now-and-get-10-off-entry-fee-wjbonw",
@@ -7251,7 +11336,8 @@ var EVENTS = [
         "venue": "Sinners Paradise Club",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 47,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/25/breakfast-in-paradise-lnrzkb",
@@ -7264,7 +11350,8 @@ var EVENTS = [
         "venue": "Sinner’s Paradise",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 122,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/25/happy-hump-day-bna-di1qpr",
@@ -7276,8 +11363,9 @@ var EVENTS = [
         "when": "Wed, Nov 25 at 10:00 AM",
         "venue": "Berlin News Agency",
         "city": "West Berlin, New Jersey, United States",
-        "rsvps": 59,
-        "image": null
+        "rsvps": 61,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/25/secret-pleasures-lunchtime-play-party-12pm-to-3pm-mhzrlg",
@@ -7289,8 +11377,9 @@ var EVENTS = [
         "when": "Wed, Nov 25 at 12:00 PM",
         "venue": "Secret Pleasures is at the Back Door of the Wi Fi Cafe",
         "city": "Emmaus, Pennsylvania, United States",
-        "rsvps": 123,
-        "image": null
+        "rsvps": 124,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/25/medusas-playhouse-presents-afternoon-with-dolliedesires-ua1k0k",
@@ -7303,7 +11392,8 @@ var EVENTS = [
         "venue": "medusas Playhouse",
         "city": "West Babylon, New York, United States",
         "rsvps": 47,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/25/captured-cock-to-use-xcufbd",
@@ -7316,7 +11406,8 @@ var EVENTS = [
         "venue": "Greendoor in Bethlehelm PA",
         "city": "Bethlehem, Pennsylvania, United States",
         "rsvps": 17,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/25/afternoon-delights-nj-piscataway-6dl9np",
@@ -7329,7 +11420,8 @@ var EVENTS = [
         "venue": null,
         "city": "Piscataway, New Jersey, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/25/kinksters-klimbing-in-lic-november-25th-j11ech",
@@ -7342,7 +11434,8 @@ var EVENTS = [
         "venue": "Movement LIC",
         "city": "Queens, New York, United States",
         "rsvps": 17,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/25/lwp-friendsgiving-rie4wp",
@@ -7355,7 +11448,8 @@ var EVENTS = [
         "venue": "The Venue",
         "city": "Bethlehem, Pennsylvania, United States",
         "rsvps": 49,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/25/philly-rope-coven-s-queer-doom-bar-munch-wed-11-25-ylfvwj",
@@ -7368,7 +11462,8 @@ var EVENTS = [
         "venue": "Doom Bar",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 181,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/25/mid-week-rope-jam-11-25-jyrofd",
@@ -7381,7 +11476,8 @@ var EVENTS = [
         "venue": "Coil & Cord Studio",
         "city": "Brooklyn, New York, United States",
         "rsvps": 23,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/25/all-hands-on-d-ck-an-erotic-voyage-joint-w-man-group-if1t1v",
@@ -7394,7 +11490,8 @@ var EVENTS = [
         "venue": "Address given in email confirmation. Please contact us if paying at door.",
         "city": "New York City, New York, United States",
         "rsvps": 13,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/25/house-blackfyre-presents-ignite-bftlf7",
@@ -7407,7 +11504,8 @@ var EVENTS = [
         "venue": "Location Given Upon Ticket Purchase",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 83,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/25/the-munch-on-the-beach-pkw3ad",
@@ -7420,7 +11518,8 @@ var EVENTS = [
         "venue": "The Rockaway Hotel",
         "city": "New York City, New York, United States",
         "rsvps": 58,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/25/simply-social-by-smitten-v0frtg",
@@ -7433,7 +11532,8 @@ var EVENTS = [
         "venue": "Jake’s Saloon",
         "city": "Manhattan, New York, United States",
         "rsvps": 75,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/25/pre-thanksgiving-stuff-her-gangbang-4vkr9z",
@@ -7445,8 +11545,9 @@ var EVENTS = [
         "when": "Wed, Nov 25 at 8:00 PM",
         "venue": "Playroom",
         "city": "Bear, Delaware, United States",
-        "rsvps": 4,
-        "image": null
+        "rsvps": 5,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/25/footspotnyc-party-stockings-night-ppg9qq",
@@ -7459,7 +11560,8 @@ var EVENTS = [
         "venue": "Given upon RSVP",
         "city": "New York City, New York, United States",
         "rsvps": 43,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/25/wed-nov-25-2026-lics-weekly-wednesday-slosh-akmcvb",
@@ -7472,7 +11574,8 @@ var EVENTS = [
         "venue": "Mr. Beery's",
         "city": "Bethpage, New York, United States",
         "rsvps": 34,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/25/club-labyrinth-pre-thanksgiving-fuckfest-couples-40-guys-80-ladies-free-couples-singles-m8evm7",
@@ -7485,7 +11588,8 @@ var EVENTS = [
         "venue": "TBA",
         "city": "New York City, New York, United States",
         "rsvps": 21,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/25/giving-receiving-men-male-only-jmdya7",
@@ -7498,7 +11602,8 @@ var EVENTS = [
         "venue": null,
         "city": "Elizabeth, New Jersey, United States",
         "rsvps": 2,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/25/caligula-ny-thanksgiving-eve-bash-fornication-friendsgiving-friends-with-benefits-edition-fqrgef",
@@ -7511,7 +11616,8 @@ var EVENTS = [
         "venue": "CALIGULA NY",
         "city": "New York City, New York, United States",
         "rsvps": 34,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/25/kinky-cannamunch-cyber-cypher-the-walk-before-the-feast-ltkdlt",
@@ -7524,7 +11630,8 @@ var EVENTS = [
         "venue": "Virtual",
         "city": "New York City, New York, United States",
         "rsvps": 31,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/25/11-25-ts-latina-blowbang-qncclr",
@@ -7537,7 +11644,8 @@ var EVENTS = [
         "venue": null,
         "city": "Ardsley, New York, United States",
         "rsvps": 3,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/25/sinners-paradise-presents-blackout-wacky-wednesdays-25-all-night-after-party-included-amsods",
@@ -7550,7 +11658,8 @@ var EVENTS = [
         "venue": "Sinners Paradise Club",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/25/medusa-s-playhouse-demian-play-parties-erotic-game-night-trvzh6",
@@ -7563,7 +11672,8 @@ var EVENTS = [
         "venue": "MEDUSAS PLAYHOUSE",
         "city": "West Babylon, New York, United States",
         "rsvps": 31,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/25/stufff-d-b9g8a5",
@@ -7576,7 +11686,204 @@ var EVENTS = [
         "venue": null,
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 29,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/25/communicating-with-ropes-yotq2g",
+        "name": "Communicating with Ropes",
+        "start": "2026-11-25",
+        "end": "2026-11-25",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Nov 25 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 28,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/25/nervenschaden-verstehen-und-vorbeugen-ypxehi",
+        "name": "Nervenschäden verstehen und vorbeugen",
+        "start": "2026-11-25",
+        "end": "2026-11-25",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Nov 25 at 1:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 90,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/25/mesa-redonda-para-rope-bottoms-lqc0zx",
+        "name": "Mesa Redonda para Rope Bottoms",
+        "start": "2026-11-25",
+        "end": "2026-11-25",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Wed, Nov 25 at 3:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 8,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/25/sissy-bimbo-goonsgiving-session-qphnjm",
+        "name": "Sissy Bimbo Goonsgiving Session",
+        "start": "2026-11-25",
+        "end": "2026-11-26",
+        "category": "BDSM Party",
+        "cost": "Free",
+        "when": "Nov 25 – 26 · Wed 6:00 PM – Thu 11:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 38,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/25/beginner-sharps-play-staples-edition-t9gl83",
+        "name": "Beginner Sharps Play: Staples Edition",
+        "start": "2026-11-25",
+        "end": "2026-11-25",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Nov 25 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 18,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/25/trans-masc-nursing-tops-tmnt-zoom-munch-xyuawy",
+        "name": "Trans Masc Nursing Tops (TMNT) - Zoom Munch",
+        "start": "2026-11-25",
+        "end": "2026-11-25",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Wed, Nov 25 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": null,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/25/batman417-s-social-virtual-community-gathering-from-the-batcave-pkhq0b",
+        "name": "Batman417's Social Virtual Community Gathering From The Batcave",
+        "start": "2026-11-25",
+        "end": "2026-11-25",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Wed, Nov 25 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 16,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/25/the-leather-chronicles-4tfuuu",
+        "name": "The Leather Chronicles",
+        "start": "2026-11-25",
+        "end": "2026-11-25",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Nov 25 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 41,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/25/online-class-conditioned-instincts-the-psychology-of-pet-headspace-with-pup-ryder-46dk2v",
+        "name": "[ONLINE CLASS] Conditioned Instincts: The Psychology of Pet Headspace with Pup Ryder",
+        "start": "2026-11-25",
+        "end": "2026-11-25",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Nov 25 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 72,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/25/how-to-please-your-partner-lhgwfv",
+        "name": "how to please your partner",
+        "start": "2026-11-25",
+        "end": "2026-11-25",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Wed, Nov 25 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 1,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/25/smut-club-ebbmqz",
+        "name": "Smut Club",
+        "start": "2026-11-25",
+        "end": "2026-11-25",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Wed, Nov 25 at 10:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 16,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/25/bdsm-session-livestream-usa-stream-sht4kc",
+        "name": "BDSM SESSION LIVESTREAM USA-STREAM",
+        "start": "2026-11-25",
+        "end": "2026-11-25",
+        "category": "BDSM Party",
+        "cost": null,
+        "when": "Wed, Nov 25 at 10:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 28,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/25/pdx-recovery-in-the-lifestyle-virtual-zoom-k0yy3a",
+        "name": "PDX-Recovery in the Lifestyle - Virtual ZOOM",
+        "start": "2026-11-25",
+        "end": "2026-11-25",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Wed, Nov 25 at 10:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 1,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/25/a-bedtime-story-with-mister-mick-x31v0b",
+        "name": "A Bedtime Story with Mister-Mick",
+        "start": "2026-11-25",
+        "end": "2026-11-25",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Thu, Nov 26 at 12:00 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 41,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/11/26/orphan-friendsgiving-dt8cap",
@@ -7589,7 +11896,8 @@ var EVENTS = [
         "venue": "Time to Eat Diner",
         "city": "Bridgewater, New Jersey, United States",
         "rsvps": 6,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/26/wedgie-wars-let-the-battles-begin-1x1rle",
@@ -7602,7 +11910,8 @@ var EVENTS = [
         "venue": "Sheraton",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 14,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/26/longisland-all-you-can-eat-ee7xcc",
@@ -7615,7 +11924,8 @@ var EVENTS = [
         "venue": "House of a thousand orgasms",
         "city": "Deer Park, New York, United States",
         "rsvps": 2,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/26/secret-pleasures-thirsty-thursday-gangbang-party-8pm-to-12am-o0ezsi",
@@ -7628,7 +11938,8 @@ var EVENTS = [
         "venue": "Secret Pleasures at the Back Door of the Wi Fi Cafe",
         "city": "Emmaus, Pennsylvania, United States",
         "rsvps": 115,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/26/trans-night-at-club-philadelphia-xbzcvt",
@@ -7641,7 +11952,8 @@ var EVENTS = [
         "venue": "Club Philadelphia",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 21,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/26/glory-hole-dick-sucking-event-iavxj1",
@@ -7653,8 +11965,9 @@ var EVENTS = [
         "when": "Nov 26 – 28 · Thu 8:00 PM – Sat 3:00 AM",
         "venue": "Elizabeth NJ",
         "city": "Elizabeth, New Jersey, United States",
-        "rsvps": 14,
-        "image": null
+        "rsvps": 15,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/26/meet-greet-in-brooklyn-hajywb",
@@ -7666,8 +11979,9 @@ var EVENTS = [
         "when": "Thu, Nov 26 at 8:00 PM",
         "venue": "gems lounge",
         "city": "Brooklyn, New York, United States",
-        "rsvps": 29,
-        "image": null
+        "rsvps": 30,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/26/asylum-13-gives-thanks-vxaztd",
@@ -7679,8 +11993,9 @@ var EVENTS = [
         "when": "Thu, Nov 26 at 9:00 PM",
         "venue": "Bar XIII",
         "city": "Wilmington, Delaware, United States",
-        "rsvps": 114,
-        "image": null
+        "rsvps": 115,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/26/black-friday-stress-relief-party-qibe1j",
@@ -7692,8 +12007,9 @@ var EVENTS = [
         "when": "Thu, Nov 26 at 9:00 PM",
         "venue": null,
         "city": "Philadelphia, Pennsylvania, United States",
-        "rsvps": 4,
-        "image": null
+        "rsvps": 8,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/26/stephanies-birthday-gangbang-agigee",
@@ -7706,7 +12022,8 @@ var EVENTS = [
         "venue": "TBD",
         "city": "New York City, New York, United States",
         "rsvps": 12,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/26/the-thanksgiving-paradise-bash-rsvp-now-and-get-10-off-96b451",
@@ -7718,8 +12035,9 @@ var EVENTS = [
         "when": "Thu, Nov 26 at 10:00 PM",
         "venue": "Sinners Paradise Club",
         "city": "Philadelphia, Pennsylvania, United States",
-        "rsvps": 33,
-        "image": null
+        "rsvps": 34,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/26/fun-in-paradise-afterdark-zdvrs5",
@@ -7732,7 +12050,120 @@ var EVENTS = [
         "venue": "Sinner’s Paradise",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 123,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/26/macy-s-parade-watch-party-iar2kn",
+        "name": "Macy's Parade Watch Party",
+        "start": "2026-11-26",
+        "end": "2026-11-26",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Thu, Nov 26 at 8:12 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 14,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/26/6th-annual-nov-edition-the-comfort-zone-by-lace-s-lair-2-sessions-11a-2-00p-7p-est-nroukn",
+        "name": "6th Annual NOV Edition \"The Comfort Zone\" by Lace's Lair-2 sessions! 11a-2:00p & 7p-??? EST",
+        "start": "2026-11-26",
+        "end": "2026-11-26",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Thu, Nov 26 at 11:00 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 25,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/26/repairing-kink-ruptures-what-to-do-when-things-go-wrong-kozzgf",
+        "name": "Repairing Kink Ruptures – What to Do When Things Go Wrong",
+        "start": "2026-11-26",
+        "end": "2026-11-26",
+        "category": "Educational",
+        "cost": null,
+        "when": "Thu, Nov 26 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 49,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/26/weekly-grounding-ouloce",
+        "name": "Weekly Grounding",
+        "start": "2026-11-26",
+        "end": "2026-11-26",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Thu, Nov 26 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 6,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/26/less-than-human-but-still-useful-human-furniture-play-with-the_seat-qgb9xz",
+        "name": "Less than Human, but still Useful: Human Furniture Play with @The_Seat",
+        "start": "2026-11-26",
+        "end": "2026-11-26",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Thu, Nov 26 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 32,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/26/webinaire-distinguer-les-violences-et-les-jeux-bdsm-i8bwbk",
+        "name": "Webinaire distinguer les violences et les jeux BDSM",
+        "start": "2026-11-26",
+        "end": "2026-11-26",
+        "category": "Educational",
+        "cost": null,
+        "when": "Thu, Nov 26 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 45,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/26/real-sissy-lifestyles-yuybmg",
+        "name": "Real Sissy Lifestyles",
+        "start": "2026-11-26",
+        "end": "2026-11-26",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Thu, Nov 26 at 4:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 56,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/26/pk-rejecting-rejection-adhd-rsd-and-confident-relationship-navigation-u51r80",
+        "name": "PK: Rejecting Rejection: ADHD, RSD, and Confident Relationship Navigation",
+        "start": "2026-11-26",
+        "end": "2026-11-26",
+        "category": "Educational",
+        "cost": null,
+        "when": "Thu, Nov 26 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 650,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/11/27/day-after-thanksgiving-glory-hole-party-mopkzq",
@@ -7745,7 +12176,8 @@ var EVENTS = [
         "venue": "Private Glory Hole",
         "city": "Mount Laurel, New Jersey, United States",
         "rsvps": 8,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/27/philly-fetish-fair-of-kink-r2t2q0",
@@ -7758,7 +12190,8 @@ var EVENTS = [
         "venue": "Prism",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 1054,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/27/black-friday-cupid-s-kutztown-czmydj",
@@ -7770,8 +12203,9 @@ var EVENTS = [
         "when": "Fri, Nov 27 at 12:00 PM",
         "venue": "Cupid's",
         "city": "Kutztown, Pennsylvania, United States",
-        "rsvps": 20,
-        "image": null
+        "rsvps": 21,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/27/newbie-couple-friday-berlin-news-agency-bp4la3",
@@ -7783,8 +12217,9 @@ var EVENTS = [
         "when": "Fri, Nov 27 at 4:00 PM",
         "venue": null,
         "city": "West Berlin, New Jersey, United States",
-        "rsvps": 62,
-        "image": null
+        "rsvps": 63,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/27/transexualx-friday-play-party-6pm-to-2am-xpg5uu",
@@ -7796,8 +12231,9 @@ var EVENTS = [
         "when": "Fri, Nov 27 at 6:00 PM",
         "venue": "RainbowPlaygroundNYC",
         "city": "New York City, New York, United States",
-        "rsvps": 22,
-        "image": null
+        "rsvps": 28,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/27/brick-hearth-november-munch-jhsg1m",
@@ -7810,7 +12246,8 @@ var EVENTS = [
         "venue": null,
         "city": "Brick, New Jersey, United States",
         "rsvps": 48,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/27/the-philly-lifestyle-social-c5onq0",
@@ -7823,7 +12260,8 @@ var EVENTS = [
         "venue": "The Loft",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 148,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/27/menage-noir-black-friday-experience-begwis",
@@ -7836,7 +12274,8 @@ var EVENTS = [
         "venue": "Private Location",
         "city": "New York City, New York, United States",
         "rsvps": 42,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/27/kurious-kink-bdsm-social-skillshare-practice-munch-followed-by-kink-play-party-rnao9h",
@@ -7848,8 +12287,9 @@ var EVENTS = [
         "when": "Fri, Nov 27 at 7:00 PM",
         "venue": "Gemini & Scorpio Loft",
         "city": "Brooklyn, New York, United States",
-        "rsvps": 84,
-        "image": null
+        "rsvps": 85,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/27/pls-x-kinky-kalendar-launch-ku4zgb",
@@ -7862,7 +12302,8 @@ var EVENTS = [
         "venue": "THE LOFT",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 34,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/27/come-break-me-in-at-berlin-news-agency-gm4h9t",
@@ -7875,7 +12316,8 @@ var EVENTS = [
         "venue": "Berlin News Agency",
         "city": "West Berlin, New Jersey, United States",
         "rsvps": 78,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/27/nj-kink-aka-omega-november-27th-2026-munch-lwdusn",
@@ -7888,7 +12330,8 @@ var EVENTS = [
         "venue": "Omega Diner",
         "city": "North Brunswick, New Jersey, United States",
         "rsvps": 59,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/27/wet-after-work-gangbang-crown-heights-brooklyn-ny-oi0whf",
@@ -7901,7 +12344,8 @@ var EVENTS = [
         "venue": null,
         "city": "Brooklyn, New York, United States",
         "rsvps": 15,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/27/wonderland-friendsgiving-cigar-social-rww0f0",
@@ -7914,7 +12358,8 @@ var EVENTS = [
         "venue": "Hall of Fame Luxe",
         "city": "Queens, New York, United States",
         "rsvps": 74,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/27/spanktopia-in-nov-the-black-and-blue-version-2jgmx9",
@@ -7926,8 +12371,9 @@ var EVENTS = [
         "when": "Fri, Nov 27 at 7:30 PM",
         "venue": "The Church-",
         "city": "New Paltz, New York, United States",
-        "rsvps": 72,
-        "image": null
+        "rsvps": 73,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/27/ladies-night-a-coed-hodown-all-gender-uni-sexual-ttfiqb",
@@ -7940,7 +12386,8 @@ var EVENTS = [
         "venue": null,
         "city": "Elizabeth, New Jersey, United States",
         "rsvps": 56,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/27/melanin-entertainment-hot-wax-cool-control-eggqvf",
@@ -7952,8 +12399,9 @@ var EVENTS = [
         "when": "Fri, Nov 27 at 8:00 PM",
         "venue": "Brivado Cigars- Event Space",
         "city": "Orange, New Jersey, United States",
-        "rsvps": 52,
-        "image": null
+        "rsvps": 53,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/27/asstrology-bdsm-queer-play-party-hdjdel",
@@ -7966,7 +12414,8 @@ var EVENTS = [
         "venue": "The Crown",
         "city": "Brooklyn, New York, United States",
         "rsvps": 51,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/27/no-pants-party-bvhugi",
@@ -7979,7 +12428,8 @@ var EVENTS = [
         "venue": "Local hotel",
         "city": "Trexlertown, Pennsylvania, United States",
         "rsvps": 9,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/27/black-friday-flash-party-red-barn-berlin-friday-november-27-0kixsh",
@@ -7991,8 +12441,9 @@ var EVENTS = [
         "when": "Fri, Nov 27 at 8:00 PM",
         "venue": "RED BARN ADULT ENTERTAINMENT COMPLEX",
         "city": "West Berlin, New Jersey, United States",
-        "rsvps": 29,
-        "image": null
+        "rsvps": 30,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/27/gobblesgiving-nov-27th-long-island-7m2smk",
@@ -8004,8 +12455,9 @@ var EVENTS = [
         "when": "Fri, Nov 27 at 9:00 PM",
         "venue": "LICK LOUNGE",
         "city": "Melville, New York, United States",
-        "rsvps": 73,
-        "image": null
+        "rsvps": 72,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/27/tristatedelights-presents-bi-the-by-nj-p0aqdg",
@@ -8018,7 +12470,8 @@ var EVENTS = [
         "venue": null,
         "city": "Nutley, New Jersey, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/27/club-labyrinth-debauchery-cpls-60-guys-100-girls-free-9pm-4am-midtown-couples-singles-fchpjg",
@@ -8031,7 +12484,8 @@ var EVENTS = [
         "venue": "TBA",
         "city": "New York City, New York, United States",
         "rsvps": 11,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/27/launch-party-it-s-here-zsaul2",
@@ -8044,7 +12498,8 @@ var EVENTS = [
         "venue": "bar",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 29,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/27/feast-of-desire-a-ritual-sex-magick-party-mio0ug",
@@ -8057,7 +12512,8 @@ var EVENTS = [
         "venue": "Pagan's Paradise - Herald Square",
         "city": "New York City, New York, United States",
         "rsvps": 23,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/27/the-diamond-club-nyc-presents-black-friday-blackout-all-black-sexy-affair-with-dj-banton-o6mmra",
@@ -8070,33 +12526,8 @@ var EVENTS = [
         "venue": "THE DIAMOND CLUB NYC [2ND FLOOR]",
         "city": "New York City, New York, United States",
         "rsvps": 42,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/27/dicksgiving-gsmlcx",
-        "name": "DicksGiving",
-        "start": "2026-11-27",
-        "end": "2026-11-28",
-        "category": "Sex Party",
-        "cost": null,
-        "when": "Nov 27 – 28 · Fri 10:00 PM – Sat 7:00 AM",
-        "venue": null,
-        "city": "Philadelphia, Pennsylvania, United States",
-        "rsvps": 82,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/27/black-friday-dump-goo-zcgxpo",
-        "name": "Black Friday Dump & Goo",
-        "start": "2026-11-27",
-        "end": "2026-11-28",
-        "category": "Sex Party",
-        "cost": "Free",
-        "when": "Nov 27 – 28 · Fri 10:00 PM – Sat 10:00 AM",
-        "venue": "hotel pruglua",
-        "city": "New York City, New York, United States",
-        "rsvps": 11,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/27/secret-pleasures-sugar-daddy-mommy-party-4ikenz",
@@ -8109,7 +12540,8 @@ var EVENTS = [
         "venue": "Secret Pleasures is at the Back Door of the Wi Fi Cafe",
         "city": "Emmaus, Pennsylvania, United States",
         "rsvps": 119,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/27/caligula-ny-presents-friday-cuckold-my-hubby-likes-to-watch-black-friday-with-dj-supa-soca-ay0cg3",
@@ -8122,7 +12554,8 @@ var EVENTS = [
         "venue": "CALIGULA NY",
         "city": "New York City, New York, United States",
         "rsvps": 64,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/27/missy-kings-black-friday-black-out-sexy-all-black-affair-yz4b1n",
@@ -8135,7 +12568,8 @@ var EVENTS = [
         "venue": "DIAMOND CLUB NYC",
         "city": "New York City, New York, United States",
         "rsvps": 35,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/27/nj-ts-cd-hotel-c24ewe",
@@ -8148,7 +12582,8 @@ var EVENTS = [
         "venue": null,
         "city": "Rutherford, New Jersey, United States",
         "rsvps": 15,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/27/beach-vibes-only-virtual-munch-leftovers-laughter-edition-nfvhmd",
@@ -8160,8 +12595,9 @@ var EVENTS = [
         "when": "Fri, Nov 27 at 9:30 PM",
         "venue": "Virtual",
         "city": "New York City, New York, United States",
-        "rsvps": 10,
-        "image": null
+        "rsvps": 11,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/27/black-friday-edition-t-shirt-panties-in-paradise-10pm-5am-can-t-stay-if-you-dont-play-kmcp2d",
@@ -8174,7 +12610,36 @@ var EVENTS = [
         "venue": "Sinners Paradise club",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 57,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/27/dicksgiving-gsmlcx",
+        "name": "DicksGiving",
+        "start": "2026-11-27",
+        "end": "2026-11-28",
+        "category": "Sex Party",
+        "cost": null,
+        "when": "Nov 27 – 28 · Fri 10:00 PM – Sat 7:00 AM",
+        "venue": null,
+        "city": "Philadelphia, Pennsylvania, United States",
+        "rsvps": 82,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/27/black-friday-dump-goo-zcgxpo",
+        "name": "Black Friday Dump & Goo",
+        "start": "2026-11-27",
+        "end": "2026-11-28",
+        "category": "Sex Party",
+        "cost": "Free",
+        "when": "Nov 27 – 28 · Fri 10:00 PM – Sat 10:00 AM",
+        "venue": "hotel pruglua",
+        "city": "New York City, New York, United States",
+        "rsvps": 11,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/27/dark-decadance-queer-forward-kink-play-goth-dance-party-smxvsa",
@@ -8187,7 +12652,8 @@ var EVENTS = [
         "venue": "Gemini and Scorpio Loft",
         "city": "Brooklyn, New York, United States",
         "rsvps": 85,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/27/medusas-playhouse-presents-fantasy-fridays-open-to-all-couples-and-singles-males-females-couples-aqregr",
@@ -8200,7 +12666,8 @@ var EVENTS = [
         "venue": "MEDUSAS PLAYHOUSE",
         "city": "West Babylon, New York, United States",
         "rsvps": 32,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/27/perv-presents-touchdown-a-sportswear-fetish-dad-s-party-ofumiq",
@@ -8212,8 +12679,121 @@ var EVENTS = [
         "when": "Fri, Nov 27 at 10:00 PM",
         "venue": "ROCKBAR NYC",
         "city": "New York City, New York, United States",
-        "rsvps": 36,
-        "image": null
+        "rsvps": 37,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/27/black-friday-virtual-lunch-munch-bvtxxc",
+        "name": "Black Friday Virtual Lunch Munch",
+        "start": "2026-11-27",
+        "end": "2026-11-27",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Fri, Nov 27 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 11,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/27/qa-chat-inbox-bulk-message-event-m5oy8s",
+        "name": "QA chat inbox bulk message event",
+        "start": "2026-11-27",
+        "end": "2026-11-27",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Fri, Nov 27 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 1,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/27/online-friday-lunch-open-to-everyone-11-27-2026-rdyvuo",
+        "name": "Online Friday Lunch (open to everyone) - 11/27/2026",
+        "start": "2026-11-27",
+        "end": "2026-11-27",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Fri, Nov 27 at 2:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 16,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/27/mistress-and-gimps-live-asxjfg",
+        "name": "Mistress and Gimps - Live",
+        "start": "2026-11-27",
+        "end": "2026-11-27",
+        "category": "BDSM Party",
+        "cost": "Free",
+        "when": "Fri, Nov 27 at 5:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 17,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/27/bringing-the-sacred-back-to-sexuality-k1tkfo",
+        "name": "Bringing the Sacred back to Sexuality",
+        "start": "2026-11-27",
+        "end": "2026-11-27",
+        "category": "Educational",
+        "cost": null,
+        "when": "Fri, Nov 27 at 6:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 48,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/27/sniff-greet-fall-edition-pnldge",
+        "name": "Sniff & Greet (Fall Edition)",
+        "start": "2026-11-27",
+        "end": "2026-11-27",
+        "category": "BDSM Party",
+        "cost": "Free",
+        "when": "Fri, Nov 27 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 48,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/27/isolation-storytime-afterparty-2026-11-27-7x5zyc",
+        "name": "Isolation Storytime Afterparty - 2026-11-27",
+        "start": "2026-11-27",
+        "end": "2026-11-27",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Fri, Nov 27 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 3,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/27/4th-friday-online-queer-leather-meditation-hhheuv",
+        "name": "4th Friday (online) Queer Leather Meditation",
+        "start": "2026-11-27",
+        "end": "2026-11-27",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Fri, Nov 27 at 10:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 1,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/the-pedicure-party-4ab1yr",
@@ -8226,7 +12806,8 @@ var EVENTS = [
         "venue": "Private Space",
         "city": "Norwalk, Connecticut, United States",
         "rsvps": 3,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/freaky-fun-saturday-bna-jp5w6o",
@@ -8238,8 +12819,9 @@ var EVENTS = [
         "when": "Sat, Nov 28 at 10:00 AM",
         "venue": "Berlin News Agency",
         "city": "West Berlin, New Jersey, United States",
-        "rsvps": 52,
-        "image": null
+        "rsvps": 54,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/healing-circle-for-harm-survivors-l3i9p8",
@@ -8252,7 +12834,8 @@ var EVENTS = [
         "venue": "Virtual",
         "city": "New York City, New York, United States",
         "rsvps": 23,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/philadelphia-kinky-speed-dating-mixer-regular-edition-hqple7",
@@ -8264,8 +12847,9 @@ var EVENTS = [
         "when": "Sat, Nov 28 at 12:00 PM",
         "venue": "Urban Village Brewery",
         "city": "Philadelphia, Pennsylvania, United States",
-        "rsvps": 164,
-        "image": null
+        "rsvps": 163,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/naked-yoga-new-york-xmdx9u",
@@ -8278,7 +12862,8 @@ var EVENTS = [
         "venue": "Address given in email confirmation. Please contact us if paying at door.",
         "city": "New York City, New York, United States",
         "rsvps": 32,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/sub-male-party-vtxj9y",
@@ -8291,7 +12876,8 @@ var EVENTS = [
         "venue": "City Ave area",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 20,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/mast-clifton-november-2026-meeting-d1brkj",
@@ -8304,7 +12890,8 @@ var EVENTS = [
         "venue": "IHOP",
         "city": "Clifton, New Jersey, United States",
         "rsvps": 17,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/flogging-201-w-raymond-wise-gecqie",
@@ -8317,7 +12904,8 @@ var EVENTS = [
         "venue": "The Venue",
         "city": "Bethlehem, Pennsylvania, United States",
         "rsvps": 55,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/sensual-nights-gloryhole-event-wv1x6h",
@@ -8330,20 +12918,8 @@ var EVENTS = [
         "venue": "Private Location",
         "city": "Union, New Jersey, United States",
         "rsvps": 8,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/11/28/juicy-ass-looking-for-6-to-8-selective-tops-vfpfmr",
-        "name": "Juicy Ass looking for 6 to 8 selective tops-",
-        "start": "2026-11-28",
-        "end": "2026-11-29",
-        "category": "Sex Party",
-        "cost": null,
-        "when": "Nov 28 – 29 · Sat 7:00 PM – Sun 8:00 AM",
-        "venue": null,
-        "city": "West Orange, New Jersey, United States",
-        "rsvps": 40,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/sissy-freak-session-kjwcnr",
@@ -8356,7 +12932,22 @@ var EVENTS = [
         "venue": "Center City discrete easy access location",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 6,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/28/juicy-ass-looking-for-6-to-8-selective-tops-vfpfmr",
+        "name": "Juicy Ass looking for 6 to 8 selective tops-",
+        "start": "2026-11-28",
+        "end": "2026-11-29",
+        "category": "Sex Party",
+        "cost": null,
+        "when": "Nov 28 – 29 · Sat 7:00 PM – Sun 8:00 AM",
+        "venue": null,
+        "city": "West Orange, New Jersey, United States",
+        "rsvps": 40,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/the-vampire-ball-y2qrhw",
@@ -8369,7 +12960,8 @@ var EVENTS = [
         "venue": "The Venue",
         "city": "Bethlehem, Pennsylvania, United States",
         "rsvps": 93,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/the-collective-gathering-potluck-yok4fn",
@@ -8381,8 +12973,9 @@ var EVENTS = [
         "when": "Sat, Nov 28 at 7:00 PM",
         "venue": "undisclosed location",
         "city": "Allentown, Pennsylvania, United States",
-        "rsvps": 37,
-        "image": null
+        "rsvps": 40,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/domme-nation-nyc-the-hit-me-up-loft-femdom-hosts-lady-viktoria-miss-eira-karina-divine-nticjs",
@@ -8395,7 +12988,8 @@ var EVENTS = [
         "venue": "Hit Me Up Loft",
         "city": "New York City, New York, United States",
         "rsvps": 151,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/the-leezus-experience-xxigoo",
@@ -8408,7 +13002,8 @@ var EVENTS = [
         "venue": "TLO",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 115,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/cfnm-taillor-femdom-play-party-ikeiig",
@@ -8421,7 +13016,8 @@ var EVENTS = [
         "venue": "The Crown",
         "city": "Brooklyn, New York, United States",
         "rsvps": 100,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/thankful-tempted-fmwbhd",
@@ -8434,7 +13030,8 @@ var EVENTS = [
         "venue": null,
         "city": "Glen Gardner, New Jersey, United States",
         "rsvps": 10,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/queer-rope-social-brooklyn-nov-28-07afkz",
@@ -8447,7 +13044,8 @@ var EVENTS = [
         "venue": "Coil & Cord Studio",
         "city": "Brooklyn, New York, United States",
         "rsvps": 36,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/girl-party-hhw6sg",
@@ -8460,7 +13058,8 @@ var EVENTS = [
         "venue": null,
         "city": "Maple Shade, New Jersey, United States",
         "rsvps": 202,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/turkey-cheeks-gangbang-party-1z3qps",
@@ -8473,7 +13072,8 @@ var EVENTS = [
         "venue": "private location in Midtown",
         "city": "New York City, New York, United States",
         "rsvps": 29,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/last-10-girl-november-gangbang-in-2026-cquyva",
@@ -8486,7 +13086,8 @@ var EVENTS = [
         "venue": "Midtown Manhattan",
         "city": "Manhattan, New York, United States",
         "rsvps": 197,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/no-panties-xxx-meet-and-play-party-for-sexy-couples-and-singles-8-30pm-xyakvo",
@@ -8499,7 +13100,8 @@ var EVENTS = [
         "venue": null,
         "city": "New Brunswick, New Jersey, United States",
         "rsvps": 121,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/november-s-after-black-friday-affair-tynuyw",
@@ -8511,8 +13113,9 @@ var EVENTS = [
         "when": "Sat, Nov 28 at 8:30 PM",
         "venue": "Midtown Manhattan",
         "city": "Manhattan, New York, United States",
-        "rsvps": 116,
-        "image": null
+        "rsvps": 117,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/slutsgiving-on-premise-d1cqm8",
@@ -8524,8 +13127,9 @@ var EVENTS = [
         "when": "Sat, Nov 28 at 9:00 PM",
         "venue": null,
         "city": "Philadelphia, Pennsylvania, United States",
-        "rsvps": 95,
-        "image": null
+        "rsvps": 96,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/secret-pleasures-neon-glow-party-n76cwb",
@@ -8538,7 +13142,8 @@ var EVENTS = [
         "venue": "Secret Pleasures is at the Back Door of the Wi Fi Cafe",
         "city": "Emmaus, Pennsylvania, United States",
         "rsvps": 132,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/resurgence-studios-tickle-and-foot-party-nov-28th-tqoowd",
@@ -8551,7 +13156,8 @@ var EVENTS = [
         "venue": "RESURGENCE STUDIOS",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 85,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/dirty-dancing-goth-prom-a-dance-play-party-8f0o5l",
@@ -8564,7 +13170,8 @@ var EVENTS = [
         "venue": null,
         "city": "New York City, New York, United States",
         "rsvps": 111,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/club-labyrinth-swinging-kink-saturday-cpls-60-guys-120-ladies-free-midtown-9pm-4am-bam3eq",
@@ -8577,7 +13184,8 @@ var EVENTS = [
         "venue": "TBA",
         "city": "New York City, New York, United States",
         "rsvps": 7,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/hide-go-get-it-lv8osn",
@@ -8590,7 +13198,8 @@ var EVENTS = [
         "venue": "secret location",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 126,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/the-panty-pantry-sex-in-the-bxxx-strip-tease-goddess-worship-crppki",
@@ -8603,7 +13212,8 @@ var EVENTS = [
         "venue": null,
         "city": "New York City, New York, United States",
         "rsvps": 12,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/pajama-lingerie-meet-greet-tbm0ev",
@@ -8616,7 +13226,8 @@ var EVENTS = [
         "venue": null,
         "city": "New York City, New York, United States",
         "rsvps": 10,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/stuffed-spoiled-sensual-soiree-ls-friendsgiving-uzxewp",
@@ -8629,7 +13240,8 @@ var EVENTS = [
         "venue": "PRIVATE AIRBNB",
         "city": "West New York, New Jersey, United States",
         "rsvps": 81,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/the-diamond-club-nyc-presents-sexual-desires-lustful-playful-edition-with-dj-supa-soca-bn61oi",
@@ -8641,8 +13253,9 @@ var EVENTS = [
         "when": "Sat, Nov 28 at 9:00 PM",
         "venue": "THE DIAMOND CLUB NYC [2ND FLOOR]",
         "city": "New York City, New York, United States",
-        "rsvps": 45,
-        "image": null
+        "rsvps": 44,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/50-shades-of-dark-hosted-by-the-three-headed-dragon-brings-you-eabty7",
@@ -8654,8 +13267,9 @@ var EVENTS = [
         "when": "Sat, Nov 28 at 9:00 PM",
         "venue": "L.I.C.K manor",
         "city": "Melville, New York, United States",
-        "rsvps": 77,
-        "image": null
+        "rsvps": 78,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/hotwife-bbc-gb-date-change-2ozjjx",
@@ -8668,7 +13282,8 @@ var EVENTS = [
         "venue": "TBD",
         "city": "Allentown, Pennsylvania, United States",
         "rsvps": 22,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/come-celebrate-k7lc3x",
@@ -8681,7 +13296,8 @@ var EVENTS = [
         "venue": null,
         "city": "Bordentown, New Jersey, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/hacienda-fucked-fed-play-party-kpqw2t",
@@ -8694,7 +13310,8 @@ var EVENTS = [
         "venue": "Hacienda",
         "city": "New York City, New York, United States",
         "rsvps": 12,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/darkside-a-bdsm-experience-the-hit-me-up-loft-our-big-2-floor-party-saturday-11-28-lhznan",
@@ -8707,7 +13324,8 @@ var EVENTS = [
         "venue": "Hit Me Up",
         "city": "New York City, New York, United States",
         "rsvps": 526,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/nympho-night-after-dark-a-sinners-paradise-production-rsvp-now-free-entry-tonight-hlmpln",
@@ -8720,7 +13338,8 @@ var EVENTS = [
         "venue": "Sinners Paradise Club",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 56,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/bangsgiving-jutj6s",
@@ -8733,7 +13352,8 @@ var EVENTS = [
         "venue": null,
         "city": "Brooklyn, New York, United States",
         "rsvps": 105,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/countdown-pansexual-play-party-o5alyr",
@@ -8746,7 +13366,8 @@ var EVENTS = [
         "venue": null,
         "city": "Brooklyn, New York, United States",
         "rsvps": 77,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/medusa-s-playhouse-freaky-bab-bunnies-presents-thanksgiving-sexy-given-open-to-couples-and-females-la5oar",
@@ -8759,7 +13380,8 @@ var EVENTS = [
         "venue": "MEDUSAS PLAYHOUSE",
         "city": "West Babylon, New York, United States",
         "rsvps": 23,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/blaqlust-play-party-hdcqha",
@@ -8772,7 +13394,8 @@ var EVENTS = [
         "venue": null,
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 22,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/freaksgiving-slumber-party-cream-pie-edition-g1ulqq",
@@ -8785,7 +13408,8 @@ var EVENTS = [
         "venue": null,
         "city": "Brooklyn, New York, United States",
         "rsvps": 79,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/black-saturday-rzfpgj",
@@ -8798,7 +13422,8 @@ var EVENTS = [
         "venue": "Private Event Space",
         "city": "New York City, New York, United States",
         "rsvps": 28,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/pink-saturday-11-28-not-black-friday-dont-blow-your-load-yet-save-your-nuts-tseao8",
@@ -8810,8 +13435,9 @@ var EVENTS = [
         "when": "Sat, Nov 28 at 10:00 PM",
         "venue": "Midtown Manhattan Loft",
         "city": "New York City, New York, United States",
-        "rsvps": 123,
-        "image": null
+        "rsvps": 124,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/deviant-black-out-t65id7",
@@ -8824,7 +13450,8 @@ var EVENTS = [
         "venue": "Red Eye NY",
         "city": "New York City, New York, United States",
         "rsvps": 30,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/28/wyldchild-s-bday-after-hour-fuck-fest-quhyvt",
@@ -8837,7 +13464,176 @@ var EVENTS = [
         "venue": null,
         "city": "Brooklyn, New York, United States",
         "rsvps": 51,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/28/mentales-bdsm-yrhcvl",
+        "name": "Mentales BDSM",
+        "start": "2026-11-28",
+        "end": "2026-11-28",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Nov 28 at 4:00 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 2,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/28/all-bodies-virtual-naked-yoga-llooqy",
+        "name": "All Bodies Virtual Naked Yoga",
+        "start": "2026-11-28",
+        "end": "2026-11-28",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Nov 28 at 10:30 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 22,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/28/30-hours-of-gimp-ve8qt3",
+        "name": "30 Hours of Gimp",
+        "start": "2026-11-28",
+        "end": "2026-11-28",
+        "category": "BDSM Party",
+        "cost": "Free",
+        "when": "Sat, Nov 28 at 11:00 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 13,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/28/coworking-hours-rzepxg",
+        "name": "Coworking Hours",
+        "start": "2026-11-28",
+        "end": "2026-11-28",
+        "category": "Social",
+        "cost": null,
+        "when": "Sat, Nov 28 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 5,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/28/conscious-conversations-month-2-week-10-sexuality-without-performance-4lhsxx",
+        "name": "Conscious Conversations | Month 2 : week 10 | Sexuality without performance",
+        "start": "2026-11-28",
+        "end": "2026-11-28",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sat, Nov 28 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 12,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/28/november-28th-11-00-pst-ethical-dominance-1-dominant-is-a-caregiving-role-with-nyxienoc-rec-rq5ppn",
+        "name": "November 28th, 11:00 PST- Ethical Dominance 1: Dominant Is a Caregiving Role with NyxieNoc +Rec",
+        "start": "2026-11-28",
+        "end": "2026-11-28",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Nov 28 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 99,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/28/online-classical-ethics-modern-kink-from-socrates-to-safewords-ye0fen",
+        "name": "ONLINE: Classical Ethics, Modern Kink: From Socrates to Safewords",
+        "start": "2026-11-28",
+        "end": "2026-11-28",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Nov 28 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 223,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/28/scene-skills-for-domination-sex-dominance-mastermind-group-hvnyt1",
+        "name": "Scene Skills for Domination & Sex @ Dominance Mastermind Group",
+        "start": "2026-11-28",
+        "end": "2026-11-28",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sat, Nov 28 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 2,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/28/houston-black-munch-november-virtual-munch-w-msddom-iyvvoz",
+        "name": "Houston Black Munch - November Virtual Munch w/ MsDDom",
+        "start": "2026-11-28",
+        "end": "2026-11-28",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sat, Nov 28 at 3:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 69,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/28/online-when-service-becomes-identity-what-happens-when-things-change-5er6e7",
+        "name": "ONLINE: When Service Becomes Identity: What Happens When Things Change",
+        "start": "2026-11-28",
+        "end": "2026-11-28",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Nov 28 at 5:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 153,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/28/the-thorn-sessions-a-virtual-skill-share-event-rptqjy",
+        "name": "The Thorn Sessions: A Virtual Skill Share Event",
+        "start": "2026-11-28",
+        "end": "2026-11-28",
+        "category": "Social",
+        "cost": null,
+        "when": "Sat, Nov 28 at 6:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 103,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/28/moscow-sparke-virtual-munch-kqa8k3",
+        "name": "Moscow SPARKE Virtual Munch",
+        "start": "2026-11-28",
+        "end": "2026-11-28",
+        "category": "Social",
+        "cost": null,
+        "when": "Sat, Nov 28 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 9,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/11/29/after-hours-style-lifestyle-eventn-asw3do",
@@ -8850,7 +13646,8 @@ var EVENTS = [
         "venue": "HOTEL SUITE",
         "city": "Brooklyn, New York, United States",
         "rsvps": 53,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/29/november-placeholder-sunday-brunch-with-the-court-ktrhxz",
@@ -8863,7 +13660,8 @@ var EVENTS = [
         "venue": "TBD",
         "city": "Lancaster, Pennsylvania, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/29/our-thanksgiving-tickle-party-urg2u2",
@@ -8876,7 +13674,8 @@ var EVENTS = [
         "venue": "The Devil’s Lair",
         "city": "Melville, New York, United States",
         "rsvps": 19,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/29/a-kinky-friendsgiving-november-bay-ridge-munch-sun-nov-29th-xwvok8",
@@ -8889,7 +13688,8 @@ var EVENTS = [
         "venue": null,
         "city": "New York City, New York, United States",
         "rsvps": 59,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/29/sunday-is-funday-bna-vpffma",
@@ -8901,8 +13701,9 @@ var EVENTS = [
         "when": "Sun, Nov 29 at 12:00 PM",
         "venue": "Berlin News Agency",
         "city": "West Berlin, New Jersey, United States",
-        "rsvps": 48,
-        "image": null
+        "rsvps": 50,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/29/holiday-carnal-arts-and-crafts-bazaar-at-the-nest-kinky-toys-fashion-and-art-7nx4lo",
@@ -8914,8 +13715,9 @@ var EVENTS = [
         "when": "Sun, Nov 29 at 1:00 PM",
         "venue": "The Nest (1615 N. Delaware Ave)",
         "city": "Philadelphia, Pennsylvania, United States",
-        "rsvps": 723,
-        "image": null
+        "rsvps": 730,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/29/fetlife-at-the-brooklyn-botanic-garden-uhkunb",
@@ -8928,7 +13730,8 @@ var EVENTS = [
         "venue": null,
         "city": "Brooklyn, New York, United States",
         "rsvps": 157,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/29/art-of-kink-november-edition-0ip2az",
@@ -8941,7 +13744,8 @@ var EVENTS = [
         "venue": "Prism ~ Please reach out if unfamiliar with our location. Arts District",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 270,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/29/november-power-exchange-roundtable-yym8yz",
@@ -8954,7 +13758,8 @@ var EVENTS = [
         "venue": "The Outpost (address w registration via google form)",
         "city": "Hammonton, New Jersey, United States",
         "rsvps": 25,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/29/slipawayandplay-all-male-events-5ab8ft",
@@ -8967,7 +13772,8 @@ var EVENTS = [
         "venue": "Info given after your email address is supplied.",
         "city": "Asbury Park, New Jersey, United States",
         "rsvps": 43,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/29/wildncrazys-sunday-delight-hsbfdb",
@@ -8980,7 +13786,8 @@ var EVENTS = [
         "venue": null,
         "city": "Somerset, New Jersey, United States",
         "rsvps": 145,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/29/sunday-funday-2x8ghj",
@@ -8993,7 +13800,8 @@ var EVENTS = [
         "venue": "tba",
         "city": "East Hanover, New Jersey, United States",
         "rsvps": 27,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/29/doom-art-society-yefykb",
@@ -9006,7 +13814,8 @@ var EVENTS = [
         "venue": "Doom Bar",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 106,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/29/naked-movie-night-male-man-identified-only-n8pdcg",
@@ -9019,7 +13828,8 @@ var EVENTS = [
         "venue": "Address given in email confirmation. Please contact us if paying at door.",
         "city": "New York City, New York, United States",
         "rsvps": 17,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/29/brey-nxmbz-group-fantasy-sqk7rz",
@@ -9032,7 +13842,8 @@ var EVENTS = [
         "venue": "Harlem",
         "city": "New York City, New York, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/29/bbc-tribute-night-vay8ug",
@@ -9045,7 +13856,8 @@ var EVENTS = [
         "venue": null,
         "city": "South Amboy, New Jersey, United States",
         "rsvps": 4,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/29/the-diamond-club-nyc-presents-spicy-swinger-sundays-sexy-fall-edition-wetgzd",
@@ -9058,7 +13870,8 @@ var EVENTS = [
         "venue": "THE DIAMOND CLUB NYC [2ND FLOOR]",
         "city": "New York City, New York, United States",
         "rsvps": 45,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/29/sultry-shades-social-game-night-edition-6i3dyc",
@@ -9071,7 +13884,8 @@ var EVENTS = [
         "venue": "The Saloon",
         "city": "Brooklyn, New York, United States",
         "rsvps": 8,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/29/caligula-ny-presents-sinful-sunday-night-swinger-social-sexy-fall-2026-edition-5dvr4o",
@@ -9084,7 +13898,316 @@ var EVENTS = [
         "venue": "CALIGULA NY",
         "city": "New York City, New York, United States",
         "rsvps": 30,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/29/virtual-meet-9lbc9x",
+        "name": "virtual meet",
+        "start": "2026-11-29",
+        "end": "2026-11-29",
+        "category": "BDSM Party",
+        "cost": "Free",
+        "when": "Sun, Nov 29 at 2:30 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 1,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/29/fire-play-301-the-sensual-flame-auz2bc",
+        "name": "Fire Play 301: The Sensual Flame",
+        "start": "2026-11-29",
+        "end": "2026-11-29",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Nov 29 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 163,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/29/finding-yourself-in-fem-dom-for-dommes-online-workshop-by-birds-k0xs8z",
+        "name": "Finding yourself in fem-dom - For dommes - Online workshop by -Birds-",
+        "start": "2026-11-29",
+        "end": "2026-11-29",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Nov 29 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 43,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/29/women-s-consent-discussion-group-nw8cg9",
+        "name": "Women's Consent Discussion Group",
+        "start": "2026-11-29",
+        "end": "2026-11-29",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sun, Nov 29 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 44,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/29/m-s-301-tds-welcomes-master-retro-bella-slave-boydrake-in-mastery-of-the-neurodivergent-master-rmbl9l",
+        "name": "M//s 301-TDS welcomes MASTER RETRO BELLA & slave boydrake in \"MASTERY OF THE NEURODIVERGENT MASTER\".",
+        "start": "2026-11-29",
+        "end": "2026-11-29",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Nov 29 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 449,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/29/the-well-disciplined-home-a-1950s-household-manual-with-miss-chris-o6ilu0",
+        "name": "The Well Disciplined Home: A 1950s Household Manual With Miss Chris!",
+        "start": "2026-11-29",
+        "end": "2026-11-29",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Nov 29 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 190,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/29/online-prostate-milking-edging-with-the-lady-v-ty2alg",
+        "name": "ONLINE: Prostate Milking & Edging with The Lady V",
+        "start": "2026-11-29",
+        "end": "2026-11-29",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Nov 29 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 210,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/29/fire-play-101-online-class-live-if-you-love-someone-set-them-on-fire-cdp68h",
+        "name": "Fire Play 101 ONLINE Class LIVE - If You Love Someone, Set Them On Fire!",
+        "start": "2026-11-29",
+        "end": "2026-11-29",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Nov 29 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 18,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/29/online-intensive-the-art-of-presenting-educate-engage-entertain-w-dawn-57a1kh",
+        "name": "ONLINE: Intensive - The Art of Presenting: Educate, Engage, Entertain w/Dawn",
+        "start": "2026-11-29",
+        "end": "2026-11-29",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Nov 29 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 49,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/29/fisica-entre-cuerdas-6u2gaf",
+        "name": "FISICA ENTRE CUERDAS",
+        "start": "2026-11-29",
+        "end": "2026-11-29",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Nov 29 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 1,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/29/empowering-adult-learners-series-series-1-sundays-workshop-no3-7lgivn",
+        "name": "Empowering Adult Learners Series (series 1 Sundays - workshop No3)",
+        "start": "2026-11-29",
+        "end": "2026-11-29",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Nov 29 at 3:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 18,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/29/weekly-virtual-support-group-cwxwbx",
+        "name": "Weekly Virtual Support Group",
+        "start": "2026-11-29",
+        "end": "2026-11-29",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Sun, Nov 29 at 3:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 1,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/29/cosy-co-op-stardew-edition-qg3haw",
+        "name": "Cosy Co-Op Stardew Edition",
+        "start": "2026-11-29",
+        "end": "2026-11-29",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Sun, Nov 29 at 3:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 6,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/29/online-violet-wands-101-with-electro-girly-tgfaig",
+        "name": "ONLINE: Violet Wands 101 with Electro Girly",
+        "start": "2026-11-29",
+        "end": "2026-11-29",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Nov 29 at 5:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 142,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/29/virtual-class-persona-power-domination-with-master-gushy-g56907",
+        "name": "VIRTUAL CLASS - PERSONA POWER - DOMINATION WITH MASTER GUSHY",
+        "start": "2026-11-29",
+        "end": "2026-11-29",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Nov 29 at 6:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 4,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/29/online-let-s-chat-happy-hour-w-dawn-for-supporting-patrons-of-erotic-awakening-mlm98o",
+        "name": "ONLINE: Let's Chat! Happy Hour w/Dawn for supporting patrons of Erotic Awakening!",
+        "start": "2026-11-29",
+        "end": "2026-11-29",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Sun, Nov 29 at 6:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 43,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/29/november-29th-19-00-estl-virtual-recorded-chain-bondage-for-beginners-with-ctw-mister-nuktyd",
+        "name": "November 29th, 19:00 EST| Virtual & Recorded- Chain Bondage for Beginners with CTW & Mister",
+        "start": "2026-11-29",
+        "end": "2026-11-29",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Nov 29 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 64,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/29/the-connection-of-shibari-education-consent-communication-safety-llpras",
+        "name": "The Connection of Shibari: Education, Consent, Communication & Safety",
+        "start": "2026-11-29",
+        "end": "2026-11-29",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sun, Nov 29 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 19,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/29/sun-nov-29-7-9pm-et-everything-you-need-to-know-about-impact-play-r82pqs",
+        "name": "Sun Nov 29 @ 7–9pm ET: Everything You Need to Know About Impact Play",
+        "start": "2026-11-29",
+        "end": "2026-11-29",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Nov 29 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 30,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/29/virtual-community-gathering-sunday-dinner-s2jisr",
+        "name": "Virtual Community Gathering Sunday Dinner",
+        "start": "2026-11-29",
+        "end": "2026-11-29",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Sun, Nov 29 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 10,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/29/virtual-rec-invisible-pain-inflicting-pain-without-marks-w-justine-cross-hdmocn",
+        "name": "VIRTUAL & REC: \"Invisible Pain: Inflicting Pain Without Marks\" w/ Justine Cross",
+        "start": "2026-11-29",
+        "end": "2026-11-29",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Nov 29 at 9:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": null,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/29/turning-mishaps-into-mastery-recorded-xmrvdh",
+        "name": "Turning Mishaps into Mastery (Recorded)",
+        "start": "2026-11-29",
+        "end": "2026-11-29",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Nov 29 at 10:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 30,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/11/30/slipawayandplay-all-male-events-g3qwkq",
@@ -9097,7 +14220,8 @@ var EVENTS = [
         "venue": "Info given after your email address is supplied.",
         "city": "Asbury Park, New Jersey, United States",
         "rsvps": 40,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/30/open-rope-practice-coil-cord-11-30-a5j4ir",
@@ -9110,7 +14234,8 @@ var EVENTS = [
         "venue": "Coil & Cord Studio",
         "city": "Brooklyn, New York, United States",
         "rsvps": 6,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/30/lasc-whip-share-0ruz7f",
@@ -9123,7 +14248,8 @@ var EVENTS = [
         "venue": null,
         "city": "Dover Plains, New York, United States",
         "rsvps": 3,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/30/the-art-of-the-bodyscape-in-low-key-a-new-photographic-exploration-attendance-closed-3ilpa0",
@@ -9136,7 +14262,8 @@ var EVENTS = [
         "venue": "Prism ~ Please reach out if you're unfamiliar with our location. Arts District",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 73,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/30/alphabeat-city-0pen-t0-all-bdsm-industry-kink-n-play-munch-11-30-2026-w-masterlolasmiles-nyc-bpkuho",
@@ -9149,7 +14276,8 @@ var EVENTS = [
         "venue": "Alphabet City",
         "city": "New York City, New York, United States",
         "rsvps": 64,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/30/nj-rope-lab-formerly-nj-rope-bite-presents-ropesgiving-a3nbl2",
@@ -9162,7 +14290,8 @@ var EVENTS = [
         "venue": "The Pride Center of NJ",
         "city": "Highland Park, New Jersey, United States",
         "rsvps": 31,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/30/nycap-monday-munch-fhndmn",
@@ -9175,7 +14304,8 @@ var EVENTS = [
         "venue": null,
         "city": "Manhattan, New York, United States",
         "rsvps": 17,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/30/nomad-discord-munch-game-on-bxoavf",
@@ -9188,7 +14318,8 @@ var EVENTS = [
         "venue": "Virtual",
         "city": "Ambler, Pennsylvania, United States",
         "rsvps": 37,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/11/30/hvps-november-munch-discussion-group-vqxeyt",
@@ -9201,7 +14332,162 @@ var EVENTS = [
         "venue": null,
         "city": "Newburgh, New York, United States",
         "rsvps": 15,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/30/guided-self-tying-session-djneyg",
+        "name": "Guided Self-Tying Session",
+        "start": "2026-11-30",
+        "end": "2026-11-30",
+        "category": "Educational",
+        "cost": null,
+        "when": "Mon, Nov 30 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 21,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/30/intimacy-talks-waarom-jij-ook-stiekem-een-erotische-sadist-bent-jt4azx",
+        "name": "Intimacy talks: Waarom jij ook (stiekem) een erotische sadist bent",
+        "start": "2026-11-30",
+        "end": "2026-11-30",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Mon, Nov 30 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 25,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/30/tops-with-tdg-facilitated-group-learning-how-to-not-get-burned-out-as-a-top-dom-me-l0y8j4",
+        "name": "TOPS with TDG - Facilitated Group Learning: How to not get burned out as a top/dom/me",
+        "start": "2026-11-30",
+        "end": "2026-11-30",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Mon, Nov 30 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 34,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/30/red-rose-socials-virtual-event-11-30-26-5njhkv",
+        "name": "Red Rose Socials Virtual Event 11/30/26",
+        "start": "2026-11-30",
+        "end": "2026-11-30",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Mon, Nov 30 at 7:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 17,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/30/fall-paint-sip-virtual-5qhdcg",
+        "name": "Fall Paint & Sip (Virtual)",
+        "start": "2026-11-30",
+        "end": "2026-11-30",
+        "category": "Social",
+        "cost": null,
+        "when": "Mon, Nov 30 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 15,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/30/monday-virtual-community-gathering-wzr3wk",
+        "name": "Monday Virtual Community Gathering",
+        "start": "2026-11-30",
+        "end": "2026-11-30",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Mon, Nov 30 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 33,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/30/office-hours-ama-with-miss-ivy-rlz4hn",
+        "name": "Office Hours! AMA with Miss Ivy",
+        "start": "2026-11-30",
+        "end": "2026-11-30",
+        "category": "Educational",
+        "cost": null,
+        "when": "Mon, Nov 30 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 5,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/30/glitter-queers-november-meeting-3wyf4u",
+        "name": "Glitter Queers' November Meeting",
+        "start": "2026-11-30",
+        "end": "2026-11-30",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Mon, Nov 30 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 12,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/30/bka-2027-info-session-pzbkwn",
+        "name": "BKA 2027 Info Session",
+        "start": "2026-11-30",
+        "end": "2026-11-30",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Mon, Nov 30 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 72,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/30/online-bdsm-negotiation-from-awkward-to-awesome-with-miriam-green-gomxsy",
+        "name": "ONLINE: BDSM Negotiation: From Awkward to Awesome with Miriam Green",
+        "start": "2026-11-30",
+        "end": "2026-11-30",
+        "category": "Educational",
+        "cost": null,
+        "when": "Mon, Nov 30 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 176,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/11/30/monday-yoga-0ccqln",
+        "name": "Monday yoga",
+        "start": "2026-11-30",
+        "end": "2026-11-30",
+        "category": "Educational",
+        "cost": null,
+        "when": "Mon, Nov 30 at 9:15 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 44,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/12/01/introducing-the-common-room-a-weekly-study-group-bqvipj",
@@ -9214,7 +14500,8 @@ var EVENTS = [
         "venue": "Manheim Township Public Library",
         "city": "Lancaster, Pennsylvania, United States",
         "rsvps": 5,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/01/hitchin-bitches-nyc-social-dec-unvetted-welcome-lo1pbc",
@@ -9227,7 +14514,8 @@ var EVENTS = [
         "venue": null,
         "city": "Manhattan, New York, United States",
         "rsvps": 10,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/01/the-nyc-caregivers-littles-munch-formerly-known-as-the-nyc-ddlg-munch-kakcgj",
@@ -9240,7 +14528,8 @@ var EVENTS = [
         "venue": "Jake’s Saloon",
         "city": "Manhattan, New York, United States",
         "rsvps": 68,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/01/impact-hang-skills-workshop-with-madameamo-6sl1jl",
@@ -9253,7 +14542,8 @@ var EVENTS = [
         "venue": "Prism ~ Please reach out if unfamiliar with our location. Arts District",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 209,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/01/philly-bottoms-munch-december-2026-3qzziz",
@@ -9266,7 +14556,8 @@ var EVENTS = [
         "venue": "Frankford Hall",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 25,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/01/njtog-december-karaoke-munch-kp0ass",
@@ -9279,7 +14570,8 @@ var EVENTS = [
         "venue": null,
         "city": "Clifton, New Jersey, United States",
         "rsvps": 16,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/01/tethered-tuesday-philly-s-weekly-rope-community-lab-3olepc",
@@ -9292,7 +14584,8 @@ var EVENTS = [
         "venue": "The Nest",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 19,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/01/nj-tng-ages-18-35-central-munch-dec-1-hileed",
@@ -9305,7 +14598,8 @@ var EVENTS = [
         "venue": null,
         "city": "Piscataway, New Jersey, United States",
         "rsvps": 15,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/01/brooklyn-beasts-pet-play-social-gaeffn",
@@ -9318,7 +14612,8 @@ var EVENTS = [
         "venue": "No Exit at Talon Bar",
         "city": "Brooklyn, New York, United States",
         "rsvps": 14,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/01/embodying-the-domina-8t9foq",
@@ -9331,7 +14626,8 @@ var EVENTS = [
         "venue": "Lightning Society Lofts",
         "city": "Brooklyn, New York, United States",
         "rsvps": 27,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/01/queer-kiss-cuddles-a-bi-pansexual-experience-cnvnxj",
@@ -9343,8 +14639,9 @@ var EVENTS = [
         "when": "Tue, Dec 1 at 7:00 PM",
         "venue": "Address given in email confirmation. Please contact us if paying at door.",
         "city": "New York City, New York, United States",
-        "rsvps": 14,
-        "image": null
+        "rsvps": 15,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/01/secret-pleasures-tuesday-titties-tushies-party-8pm-to-12am-pva1vx",
@@ -9357,7 +14654,162 @@ var EVENTS = [
         "venue": "Secret Pleasures at the Back Door of the Wi Fi Cafe",
         "city": "Emmaus, Pennsylvania, United States",
         "rsvps": 80,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/01/den-morsomste-julekalenderen-i-2026-sp0gvz",
+        "name": "Den morsomste julekalenderen i 2026",
+        "start": "2026-12-01",
+        "end": "2026-12-07",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Nov 30 – Dec 6 · Mon 7:00 PM – Sun 6:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 39,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/01/foundations-of-consent-sgthpg",
+        "name": "Foundations of Consent",
+        "start": "2026-12-01",
+        "end": "2026-12-01",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Dec 1 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 32,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/01/beneath-the-surface-needle-play-w3v8ys",
+        "name": "Beneath the Surface: Needle Play",
+        "start": "2026-12-01",
+        "end": "2026-12-01",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Dec 1 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 26,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/01/toying-with-the-unseen-energy-play-n8pv82",
+        "name": "Toying with the Unseen: Energy Play",
+        "start": "2026-12-01",
+        "end": "2026-12-01",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Dec 1 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 10,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/01/midwest-love-fest-community-call-bupbo8",
+        "name": "Midwest Love Fest Community Call!",
+        "start": "2026-12-01",
+        "end": "2026-12-01",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Tue, Dec 1 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 8,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/01/femmes-burning-flowers-seshhh-now-on-tuesdays-nabfwu",
+        "name": "FEMMES Burning Flowers Seshhh -Now on Tuesdays!",
+        "start": "2026-12-01",
+        "end": "2026-12-01",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Tue, Dec 1 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 3,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/01/tes-online-red-flags-and-dangerous-behaviors-aohofl",
+        "name": "TES ONLINE – Red Flags and Dangerous Behaviors",
+        "start": "2026-12-01",
+        "end": "2026-12-01",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Dec 1 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 40,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/01/he-presents-beneath-the-surface-needle-play-by-panpolyplantmom-free-virtual-mfsaq8",
+        "name": "HE Presents: Beneath The Surface - Needle Play by PanPolyPlantMom (Free & Virtual)",
+        "start": "2026-12-01",
+        "end": "2026-12-01",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Dec 1 at 7:15 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": null,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/01/online-class-pup-training-basics-imgemf",
+        "name": "[ONLINE CLASS] Pup Training Basics",
+        "start": "2026-12-01",
+        "end": "2026-12-01",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Dec 1 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 87,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/01/online-reclaiming-your-inner-villain-a-fantasy-roleplaying-workshop-rmozx3",
+        "name": "ONLINE: Reclaiming Your Inner Villain: A Fantasy Roleplaying Workshop",
+        "start": "2026-12-01",
+        "end": "2026-12-01",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Dec 1 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 212,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/01/online-ecstasy-for-aces-with-miriam-green-3wfdwc",
+        "name": "ONLINE: Ecstasy for Aces with Miriam Green",
+        "start": "2026-12-01",
+        "end": "2026-12-01",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Dec 1 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 122,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/12/02/breakfast-and-head-play-and-gang-bang-party-10am-3pm-rsvp-now-and-get-10-off-entry-fee-ms9ghh",
@@ -9370,7 +14822,8 @@ var EVENTS = [
         "venue": "Sinners Paradise Club",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 24,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/02/secret-pleasures-lunchtime-play-party-12pm-to-3pm-bjuq75",
@@ -9383,7 +14836,8 @@ var EVENTS = [
         "venue": "Secret Pleasures is at the Back Door of the Wi Fi Cafe",
         "city": "Emmaus, Pennsylvania, United States",
         "rsvps": 85,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/02/slipawayandplay-all-male-events-nsuvsp",
@@ -9396,7 +14850,8 @@ var EVENTS = [
         "venue": "Info given after your email address is supplied.",
         "city": "Morristown, New Jersey, United States",
         "rsvps": 1,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/02/december-femdom-first-friday-b9k808",
@@ -9409,7 +14864,8 @@ var EVENTS = [
         "venue": "Philadelphia (address with registration)",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 41,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/02/knitting-circle-15-a-rope-gathering-sgd7ea",
@@ -9422,7 +14878,8 @@ var EVENTS = [
         "venue": "Midtown NYC",
         "city": "New York City, New York, United States",
         "rsvps": 28,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/02/sinners-munch-6pm-10pm-an-exclusive-meet-greet-free-entry-to-this-event-no-membership-reqiured-kc3ufj",
@@ -9435,7 +14892,8 @@ var EVENTS = [
         "venue": "Sinners Paradise Club",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 38,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/02/nyc-tng-ages-18-35-weeknight-munch-december-2026-qguyjh",
@@ -9448,7 +14906,8 @@ var EVENTS = [
         "venue": "TBD",
         "city": "New York City, New York, United States",
         "rsvps": 26,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/02/kafol-munch-december-2026-ysh617",
@@ -9461,7 +14920,8 @@ var EVENTS = [
         "venue": "YOU MUST PM TO BE VETTED!",
         "city": "Lawrenceville, New Jersey, United States",
         "rsvps": 27,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/02/red-room-munch-1st-wednesdays-bn7hnb",
@@ -9474,7 +14934,8 @@ var EVENTS = [
         "venue": "Freppe's Tex-Mex Restaurant",
         "city": "Plainfield, New Jersey, United States",
         "rsvps": 19,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/02/wed-dec-2-2026-long-island-community-munch-birthday-edition-1amgvn",
@@ -9487,7 +14948,8 @@ var EVENTS = [
         "venue": "Main Event",
         "city": "East Farmingdale, Farmingdale, New York, United States",
         "rsvps": 23,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/02/lifestyle-america-social-club-inc-quarterly-community-town-hall-nwkoz7",
@@ -9500,7 +14962,8 @@ var EVENTS = [
         "venue": "Virtual",
         "city": "Dover Plains, New York, United States",
         "rsvps": 35,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/02/lwp-monthly-meet-mingle-holiday-festive-theme-9jeyhs",
@@ -9513,7 +14976,8 @@ var EVENTS = [
         "venue": "The Bath Exchange",
         "city": "Bath, Pennsylvania, United States",
         "rsvps": 58,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/02/tph-meet-greet-05vypu",
@@ -9526,7 +14990,8 @@ var EVENTS = [
         "venue": "Leaf bar & lounge",
         "city": "New York City, New York, United States",
         "rsvps": 35,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/02/kinky-speed-dating-friending-qcs0ar",
@@ -9539,7 +15004,8 @@ var EVENTS = [
         "venue": "Address given in email confirmation. Please contact us if paying at door.",
         "city": "New York City, New York, United States",
         "rsvps": 42,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/02/fetish-the-official-book-club-ucn89p",
@@ -9552,7 +15018,8 @@ var EVENTS = [
         "venue": "Hit Me Up",
         "city": "New York City, New York, United States",
         "rsvps": 16,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/02/rope-while-fat-with-amnesia-jane-w8saaz",
@@ -9565,7 +15032,8 @@ var EVENTS = [
         "venue": "Coil & Cord Studio",
         "city": "Brooklyn, New York, United States",
         "rsvps": 19,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/02/wed-dec-2-2026-lics-weekly-wednesday-slosh-863lmp",
@@ -9578,7 +15046,8 @@ var EVENTS = [
         "venue": "Mr. Beery's",
         "city": "Bethpage, New York, United States",
         "rsvps": 25,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/02/silent-night-sinful-night-after-party-included-rsvp-now-and-it-s-25-to-enter-760htd",
@@ -9591,7 +15060,8 @@ var EVENTS = [
         "venue": "Sinners Paradise Club",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 27,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/02/karaoke-hump-day-game-night-0lztac",
@@ -9604,7 +15074,190 @@ var EVENTS = [
         "venue": "The Play House",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 18,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/02/coworking-hours-4lnxyk",
+        "name": "Coworking Hours",
+        "start": "2026-12-02",
+        "end": "2026-12-02",
+        "category": "Social",
+        "cost": null,
+        "when": "Wed, Dec 2 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 4,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/02/rope-for-nerds-detail-focus-debugging-uehxoi",
+        "name": "Rope for Nerds: Detail Focus & Debugging",
+        "start": "2026-12-02",
+        "end": "2026-12-02",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Dec 2 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 52,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/02/make-em-cry-scene-crafting-and-storytelling-for-emotional-sadomasochism-with-sarai311-esfitm",
+        "name": "Make 'Em Cry: Scene Crafting and Storytelling for Emotional Sadomasochism with Sarai311",
+        "start": "2026-12-02",
+        "end": "2026-12-02",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Dec 2 at 5:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 72,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/02/shibari-for-suspension-series-soft-skills-3-considerations-for-tying-all-body-types-u56kq4",
+        "name": "Shibari for Suspension series, soft skills 3: considerations for tying all body types",
+        "start": "2026-12-02",
+        "end": "2026-12-02",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Dec 2 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 6,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/02/dungeon-monitoring-101-x4m1qu",
+        "name": "Dungeon Monitoring 101",
+        "start": "2026-12-02",
+        "end": "2026-12-02",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Wed, Dec 2 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 36,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/02/evolving-d-s-nurturing-supporting-adapting-our-dynamics-over-time-online-workshop-pkcowb",
+        "name": "Evolving D/s: Nurturing, Supporting, & Adapting Our Dynamics Over Time - Online Workshop",
+        "start": "2026-12-02",
+        "end": "2026-12-02",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Dec 2 at 7:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 48,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/02/dark-ageplay-9svnr9",
+        "name": "Dark Ageplay",
+        "start": "2026-12-02",
+        "end": "2026-12-02",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Dec 2 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 40,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/02/online-domestic-style-discipline-with-miss-chris-ljzdcq",
+        "name": "ONLINE: Domestic Style Discipline with Miss Chris",
+        "start": "2026-12-02",
+        "end": "2026-12-02",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Dec 2 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 151,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/02/qatmp-virtual-link-probe-5c4h81",
+        "name": "QATMP Virtual Link Probe",
+        "start": "2026-12-02",
+        "end": "2026-12-02",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Wed, Dec 2 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": null,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/02/fisting-101-for-first-timers-fisters-and-fistees-rkq88q",
+        "name": "Fisting 101: For First-Timers, Fisters, and Fistees",
+        "start": "2026-12-02",
+        "end": "2026-12-02",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Dec 2 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 1,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/02/beach-vibes-only-girl-s-night-virtual-munch-vwyzx6",
+        "name": "Beach Vibes Only - Girl's Night Virtual Munch",
+        "start": "2026-12-02",
+        "end": "2026-12-02",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Wed, Dec 2 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 12,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/02/the-exiles-online-munch-77pfca",
+        "name": "The Exiles Online Munch",
+        "start": "2026-12-02",
+        "end": "2026-12-02",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Wed, Dec 2 at 9:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 30,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/02/club-de-lectura-kinky-43uovz",
+        "name": "Club de Lectura - Kinky",
+        "start": "2026-12-02",
+        "end": "2026-12-02",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Wed, Dec 2 at 10:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 14,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/12/03/massage-trade-social-lunchbreak-m4m-sjyinl",
@@ -9617,7 +15270,8 @@ var EVENTS = [
         "venue": "Address given in email confirmation. Please contact us if paying at door.",
         "city": "New York City, New York, United States",
         "rsvps": 6,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/03/pax-unpluggd-2026-5qdtnz",
@@ -9630,7 +15284,8 @@ var EVENTS = [
         "venue": "Pennsylvania Convention Center",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 96,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/03/karaoke-social-by-tnc-bucoqj",
@@ -9643,7 +15298,8 @@ var EVENTS = [
         "venue": null,
         "city": "New Windsor, New York, United States",
         "rsvps": 26,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/03/philly-tng-munch-december-3rd-zobbd4",
@@ -9656,7 +15312,8 @@ var EVENTS = [
         "venue": "Clarkville",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 21,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/03/december-high-tides-munch-chfvji",
@@ -9669,7 +15326,8 @@ var EVENTS = [
         "venue": "will be emailed to new RSVPs",
         "city": "Toms River, New Jersey, United States",
         "rsvps": 18,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/03/swack-southern-westchester-munch-december-3-26-6-45-pm-9-pm-tbw6gn",
@@ -9682,7 +15340,8 @@ var EVENTS = [
         "venue": "The Metro Deli",
         "city": "Scarsdale, New York, United States",
         "rsvps": 29,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/03/obsidian-playground-massage-magic-bipoc-relaxation-social-g0a8jy",
@@ -9695,7 +15354,8 @@ var EVENTS = [
         "venue": "Address given in email confirmation. Please contact us if paying at door.",
         "city": "New York City, New York, United States",
         "rsvps": 21,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/03/queens-kinksters-munch-hefkbh",
@@ -9708,7 +15368,8 @@ var EVENTS = [
         "venue": "Bohemian Hall & Beer Garden",
         "city": "Queens, New York, United States",
         "rsvps": 29,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/03/sit-stay-bdsm-pet-play-101-mgpdgf",
@@ -9721,7 +15382,8 @@ var EVENTS = [
         "venue": "The Crown",
         "city": "Brooklyn, New York, United States",
         "rsvps": 47,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/03/park-slope-gowanus-december-munch-ms3gy8",
@@ -9734,7 +15396,8 @@ var EVENTS = [
         "venue": null,
         "city": "Brooklyn, New York, United States",
         "rsvps": 36,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/03/central-new-jersey-munch-december-2026-oonuks",
@@ -9746,8 +15409,9 @@ var EVENTS = [
         "when": "Thu, Dec 3 at 7:00 PM",
         "venue": "Panera Clark",
         "city": "Clark, New Jersey, United States",
-        "rsvps": 125,
-        "image": null
+        "rsvps": 126,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/03/shibari-cafe-presents-grounded-playing-with-rope-on-the-floor-w-tasteofoxblood-scarletcass-pyg1ct",
@@ -9760,7 +15424,8 @@ var EVENTS = [
         "venue": "Shibari Café ~ Reach out if you’re not familiar with the address. Arts District",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 39,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/03/pulleys-for-pragmatists-an-uplines-workshop-with-amnesia-jane-pv9m56",
@@ -9773,7 +15438,8 @@ var EVENTS = [
         "venue": "Coil & Cord Studio",
         "city": "Brooklyn, New York, United States",
         "rsvps": 12,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/03/kinky-shadow-work-series-trauma-informed-kink-cwblay",
@@ -9786,7 +15452,8 @@ var EVENTS = [
         "venue": "Pagan's Paradise",
         "city": "New York City, New York, United States",
         "rsvps": 25,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/03/dirty-magazine-s-lingerie-skate-aexu1p",
@@ -9799,7 +15466,8 @@ var EVENTS = [
         "venue": "XANADU NYC",
         "city": "New York City, New York, United States",
         "rsvps": 43,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/03/secret-pleasures-thirsty-thursday-gangbang-party-8pm-to-12am-unq2xw",
@@ -9812,7 +15480,8 @@ var EVENTS = [
         "venue": "Secret Pleasures at the Back Door of the Wi Fi Cafe",
         "city": "Emmaus, Pennsylvania, United States",
         "rsvps": 94,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/03/pleasure-vs-endurance-a-predicament-impact-class-qdg9oh",
@@ -9825,7 +15494,8 @@ var EVENTS = [
         "venue": "The Crown",
         "city": "Brooklyn, New York, United States",
         "rsvps": 37,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/03/ho-ho-ho-horsemarket-ix-red-barn-berlin-thursday-december-3-vmko88",
@@ -9838,7 +15508,8 @@ var EVENTS = [
         "venue": "RED BARN ADULT ENTERTAINMENT COMPLEX",
         "city": "West Berlin, New Jersey, United States",
         "rsvps": 48,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/03/asylum-13-presents-krampusnacht-yybkt7",
@@ -9851,7 +15522,8 @@ var EVENTS = [
         "venue": "Bar XIII",
         "city": "Wilmington, Delaware, United States",
         "rsvps": 129,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/03/gang-bang-night-in-paradise-a-thursday-night-of-pure-ecstasy-rsvp-now-and-get-10-off-entree-fee-rzwoss",
@@ -9864,7 +15536,218 @@ var EVENTS = [
         "venue": "Sinners Paradise Club",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 23,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/03/emotional-sadism-building-intensity-without-breaking-trust-with-skeleton_bitch-rgk5xk",
+        "name": "Emotional Sadism: Building Intensity Without Breaking Trust with @Skeleton_Bitch",
+        "start": "2026-12-03",
+        "end": "2026-12-03",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Dec 2 at 6:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 438,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/03/important-skills-in-rope-scenes-that-don-t-include-rope-with-birds-online-9iwxve",
+        "name": "Important skills in rope scenes that don't include rope with -Birds- (Online)",
+        "start": "2026-12-03",
+        "end": "2026-12-03",
+        "category": "Educational",
+        "cost": null,
+        "when": "Thu, Dec 3 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 62,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/03/free-online-shibari-class-affirmed-in-rope-cbli0j",
+        "name": "[FREE Online Shibari Class] Affirmed In Rope",
+        "start": "2026-12-03",
+        "end": "2026-12-03",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Thu, Dec 3 at 4:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 157,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/03/free-welcome-to-needles-needles-101-with-ember-solaris-epy3lq",
+        "name": "FREE - Welcome to Needles - Needles 101 with Ember Solaris",
+        "start": "2026-12-03",
+        "end": "2026-12-03",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Thu, Dec 3 at 6:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 491,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/03/wired-for-pleasure-electrifying-your-intimacy-with-e-stim-8mtvuj",
+        "name": "Wired for Pleasure: Electrifying Your Intimacy with E-Stim",
+        "start": "2026-12-03",
+        "end": "2026-12-03",
+        "category": "Educational",
+        "cost": null,
+        "when": "Thu, Dec 3 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 31,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/03/a-prelude-of-grace-gravitas-option-3-2nzt4t",
+        "name": "A Prelude of Grace & Gravitas (Option 3)",
+        "start": "2026-12-03",
+        "end": "2026-12-03",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Thu, Dec 3 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 6,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/03/fire-cupping-more-online-class-live-iyfluq",
+        "name": "Fire Cupping & More ONLINE Class LIVE",
+        "start": "2026-12-03",
+        "end": "2026-12-03",
+        "category": "Educational",
+        "cost": null,
+        "when": "Thu, Dec 3 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 10,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/03/meet-your-power-animal-8nlvdv",
+        "name": "Meet Your Power Animal",
+        "start": "2026-12-03",
+        "end": "2026-12-03",
+        "category": "Educational",
+        "cost": null,
+        "when": "Thu, Dec 3 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 9,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/03/men-s-naked-yoga-online-local-thursday-3dec26-5-15-pm-mt-practice-leader-mike-pi4u3v",
+        "name": "Men's Naked Yoga, ONLINE/LOCAL: Thursday 3Dec26, 5:15 pm MT Practice - Leader: Mike",
+        "start": "2026-12-03",
+        "end": "2026-12-03",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Thu, Dec 3 at 7:15 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 7,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/03/free-virtual-intro-to-the-spanking-scene-class-g0azss",
+        "name": "FREE virtual Intro to the Spanking Scene class",
+        "start": "2026-12-03",
+        "end": "2026-12-03",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Thu, Dec 3 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 54,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/03/online-kink-and-disabilities-with-lee-harrington-bafspp",
+        "name": "ONLINE: Kink and Disabilities with Lee Harrington",
+        "start": "2026-12-03",
+        "end": "2026-12-03",
+        "category": "Educational",
+        "cost": null,
+        "when": "Thu, Dec 3 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 246,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/03/the-science-of-seduction-why-we-want-what-we-want-1fibvf",
+        "name": "The Science of Seduction: Why We Want What We Want",
+        "start": "2026-12-03",
+        "end": "2026-12-03",
+        "category": "Educational",
+        "cost": null,
+        "when": "Thu, Dec 3 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 11,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/03/virtual-bliss-briefings-presents-community-unpacked-session-8-when-something-feels-wrong-bygwia",
+        "name": "Virtual Bliss Briefings Presents~ Community Unpacked-Session 8- When Something Feels Wrong",
+        "start": "2026-12-03",
+        "end": "2026-12-03",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Thu, Dec 3 at 9:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 10,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/03/kgs-munch-online-56m4oh",
+        "name": "KGS Munch Online",
+        "start": "2026-12-03",
+        "end": "2026-12-03",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Thu, Dec 3 at 10:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 16,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/03/polyamory-101-for-couples-hy5nbl",
+        "name": "Polyamory 101 for Couples",
+        "start": "2026-12-03",
+        "end": "2026-12-03",
+        "category": "Educational",
+        "cost": null,
+        "when": "Thu, Dec 3 at 10:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 37,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/12/04/cfnm-friday-vnxe1e",
@@ -9877,7 +15760,8 @@ var EVENTS = [
         "venue": "The Venue",
         "city": "Bethlehem, Pennsylvania, United States",
         "rsvps": 55,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/04/friday-funday-cuddle-grind-edition-vsjvqb",
@@ -9890,7 +15774,8 @@ var EVENTS = [
         "venue": "Midtown Hotel",
         "city": "Manhattan, New York, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/04/club-giggity-s-winter-wonderland-weeeknd-takeover-oinhww",
@@ -9903,7 +15788,8 @@ var EVENTS = [
         "venue": "Quakertown, PA Hotel",
         "city": "Quakertown, Pennsylvania, United States",
         "rsvps": 33,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/04/knotty-sketches-rope-tying-figure-drawing-u3qgke",
@@ -9916,7 +15802,8 @@ var EVENTS = [
         "venue": "Secret Location",
         "city": "Manhattan, New York, United States",
         "rsvps": 42,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/04/gangbang-in-philly-big-cocks-only-j5z5gn",
@@ -9929,7 +15816,8 @@ var EVENTS = [
         "venue": "Philadelphia pa",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 11,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/04/gangbang-in-philly-big-cocks-only-pkstlq",
@@ -9942,7 +15830,8 @@ var EVENTS = [
         "venue": "Philadelphia pa",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 8,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/04/cfnm-spank-fest-4gexox",
@@ -9955,7 +15844,8 @@ var EVENTS = [
         "venue": "Secret Location",
         "city": "Manhattan, New York, United States",
         "rsvps": 53,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/04/yes-madame-submissive-etiquette-101-dhqmkt",
@@ -9968,7 +15858,8 @@ var EVENTS = [
         "venue": "Secret Location",
         "city": "Manhattan, New York, United States",
         "rsvps": 53,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/04/fri-dec-4th-new-and-nervous-coffee-social-exton-pa-you-don-t-have-to-be-new-or-nervous-37azeq",
@@ -9981,7 +15872,8 @@ var EVENTS = [
         "venue": "Starbucks",
         "city": "Uwchlan Township, Pennsylvania, United States",
         "rsvps": 94,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/04/chains-of-the-guard-g5smjz",
@@ -9994,7 +15886,8 @@ var EVENTS = [
         "venue": "12 Penny Saloon",
         "city": "Moosic, Pennsylvania, United States",
         "rsvps": 11,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/04/mistletoe-mischief-hmu69n",
@@ -10007,7 +15900,8 @@ var EVENTS = [
         "venue": null,
         "city": "Trumbull, Connecticut, United States",
         "rsvps": 46,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/04/bound-men-a-gay-bondage-party-cn8okg",
@@ -10020,7 +15914,8 @@ var EVENTS = [
         "venue": "Studio125",
         "city": "Manhattan, New York, United States",
         "rsvps": 4,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/04/december-hvlol-munch-yklmxn",
@@ -10033,7 +15928,8 @@ var EVENTS = [
         "venue": "Perkins Family Restaurant",
         "city": "Newburgh, New York, United States",
         "rsvps": 13,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/04/holigay-edition-taste-the-rainbow-sex-positive-poly-kinky-lgbtq-allies-mixer-ul3asd",
@@ -10046,7 +15942,8 @@ var EVENTS = [
         "venue": "Gemini & Scorpio Loft",
         "city": "Brooklyn, New York, United States",
         "rsvps": 68,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/04/kinklesque-toys-gone-bad-a-kinky-holiday-pole-variety-show-and-play-party-like-no-other-oahjg3",
@@ -10059,7 +15956,8 @@ var EVENTS = [
         "venue": "Address given in email confirmation. Please contact us if paying at door.",
         "city": "New York City, New York, United States",
         "rsvps": 66,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/04/pleasurecation-flirt-edition-ekwdkq",
@@ -10072,7 +15970,8 @@ var EVENTS = [
         "venue": "Pleasure Garden Club",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 283,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/04/peg-pound-philly-12-4-iynntq",
@@ -10085,7 +15984,8 @@ var EVENTS = [
         "venue": "Undisclosed until RSVP is completed.",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 35,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/04/december-4th-2026-holiday-munch-charity-fundraiser-ih18w2",
@@ -10098,7 +15998,8 @@ var EVENTS = [
         "venue": null,
         "city": "Islandia, New York, United States",
         "rsvps": 26,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/04/the-nyte-life-episode-10-sex-kink-fantasy-lih3jy",
@@ -10111,7 +16012,8 @@ var EVENTS = [
         "venue": "L.I.C.K. Manor HQ",
         "city": "Melville, New York, United States",
         "rsvps": 66,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/04/secret-pleasures-first-friday-meet-greet-play-party-gyjs0k",
@@ -10124,7 +16026,8 @@ var EVENTS = [
         "venue": "Secret Pleasures is at the Back Door of the Wi Fi Cafe",
         "city": "Emmaus, Pennsylvania, United States",
         "rsvps": 172,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/04/friday-vibes-qtlywh",
@@ -10137,7 +16040,8 @@ var EVENTS = [
         "venue": null,
         "city": "Glen Gardner, New Jersey, United States",
         "rsvps": 5,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/04/club-labyrinth-debauchery-cpls-60-guys-100-girls-free-9pm-4am-midtown-couples-singles-cb39mc",
@@ -10150,7 +16054,8 @@ var EVENTS = [
         "venue": "TBA",
         "city": "New York City, New York, United States",
         "rsvps": 9,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/04/bearunion-at-club-philadelphia-lafked",
@@ -10163,7 +16068,8 @@ var EVENTS = [
         "venue": "Club Philadelphia",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 6,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/04/tsecretsociety-presents-fq48ky",
@@ -10176,7 +16082,8 @@ var EVENTS = [
         "venue": "n/a",
         "city": "Brooklyn, New York, United States",
         "rsvps": 25,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/04/medusas-playhouse-presents-fantasy-fridays-open-to-all-couples-and-singles-males-females-couples-2y0mtz",
@@ -10189,7 +16096,8 @@ var EVENTS = [
         "venue": "MEDUSAS PLAYHOUSE",
         "city": "West Babylon, New York, United States",
         "rsvps": 21,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/04/skip-the-games-sinners-paradise-25-all-night-rsvp-now-vdl03e",
@@ -10202,7 +16110,8 @@ var EVENTS = [
         "venue": "Sinners Paradise Club",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 32,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/04/hopa-the-naughty-list-nstqox",
@@ -10215,7 +16124,8 @@ var EVENTS = [
         "venue": "Red Eye NY",
         "city": "Manhattan, New York, United States",
         "rsvps": 25,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/04/scorpio-freak-party-pijahm",
@@ -10228,7 +16138,8 @@ var EVENTS = [
         "venue": null,
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 6,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/04/birthday-bukakke-sgpxhp",
@@ -10241,176 +16152,176 @@ var EVENTS = [
         "venue": "Manhattan or Brooklyn- TBD",
         "city": "New York City, New York, United States",
         "rsvps": 1,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
-        "url": "https://fetlife.com/events/2026/12/05/erotic-shadow-play-weekend-immersion-dec-2026-u1b6xa",
-        "name": "Erotic Shadow Play: Weekend Immersion (Dec 2026)",
-        "start": "2026-12-05",
-        "end": "2026-12-06",
+        "url": "https://fetlife.com/events/2026/12/04/the-sexual-longevity-protocol-lifestyle-alaivt",
+        "name": "The Sexual Longevity Protocol: Lifestyle",
+        "start": "2026-12-04",
+        "end": "2026-12-04",
         "category": "Educational",
         "cost": null,
-        "when": "Dec 5 – 6 · Sat 10:00 AM – Sun 6:00 PM",
-        "venue": "West 14th St",
-        "city": "Manhattan, New York, United States",
-        "rsvps": 39,
-        "image": null
+        "when": "Fri, Dec 4 at 11:00 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 4,
+        "image": null,
+        "virtual": true
     },
     {
-        "url": "https://fetlife.com/events/2026/12/05/freaks-on-foot-a-weekly-walking-social-j4fjhq",
-        "name": "Freaks on Foot: A Weekly Walking Social",
-        "start": "2026-12-05",
-        "end": "2026-12-05",
+        "url": "https://fetlife.com/events/2026/12/04/bonus-monthly-online-orgy-fsl0jc",
+        "name": "Bonus Monthly Online Orgy",
+        "start": "2026-12-04",
+        "end": "2026-12-04",
+        "category": "Sex Party",
+        "cost": "Free",
+        "when": "Fri, Dec 4 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 76,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/04/pk-well-matched-lovers-the-dance-of-kink-and-neurodiversity-tgejac",
+        "name": "PK: Well-Matched Lovers: The Dance of Kink and Neurodiversity",
+        "start": "2026-12-04",
+        "end": "2026-12-04",
+        "category": "Educational",
+        "cost": null,
+        "when": "Fri, Dec 4 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 363,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/04/drips-pours-rainbows-a-wax-play-overview-online-class-uijaz7",
+        "name": "Drips, Pours & Rainbows: A Wax Play Overview [ONLINE CLASS]",
+        "start": "2026-12-04",
+        "end": "2026-12-04",
+        "category": "Educational",
+        "cost": null,
+        "when": "Fri, Dec 4 at 4:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 106,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/04/femdoms-of-the-north-google-call-balgki",
+        "name": "Femdoms of the North Google Call",
+        "start": "2026-12-04",
+        "end": "2026-12-04",
         "category": "Social",
         "cost": "Free",
-        "when": "Sat, Dec 5 at 10:00 AM",
-        "venue": "The Spur – Lebanon Valley Rail Trail 451 Mt. Gretna Road, Mount Gretna, PA 17064",
-        "city": "Mount Gretna, Pennsylvania, United States",
-        "rsvps": 14,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/12/05/naked-yoga-new-york-liwg93",
-        "name": "Naked Yoga New York",
-        "start": "2026-12-05",
-        "end": "2026-12-05",
-        "category": "Educational",
-        "cost": null,
-        "when": "Sat, Dec 5 at 12:00 PM",
-        "venue": "Address given in email confirmation. Please contact us if paying at door.",
-        "city": "New York City, New York, United States",
-        "rsvps": 15,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/12/05/annual-holiday-paid-members-only-party-with-secret-santa-why-do-we-choose-bdsm-and-or-d-s-and-m-s-er9txb",
-        "name": "Annual Holiday PAID MEMBERS ONLY Party with Secret Santa + Why do we choose BDSM and/or D/s and M/s?",
-        "start": "2026-12-05",
-        "end": "2026-12-05",
-        "category": "Educational",
-        "cost": null,
-        "when": "Sat, Dec 5 at 12:30 PM",
-        "venue": "Samco Boutique, home of SceneWear",
-        "city": "Edgewater Park, New Jersey, United States",
-        "rsvps": 10,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/12/05/power-exchange-round-table-9ilw4y",
-        "name": "Power Exchange Round Table",
-        "start": "2026-12-05",
-        "end": "2026-12-05",
-        "category": "BDSM Party",
-        "cost": null,
-        "when": "Sat, Dec 5 at 1:00 PM",
-        "venue": "Church",
-        "city": "New Paltz, New York, United States",
-        "rsvps": 59,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/12/05/onyx-day-of-wellness-krd4xo",
-        "name": "ONYX Day of Wellness",
-        "start": "2026-12-05",
-        "end": "2026-12-05",
-        "category": "Educational",
-        "cost": "Free",
-        "when": "Sat, Dec 5 at 1:00 PM",
-        "venue": "Brooklyn Pride Center",
-        "city": "New York City, New York, United States",
-        "rsvps": 3,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/12/05/impact-men-nyc-men-s-bdsm-impact-play-party-2bedqr",
-        "name": "Impact Men NYC | Men's BDSM & Impact Play Party",
-        "start": "2026-12-05",
-        "end": "2026-12-05",
-        "category": "Educational",
-        "cost": null,
-        "when": "Sat, Dec 5 at 3:00 PM",
-        "venue": "Studio125",
-        "city": "Manhattan, New York, United States",
-        "rsvps": 10,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/12/05/westchester-afternoon-party-for-bi-guys-and-cd-ts-but-everyone-is-invited-vj9ky1",
-        "name": "Westchester Afternoon Party for Bi Guys and CD/TS - But EVERYONE Is Invited",
-        "start": "2026-12-05",
-        "end": "2026-12-05",
-        "category": "Sex Party",
-        "cost": null,
-        "when": "Sat, Dec 5 at 3:30 PM",
-        "venue": "Westchester Mariott",
-        "city": "Yonkers, New York, United States",
+        "when": "Fri, Dec 4 at 4:00 PM",
+        "venue": "Virtual",
+        "city": null,
         "rsvps": 12,
-        "image": null
+        "image": null,
+        "virtual": true
     },
     {
-        "url": "https://fetlife.com/events/2026/12/05/bdsm-vibrations-wintery-mix-kigrf9",
-        "name": "BDSM Vibrations: Wintery MIX",
-        "start": "2026-12-05",
-        "end": "2026-12-05",
-        "category": "BDSM Party",
-        "cost": null,
-        "when": "Sat, Dec 5 at 4:00 PM",
-        "venue": "Church",
-        "city": "New Paltz, New York, United States",
-        "rsvps": 78,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/12/05/kpid-munch-karaoke-edition-wlxc9l",
-        "name": "KPID Munch-Karaoke Edition",
-        "start": "2026-12-05",
-        "end": "2026-12-05",
-        "category": "Social",
+        "url": "https://fetlife.com/events/2026/12/04/the-last-first-friday-fiver-5pm-canada-eastern-presenter-recorded-xhwxtt",
+        "name": "[The Last] First Friday Fiver (5pm Canada Eastern / Presenter Recorded)",
+        "start": "2026-12-04",
+        "end": "2026-12-04",
+        "category": "Educational",
         "cost": "Free",
-        "when": "Sat, Dec 5 at 5:00 PM",
-        "venue": "The Drunken Smithy",
-        "city": "Lebanon, Pennsylvania, United States",
-        "rsvps": 48,
-        "image": null
+        "when": "Fri, Dec 4 at 5:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 37,
+        "image": null,
+        "virtual": true
     },
     {
-        "url": "https://fetlife.com/events/2026/12/05/pony-play-introduction-by-adelasia-nzgb3s",
-        "name": "Pony Play Introduction - by Adelasia",
-        "start": "2026-12-05",
-        "end": "2026-12-05",
+        "url": "https://fetlife.com/events/2026/12/04/power-exchange-together-rva-9nujqy",
+        "name": "Power Exchange Together RVA",
+        "start": "2026-12-04",
+        "end": "2026-12-04",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Fri, Dec 4 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 67,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/04/pretty-pointy-powerful-the-art-and-intention-of-decorative-needle-play-with-missmoon-1hwkqw",
+        "name": "Pretty. Pointy. Powerful: The Art and Intention of Decorative Needle Play with MissMoon",
+        "start": "2026-12-04",
+        "end": "2026-12-04",
         "category": "Educational",
         "cost": null,
-        "when": "Sat, Dec 5 at 5:00 PM",
-        "venue": "The Venue",
-        "city": "Bethlehem, Pennsylvania, United States",
-        "rsvps": 38,
-        "image": null
+        "when": "Fri, Dec 4 at 7:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 12,
+        "image": null,
+        "virtual": true
     },
     {
-        "url": "https://fetlife.com/events/2026/12/05/travis-s-birthday-celebration-with-the-beach-house-3-5uo9we",
-        "name": "Travis’s Birthday Celebration with The Beach House 3",
-        "start": "2026-12-05",
-        "end": "2026-12-05",
+        "url": "https://fetlife.com/events/2026/12/04/in-leather-we-trust-2026-a-very-special-fundraiser-s45dal",
+        "name": "In Leather We Trust 2026: A very special fundraiser!",
+        "start": "2026-12-04",
+        "end": "2026-12-06",
+        "category": "Conference / Festival",
+        "cost": null,
+        "when": "Dec 4 – 6 · Fri 7:45 PM – Sun 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": null,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/04/online-submissive-guide-community-munch-comfort-care-what-helps-you-recharge-rye73h",
+        "name": "ONLINE - Submissive Guide Community Munch - Comfort & Care: What Helps You Recharge?",
+        "start": "2026-12-04",
+        "end": "2026-12-04",
         "category": "Social",
-        "cost": null,
-        "when": "Sat, Dec 5 at 6:00 PM",
-        "venue": "Empire Sports Bar",
-        "city": "Brooklawn, New Jersey, United States",
-        "rsvps": 150,
-        "image": null
+        "cost": "Free",
+        "when": "Fri, Dec 4 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 108,
+        "image": null,
+        "virtual": true
     },
     {
-        "url": "https://fetlife.com/events/2026/12/05/unicorn-s-paradise-threesomes-101-workshop-speed-dating-play-party-perkef",
-        "name": "Unicorn's Paradise - Threesomes 101 Workshop / Speed Dating / Play Party",
-        "start": "2026-12-05",
-        "end": "2026-12-05",
-        "category": "Sex Party",
+        "url": "https://fetlife.com/events/2026/12/04/class-group-projects-threesomes-moresomes-group-scenes-oh-my-v1xhrt",
+        "name": "CLASS: Group Projects- Threesomes, Moresomes & Group Scenes, Oh My!",
+        "start": "2026-12-04",
+        "end": "2026-12-04",
+        "category": "Educational",
         "cost": null,
-        "when": "Sat, Dec 5 at 6:45 PM",
-        "venue": "Pagan's Paradise",
-        "city": "New York City, New York, United States",
-        "rsvps": 56,
-        "image": null
+        "when": "Fri, Dec 4 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 104,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/04/isolation-storytime-afterparty-2026-12-04-tvhmwe",
+        "name": "Isolation Storytime Afterparty - 2026-12-04",
+        "start": "2026-12-04",
+        "end": "2026-12-04",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Fri, Dec 4 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 2,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/12/05/unholy-a-f-ucked-up-white-elephant-gift-exchange-and-free-use-event-wvw13n",
@@ -10423,7 +16334,190 @@ var EVENTS = [
         "venue": "undisclosed location",
         "city": "Allentown, Pennsylvania, United States",
         "rsvps": 75,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/05/erotic-shadow-play-weekend-immersion-dec-2026-u1b6xa",
+        "name": "Erotic Shadow Play: Weekend Immersion (Dec 2026)",
+        "start": "2026-12-05",
+        "end": "2026-12-06",
+        "category": "Educational",
+        "cost": null,
+        "when": "Dec 5 – 6 · Sat 10:00 AM – Sun 6:00 PM",
+        "venue": "West 14th St",
+        "city": "Manhattan, New York, United States",
+        "rsvps": 39,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/05/freaks-on-foot-a-weekly-walking-social-j4fjhq",
+        "name": "Freaks on Foot: A Weekly Walking Social",
+        "start": "2026-12-05",
+        "end": "2026-12-05",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Sat, Dec 5 at 10:00 AM",
+        "venue": "The Spur – Lebanon Valley Rail Trail 451 Mt. Gretna Road, Mount Gretna, PA 17064",
+        "city": "Mount Gretna, Pennsylvania, United States",
+        "rsvps": 14,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/05/naked-yoga-new-york-liwg93",
+        "name": "Naked Yoga New York",
+        "start": "2026-12-05",
+        "end": "2026-12-05",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Dec 5 at 12:00 PM",
+        "venue": "Address given in email confirmation. Please contact us if paying at door.",
+        "city": "New York City, New York, United States",
+        "rsvps": 15,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/05/annual-holiday-paid-members-only-party-with-secret-santa-why-do-we-choose-bdsm-and-or-d-s-and-m-s-er9txb",
+        "name": "Annual Holiday PAID MEMBERS ONLY Party with Secret Santa + Why do we choose BDSM and/or D/s and M/s?",
+        "start": "2026-12-05",
+        "end": "2026-12-05",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Dec 5 at 12:30 PM",
+        "venue": "Samco Boutique, home of SceneWear",
+        "city": "Edgewater Park, New Jersey, United States",
+        "rsvps": 10,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/05/power-exchange-round-table-9ilw4y",
+        "name": "Power Exchange Round Table",
+        "start": "2026-12-05",
+        "end": "2026-12-05",
+        "category": "BDSM Party",
+        "cost": null,
+        "when": "Sat, Dec 5 at 1:00 PM",
+        "venue": "Church",
+        "city": "New Paltz, New York, United States",
+        "rsvps": 59,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/05/onyx-day-of-wellness-krd4xo",
+        "name": "ONYX Day of Wellness",
+        "start": "2026-12-05",
+        "end": "2026-12-05",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sat, Dec 5 at 1:00 PM",
+        "venue": "Brooklyn Pride Center",
+        "city": "New York City, New York, United States",
+        "rsvps": 4,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/05/impact-men-nyc-men-s-bdsm-impact-play-party-2bedqr",
+        "name": "Impact Men NYC | Men's BDSM & Impact Play Party",
+        "start": "2026-12-05",
+        "end": "2026-12-05",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Dec 5 at 3:00 PM",
+        "venue": "Studio125",
+        "city": "Manhattan, New York, United States",
+        "rsvps": 10,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/05/westchester-afternoon-party-for-bi-guys-and-cd-ts-but-everyone-is-invited-vj9ky1",
+        "name": "Westchester Afternoon Party for Bi Guys and CD/TS - But EVERYONE Is Invited",
+        "start": "2026-12-05",
+        "end": "2026-12-05",
+        "category": "Sex Party",
+        "cost": null,
+        "when": "Sat, Dec 5 at 3:30 PM",
+        "venue": "Westchester Mariott",
+        "city": "Yonkers, New York, United States",
+        "rsvps": 12,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/05/bdsm-vibrations-wintery-mix-kigrf9",
+        "name": "BDSM Vibrations: Wintery MIX",
+        "start": "2026-12-05",
+        "end": "2026-12-05",
+        "category": "BDSM Party",
+        "cost": null,
+        "when": "Sat, Dec 5 at 4:00 PM",
+        "venue": "Church",
+        "city": "New Paltz, New York, United States",
+        "rsvps": 78,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/05/kpid-munch-karaoke-edition-wlxc9l",
+        "name": "KPID Munch-Karaoke Edition",
+        "start": "2026-12-05",
+        "end": "2026-12-05",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Sat, Dec 5 at 5:00 PM",
+        "venue": "The Drunken Smithy",
+        "city": "Lebanon, Pennsylvania, United States",
+        "rsvps": 48,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/05/pony-play-introduction-by-adelasia-nzgb3s",
+        "name": "Pony Play Introduction - by Adelasia",
+        "start": "2026-12-05",
+        "end": "2026-12-05",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Dec 5 at 5:00 PM",
+        "venue": "The Venue",
+        "city": "Bethlehem, Pennsylvania, United States",
+        "rsvps": 38,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/05/travis-s-birthday-celebration-with-the-beach-house-3-5uo9we",
+        "name": "Travis’s Birthday Celebration with The Beach House 3",
+        "start": "2026-12-05",
+        "end": "2026-12-05",
+        "category": "Social",
+        "cost": null,
+        "when": "Sat, Dec 5 at 6:00 PM",
+        "venue": "Empire Sports Bar",
+        "city": "Brooklawn, New Jersey, United States",
+        "rsvps": 150,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/05/unicorn-s-paradise-threesomes-101-workshop-speed-dating-play-party-perkef",
+        "name": "Unicorn's Paradise - Threesomes 101 Workshop / Speed Dating / Play Party",
+        "start": "2026-12-05",
+        "end": "2026-12-05",
+        "category": "Sex Party",
+        "cost": null,
+        "when": "Sat, Dec 5 at 6:45 PM",
+        "venue": "Pagan's Paradise",
+        "city": "New York City, New York, United States",
+        "rsvps": 56,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/05/bbc-heaven-hotwives-milfs-qos-single-ladies-xxx-club-takeover-9pm-2am-n4n07k",
@@ -10436,7 +16530,8 @@ var EVENTS = [
         "venue": "Roleplay Lifestyle Club",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 419,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/05/members-appreciation-night-fvvy5g",
@@ -10449,7 +16544,8 @@ var EVENTS = [
         "venue": "The Venue",
         "city": "Bethlehem, Pennsylvania, United States",
         "rsvps": 63,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/05/kinky-speed-flirting-vliiml",
@@ -10462,7 +16558,8 @@ var EVENTS = [
         "venue": "Less Dead Studio",
         "city": "Poughkeepsie, New York, United States",
         "rsvps": 64,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/05/westchester-party-for-couples-females-cd-ts-and-select-males-and-any-gb-ladies-up-to-have-fun-rf0gn1",
@@ -10475,7 +16572,8 @@ var EVENTS = [
         "venue": "Courtyard by Mariott",
         "city": "Yonkers, New York, United States",
         "rsvps": 11,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/05/unicorn-s-paradise-threesomes-101-workshop-speed-dating-play-party-7jrhno",
@@ -10488,7 +16586,8 @@ var EVENTS = [
         "venue": "Pagan's Paradise",
         "city": "New York City, New York, United States",
         "rsvps": 39,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/05/2026-hump-film-festival-fall-season-philadelphia-pa-2-showings-6-30-pm-9-pm-uvj6ak",
@@ -10501,7 +16600,8 @@ var EVENTS = [
         "venue": "FringeArts",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 34,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/05/dark-ageplay-diaper-play-party-jjdyah",
@@ -10514,7 +16614,8 @@ var EVENTS = [
         "venue": "Shared with Ticket Holders",
         "city": "Little Falls, New Jersey, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/05/big-bday-bash-vmwh1n",
@@ -10527,7 +16628,8 @@ var EVENTS = [
         "venue": "tba",
         "city": "East Rutherford, New Jersey, United States",
         "rsvps": 5,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/05/holiday-pajama-party-2026-dl7lks",
@@ -10540,7 +16642,8 @@ var EVENTS = [
         "venue": null,
         "city": "Cranford, New Jersey, United States",
         "rsvps": 51,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/05/sexy-sip-n-paint-bella-s-birthday-celebration-g3kx2k",
@@ -10553,7 +16656,8 @@ var EVENTS = [
         "venue": null,
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 9,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/05/sexy-sip-n-paint-bella-s-birthday-celebration-7irneq",
@@ -10566,7 +16670,8 @@ var EVENTS = [
         "venue": "Location will be sent once donation are received",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 15,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/05/coil-cord-rope-jam-12-5-fe7t2k",
@@ -10579,7 +16684,8 @@ var EVENTS = [
         "venue": "Coil & Cord Studio",
         "city": "Brooklyn, New York, United States",
         "rsvps": 23,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/05/pineapple-xpress-lingerie-party-zrgak2",
@@ -10591,8 +16697,9 @@ var EVENTS = [
         "when": "Sat, Dec 5 at 9:00 PM",
         "venue": "Medusa’s Playhouse",
         "city": "West Babylon, New York, United States",
-        "rsvps": 53,
-        "image": null
+        "rsvps": 54,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/05/club-labyrinth-swinging-kink-saturday-cpls-60-guys-120-ladies-free-midtown-9pm-4am-kfzova",
@@ -10605,7 +16712,8 @@ var EVENTS = [
         "venue": "TBA",
         "city": "New York City, New York, United States",
         "rsvps": 7,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/05/swing-in-style-jd17xr",
@@ -10618,7 +16726,8 @@ var EVENTS = [
         "venue": "HAMPTON INN",
         "city": "Linden, New Jersey, United States",
         "rsvps": 70,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/05/mixx-nightclub-allentown-pa-ivsuxi",
@@ -10631,7 +16740,8 @@ var EVENTS = [
         "venue": "Mixx Nightclub & Lounge",
         "city": "Allentown, Pennsylvania, United States",
         "rsvps": 17,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/05/cumunion-at-club-philadelphia-i7ylje",
@@ -10644,7 +16754,8 @@ var EVENTS = [
         "venue": "Club Philadelphia",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 5,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/05/brdfst-breedfest-by-pighaus-9akuw3",
@@ -10657,7 +16768,8 @@ var EVENTS = [
         "venue": "RED EYE NY",
         "city": "New York City, New York, United States",
         "rsvps": 7,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/05/medusas-playhouse-pinneaple-xpress-presents-the-2nd-annual-naughty-lingerie-pajama-party-7cgqiu",
@@ -10670,7 +16782,8 @@ var EVENTS = [
         "venue": "MEDUSAS PLAYHOUSE",
         "city": "West Babylon, New York, United States",
         "rsvps": 30,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/05/tis-the-season-the-naked-truth-sinners-paradise-free-entry-tonight-rbfcr2",
@@ -10683,7 +16796,8 @@ var EVENTS = [
         "venue": "Sinners Paradise Club",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 29,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/05/days-gone-bye-hkfysh",
@@ -10696,7 +16810,8 @@ var EVENTS = [
         "venue": "rustik tavern bk",
         "city": "New York City, New York, United States",
         "rsvps": 21,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/05/tuff-nyc-2-year-anniversary-party-srprun",
@@ -10709,7 +16824,8 @@ var EVENTS = [
         "venue": "9 Bob Note",
         "city": "New York City, New York, United States",
         "rsvps": 33,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/05/wonderland-nyc-december-5-candyland-m4wtd5",
@@ -10722,7 +16838,8 @@ var EVENTS = [
         "venue": "Secret NYC Loft",
         "city": "New York City, New York, United States",
         "rsvps": 7,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/05/tsecretsociety-presents-itviok",
@@ -10735,7 +16852,8 @@ var EVENTS = [
         "venue": "n/a",
         "city": "Brooklyn, New York, United States",
         "rsvps": 37,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/05/baby-misty-s-50th-disco-b-day-scq5no",
@@ -10747,8 +16865,163 @@ var EVENTS = [
         "when": "Sat, Dec 5 at 11:00 PM",
         "venue": "Le Poisson Rouge",
         "city": "New York City, New York, United States",
-        "rsvps": 29,
-        "image": null
+        "rsvps": 39,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/05/quick-sticks-needle-play-for-short-scenes-and-big-impact-with-cinnfull_delight-97buiu",
+        "name": "Quick Sticks: Needle Play for Short Scenes and Big Impact with @CinnFull_Delight",
+        "start": "2026-12-05",
+        "end": "2026-12-05",
+        "category": "Educational",
+        "cost": null,
+        "when": "Fri, Dec 4 at 6:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 267,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/05/consent-and-leadership-7-beyond-the-ban-options-for-accountability-9nrqn1",
+        "name": "Consent and Leadership 7: Beyond the Ban: Options for Accountability",
+        "start": "2026-12-05",
+        "end": "2026-12-05",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Dec 5 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 106,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/05/conscious-conversations-month-3-week-11-shame-silence-self-trust-lfzyvg",
+        "name": "Conscious Conversations | Month 3 : week 11 | Shame, Silence & Self-Trust",
+        "start": "2026-12-05",
+        "end": "2026-12-05",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sat, Dec 5 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 14,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/05/online-cellaring-refining-your-skills-as-an-older-kinkster-with-miriam-green-rqy6gs",
+        "name": "ONLINE: Cellaring: Refining Your Skills as an Older Kinkster with Miriam Green",
+        "start": "2026-12-05",
+        "end": "2026-12-05",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Dec 5 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 118,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/05/online-recorded-for-honor-and-pleasure-intro-to-medieval-fantasy-play-af7del",
+        "name": "[Online & Recorded] “For Honor and Pleasure” Intro to Medieval Fantasy Play",
+        "start": "2026-12-05",
+        "end": "2026-12-05",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Dec 5 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 26,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/05/deconstruction-bible-study-mary-the-virgin-consent-sexuality-power-part-1-7bapll",
+        "name": "Deconstruction Bible Study - Mary: The Virgin, Consent, Sexuality & Power (Part 1)",
+        "start": "2026-12-05",
+        "end": "2026-12-05",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sat, Dec 5 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 91,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/05/intro-to-dungeon-monitoring-j82efk",
+        "name": "Intro to Dungeon Monitoring",
+        "start": "2026-12-05",
+        "end": "2026-12-05",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sat, Dec 5 at 3:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 281,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/05/online-private-joy-sadomasochism-for-solo-distance-play-with-miriam-green-4puwal",
+        "name": "ONLINE: Private Joy: Sadomasochism for Solo & Distance Play with Miriam Green",
+        "start": "2026-12-05",
+        "end": "2026-12-05",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Dec 5 at 5:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 149,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/05/lgoc-community-holiday-social-ygpjtc",
+        "name": "LgOC Community Holiday Social",
+        "start": "2026-12-05",
+        "end": "2026-12-05",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Sat, Dec 5 at 5:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 12,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/05/jaxtng-zoom-class-cigar-service-bfaufx",
+        "name": "JaxTNG Zoom Class: Cigar Service",
+        "start": "2026-12-05",
+        "end": "2026-12-05",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sat, Dec 5 at 6:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 72,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/05/pk-is-it-community-service-or-unpaid-labor-n7fhfa",
+        "name": "PK: Is it Community Service or Unpaid Labor?",
+        "start": "2026-12-05",
+        "end": "2026-12-05",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sat, Dec 5 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 430,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/12/06/new-paltz-munch-sponsored-by-the-church-nico007-mvg9nl",
@@ -10761,7 +17034,8 @@ var EVENTS = [
         "venue": "Plaza Diner",
         "city": "New Paltz, New York, United States",
         "rsvps": 103,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/06/south-st-thrift-crawl-hqniqp",
@@ -10774,7 +17048,8 @@ var EVENTS = [
         "venue": "Spread Bagelry (South and 5th)",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 4,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/06/sold-out-the-fire-massage-series-in-person-december-gygld8",
@@ -10787,7 +17062,8 @@ var EVENTS = [
         "venue": "Ruby Corral",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 43,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/06/sacred-sunday-afternoon-play-party-12-30-3-pm-liqkhk",
@@ -10800,7 +17076,8 @@ var EVENTS = [
         "venue": "Church",
         "city": "New Paltz, New York, United States",
         "rsvps": 120,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/06/december-spanking-lovers-mall-walk-and-food-court-picnic-o0uycp",
@@ -10813,7 +17090,8 @@ var EVENTS = [
         "venue": "Bridgewater Commons Mall",
         "city": "Bridgewater, New Jersey, United States",
         "rsvps": 33,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/06/sweet-treats-dirty-beats-play-party-oov0qe",
@@ -10826,7 +17104,8 @@ var EVENTS = [
         "venue": "The Nest (exact location shared with tix purchase)",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 373,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/06/december-central-nj-rope-share-gtto0n",
@@ -10839,7 +17118,8 @@ var EVENTS = [
         "venue": "Pride Center of NJ",
         "city": "Highland Park, New Jersey, United States",
         "rsvps": 11,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/06/anthracite-leather-tribe-tea-dance-krampusnacht-hangover-party-kly0mx",
@@ -10852,7 +17132,8 @@ var EVENTS = [
         "venue": "12 Penny Saloon",
         "city": "Moosic, Pennsylvania, United States",
         "rsvps": 8,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/06/the-art-of-chastity-and-keyholding-for-all-degv7k",
@@ -10865,7 +17146,8 @@ var EVENTS = [
         "venue": "InnThrall",
         "city": "Shillington, Pennsylvania, United States",
         "rsvps": 4,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/06/game-on-krinkles-abdl-kink-community-game-night-j7dooc",
@@ -10878,7 +17160,8 @@ var EVENTS = [
         "venue": "Studio125",
         "city": "Manhattan, New York, United States",
         "rsvps": 14,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/06/slipawayandplay-all-male-events-1inbpf",
@@ -10891,7 +17174,8 @@ var EVENTS = [
         "venue": "Info given after your email address is supplied.",
         "city": "Asbury Park, New Jersey, United States",
         "rsvps": 3,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/06/shibari-for-suspension-rq8r2v",
@@ -10904,7 +17188,8 @@ var EVENTS = [
         "venue": "TBA",
         "city": "Elizabethtown, Pennsylvania, United States",
         "rsvps": 5,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/06/lasc-rope-share-hrinhy",
@@ -10917,7 +17202,8 @@ var EVENTS = [
         "venue": null,
         "city": "Dover Plains, New York, United States",
         "rsvps": 7,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/06/couples-erotic-massage-workshop-pbysnk",
@@ -10930,7 +17216,8 @@ var EVENTS = [
         "venue": "Less Dead Studio",
         "city": "Poughkeepsie, New York, United States",
         "rsvps": 28,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/06/mast-metro-ny-s-25th-anniversary-annual-winter-potluck-social-sunday-december-6th-6-9-pm-in-nyc-bplaqo",
@@ -10943,7 +17230,8 @@ var EVENTS = [
         "venue": null,
         "city": "Manhattan, New York, United States",
         "rsvps": 37,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/06/sensory-play-hanukkah-edition-oesebf",
@@ -10956,7 +17244,414 @@ var EVENTS = [
         "venue": "Hit Me Up",
         "city": "New York City, New York, United States",
         "rsvps": 15,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/06/not-just-lying-there-the-art-of-active-bottoming-with-ms_kitten_-y7xyqn",
+        "name": "Not Just Lying There: The Art of Active Bottoming with @MS_KITTEN_",
+        "start": "2026-12-06",
+        "end": "2026-12-06",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Dec 5 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 392,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/06/candidature-petplay-france-2027-l1ofkt",
+        "name": "CANDIDATURE Petplay France 2027",
+        "start": "2026-12-06",
+        "end": "2026-12-06",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sat, Dec 5 at 6:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 2,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/06/men-s-naked-yoga-sunday-dec-6-morning-practice-gsgnbh",
+        "name": "Men's Naked Yoga - Sunday Dec 6, Morning Practice",
+        "start": "2026-12-06",
+        "end": "2026-12-06",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sun, Dec 6 at 11:45 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 5,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/06/virtual-progressive-threads-a-rope-community-for-deliberate-practice-wmoksu",
+        "name": "[VIRTUAL] Progressive Threads: A Rope Community for Deliberate Practice",
+        "start": "2026-12-06",
+        "end": "2026-12-06",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Dec 6 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 60,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/06/ava-s-eros-writing-group-h0iao2",
+        "name": "Ava's Eros Writing Group",
+        "start": "2026-12-06",
+        "end": "2026-12-06",
+        "category": "Social",
+        "cost": null,
+        "when": "Sun, Dec 6 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 14,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/06/bipoc-utopias-celebration-apsrjs",
+        "name": "BIPOC Utopias – Celebration",
+        "start": "2026-12-06",
+        "end": "2026-12-06",
+        "category": "Social",
+        "cost": null,
+        "when": "Sun, Dec 6 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 11,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/06/virtual-bootblack-jam-l-interview-with-atlas-int-l-mr-bootblack-2026-lvkwob",
+        "name": "Virtual Bootblack Jam | Interview with Atlas, Int'l Mr Bootblack 2026",
+        "start": "2026-12-06",
+        "end": "2026-12-06",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sun, Dec 6 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 33,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/06/intimacy-after-cancer-sold-out-kz5bzf",
+        "name": "Intimacy After Cancer / SOLD OUT",
+        "start": "2026-12-06",
+        "end": "2026-12-06",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Dec 6 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 4,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/06/dark-romance-book-club-god-of-malice-kqbshr",
+        "name": "Dark Romance Book Club: God of Malice",
+        "start": "2026-12-06",
+        "end": "2026-12-06",
+        "category": "Social",
+        "cost": null,
+        "when": "Sun, Dec 6 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 12,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/06/online-an-introduction-to-submission-exploring-submissive-roles-with-sub-in-the-city-nq1zkm",
+        "name": "ONLINE: An Introduction to Submission: Exploring Submissive Roles with Sub in the City",
+        "start": "2026-12-06",
+        "end": "2026-12-06",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Dec 6 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 125,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/06/vetted-event-power-exchange-together-west-michigan-monthly-discussion-december-6th-2026-cp70uo",
+        "name": "Vetted Event: Power Exchange Together West Michigan Monthly Discussion ~ December, 6th, 2026",
+        "start": "2026-12-06",
+        "end": "2026-12-06",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Dec 6 at 3:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 17,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/06/insemination-jubilee-gooning-and-cocooning-with-empress-wu-kerosene-jones-kobxz2",
+        "name": "Insemination Jubilee: Gooning and Cocooning with Empress Wu & Kerosene Jones",
+        "start": "2026-12-06",
+        "end": "2026-12-06",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Dec 6 at 3:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 8,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/06/fill-in-the-blank-rouletting-the-brain-0n5if5",
+        "name": "Fill in the Blank: Rouletting the Brain",
+        "start": "2026-12-06",
+        "end": "2026-12-06",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Dec 6 at 3:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 20,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/06/black-fem-fatale-let-s-talk-archetype-development-for-deeper-play-eicwqb",
+        "name": "Black Fem Fatale: Let's Talk Archetype Development for Deeper Play",
+        "start": "2026-12-06",
+        "end": "2026-12-06",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sun, Dec 6 at 4:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 53,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/06/desire-smuggling-the-gift-that-was-really-for-them-zoom-meeting-for-domme-scouts-and-brownies-rkpg2a",
+        "name": "Desire Smuggling: The Gift That Was Really for Them-Zoom meeting for Domme Scouts and brownies",
+        "start": "2026-12-06",
+        "end": "2026-12-06",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sun, Dec 6 at 5:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 20,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/06/online-community-roles-volunteers-dungeon-monitors-and-more-hpk0bg",
+        "name": "ONLINE: Community Roles: Volunteers, Dungeon Monitors, and More!",
+        "start": "2026-12-06",
+        "end": "2026-12-06",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Dec 6 at 5:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 165,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/06/bfd-only-monthly-telecon-dec-bd00cd",
+        "name": "BFD ONLY Monthly Telecon (DEC)",
+        "start": "2026-12-06",
+        "end": "2026-12-06",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Dec 6 at 6:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 12,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/06/virtual-class-scene-building-domination-with-master-gushy-sycunt",
+        "name": "VIRTUAL CLASS- SCENE BUILDING - DOMINATION WITH MASTER GUSHY",
+        "start": "2026-12-06",
+        "end": "2026-12-06",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Dec 6 at 6:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 3,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/06/creating-consent-reporting-processes-for-orgs-events-and-reporters-with-ember-solaris-hjffkl",
+        "name": "Creating Consent Reporting Processes for Orgs, Events, and Reporters with Ember Solaris",
+        "start": "2026-12-06",
+        "end": "2026-12-06",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Dec 6 at 6:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 379,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/06/virtual-awesome-boundaries-presented-by-sex-positive-world-eesqej",
+        "name": "VIRTUAL: \"Awesome Boundaries!\" - presented by Sex Positive World!",
+        "start": "2026-12-06",
+        "end": "2026-12-06",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Dec 6 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 15,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/06/little_librarian-s-storytime-happy-holidays-oqff4t",
+        "name": "Little_Librarian's Storytime: Happy Holidays",
+        "start": "2026-12-06",
+        "end": "2026-12-06",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sun, Dec 6 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 13,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/06/the-body-as-altar-a-women-s-meditation-sex-magic-circle-2kbx8l",
+        "name": "The Body as Altar: A Women’s Meditation & Sex Magic Circle",
+        "start": "2026-12-06",
+        "end": "2026-12-06",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sun, Dec 6 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 6,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/06/sun-dec-6-7-9pm-et-flogging-for-pleasure-pain-with-sudisa-pkywn9",
+        "name": "Sun Dec 6 @ 7–9pm ET: Flogging for Pleasure & Pain — with sudisa",
+        "start": "2026-12-06",
+        "end": "2026-12-06",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Dec 6 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 26,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/06/x2-take-care-of-you-sunday-evening-reset-hfnun0",
+        "name": "X2-Take Care of You-Sunday Evening Reset",
+        "start": "2026-12-06",
+        "end": "2026-12-06",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sun, Dec 6 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 22,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/06/virtual-recl-position-of-power-power-exchange-authority-and-the-nervous-system-with-sylvastra-jg2q3c",
+        "name": "Virtual + Rec| Position of Power: Power Exchange, Authority, and the Nervous System with Sylvastra",
+        "start": "2026-12-06",
+        "end": "2026-12-06",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Dec 6 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 62,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/06/the-exiles-bdsm-101-orientation-online-m3rvtg",
+        "name": "The Exiles: BDSM 101: Orientation Online",
+        "start": "2026-12-06",
+        "end": "2026-12-06",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Dec 6 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 13,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/06/pleasure-mastery-an-intro-to-erotic-blueprints-hxferr",
+        "name": "Pleasure Mastery: An Intro to Erotic Blueprints",
+        "start": "2026-12-06",
+        "end": "2026-12-06",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Dec 6 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 12,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/06/virtual-rec-intro-to-transforming-primal-attachment-panic-w-jessica-fern-of-polysecure-bnc0af",
+        "name": "VIRTUAL & REC: \"Intro to Transforming Primal Attachment Panic\" w/ Jessica Fern of \"Polysecure\"",
+        "start": "2026-12-06",
+        "end": "2026-12-06",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Dec 6 at 9:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 48,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/06/fantasy-has-rules-consent-trauma-cnc-recorded-x0wogw",
+        "name": "Fantasy Has Rules: Consent, Trauma & CNC (Recorded)",
+        "start": "2026-12-06",
+        "end": "2026-12-06",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Dec 6 at 10:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 33,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/12/07/slipawayandplay-all-male-events-p5huet",
@@ -10969,7 +17664,8 @@ var EVENTS = [
         "venue": "Info given after your email address is supplied.",
         "city": "Asbury Park, New Jersey, United States",
         "rsvps": 8,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/07/open-rope-practice-coil-cord-12-7-uvxrtx",
@@ -10982,7 +17678,8 @@ var EVENTS = [
         "venue": "Coil & Cord Studio",
         "city": "Brooklyn, New York, United States",
         "rsvps": 14,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/07/tes-in-person-tes-monthly-munch-4utfqq",
@@ -10995,7 +17692,8 @@ var EVENTS = [
         "venue": "Skylight Diner",
         "city": "Manhattan, New York, United States",
         "rsvps": 51,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/07/pretty-plastic-a-bimbo-pageant-event-by-the-taillors-9j1zpl",
@@ -11008,7 +17706,8 @@ var EVENTS = [
         "venue": "The Crown",
         "city": "Brooklyn, New York, United States",
         "rsvps": 30,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/07/impact-with-intention-a-101-and-beyond-lhccb7",
@@ -11021,7 +17720,8 @@ var EVENTS = [
         "venue": "Address given in email confirmation. Please contact us if paying at door.",
         "city": "New York City, New York, United States",
         "rsvps": 9,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/07/new-moon-ritual-sound-bath-experience-13nqrq",
@@ -11034,7 +17734,8 @@ var EVENTS = [
         "venue": "Address given in email confirmation. Please contact us if paying at door.",
         "city": "New York City, New York, United States",
         "rsvps": 18,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/07/rosewiththegold-lingerie-shower-ujguoo",
@@ -11047,7 +17748,148 @@ var EVENTS = [
         "venue": null,
         "city": "Brooklyn, New York, United States",
         "rsvps": 11,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/07/the-confessional-mvorrs",
+        "name": "The Confessional",
+        "start": "2026-12-07",
+        "end": "2026-12-07",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Mon, Dec 7 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 98,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/07/zoom-meeting-pro-domme-society-besloten-bxd5ms",
+        "name": "Zoom meeting Pro Domme Society (besloten)",
+        "start": "2026-12-07",
+        "end": "2026-12-07",
+        "category": "Educational",
+        "cost": null,
+        "when": "Mon, Dec 7 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 3,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/07/blood-impact-and-play-in-public-containment-considerations-and-hygiene-with-ember-solaris-vpanzm",
+        "name": "Blood Impact and Play in Public: Containment, Considerations, and Hygiene with Ember Solaris",
+        "start": "2026-12-07",
+        "end": "2026-12-07",
+        "category": "Educational",
+        "cost": null,
+        "when": "Mon, Dec 7 at 6:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 308,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/07/kink-roles-panel-open-forum-uxopdz",
+        "name": "Kink Roles Panel - Open Forum",
+        "start": "2026-12-07",
+        "end": "2026-12-07",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Mon, Dec 7 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 21,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/07/fem-fetish-creators-monthly-virtual-open-house-sotbru",
+        "name": "Fem Fetish Creators Monthly Virtual Open House",
+        "start": "2026-12-07",
+        "end": "2026-12-07",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Mon, Dec 7 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 27,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/07/em-s-men-s-group-ciud9s",
+        "name": "EM's Men's Group",
+        "start": "2026-12-07",
+        "end": "2026-12-07",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Mon, Dec 7 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 80,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/07/online-bite-me-the-art-arousal-safety-of-erotic-biting-with-marla-renee-stewart-z815fy",
+        "name": "ONLINE: Bite Me: The Art, Arousal & Safety of Erotic Biting with Marla Renee Stewart",
+        "start": "2026-12-07",
+        "end": "2026-12-07",
+        "category": "Educational",
+        "cost": null,
+        "when": "Mon, Dec 7 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 201,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/07/mast-everett-december-meeting-zpte6q",
+        "name": "MAsT: Everett December Meeting",
+        "start": "2026-12-07",
+        "end": "2026-12-08",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Dec 7 – 9 · Mon 10:00 PM – Wed 12:00 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 39,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/07/view-from-the-top-support-for-d-types-lvgs7e",
+        "name": "\"View From the Top\" -Support for D-types",
+        "start": "2026-12-07",
+        "end": "2026-12-07",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Mon, Dec 7 at 10:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 24,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/07/12-7-society-of-janus-bizmeet-now-fully-virtual-ig773x",
+        "name": "12/7 Society of Janus Bizmeet - now FULLY VIRTUAL",
+        "start": "2026-12-07",
+        "end": "2026-12-07",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Mon, Dec 7 at 10:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 8,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/12/08/center-city-munch-covtxp",
@@ -11060,7 +17902,8 @@ var EVENTS = [
         "venue": "Hard Rock",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 147,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/08/nj-diaper-peeps-december-munch-ah7wyl",
@@ -11073,7 +17916,8 @@ var EVENTS = [
         "venue": "Houlihan's Paramus (Mezzanine Level - All to Ourselves)",
         "city": "Paramus, New Jersey, United States",
         "rsvps": 142,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/08/lwp-s-monthly-rope-share-7vzfai",
@@ -11086,7 +17930,8 @@ var EVENTS = [
         "venue": "The Venue",
         "city": "Bethlehem, Pennsylvania, United States",
         "rsvps": 50,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/08/hudson-valley-miscellaneous-munch-luwm3g",
@@ -11099,7 +17944,8 @@ var EVENTS = [
         "venue": "To be given in private DM after RSVP closing date",
         "city": "Newburgh, New York, United States",
         "rsvps": 26,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/08/mast-clifton-december-2026-munch-phjzj3",
@@ -11112,7 +17958,8 @@ var EVENTS = [
         "venue": "UNO Pizzeria & Grill",
         "city": "Clifton, New Jersey, United States",
         "rsvps": 9,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/08/tethered-tuesday-philly-s-weekly-rope-community-lab-19whha",
@@ -11125,7 +17972,8 @@ var EVENTS = [
         "venue": "The Nest",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 17,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/08/shibari-figure-drawing-6l3t2q",
@@ -11138,7 +17986,8 @@ var EVENTS = [
         "venue": "The Sewing Factory - Exact Address revealed upon ticket purchase closer to the event",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 6,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/08/the-poughkeepsie-munch-3x7mpi",
@@ -11151,7 +18000,8 @@ var EVENTS = [
         "venue": "Palace Diner",
         "city": "Poughkeepsie, New York, United States",
         "rsvps": 19,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/08/midtown-rope-share-tuesday-12-08-7-9pm-irtbxe",
@@ -11164,7 +18014,8 @@ var EVENTS = [
         "venue": null,
         "city": "Manhattan, New York, United States",
         "rsvps": 30,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/08/toking-it-tuesday-s-33pmcx",
@@ -11177,7 +18028,8 @@ var EVENTS = [
         "venue": "Lick Manor",
         "city": "Melville, New York, United States",
         "rsvps": 94,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/08/delco-drinks-munch-december-2026-r2rqqm",
@@ -11190,7 +18042,8 @@ var EVENTS = [
         "venue": "Casey's Ridley Park",
         "city": "Ridley Park, Pennsylvania, United States",
         "rsvps": 17,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/08/queer-massage-magic-a-tantric-bi-pansexual-experience-f97yuo",
@@ -11203,7 +18056,8 @@ var EVENTS = [
         "venue": "Address given in email confirmation. Please contact us if paying at door.",
         "city": "New York City, New York, United States",
         "rsvps": 13,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/08/kinky-quizo-munch-at-prism-holiday-edition-sjjbjk",
@@ -11216,7 +18070,8 @@ var EVENTS = [
         "venue": "Prism ~ Please reach out privately if unfamiliar with our location. Arts District",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 96,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/08/secret-pleasures-tuesday-titties-tushies-party-8pm-to-12am-hbxjjq",
@@ -11229,7 +18084,218 @@ var EVENTS = [
         "venue": "Secret Pleasures at the Back Door of the Wi Fi Cafe",
         "city": "Emmaus, Pennsylvania, United States",
         "rsvps": 80,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/08/kink-is-political-restraint-wqt5vb",
+        "name": "Kink is Political – Restraint",
+        "start": "2026-12-08",
+        "end": "2026-12-08",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Dec 8 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 50,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/08/en-ligne-ne-pas-jouer-avec-la-nourriture-z2lhhn",
+        "name": "EN LIGNE (Ne pas) Jouer avec la nourriture",
+        "start": "2026-12-08",
+        "end": "2026-12-08",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Dec 8 at 1:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 9,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/08/en-ligne-toucher-geni-t-al-partie-1-6iou68",
+        "name": "EN LIGNE Toucher Géni(t)al partie 1",
+        "start": "2026-12-08",
+        "end": "2026-12-08",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Dec 8 at 1:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 4,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/08/tying-for-hypermobility-heds-bgsfcs",
+        "name": "Tying for hypermobility/hEDS",
+        "start": "2026-12-08",
+        "end": "2026-12-08",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Dec 8 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 38,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/08/le-salon-de-deesse-aume-le-pouvoir-des-bas-et-des-collants-flkbun",
+        "name": "LE SALON DE DÉESSE AUME — LE POUVOIR DES BAS ET DES COLLANTS",
+        "start": "2026-12-08",
+        "end": "2026-12-08",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Tue, Dec 8 at 3:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 70,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/08/religious-trauma-and-sexuality-glmasq",
+        "name": "Religious Trauma and Sexuality",
+        "start": "2026-12-08",
+        "end": "2026-12-08",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Tue, Dec 8 at 6:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 127,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/08/virtual-smut-slam-open-mic-n71dki",
+        "name": "[virtual] SMUT Slam: Open Mic",
+        "start": "2026-12-08",
+        "end": "2026-12-08",
+        "category": "Social",
+        "cost": null,
+        "when": "Tue, Dec 8 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 2,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/08/holiday-virtual-munch-ohvl2x",
+        "name": "Holiday Virtual Munch",
+        "start": "2026-12-08",
+        "end": "2026-12-08",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Tue, Dec 8 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 11,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/08/femmes-burning-flowers-seshhh-now-on-tuesdays-bgaci0",
+        "name": "FEMMES Burning Flowers Seshhh -Now on Tuesdays!",
+        "start": "2026-12-08",
+        "end": "2026-12-08",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Tue, Dec 8 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 5,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/08/meap-babysitters-club-bdtyhi",
+        "name": "MEAP BABYSITTERS CLUB!",
+        "start": "2026-12-08",
+        "end": "2026-12-08",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Tue, Dec 8 at 7:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 17,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/08/online-primal-support-group-topic-staying-primal-through-stress-e0wx4p",
+        "name": "ONLINE: Primal Support Group - Topic: Staying Primal Through Stress",
+        "start": "2026-12-08",
+        "end": "2026-12-08",
+        "category": "Social",
+        "cost": null,
+        "when": "Tue, Dec 8 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 72,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/08/online-pleasure-on-the-edge-tease-denial-orgasm-control-akqiqx",
+        "name": "ONLINE: Pleasure on the Edge: Tease, Denial, & Orgasm Control",
+        "start": "2026-12-08",
+        "end": "2026-12-08",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Dec 8 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 250,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/08/online-class-trauma-informed-topping-rutmyc",
+        "name": "ONLINE CLASS: Trauma-Informed Topping",
+        "start": "2026-12-08",
+        "end": "2026-12-08",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Dec 8 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 177,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/08/let-s-talk-poly-enm-09lylf",
+        "name": "Let's Talk Poly/ENM",
+        "start": "2026-12-08",
+        "end": "2026-12-08",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Tue, Dec 8 at 9:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 10,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/08/kinky-book-club-virtual-discussion-november-december-the-art-of-giving-and-receiving-4vtw1h",
+        "name": "Kinky Book Club Virtual Discussion November/December: The Art of Giving and Receiving",
+        "start": "2026-12-08",
+        "end": "2026-12-08",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Tue, Dec 8 at 10:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 20,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/12/09/breakfast-and-head-play-and-gang-bang-party-10am-3pm-rsvp-now-and-get-10-off-entry-fee-yj3qmw",
@@ -11242,7 +18308,8 @@ var EVENTS = [
         "venue": "Sinners Paradise Club",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 23,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/09/secret-pleasures-lunchtime-play-party-12pm-to-3pm-xmpv7x",
@@ -11255,7 +18322,8 @@ var EVENTS = [
         "venue": "Secret Pleasures is at the Back Door of the Wi Fi Cafe",
         "city": "Emmaus, Pennsylvania, United States",
         "rsvps": 89,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/09/middletown-de-munch-12-9-26-kjzhwc",
@@ -11268,7 +18336,8 @@ var EVENTS = [
         "venue": "Buffalo Wild Wings",
         "city": "Middletown, Delaware, United States",
         "rsvps": 18,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/09/mink-munch-wednesday-december-9-2026-6oybwm",
@@ -11280,8 +18349,9 @@ var EVENTS = [
         "when": "Wed, Dec 9 at 6:00 PM",
         "venue": "Artifice Ales and Mead",
         "city": "Manheim, Pennsylvania, United States",
-        "rsvps": 12,
-        "image": null
+        "rsvps": 19,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/09/smutty-saloon-6j752t",
@@ -11294,7 +18364,8 @@ var EVENTS = [
         "venue": "Book Club",
         "city": "New York City, New York, United States",
         "rsvps": 54,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/09/simply-social-by-smitten-e77ipc",
@@ -11307,7 +18378,8 @@ var EVENTS = [
         "venue": "Jake’s Saloon",
         "city": "Manhattan, New York, United States",
         "rsvps": 36,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/09/poly-connections-intimacy-lab-xs4ait",
@@ -11320,7 +18392,8 @@ var EVENTS = [
         "venue": "Address given in email confirmation. Please contact us if paying at door.",
         "city": "New York City, New York, United States",
         "rsvps": 21,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/09/dominant-round-table-trust-vulnerability-kov3mm",
@@ -11333,7 +18406,8 @@ var EVENTS = [
         "venue": "The Venue",
         "city": "Bethlehem, Pennsylvania, United States",
         "rsvps": 34,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/09/wednesday-night-pole-jam-g9uzxp",
@@ -11346,7 +18420,8 @@ var EVENTS = [
         "venue": "The Kink Lair",
         "city": "Scranton, Pennsylvania, United States",
         "rsvps": 66,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/09/open-mic-and-karaoke-at-prism-december-edition-yibgw9",
@@ -11359,7 +18434,8 @@ var EVENTS = [
         "venue": "Prism ~ Please reach out if you're unfamiliar with our address • Arts District",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 115,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/09/wed-dec-9-2026-lics-weekly-wednesday-slosh-wegtxc",
@@ -11372,7 +18448,8 @@ var EVENTS = [
         "venue": "Mr. Beery's",
         "city": "Bethpage, New York, United States",
         "rsvps": 22,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/09/sinners-paradise-presents-blackout-wacky-wednesdays-25-all-night-after-party-included-xnatls",
@@ -11385,7 +18462,218 @@ var EVENTS = [
         "venue": "Sinners Paradise Club",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 22,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/09/fuck-around-and-find-out-bratting-and-brat-taming-ies0n7",
+        "name": "Fuck Around and Find Out: Bratting and Brat Taming",
+        "start": "2026-12-09",
+        "end": "2026-12-09",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Dec 9 at 1:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 46,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/09/online-fesseltreff-des-hasenstalls-secret56-m9waim",
+        "name": "Online-Fesseltreff des Hasenstalls & Secret56",
+        "start": "2026-12-09",
+        "end": "2026-12-09",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Wed, Dec 9 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 9,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/09/degradation-play-101-with-skeleton_bitch-a3wft4",
+        "name": "Degradation Play 101 with @Skeleton_Bitch",
+        "start": "2026-12-09",
+        "end": "2026-12-09",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Wed, Dec 9 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 24,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/09/virtual-chaotic-attraction-what-the-hell-ygptlk",
+        "name": "[Virtual] Chaotic Attraction: What the Hell?!",
+        "start": "2026-12-09",
+        "end": "2026-12-09",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Dec 9 at 6:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 66,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/09/do-you-feel-me-exploring-empathy-ngx8mk",
+        "name": "Do You Feel Me? (Exploring Empathy)",
+        "start": "2026-12-09",
+        "end": "2026-12-09",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Dec 9 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 106,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/09/shibari-for-suspension-series-soft-skills-4-rope-styles-japanese-terminology-and-journaling-qp3t0b",
+        "name": "Shibari for Suspension series, soft skills 4: rope styles, Japanese terminology, and journaling",
+        "start": "2026-12-09",
+        "end": "2026-12-09",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Dec 9 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 2,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/09/dujava-virtual-munch-12-09-2026-mgfkd9",
+        "name": "DuJava Virtual Munch - 12/09/2026",
+        "start": "2026-12-09",
+        "end": "2026-12-09",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Wed, Dec 9 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 1,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/09/protocols-ritual-and-ceremony-with-akasha-eden-ac6e8y",
+        "name": "Protocols, Ritual, and Ceremony with Akasha Eden",
+        "start": "2026-12-09",
+        "end": "2026-12-09",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Dec 9 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 41,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/09/cjlc-presents-the-librarian-speaks-dcybgj",
+        "name": "CJLC Presents: The Librarian Speaks",
+        "start": "2026-12-09",
+        "end": "2026-12-09",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Dec 9 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 60,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/09/monthly-support-group-for-mono-poly-relationships-npmva2",
+        "name": "Monthly Support Group for Mono/Poly Relationships",
+        "start": "2026-12-09",
+        "end": "2026-12-09",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Dec 9 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 4,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/09/play-party-protocol-etiquette-for-parties-dungeons-events-qn10in",
+        "name": "Play Party Protocol: Etiquette for Parties, Dungeons & Events",
+        "start": "2026-12-09",
+        "end": "2026-12-09",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Dec 9 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 11,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/09/polyam-parenting-community-group-d3axuc",
+        "name": "Polyam Parenting Community Group",
+        "start": "2026-12-09",
+        "end": "2026-12-09",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Wed, Dec 9 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 2,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/09/open-military-justice-reform-action-network-xgbknx",
+        "name": "OPEN Military Justice Reform - Action Network",
+        "start": "2026-12-09",
+        "end": "2026-12-09",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Wed, Dec 9 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 31,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/09/online-blasphemy-religious-play-with-the-lady-v-jy9db4",
+        "name": "ONLINE: Blasphemy & Religious Play with The Lady V",
+        "start": "2026-12-09",
+        "end": "2026-12-09",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Dec 9 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 167,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/09/deprogramming-online-discussion-group-annual-review-townhall-uwo6zj",
+        "name": "DEPROGRAMMING Online Discussion Group - Annual Review Townhall",
+        "start": "2026-12-09",
+        "end": "2026-12-09",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Wed, Dec 9 at 9:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 33,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/12/10/south-jersey-craft-munch-december-2026-vgfeka",
@@ -11398,7 +18686,8 @@ var EVENTS = [
         "venue": "falcon diner",
         "city": "Brooklawn, New Jersey, United States",
         "rsvps": 44,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/10/crave-munch-december-w7wkds",
@@ -11411,7 +18700,8 @@ var EVENTS = [
         "venue": "Prism",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 26,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/10/the-jersey-city-december-holiday-munch-end-the-year-right-16tliu",
@@ -11424,7 +18714,8 @@ var EVENTS = [
         "venue": "Zeppelin Hall",
         "city": "Jersey City, New York, United States",
         "rsvps": 61,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/10/mischief-rope-salon-december-2026-abdcae",
@@ -11437,7 +18728,8 @@ var EVENTS = [
         "venue": null,
         "city": "Wharton, New Jersey, United States",
         "rsvps": 18,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/10/moved-to-december-due-to-storm-millennials-munch-ages-28-45-age-restricted-event-quox9m",
@@ -11450,7 +18742,8 @@ var EVENTS = [
         "venue": null,
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 136,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/10/philly-ageplay-clubhouse-december-holiday-party-82bf2x",
@@ -11463,7 +18756,8 @@ var EVENTS = [
         "venue": "The Nest",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 46,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/10/kip-december-munch-kpitlj",
@@ -11476,7 +18770,8 @@ var EVENTS = [
         "venue": "Perkins",
         "city": "Buckhorn, Pennsylvania, United States",
         "rsvps": 41,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/10/sensual-rope-play-yil7yn",
@@ -11489,7 +18784,8 @@ var EVENTS = [
         "venue": "Less Dead Studio",
         "city": "Poughkeepsie, New York, United States",
         "rsvps": 36,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/10/queens-poly-mixer-yehndg",
@@ -11502,7 +18798,8 @@ var EVENTS = [
         "venue": "Solid State",
         "city": "Queens, New York, United States",
         "rsvps": 16,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/10/scarlet-lab-s-4nication-thursday-after-work-swingers-play-party-xzhpdq",
@@ -11515,7 +18812,8 @@ var EVENTS = [
         "venue": "3rd Floor",
         "city": "New York City, New York, United States",
         "rsvps": 33,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/10/tes-in-person-building-trust-nrgcqw",
@@ -11528,7 +18826,8 @@ var EVENTS = [
         "venue": "LGBT Community Center",
         "city": "New York City, New York, United States",
         "rsvps": 25,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/10/secret-pleasures-thirsty-thursday-gangbang-party-8pm-to-12am-d9zpa1",
@@ -11541,7 +18840,8 @@ var EVENTS = [
         "venue": "Secret Pleasures at the Back Door of the Wi Fi Cafe",
         "city": "Emmaus, Pennsylvania, United States",
         "rsvps": 97,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/10/kinky-karaoke-disney-after-dark-bfrfpx",
@@ -11554,7 +18854,8 @@ var EVENTS = [
         "venue": "Pagan's Paradise",
         "city": "New York City, New York, United States",
         "rsvps": 28,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/10/femmefever-big-holiday-party-684izl",
@@ -11567,7 +18868,8 @@ var EVENTS = [
         "venue": "Cancun Private Party Venue Hicksville",
         "city": "Hicksville, New York, United States",
         "rsvps": 161,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/10/gang-bang-night-in-paradise-a-thursday-night-of-pure-ecstasy-rsvp-now-and-get-10-off-entree-fee-ouyirb",
@@ -11580,7 +18882,232 @@ var EVENTS = [
         "venue": "Sinners Paradise Club",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 23,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/10/breath-play-with-ropes-udwzog",
+        "name": "Breath Play with Ropes",
+        "start": "2026-12-10",
+        "end": "2026-12-10",
+        "category": "Educational",
+        "cost": null,
+        "when": "Thu, Dec 10 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 63,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/10/power-exchange-im-alltag-online-workshop-hpad1d",
+        "name": "Power Exchange im Alltag – ONLINE WORKSHOP",
+        "start": "2026-12-10",
+        "end": "2026-12-10",
+        "category": "Educational",
+        "cost": null,
+        "when": "Thu, Dec 10 at 1:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 2,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/10/the-ghost-uplink-private-pov-access-l9gwbi",
+        "name": "THE GHOST UPLINK: Private POV Access",
+        "start": "2026-12-10",
+        "end": "2026-12-10",
+        "category": "BDSM Party",
+        "cost": null,
+        "when": "Thu, Dec 10 at 5:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 2,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/10/o-w-a-l-older-women-in-alternative-lifestyles-video-required-e1czhu",
+        "name": "O.W.A.L - Older Women in Alternative Lifestyles (Video Required)",
+        "start": "2026-12-10",
+        "end": "2026-12-10",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Thu, Dec 10 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 17,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/10/pk-ageplay-and-trauma-hjbg8u",
+        "name": "PK: Ageplay and Trauma",
+        "start": "2026-12-10",
+        "end": "2026-12-10",
+        "category": "Educational",
+        "cost": null,
+        "when": "Thu, Dec 10 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 241,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/10/december-virtual-rope-bottom-roundtable-5ale6p",
+        "name": "December Virtual Rope Bottom Roundtable",
+        "start": "2026-12-10",
+        "end": "2026-12-10",
+        "category": "Educational",
+        "cost": null,
+        "when": "Thu, Dec 10 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 67,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/10/the-elusive-g-spot-and-the-secrets-to-squirting-class-oclbo8",
+        "name": "The Elusive G-spot and the Secrets to Squirting Class",
+        "start": "2026-12-10",
+        "end": "2026-12-10",
+        "category": "Educational",
+        "cost": null,
+        "when": "Thu, Dec 10 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 25,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/10/kink-entrepreneurs-workshop-kn8kjk",
+        "name": "Kink Entrepreneurs Workshop",
+        "start": "2026-12-10",
+        "end": "2026-12-10",
+        "category": "Educational",
+        "cost": null,
+        "when": "Thu, Dec 10 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 8,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/10/emotional-cpr-part-1-framework-101-ikbukn",
+        "name": "Emotional CPR - Part 1: Framework 101",
+        "start": "2026-12-10",
+        "end": "2026-12-10",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Thu, Dec 10 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 11,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/10/blushing-pixie-s-kinky-hearts-club-munch-nwratg",
+        "name": "Blushing Pixie's Kinky Hearts Club Munch",
+        "start": "2026-12-10",
+        "end": "2026-12-10",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Thu, Dec 10 at 7:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 6,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/10/k-e-a-n-canada-events-foundations-forum-the-anatomy-of-a-great-scene-prsq9f",
+        "name": "K-E-A-N Canada Events - Foundations Forum- The Anatomy of a Great Scene",
+        "start": "2026-12-10",
+        "end": "2026-12-10",
+        "category": "Educational",
+        "cost": null,
+        "when": "Thu, Dec 10 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": null,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/10/online-a-loving-release-ending-a-dynamic-with-care-with-sarai-61q3t5",
+        "name": "ONLINE: A Loving Release: Ending A Dynamic With Care with Sarai",
+        "start": "2026-12-10",
+        "end": "2026-12-10",
+        "category": "Educational",
+        "cost": null,
+        "when": "Thu, Dec 10 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 188,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/10/virtual-bliss-briefings-presents-community-unpacked-session-9-the-art-of-leaving-bofgmo",
+        "name": "Virtual Bliss Briefings Presents~ Community Unpacked-Session 9-The Art of Leaving",
+        "start": "2026-12-10",
+        "end": "2026-12-10",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Thu, Dec 10 at 9:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 7,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/10/virtual-bliss-briefings-presents-community-unpacked-session-11-when-harm-happens-53ayg4",
+        "name": "Virtual Bliss Briefings Presents~ Community Unpacked-Session 11-When Harm Happens",
+        "start": "2026-12-10",
+        "end": "2026-12-10",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Thu, Dec 10 at 9:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 7,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/10/online-international-gender-adventurers-december-10th-zoom-hemjdl",
+        "name": "ONLINE International Gender Adventurers December 10th Zoom",
+        "start": "2026-12-10",
+        "end": "2026-12-10",
+        "category": "Other",
+        "cost": null,
+        "when": "Thu, Dec 10 at 10:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 34,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/10/supportive-growth-circle-for-ownership-oriented-s-types-visioning-goal-setting-for-2027-djq0zf",
+        "name": "Supportive Growth Circle for Ownership Oriented s-types: visioning & goal setting for 2027",
+        "start": "2026-12-10",
+        "end": "2026-12-10",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Thu, Dec 10 at 10:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 36,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/12/11/black-daddy-con-b1undn",
@@ -11593,7 +19120,8 @@ var EVENTS = [
         "venue": "BBC Center",
         "city": "Manhattan, New York, United States",
         "rsvps": 38,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/11/the-curious-gentleman-tgiyzb",
@@ -11606,7 +19134,8 @@ var EVENTS = [
         "venue": "The Venue",
         "city": "Bethlehem, Pennsylvania, United States",
         "rsvps": 36,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/11/whoring-male-slave-ass-licking-training-3s7dgg",
@@ -11619,7 +19148,8 @@ var EVENTS = [
         "venue": "Farmingdale Motel - Address to be provided",
         "city": "Farmingdale, New York, United States",
         "rsvps": 2,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/11/queer-munch-south-december-t5x8ib",
@@ -11632,7 +19162,8 @@ var EVENTS = [
         "venue": "Bridgeport Pride Center",
         "city": "Bridgeport, Connecticut, United States",
         "rsvps": 22,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/11/happy-hour-hangout-6mfmfj",
@@ -11645,7 +19176,8 @@ var EVENTS = [
         "venue": "Miller's Alehouse",
         "city": "Allentown, Pennsylvania, United States",
         "rsvps": 35,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/11/movie-night-at-the-playground-wutt4g",
@@ -11658,7 +19190,8 @@ var EVENTS = [
         "venue": "The Venue",
         "city": "Bethlehem, Pennsylvania, United States",
         "rsvps": 58,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/11/rope-share-jam-neon-suspension-edition-cndbuj",
@@ -11671,7 +19204,8 @@ var EVENTS = [
         "venue": "The Church",
         "city": "New Paltz, New York, United States",
         "rsvps": 77,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/11/femme-friday-munch-a-sapphic-social-ccq9um",
@@ -11684,7 +19218,8 @@ var EVENTS = [
         "venue": "Between the Veil",
         "city": "Monroe, Connecticut, United States",
         "rsvps": 43,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/11/all-tied-up-for-the-holiday-west-xvuf3p",
@@ -11697,7 +19232,8 @@ var EVENTS = [
         "venue": "Iron Monkey Strength",
         "city": "Franklin Square, New York, United States",
         "rsvps": 27,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/11/melanin-entertainment-naughty-list-1texen",
@@ -11710,33 +19246,8 @@ var EVENTS = [
         "venue": "Brivado Cigars- Event Space",
         "city": "Orange, New Jersey, United States",
         "rsvps": 63,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/12/11/tsecretsociety-presents-aog9op",
-        "name": "Tsecretsociety Presents",
-        "start": "2026-12-11",
-        "end": "2026-12-14",
-        "category": "Sex Party",
-        "cost": null,
-        "when": "Dec 11 – 14 · Fri 11:00 PM – Mon 7:00 AM",
-        "venue": "n/a",
-        "city": "Philadelphia, Pennsylvania, United States",
-        "rsvps": 30,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/12/11/philly-hoe-down-t3t32p",
-        "name": "PHILLY HOE DOWN",
-        "start": "2026-12-11",
-        "end": "2026-12-14",
-        "category": "Sex Party",
-        "cost": null,
-        "when": "Dec 11 – 14 · Fri 11:30 PM – Mon 8:00 AM",
-        "venue": "PHILLY",
-        "city": "Philadelphia, Pennsylvania, United States",
-        "rsvps": 13,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/11/drive-in-old-school-porn-movie-night-at-the-nest-4llpw0",
@@ -11749,7 +19260,8 @@ var EVENTS = [
         "venue": "The Nest",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 195,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/11/diaper-debauchery-a-diapers-kink-fetish-open-play-party-3uomld",
@@ -11762,7 +19274,8 @@ var EVENTS = [
         "venue": "Studio125",
         "city": "Manhattan, New York, United States",
         "rsvps": 16,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/11/the-power-of-control-a-cf-nm-holiday-party-jfmetr",
@@ -11775,7 +19288,8 @@ var EVENTS = [
         "venue": "Address Given Within Ticket Confirmation Email",
         "city": "Queens, New York, United States",
         "rsvps": 122,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/11/garden-of-eden-vi-the-feminine-renaissance-kinky-costume-party-all-genders-welcome-wrpeae",
@@ -11788,7 +19302,8 @@ var EVENTS = [
         "venue": "Prism Arts",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 199,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/11/garden-of-eden-immersive-kinky-party-experience-all-genders-welcome-h8nf3h",
@@ -11801,7 +19316,8 @@ var EVENTS = [
         "venue": "Prism ~ Please reach out if unfamiliar with our location. Arts District",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 171,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/11/mocha-xxxmas-naughty-freaky-12-11-26-pgawqw",
@@ -11814,7 +19330,36 @@ var EVENTS = [
         "venue": null,
         "city": "Port Deposit, Maryland, United States",
         "rsvps": 78,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/11/tsecretsociety-presents-aog9op",
+        "name": "Tsecretsociety Presents",
+        "start": "2026-12-11",
+        "end": "2026-12-14",
+        "category": "Sex Party",
+        "cost": null,
+        "when": "Dec 11 – 14 · Fri 11:00 PM – Mon 7:00 AM",
+        "venue": "n/a",
+        "city": "Philadelphia, Pennsylvania, United States",
+        "rsvps": 30,
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/11/philly-hoe-down-t3t32p",
+        "name": "PHILLY HOE DOWN",
+        "start": "2026-12-11",
+        "end": "2026-12-14",
+        "category": "Sex Party",
+        "cost": null,
+        "when": "Dec 11 – 14 · Fri 11:30 PM – Mon 8:00 AM",
+        "venue": "PHILLY",
+        "city": "Philadelphia, Pennsylvania, United States",
+        "rsvps": 13,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/11/secret-pleasures-stockings-and-heels-party-d3ynz7",
@@ -11827,7 +19372,8 @@ var EVENTS = [
         "venue": "Secret Pleasures is at the Back Door of the Wi Fi Cafe",
         "city": "Emmaus, Pennsylvania, United States",
         "rsvps": 107,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/11/lip-service-pansexual-makeout-party-a4n6cr",
@@ -11840,7 +19386,8 @@ var EVENTS = [
         "venue": "Gemini & Scorpio Loft",
         "city": "Brooklyn, New York, United States",
         "rsvps": 52,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/11/kink-night-kingston-festive-bbfkpb",
@@ -11853,7 +19400,8 @@ var EVENTS = [
         "venue": "Unicorn Bar",
         "city": "Kingston, New York, United States",
         "rsvps": 28,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/11/heaux-heaux-heaux-l-a-very-merry-cabin-affair-uj5z2b",
@@ -11866,7 +19414,8 @@ var EVENTS = [
         "venue": "Cabins",
         "city": "Vernon, New Jersey, United States",
         "rsvps": 85,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/11/medusas-playhouse-presents-fantasy-fridays-open-to-all-couples-and-singles-males-females-couples-z7gtnf",
@@ -11879,7 +19428,8 @@ var EVENTS = [
         "venue": "MEDUSAS PLAYHOUSE",
         "city": "West Babylon, New York, United States",
         "rsvps": 20,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/11/birthday-bottom-boy-hotel-y3ylwh",
@@ -11892,7 +19442,8 @@ var EVENTS = [
         "venue": null,
         "city": "Linden, New Jersey, United States",
         "rsvps": 1,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/11/i-candy-a-sinners-paradise-presentation-rsvp-and-get-in-free-dp7gex",
@@ -11905,7 +19456,8 @@ var EVENTS = [
         "venue": "Sinners Paradise Club",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 26,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/11/heaux-heaux-heaux-a-very-merry-cabin-affair-doygfw",
@@ -11918,7 +19470,148 @@ var EVENTS = [
         "venue": "New Jersey Cabins",
         "city": "Vernon, New Jersey, United States",
         "rsvps": 44,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/11/online-workshop-bdsm-fur-einsteiger-hpp17q",
+        "name": "Online-Workshop: BDSM für Einsteiger",
+        "start": "2026-12-11",
+        "end": "2026-12-12",
+        "category": "Educational",
+        "cost": null,
+        "when": "Dec 11 – 12 · Fri 4:00 AM – Sat 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 1,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/11/les-louves-_-cercle-de-parole-prodom_-faire-respecter-nos-limites-cixzcm",
+        "name": "LES LOUVES _ Cercle de parole prodom_ Faire respecter nos limites",
+        "start": "2026-12-11",
+        "end": "2026-12-11",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Fri, Dec 11 at 8:00 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 4,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/11/coworking-hours-34w1bk",
+        "name": "Coworking Hours",
+        "start": "2026-12-11",
+        "end": "2026-12-11",
+        "category": "Social",
+        "cost": null,
+        "when": "Fri, Dec 11 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 4,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/11/reimagining-connection-what-is-relationship-anarchy-f6f3a3",
+        "name": "Reimagining Connection – What is Relationship Anarchy?",
+        "start": "2026-12-11",
+        "end": "2026-12-11",
+        "category": "Educational",
+        "cost": null,
+        "when": "Fri, Dec 11 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 22,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/11/giving-people-their-first-sharps-and-blood-experiences-with-ember-solaris-jiv5us",
+        "name": "Giving People Their First Sharps and Blood Experiences with Ember Solaris",
+        "start": "2026-12-11",
+        "end": "2026-12-11",
+        "category": "Educational",
+        "cost": null,
+        "when": "Fri, Dec 11 at 6:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 236,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/11/sensual-flow-workshop-virtual-fomvzt",
+        "name": "Sensual Flow Workshop (Virtual)",
+        "start": "2026-12-11",
+        "end": "2026-12-11",
+        "category": "Educational",
+        "cost": null,
+        "when": "Fri, Dec 11 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 16,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/11/online-submissive-guide-bdsm-topic-watch-party-beyond-aftercare-pre-care-self-care-recovery-vo4sx9",
+        "name": "ONLINE - Submissive Guide BDSM Topic Watch Party! - Beyond Aftercare: Pre-care, Self-care & Recovery",
+        "start": "2026-12-11",
+        "end": "2026-12-11",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Fri, Dec 11 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 124,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/11/dymy-community-event-who-did-it-naught-or-nice-edition-yugqas",
+        "name": "DYMY Community Event - Who Did It?: Naught or Nice Edition",
+        "start": "2026-12-11",
+        "end": "2026-12-11",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Fri, Dec 11 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 4,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/11/munch-virtual-2pe6s7",
+        "name": "Munch Virtual!!!!",
+        "start": "2026-12-11",
+        "end": "2026-12-11",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Fri, Dec 11 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 8,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/11/isolation-storytime-afterparty-2026-12-11-oid8bo",
+        "name": "Isolation Storytime Afterparty - 2026-12-11",
+        "start": "2026-12-11",
+        "end": "2026-12-11",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Fri, Dec 11 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 2,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/freaks-on-foot-a-weekly-walking-social-gifb1h",
@@ -11931,7 +19624,8 @@ var EVENTS = [
         "venue": "Gring's Mill Recreation Area",
         "city": "Wyomissing, Pennsylvania, United States",
         "rsvps": 10,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/kpid-members-only-yuletide-at-parf-jcmg3r",
@@ -11944,7 +19638,8 @@ var EVENTS = [
         "venue": "Pa Renaissance Faire",
         "city": "Manheim, Pennsylvania, United States",
         "rsvps": 26,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/the-tantra-and-sexual-health-women-8u4zhg",
@@ -11957,7 +19652,8 @@ var EVENTS = [
         "venue": "Center City Breathe",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 5,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/beginner-rope-intensive-12-12-xva2rs",
@@ -11970,7 +19666,8 @@ var EVENTS = [
         "venue": "Coil & Cord Studio",
         "city": "New York City, New York, United States",
         "rsvps": 19,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/c-c-yule-tide-brunch-8af2py",
@@ -11983,7 +19680,8 @@ var EVENTS = [
         "venue": null,
         "city": "Lancaster, Pennsylvania, United States",
         "rsvps": 6,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/lv-little-scouts-december-6vuc0w",
@@ -11996,7 +19694,8 @@ var EVENTS = [
         "venue": null,
         "city": "Allentown, Pennsylvania, United States",
         "rsvps": 1,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/shameless-queer-erotic-open-mic-sober-community-showcase-naked-ecstatic-dance-ncvgs7",
@@ -12009,7 +19708,8 @@ var EVENTS = [
         "venue": null,
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 62,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/naked-yoga-new-york-wdwlww",
@@ -12022,7 +19722,8 @@ var EVENTS = [
         "venue": "Address given in email confirmation. Please contact us if paying at door.",
         "city": "New York City, New York, United States",
         "rsvps": 6,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/animated-conversations-dec-26-series-finale-7x02xh",
@@ -12035,7 +19736,8 @@ var EVENTS = [
         "venue": "Less Dead Studio",
         "city": "Poughkeepsie, New York, United States",
         "rsvps": 26,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/coed-day-party-all-gender-uni-sexual-r1o7sr",
@@ -12048,7 +19750,8 @@ var EVENTS = [
         "venue": null,
         "city": "Elizabeth, New Jersey, United States",
         "rsvps": 8,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/rainbow-meeple-december-l0yj1l",
@@ -12061,7 +19764,8 @@ var EVENTS = [
         "venue": "Helen Kate Furness Library",
         "city": "Wallingford, Pennsylvania, United States",
         "rsvps": 6,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/nyc-little-scouts-december-munch-4dldw6",
@@ -12074,7 +19778,8 @@ var EVENTS = [
         "venue": "TBA with confirmed RSVP",
         "city": "New York City, New York, United States",
         "rsvps": 21,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/panera-munch-kihnvz",
@@ -12087,7 +19792,8 @@ var EVENTS = [
         "venue": "Panera Bread",
         "city": "Moosic, Pennsylvania, United States",
         "rsvps": 18,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/kt-s-brat-and-kiddie-camp-take-2-tpgizk",
@@ -12100,7 +19806,8 @@ var EVENTS = [
         "venue": null,
         "city": "Brick, New Jersey, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/the-rockland-munch-saturday-december-12th-2-to-5-pm-stay-later-if-the-vibe-is-right-yrssft",
@@ -12113,7 +19820,8 @@ var EVENTS = [
         "venue": null,
         "city": "New City, New York, United States",
         "rsvps": 29,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/power-exchange-together-of-snj-runf8k",
@@ -12126,7 +19834,8 @@ var EVENTS = [
         "venue": null,
         "city": "West Berlin, New Jersey, United States",
         "rsvps": 31,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/the_lodge-learns-enm-panel-discussion-8qslqr",
@@ -12139,7 +19848,8 @@ var EVENTS = [
         "venue": null,
         "city": "Dover Plains, New York, United States",
         "rsvps": 46,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/energetic-ties-that-bind-6ga6ne",
@@ -12152,7 +19862,8 @@ var EVENTS = [
         "venue": "Less Dead Studio",
         "city": "Poughkeepsie, New York, United States",
         "rsvps": 27,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/get-on-miss-royal-s-naughty-list-zfqlch",
@@ -12165,7 +19876,8 @@ var EVENTS = [
         "venue": "The Kink Lair",
         "city": "Scranton, Pennsylvania, United States",
         "rsvps": 125,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/the-more-the-merrier-samo7g",
@@ -12178,7 +19890,8 @@ var EVENTS = [
         "venue": null,
         "city": "Dover Plains, New York, United States",
         "rsvps": 47,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/xanadu-family-friends-christmas-party-december-12-2025-drkdpl",
@@ -12191,7 +19904,8 @@ var EVENTS = [
         "venue": "TBD",
         "city": "New Jersey, United States",
         "rsvps": 26,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/the-littles-takeover-toy-night-at-the-church-hahxtj",
@@ -12204,7 +19918,8 @@ var EVENTS = [
         "venue": "The Church (Just off the NY state Thruway New Paltz New York)",
         "city": "New Paltz, New York, United States",
         "rsvps": 85,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/geekaholic-december-12th-board-game-munch-w-icebreakers-rotating-bdsm-workshops-nyc-8tayg6",
@@ -12217,7 +19932,8 @@ var EVENTS = [
         "venue": "Prime Produce",
         "city": "Manhattan, New York, United States",
         "rsvps": 40,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/new-hope-pa-hodgepodge-lemzyq",
@@ -12230,7 +19946,8 @@ var EVENTS = [
         "venue": "see description",
         "city": "New Hope, Pennsylvania, United States",
         "rsvps": 13,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/royal-orchids-are-coming-to-wilkes-barre-z1wkjk",
@@ -12243,7 +19960,8 @@ var EVENTS = [
         "venue": "Wilkes-Barre, Pa",
         "city": "Wilkes-Barre, Pennsylvania, United States",
         "rsvps": 39,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/lean-in-let-go-the-sensual-science-of-gentle-control-wjdl4u",
@@ -12256,7 +19974,8 @@ var EVENTS = [
         "venue": "Youtopia Dreamspace",
         "city": "New York City, New York, United States",
         "rsvps": 16,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/the-wild-bunch-presents-mistletoe-mischief-mfhvdi",
@@ -12269,7 +19988,8 @@ var EVENTS = [
         "venue": "Secret Hotel",
         "city": "King of Prussia, Pennsylvania, United States",
         "rsvps": 196,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/the-naked-comedy-show-philadelphia-dqxdgo",
@@ -12282,7 +20002,8 @@ var EVENTS = [
         "venue": "The Velvet Whip",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 37,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/cd-trans-allies-social-wkmd7a",
@@ -12295,7 +20016,8 @@ var EVENTS = [
         "venue": "The Venue",
         "city": "Bethlehem, Pennsylvania, United States",
         "rsvps": 53,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/bare-saturdays-men-male-only-xhnipx",
@@ -12308,7 +20030,8 @@ var EVENTS = [
         "venue": null,
         "city": "Elizabeth, New Jersey, United States",
         "rsvps": 3,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/tkl-bdsm-swinky-party-wlizwa",
@@ -12321,7 +20044,8 @@ var EVENTS = [
         "venue": "The Kink Lair",
         "city": "Scranton, Pennsylvania, United States",
         "rsvps": 106,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/crave-december-edition-ggga7q",
@@ -12334,7 +20058,8 @@ var EVENTS = [
         "venue": null,
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 49,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/sj-d-s-play-party-qqorvl",
@@ -12347,7 +20072,8 @@ var EVENTS = [
         "venue": "The Lodge",
         "city": "West Berlin, New Jersey, United States",
         "rsvps": 20,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/goddess-worship-with-bats-violet-qydxj2",
@@ -12360,7 +20086,8 @@ var EVENTS = [
         "venue": "location given after ticket purchase",
         "city": "Brooklyn, New York, United States",
         "rsvps": 9,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/cheeky-holiday-party-2026-omkpmp",
@@ -12373,7 +20100,8 @@ var EVENTS = [
         "venue": "Cheeky Play Space",
         "city": "Manhattan, New York, United States",
         "rsvps": 180,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/rainbow-mtn-e-strousdburg-pa-holiday-2026-party-t-gurls-cd-s-trans-lbgtq-and-admirers-nqlbus",
@@ -12386,7 +20114,8 @@ var EVENTS = [
         "venue": "Rainbow Mountain Resort",
         "city": "Smithfield Township, Pennsylvania, United States",
         "rsvps": 130,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/amature-porn-star-party-momzob",
@@ -12399,7 +20128,8 @@ var EVENTS = [
         "venue": "Marriot in coatesville",
         "city": "Lancaster, Pennsylvania, United States",
         "rsvps": 1,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/sapphic-flinta-kink-party-sapphrodisia-lvljah",
@@ -12412,7 +20142,8 @@ var EVENTS = [
         "venue": "Address given in email confirmation. Please contact us if paying at door.",
         "city": "New York City, New York, United States",
         "rsvps": 57,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/mysthickmas-the-naughty-sweater-edition-zli8io",
@@ -12425,7 +20156,8 @@ var EVENTS = [
         "venue": null,
         "city": "Brooklyn, New York, United States",
         "rsvps": 21,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/kariz-mas-christmas-party-1impq2",
@@ -12438,7 +20170,8 @@ var EVENTS = [
         "venue": null,
         "city": "Glen Gardner, New Jersey, United States",
         "rsvps": 3,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/hardpoint-happy-holiplay-party-e87zrn",
@@ -12451,7 +20184,8 @@ var EVENTS = [
         "venue": null,
         "city": "New York City, New York, United States",
         "rsvps": 6,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/lydiagrey-s-private-show-fihugh",
@@ -12464,7 +20198,8 @@ var EVENTS = [
         "venue": "NYC",
         "city": "Manhattan, New York, United States",
         "rsvps": 10,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/secret-pleasures-hot-wife-party-kxkvdz",
@@ -12477,7 +20212,8 @@ var EVENTS = [
         "venue": "Secret Pleasures is at the Back Door of the Wi Fi Cafe",
         "city": "Emmaus, Pennsylvania, United States",
         "rsvps": 25,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/hard-fast-and-loud-presents-needful-flings-hail-santa-rnktou",
@@ -12490,7 +20226,8 @@ var EVENTS = [
         "venue": "Saints and Sinners Emery Street Philly",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 74,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/december-kinky-kickback-q0hdqo",
@@ -12503,7 +20240,8 @@ var EVENTS = [
         "venue": "The Nest",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 50,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/cd-trans-allies-play-party-mybj3q",
@@ -12516,7 +20254,8 @@ var EVENTS = [
         "venue": "The Venue",
         "city": "Bethlehem, Pennsylvania, United States",
         "rsvps": 57,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/bisexual-party-for-the-holidays-2rd1ug",
@@ -12529,7 +20268,8 @@ var EVENTS = [
         "venue": "tba",
         "city": "Massapequa Park, New York, United States",
         "rsvps": 25,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/black-santa-2026-she-got-blacked-group-s-xxx-holiday-meet-and-play-party-txvook",
@@ -12542,7 +20282,8 @@ var EVENTS = [
         "venue": "Private Hotel",
         "city": "Edison, New Jersey, United States",
         "rsvps": 22,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/saturday-morning-party-berlin-news-qcihaf",
@@ -12554,8 +20295,9 @@ var EVENTS = [
         "when": "Sat, Dec 12 at 9:30 PM",
         "venue": "Berlin News Agency",
         "city": "West Berlin, New Jersey, United States",
-        "rsvps": 62,
-        "image": null
+        "rsvps": 63,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/sat-12-12-tpp-is-back-for-our-annual-naughty-nice-holiday-ho-ho-ho-party-medusa-playhouse-10-3-cjuppq",
@@ -12568,7 +20310,8 @@ var EVENTS = [
         "venue": "Medusa Playhouse",
         "city": "West Babylon, New York, United States",
         "rsvps": 81,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/12/beginner-sinner-in-paradise-10pm-5am-free-membership-to-all-of-our-newbies-rsvp-now-xl9dsr",
@@ -12581,7 +20324,148 @@ var EVENTS = [
         "venue": "Sinners Paradise Club",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 37,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/12/the-decisive-dominant-online-workshop-x4grv1",
+        "name": "The Decisive Dominant - Online Workshop",
+        "start": "2026-12-12",
+        "end": "2026-12-12",
+        "category": "Educational",
+        "cost": null,
+        "when": "Fri, Dec 11 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 74,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/12/little-scouts-satellite-troop-weekend-meeting-mybj11",
+        "name": "Little Scouts Satellite Troop - Weekend Meeting",
+        "start": "2026-12-12",
+        "end": "2026-12-12",
+        "category": "Social",
+        "cost": null,
+        "when": "Sat, Dec 12 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 14,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/12/passing-wisdom-on-a-bdsm-educator-primer-the-intensive-kbqonw",
+        "name": "Passing Wisdom On: A BDSM Educator Primer (The Intensive)",
+        "start": "2026-12-12",
+        "end": "2026-12-12",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Dec 12 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 142,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/12/consent-and-leadership-8-personal-accountability-for-leadership-il7dva",
+        "name": "Consent and Leadership 8: Personal Accountability for Leadership",
+        "start": "2026-12-12",
+        "end": "2026-12-12",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Dec 12 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 76,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/12/who-s-your-daddy-e66nrh",
+        "name": "Who’s Your Daddy?",
+        "start": "2026-12-12",
+        "end": "2026-12-12",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Dec 12 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 11,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/12/face-needle-play-intensive-and-demo-online-and-recorded-workshop-by-birds-llnzmg",
+        "name": "Face needle play intensive and demo - Online and recorded workshop by Birds",
+        "start": "2026-12-12",
+        "end": "2026-12-12",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Dec 12 at 1:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 50,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/12/online-hypnokink-201-subject-skills-with-faun-wtssoz",
+        "name": "ONLINE: Hypnokink 201: Subject Skills with Faun",
+        "start": "2026-12-12",
+        "end": "2026-12-12",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Dec 12 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 128,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/12/online-byo-structure-strategies-for-navigating-flexibility-in-power-imbalanced-dynamics-5qjc4m",
+        "name": "ONLINE: BYO Structure - Strategies for Navigating Flexibility in Power Imbalanced Dynamics",
+        "start": "2026-12-12",
+        "end": "2026-12-12",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sat, Dec 12 at 4:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 18,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/12/online-threesomes-and-group-play-dynamics-with-mel-memi-k3f2i1",
+        "name": "ONLINE: Threesomes and Group Play Dynamics with Mel & Memi",
+        "start": "2026-12-12",
+        "end": "2026-12-12",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Dec 12 at 5:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 151,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/12/moscow-sparke-virtual-munch-t3h22k",
+        "name": "Moscow SPARKE Virtual Munch",
+        "start": "2026-12-12",
+        "end": "2026-12-12",
+        "category": "Social",
+        "cost": null,
+        "when": "Sat, Dec 12 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 7,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/12/13/ffc-holiday-photo-shootout-unwrapped-phn70j",
@@ -12594,7 +20478,8 @@ var EVENTS = [
         "venue": null,
         "city": "Plymouth Meeting, Pennsylvania, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/13/nj-rope-space-beginner-track-103-friction-hitches-and-knots-vu9suj",
@@ -12607,7 +20492,8 @@ var EVENTS = [
         "venue": "Pride Center of NJ (suite 100)",
         "city": "Highland Park, New Jersey, United States",
         "rsvps": 23,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/13/gagged-for-brunch-a-sunday-daytime-kink-play-party-nsf0vc",
@@ -12620,7 +20506,8 @@ var EVENTS = [
         "venue": null,
         "city": "New York City, New York, United States",
         "rsvps": 72,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/13/nyc-trance-social-fdjiua",
@@ -12633,7 +20520,8 @@ var EVENTS = [
         "venue": "Paris Baguette (31st st & 7th ave)",
         "city": "New York City, New York, United States",
         "rsvps": 16,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/13/nj-rope-space-user-directed-learning-and-practice-space-dgacm0",
@@ -12646,7 +20534,8 @@ var EVENTS = [
         "venue": "The Pride Center of NJ",
         "city": "Highland Park, New Jersey, United States",
         "rsvps": 14,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/13/kinky-asexual-hang-munch-ikjjgo",
@@ -12659,7 +20548,8 @@ var EVENTS = [
         "venue": "Ace Bar",
         "city": "New York City, New York, United States",
         "rsvps": 12,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/13/nyc-hypno-jam-agency-more-or-less-l4tqjh",
@@ -12672,7 +20562,8 @@ var EVENTS = [
         "venue": "TBA on vetting",
         "city": "New York City, New York, United States",
         "rsvps": 16,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/13/monthly-social-pool-party-at-innthrall-for-members-8lbnay",
@@ -12685,7 +20576,8 @@ var EVENTS = [
         "venue": "InnThrall - Your Kinky B&B",
         "city": "Shillington, Pennsylvania, United States",
         "rsvps": 7,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/13/westchester-rope-share-05ru3l",
@@ -12698,7 +20590,8 @@ var EVENTS = [
         "venue": null,
         "city": "Thornwood, New York, United States",
         "rsvps": 59,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/13/pallet-wrap-suspension-and-inversion-lh7nmv",
@@ -12711,7 +20604,8 @@ var EVENTS = [
         "venue": "Less Dead Studio",
         "city": "Poughkeepsie, New York, United States",
         "rsvps": 40,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/13/the-allentown-munch-december-td3bfj",
@@ -12724,7 +20618,8 @@ var EVENTS = [
         "venue": null,
         "city": "Allentown, Pennsylvania, United States",
         "rsvps": 80,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/13/big-cock-club-0cczyn",
@@ -12737,7 +20632,8 @@ var EVENTS = [
         "venue": "NYC",
         "city": "Manhattan, New York, United States",
         "rsvps": 100,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/13/moved-to-sunday-bisexuals-boardgame-night-z9hl0i",
@@ -12750,7 +20646,8 @@ var EVENTS = [
         "venue": null,
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 9,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/13/the-atlantic-county-munch-christmas-edition-3tbm2s",
@@ -12763,7 +20660,8 @@ var EVENTS = [
         "venue": "The Shore Diner",
         "city": "Egg Harbor Township, New Jersey, United States",
         "rsvps": 57,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/13/sinema-club-sex-pos-lgbtq-film-night-unhinged-holigays-tv-specials-n6s2r5",
@@ -12776,7 +20674,302 @@ var EVENTS = [
         "venue": "Gemini & Scorpio Loft",
         "city": "Brooklyn, New York, United States",
         "rsvps": 37,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/13/domming-from-a-distance-with-eljardinero-hispurplerose-mr6cfo",
+        "name": "Domming from a Distance with @ElJardinero & @HisPurpleRose",
+        "start": "2026-12-13",
+        "end": "2026-12-13",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Dec 12 at 5:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 241,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/13/global-online-switch-munch-3-v6wdkq",
+        "name": "Global Online Switch Munch #3",
+        "start": "2026-12-13",
+        "end": "2026-12-13",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Sat, Dec 12 at 5:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 229,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/13/tol-2027-calendar-planning-event-dec-13th-2026-10a-12p-1p-pst-cst-est-knf0qc",
+        "name": "TOL 2027 Calendar Planning Event: DEC 13th, 2026 10a/12p/1p (PST/CST/EST)",
+        "start": "2026-12-13",
+        "end": "2026-12-13",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sun, Dec 13 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 5,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/13/pk-kinking-with-your-headmates-viw3vo",
+        "name": "PK: Kinking with your Headmates",
+        "start": "2026-12-13",
+        "end": "2026-12-13",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Dec 13 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 51,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/13/trans-inclusive-practices-for-organizers-attendees-allies-with-the_lady_v-dhub4c",
+        "name": "Trans* Inclusive Practices for Organizers, Attendees & Allies with @The_Lady_V",
+        "start": "2026-12-13",
+        "end": "2026-12-13",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Dec 13 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 452,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/13/play-piercing-101-online-hybrid-class-live-fu960i",
+        "name": "Play Piercing 101 ONLINE Hybrid Class LIVE!",
+        "start": "2026-12-13",
+        "end": "2026-12-13",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Dec 13 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 33,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/13/online-the-new-relationship-energy-survival-guide-with-sir-panda-3wrvub",
+        "name": "ONLINE: The New Relationship Energy Survival Guide with Sir Panda",
+        "start": "2026-12-13",
+        "end": "2026-12-13",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Dec 13 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 114,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/13/who-s-the-bigger-brat-brat4brat-dynamics-and-play-with-badly-licked-bear-cauoxo",
+        "name": "Who's the Bigger Brat? Brat4Brat Dynamics and Play with Badly Licked Bear",
+        "start": "2026-12-13",
+        "end": "2026-12-13",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Dec 13 at 3:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 10,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/13/suffering-as-a-service-with-martipaige-kcwhcb",
+        "name": "Suffering as a Service with @MartiPaige",
+        "start": "2026-12-13",
+        "end": "2026-12-13",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Dec 13 at 4:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 361,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/13/online-e-stim-devices-with-electro-girly-zkyusy",
+        "name": "ONLINE: E-stim Devices with Electro Girly",
+        "start": "2026-12-13",
+        "end": "2026-12-13",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Dec 13 at 5:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 244,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/13/emergency-medicine-for-kink-online-cvwqne",
+        "name": "Emergency Medicine for Kink (ONLINE)",
+        "start": "2026-12-13",
+        "end": "2026-12-13",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Dec 13 at 5:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 24,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/13/12-13-online-event-newcomers-only-crash-course-2q9laj",
+        "name": "12/13 Online Event: Newcomers-Only Crash Course",
+        "start": "2026-12-13",
+        "end": "2026-12-13",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Dec 13 at 6:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 5,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/13/virtual-class-worship-humiliation-domination-with-master-gushy-kpfq5i",
+        "name": "VIRTUAL CLASS - WORSHIP & HUMILIATION - DOMINATION WITH MASTER GUSHY",
+        "start": "2026-12-13",
+        "end": "2026-12-13",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Dec 13 at 6:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 4,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/13/poc-leather-bdsm-educating-through-service-while-adding-fun-1hs9ey",
+        "name": "POC Leather & BDSM: Educating Through Service While Adding Fun",
+        "start": "2026-12-13",
+        "end": "2026-12-13",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sun, Dec 13 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 85,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/13/the-unclothed-circle-a-nude-optional-virtual-gathering-8ak1g5",
+        "name": "The Unclothed Circle: A Nude-Optional Virtual Gathering",
+        "start": "2026-12-13",
+        "end": "2026-12-13",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Dec 13 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 75,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/13/kinky-and-covid-cautious-munch-jxykuf",
+        "name": "Kinky and Covid Cautious Munch",
+        "start": "2026-12-13",
+        "end": "2026-12-13",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Sun, Dec 13 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 2,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/13/chain-bondage-for-beginners-in-line-single-columns-with-ctw-mister-online-recorded-pxajpp",
+        "name": "Chain Bondage for Beginners: In-Line Single Columns with CTW & Mister| Online + Recorded",
+        "start": "2026-12-13",
+        "end": "2026-12-13",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Dec 13 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 50,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/13/cokc-virtual-movie-night-oeec2x",
+        "name": "COKC virtual movie night",
+        "start": "2026-12-13",
+        "end": "2026-12-13",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Sun, Dec 13 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 5,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/13/virtual-teaching-in-kink-discussion-fzbtxk",
+        "name": "[Virtual] - Teaching in Kink - Discussion",
+        "start": "2026-12-13",
+        "end": "2026-12-13",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sat, Dec 12 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 64,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/13/online-class-the-top-tutor-a-masochist-bottom-s-guide-to-effective-sadism-and-topping-ead11p",
+        "name": "Online Class: The Top Tutor: A Masochist Bottom's Guide To Effective Sadism and Topping.",
+        "start": "2026-12-13",
+        "end": "2026-12-13",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Dec 12 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 513,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/13/devotion-with-direction-intentional-tasking-and-power-recorded-dbjmko",
+        "name": "Devotion with Direction: intentional, tasking, and power (Recorded)",
+        "start": "2026-12-13",
+        "end": "2026-12-13",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Dec 13 at 10:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 35,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/12/14/open-rope-practice-coil-cord-12-14-sjmeyq",
@@ -12789,7 +20982,8 @@ var EVENTS = [
         "venue": "Coil & Cord Studio",
         "city": "Brooklyn, New York, United States",
         "rsvps": 8,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/14/jersey-city-polyam-enm-mixer-bzllpa",
@@ -12802,7 +20996,8 @@ var EVENTS = [
         "venue": "Pet Shop",
         "city": "Jersey City, New York, United States",
         "rsvps": 15,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/14/tnc-holiday-party-qkggl3",
@@ -12815,7 +21010,8 @@ var EVENTS = [
         "venue": null,
         "city": "Newburgh, New York, United States",
         "rsvps": 19,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/14/queer-takeover-munch-pbtvdg",
@@ -12828,7 +21024,8 @@ var EVENTS = [
         "venue": null,
         "city": "Queens, New York, United States",
         "rsvps": 13,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/14/december-central-jersey-poly-kinky-munch-ntkl6q",
@@ -12841,7 +21038,8 @@ var EVENTS = [
         "venue": "Town and Country Diner Bordentown",
         "city": "Bordentown, New Jersey, United States",
         "rsvps": 97,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/14/nomad-events-naughty-nice-holiday-party-swmtzs",
@@ -12854,7 +21052,8 @@ var EVENTS = [
         "venue": null,
         "city": "Media, Pennsylvania, United States",
         "rsvps": 147,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/14/legion-of-sin-philly-december-2026-club-meeting-naaj89",
@@ -12867,7 +21066,8 @@ var EVENTS = [
         "venue": "Pat's Diner",
         "city": "Trenton, New Jersey, United States",
         "rsvps": 8,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/14/rope-yoga-solo-flow-december-edition-kaqntv",
@@ -12880,7 +21080,8 @@ var EVENTS = [
         "venue": "Prism Arts",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 35,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/14/monday-ugly-sweater-moon-munch-yltowr",
@@ -12893,7 +21094,8 @@ var EVENTS = [
         "venue": "The Moon Tavern",
         "city": "Scranton, Pennsylvania, United States",
         "rsvps": 120,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/14/ties-tickle-rope-circus-online-munch-tttbom",
@@ -12906,7 +21108,8 @@ var EVENTS = [
         "venue": "Virtual",
         "city": "Yorktown Heights, New York, United States",
         "rsvps": 8,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/14/feb-s-game-night-86wpha",
@@ -12919,7 +21122,8 @@ var EVENTS = [
         "venue": null,
         "city": "Paramus, New Jersey, United States",
         "rsvps": 24,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/14/f-like-a-pro-erotic-tantric-couples-massage-workshop-and-after-hours-jgncna",
@@ -12932,7 +21136,8 @@ var EVENTS = [
         "venue": "Address given in email confirmation. Please contact us if paying at door.",
         "city": "New York City, New York, United States",
         "rsvps": 9,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/14/trans-night-at-club-philadelphia-pgm7hy",
@@ -12945,7 +21150,106 @@ var EVENTS = [
         "venue": "Club Philadelphia",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 9,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/14/open-call-for-art-2027-erotica-l-an-exhibition-to-arouse-0apjbx",
+        "name": "Open Call for Art 2027 Erotica l: An Exhibition to Arouse",
+        "start": "2026-12-14",
+        "end": "2026-12-20",
+        "category": "Conference / Festival",
+        "cost": null,
+        "when": "Dec 14 – 21 · Mon 3:00 AM – Mon 2:59 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 57,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/14/the-high-life-cannabis-intimacy-and-kink-bnlndu",
+        "name": "The High Life: Cannabis, Intimacy, and Kink",
+        "start": "2026-12-14",
+        "end": "2026-12-14",
+        "category": "Educational",
+        "cost": null,
+        "when": "Mon, Dec 14 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 9,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/14/monday-virtual-community-gathering-mo35vm",
+        "name": "Monday Virtual Community Gathering",
+        "start": "2026-12-14",
+        "end": "2026-12-14",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Mon, Dec 14 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 29,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/14/online-the-art-of-body-worship-devotion-desire-delicious-attention-sppeu9",
+        "name": "ONLINE: The Art of Body Worship: Devotion, Desire & Delicious Attention",
+        "start": "2026-12-14",
+        "end": "2026-12-14",
+        "category": "Educational",
+        "cost": null,
+        "when": "Mon, Dec 14 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 165,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/14/virtual-recorded-come-on-barbie-let-s-go-party-dollification-101-with-miss-chris-wvzqfc",
+        "name": "Virtual & Recorded| “Come on Barbie, Let’s go Party” - Dollification 101 with Miss Chris",
+        "start": "2026-12-14",
+        "end": "2026-12-14",
+        "category": "Educational",
+        "cost": null,
+        "when": "Mon, Dec 14 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 68,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/14/new-sacramento-area-kinksters-toys-types-use-and-care-virtual-aji3ah",
+        "name": "New Sacramento Area Kinksters: Toys: Types, use and care (Virtual)",
+        "start": "2026-12-14",
+        "end": "2026-12-14",
+        "category": "Educational",
+        "cost": null,
+        "when": "Mon, Dec 14 at 10:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 7,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/14/socal-polyam-support-group-dec-14th-7-9pm-pst-online-hfvkvg",
+        "name": "SoCal Polyam Support Group - Dec 14th 7-9pm pst ONLINE!",
+        "start": "2026-12-14",
+        "end": "2026-12-14",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Mon, Dec 14 at 10:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 14,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/12/15/south-jersey-connections-munch-december-hptmz0",
@@ -12958,7 +21262,8 @@ var EVENTS = [
         "venue": "Splitz Bar & Grill (attached to Laurel Lanes)",
         "city": "Maple Shade, New Jersey, United States",
         "rsvps": 203,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/15/knitting-circle-16-a-rope-gathering-pveqi1",
@@ -12971,7 +21276,8 @@ var EVENTS = [
         "venue": "Midtown NYC",
         "city": "New York City, New York, United States",
         "rsvps": 17,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/15/philly-metro-photo-workshops-sugarplums-snowflakes-zrwejr",
@@ -12984,7 +21290,8 @@ var EVENTS = [
         "venue": "location to be shared upon payment",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 80,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/15/tethered-tuesday-philly-s-weekly-rope-community-lab-3yyk0q",
@@ -12997,7 +21304,8 @@ var EVENTS = [
         "venue": "The Nest",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 9,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/15/limerick-board-game-munch-gamer-s-heaven-chfuxe",
@@ -13010,7 +21318,8 @@ var EVENTS = [
         "venue": "Gamer's Heaven",
         "city": "Limerick, Pennsylvania, United States",
         "rsvps": 7,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/15/queer-kiss-cuddles-a-bi-pansexual-experience-br04wj",
@@ -13023,7 +21332,8 @@ var EVENTS = [
         "venue": "Address given in email confirmation. Please contact us if paying at door.",
         "city": "New York City, New York, United States",
         "rsvps": 11,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/15/secret-pleasures-tuesday-titties-tushies-party-8pm-to-12am-yyo9co",
@@ -13036,7 +21346,190 @@ var EVENTS = [
         "venue": "Secret Pleasures at the Back Door of the Wi Fi Cafe",
         "city": "Emmaus, Pennsylvania, United States",
         "rsvps": 73,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/15/rope-for-nerds-cheat-codes-for-play-ts6ues",
+        "name": "Rope for Nerds: Cheat Codes for Play",
+        "start": "2026-12-15",
+        "end": "2026-12-15",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Dec 15 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 40,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/15/train-that-wife-p0nwoo",
+        "name": "TRAIN THAT WIFE",
+        "start": "2026-12-15",
+        "end": "2026-12-15",
+        "category": "Sex Party",
+        "cost": null,
+        "when": "Tue, Dec 15 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 64,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/15/prep-talk-all-about-prep-2ixtmr",
+        "name": "PrEP Talk: All About PrEP",
+        "start": "2026-12-15",
+        "end": "2026-12-15",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Tue, Dec 15 at 6:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 36,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/15/nyc-caregivers-littles-virtual-game-night-cards-against-humanity-mtrcjk",
+        "name": "NYC Caregivers - littles Virtual Game Night (Cards Against Humanity)",
+        "start": "2026-12-15",
+        "end": "2026-12-15",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Tue, Dec 15 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 19,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/15/a-guiding-compass-for-the-new-and-nervous-bdsm-101-63nwqh",
+        "name": "A Guiding Compass for the New and Nervous: BDSM 101",
+        "start": "2026-12-15",
+        "end": "2026-12-15",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Dec 15 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 25,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/15/femmes-burning-flowers-seshhh-now-on-tuesdays-jhcodi",
+        "name": "FEMMES Burning Flowers Seshhh -Now on Tuesdays!",
+        "start": "2026-12-15",
+        "end": "2026-12-15",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Tue, Dec 15 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 3,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/15/tes-online-how-to-make-friends-and-influence-kinksters-oxm0fb",
+        "name": "TES ONLINE – How to Make Friends and Influence Kinksters",
+        "start": "2026-12-15",
+        "end": "2026-12-15",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Dec 15 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 27,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/15/he-presents-voice-as-a-service-by-daniika-free-virtual-iqlrfc",
+        "name": "HE Presents: Voice as a Service by daniika (Free & Virtual)",
+        "start": "2026-12-15",
+        "end": "2026-12-15",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Dec 15 at 7:15 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": null,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/15/house-of-koch-dominant-roundtable-hmnmmo",
+        "name": "House Of Koch - Dominant Roundtable",
+        "start": "2026-12-15",
+        "end": "2026-12-15",
+        "category": "Social",
+        "cost": null,
+        "when": "Tue, Dec 15 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 6,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/15/virtual-emotional-support-group-for-s-types-l-l-htx-slave-circle-8p-ncksop",
+        "name": "VIRTUAL Emotional Support group for s-types |!| HTX slave Circle 8p",
+        "start": "2026-12-15",
+        "end": "2026-12-15",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Tue, Dec 15 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 4,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/15/online-bdsm-negotiation-from-awkward-to-awesome-with-miriam-green-gkqkms",
+        "name": "ONLINE: BDSM Negotiation: From Awkward to Awesome with Miriam Green",
+        "start": "2026-12-15",
+        "end": "2026-12-15",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Dec 15 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 139,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/15/virtual-rec-avoiding-extortion-exploitation-grifts-in-online-kink-spaces-w-nyxie-noc-syipmw",
+        "name": "VIRTUAL & REC: \"Avoiding Extortion, Exploitation, & Grifts in Online Kink Spaces\" w/ Nyxie Noc",
+        "start": "2026-12-15",
+        "end": "2026-12-15",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Dec 15 at 9:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 30,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/15/virtual-recordedl-fatal-follicles-hair-pulling-for-harlots-with-the_lady_v-ldiqgf",
+        "name": "Virtual & Recorded| Fatal Follicles: Hair Pulling for Harlots! with The_Lady_V",
+        "start": "2026-12-15",
+        "end": "2026-12-15",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Dec 15 at 9:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 46,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/12/16/hump-day-holiday-gang-bangs-in-paradise-rsvp-now-y8qtka",
@@ -13049,7 +21542,8 @@ var EVENTS = [
         "venue": "Sinners Paradise Club",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 23,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/16/secret-pleasures-lunchtime-play-party-12pm-to-3pm-if814g",
@@ -13062,7 +21556,8 @@ var EVENTS = [
         "venue": "Secret Pleasures is at the Back Door of the Wi Fi Cafe",
         "city": "Emmaus, Pennsylvania, United States",
         "rsvps": 86,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/16/slipawayandplay-all-male-events-rzfp6o",
@@ -13075,7 +21570,8 @@ var EVENTS = [
         "venue": "Info given after your email address is supplied.",
         "city": "East Rutherford, New Jersey, United States",
         "rsvps": 1,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/16/sex-breathwork-hajigo",
@@ -13088,7 +21584,8 @@ var EVENTS = [
         "venue": "West 14 St",
         "city": "Manhattan, New York, United States",
         "rsvps": 14,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/16/web-a-rope-jam-for-the-weirdos-yxawrh",
@@ -13101,7 +21598,8 @@ var EVENTS = [
         "venue": "The Kink Lair",
         "city": "Scranton, Pennsylvania, United States",
         "rsvps": 55,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/16/no-labels-hotel-play-c4iroq",
@@ -13114,7 +21612,8 @@ var EVENTS = [
         "venue": "hotel tba",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/16/femme-dom-game-night-holiday-edition-y1jjth",
@@ -13127,7 +21626,8 @@ var EVENTS = [
         "venue": "Talon Bar (Downstairs titled No Exit)",
         "city": "Brooklyn, New York, United States",
         "rsvps": 136,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/16/blairstown-monthly-munch-ermgt1",
@@ -13140,7 +21640,8 @@ var EVENTS = [
         "venue": "Buck Hill Brewery",
         "city": "Blairstown, New Jersey, United States",
         "rsvps": 17,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/16/the-gathering-a-noir-collective-social-f6w5co",
@@ -13153,7 +21654,8 @@ var EVENTS = [
         "venue": null,
         "city": "Manhattan, New York, United States",
         "rsvps": 15,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/16/tantra-wisdom-divine-soul-64qb8d",
@@ -13166,7 +21668,8 @@ var EVENTS = [
         "venue": "Center City Breathe",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 5,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/16/wed-dec-16-2026-long-island-community-munch-bantcq",
@@ -13179,7 +21682,8 @@ var EVENTS = [
         "venue": "Main Event",
         "city": "East Farmingdale, Farmingdale, New York, United States",
         "rsvps": 16,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/16/owls-roost-munch-at-the-nest-potluck-byob-gerz30",
@@ -13192,7 +21696,8 @@ var EVENTS = [
         "venue": "The Nest",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 291,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/16/poly-connections-game-night-bzitm5",
@@ -13205,7 +21710,8 @@ var EVENTS = [
         "venue": "Address given in email confirmation. Please contact us if paying at door.",
         "city": "New York City, New York, United States",
         "rsvps": 30,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/16/submissive-round-table-trust-vulnerability-gckzw8",
@@ -13218,7 +21724,8 @@ var EVENTS = [
         "venue": "The Venue",
         "city": "Bethlehem, Pennsylvania, United States",
         "rsvps": 34,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/16/bipoc-rope-jam-12-16-yeuqo3",
@@ -13231,7 +21738,8 @@ var EVENTS = [
         "venue": "Coil & Cord Studio",
         "city": "Brooklyn, New York, United States",
         "rsvps": 8,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/16/link-s-december-munch-cfwznz",
@@ -13244,7 +21752,8 @@ var EVENTS = [
         "venue": "Arooga's",
         "city": "Manor Township, Pennsylvania, United States",
         "rsvps": 152,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/16/thirst-men-male-only-9qabwi",
@@ -13257,7 +21766,8 @@ var EVENTS = [
         "venue": null,
         "city": "Elizabeth, New Jersey, United States",
         "rsvps": 1,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/16/bucks-activities-munch-bam-cd0irg",
@@ -13270,7 +21780,8 @@ var EVENTS = [
         "venue": "McStew's Irish Pub 5316 New Falls Road Levittown, Pennsylvania, United States",
         "city": "Levittown, Pennsylvania, United States",
         "rsvps": 16,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/16/wed-dec-16-2026-lics-weekly-wednesday-slosh-jrofgo",
@@ -13283,7 +21794,8 @@ var EVENTS = [
         "venue": "Mr. Beery's",
         "city": "Bethpage, New York, United States",
         "rsvps": 22,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/16/sinners-paradise-presents-blackout-wacky-wednesdays-25-all-night-after-party-included-nilisr",
@@ -13296,7 +21808,218 @@ var EVENTS = [
         "venue": "Sinners Paradise Club",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 22,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/16/fuck-this-shit-a-guided-dissociation-with-ropes-lmbatv",
+        "name": "Fuck this Shit – a Guided Dissociation with Ropes",
+        "start": "2026-12-16",
+        "end": "2026-12-16",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Dec 16 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 24,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/16/ohnmacht-im-seil-azogro",
+        "name": "Ohnmacht im Seil",
+        "start": "2026-12-16",
+        "end": "2026-12-16",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Dec 16 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 61,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/16/it-ain-t-all-whips-and-chains-virtual-mibdi8",
+        "name": "It Ain't All Whips and Chains VIRTUAL",
+        "start": "2026-12-16",
+        "end": "2026-12-16",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Dec 16 at 6:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 3,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/16/shibari-learning-series-negotiating-and-safety-for-rope-bottoms-lixfys",
+        "name": "Shibari Learning Series- negotiating and safety for rope bottoms",
+        "start": "2026-12-16",
+        "end": "2026-12-16",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Dec 16 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 2,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/16/shibari-for-suspension-series-soft-skills-5-risk-and-negotiation-as-a-rigger-ehicqw",
+        "name": "Shibari for Suspension series, soft skills 5: risk and negotiation as a rigger",
+        "start": "2026-12-16",
+        "end": "2026-12-16",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Dec 16 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 3,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/16/virtual-practical-polyamory-workshop-series-long-term-poly-akobit",
+        "name": "[VIRTUAL] Practical Polyamory Workshop Series - Long-Term Poly",
+        "start": "2026-12-16",
+        "end": "2026-12-16",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Dec 16 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 53,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/16/emotional-cpr-part-2-application-201-tofues",
+        "name": "Emotional CPR - Part 2: Application 201",
+        "start": "2026-12-16",
+        "end": "2026-12-16",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Wed, Dec 16 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 13,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/16/cultivating-service-a-guide-for-service-submissives-online-workshop-zsoim0",
+        "name": "Cultivating Service: A Guide for Service Submissives - Online Workshop",
+        "start": "2026-12-16",
+        "end": "2026-12-16",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Dec 16 at 7:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 35,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/16/leather-pride-night-prdzz7",
+        "name": "Leather Pride Night",
+        "start": "2026-12-16",
+        "end": "2026-12-16",
+        "category": "Social",
+        "cost": null,
+        "when": "Wed, Dec 16 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 53,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/16/online-class-lick-my-brain-a-delicious-mind-games-lab-with-madame-selana-sjrdkz",
+        "name": "[ONLINE CLASS] Lick My Brain! A Delicious Mind Games Lab with Madame Selana",
+        "start": "2026-12-16",
+        "end": "2026-12-16",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Dec 16 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 79,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/16/beyond-the-battle-ptsd-strategy-group-y2kudz",
+        "name": "Beyond the Battle: PTSD Strategy Group",
+        "start": "2026-12-16",
+        "end": "2026-12-16",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Wed, Dec 16 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 4,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/16/tome-eaters-book-devouring-club-3ugvgm",
+        "name": "Tome Eaters: Book Devouring Club",
+        "start": "2026-12-16",
+        "end": "2026-12-16",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Wed, Dec 16 at 8:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 4,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/16/online-wild-intimacy-eco-eroticism-and-the-art-of-kink-5optpf",
+        "name": "ONLINE: Wild Intimacy: Eco Eroticism and the Art of Kink",
+        "start": "2026-12-16",
+        "end": "2026-12-16",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Dec 16 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 113,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/16/online-aftercare-self-care-and-personal-practice-with-h-g-wyndell-gwwbus",
+        "name": "ONLINE: Aftercare, Self-Care, and Personal Practice with H G Wyndell",
+        "start": "2026-12-16",
+        "end": "2026-12-16",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Dec 16 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 141,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/16/holiday-special-virtual-peep-show-with-milfqueen-maestro-pggehk",
+        "name": "Holiday Special VIRTUAL Peep Show with Milfqueen & Maestro!",
+        "start": "2026-12-16",
+        "end": "2026-12-16",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Dec 16 at 10:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 79,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/12/17/slipawayandplay-all-male-events-vedhia",
@@ -13309,7 +22032,8 @@ var EVENTS = [
         "venue": "Info given after your email address is supplied.",
         "city": "East Rutherford, New Jersey, United States",
         "rsvps": 1,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/17/reading-pa-meet-greet-december-17-white-elephant-co-hosted-by-babygirl_katya-5pfu1b",
@@ -13322,7 +22046,8 @@ var EVENTS = [
         "venue": "Craft 2700",
         "city": "Hyde Park, Pennsylvania, United States",
         "rsvps": 31,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/17/nostalgic-pleasures-munch-l6hy04",
@@ -13335,7 +22060,8 @@ var EVENTS = [
         "venue": null,
         "city": "Brooklyn, New York, United States",
         "rsvps": 30,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/17/back-up-link-reading-pa-meet-greet-december-17-white-elephant-co-hosted-by-babygirl_katya-tlsfx6",
@@ -13348,7 +22074,8 @@ var EVENTS = [
         "venue": "Craft 2700",
         "city": "Reading, Pennsylvania, United States",
         "rsvps": 41,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/17/building-tension-ropeshare-dec-26-rxtsui",
@@ -13361,7 +22088,8 @@ var EVENTS = [
         "venue": "Less Dead Studio",
         "city": "Poughkeepsie, New York, United States",
         "rsvps": 29,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/17/ascend-community-slosh-z9bosv",
@@ -13374,7 +22102,8 @@ var EVENTS = [
         "venue": "Unicorn Bar",
         "city": "Kingston, New York, United States",
         "rsvps": 30,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/17/the-art-of-ass-facesitting-workshop-oweosp",
@@ -13387,7 +22116,8 @@ var EVENTS = [
         "venue": "address given upon ticket purchase",
         "city": "New York City, New York, United States",
         "rsvps": 40,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/17/queens-kinksters-munch-31j9f3",
@@ -13400,7 +22130,8 @@ var EVENTS = [
         "venue": "Bohemian Hall & Beer Garden",
         "city": "Queens, New York, United States",
         "rsvps": 23,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/17/kinky-carnival-di07sn",
@@ -13413,7 +22144,8 @@ var EVENTS = [
         "venue": "Hit Me Up",
         "city": "New York City, New York, United States",
         "rsvps": 7,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/17/beyond-jealousy-shadow-work-for-ethical-non-monogamy-0wmm4r",
@@ -13426,7 +22158,8 @@ var EVENTS = [
         "venue": "Pagan's Paradise - Herald Square",
         "city": "New York City, New York, United States",
         "rsvps": 22,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/17/tes-in-person-holiday-potluck-party-and-gift-exchange-event-wehsqq",
@@ -13439,7 +22172,8 @@ var EVENTS = [
         "venue": "LGBT Community Center",
         "city": "New York City, New York, United States",
         "rsvps": 15,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/17/secret-pleasures-thirsty-thursday-gangbang-party-8pm-to-12am-mycqdi",
@@ -13452,7 +22186,8 @@ var EVENTS = [
         "venue": "Secret Pleasures at the Back Door of the Wi Fi Cafe",
         "city": "Emmaus, Pennsylvania, United States",
         "rsvps": 94,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/17/gang-bang-night-in-paradise-a-thursday-night-of-pure-ecstasy-rsvp-now-and-get-10-off-entree-fee-9bk0lc",
@@ -13465,7 +22200,176 @@ var EVENTS = [
         "venue": "Sinners Paradise Club",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 22,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/17/coworking-hours-q8euzt",
+        "name": "Coworking Hours",
+        "start": "2026-12-17",
+        "end": "2026-12-17",
+        "category": "Social",
+        "cost": null,
+        "when": "Thu, Dec 17 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 4,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/17/free-online-shibari-class-rope-while-fat-a-primer-xdzp2f",
+        "name": "[FREE Online Shibari Class] Rope While Fat: A Primer",
+        "start": "2026-12-17",
+        "end": "2026-12-17",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Thu, Dec 17 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 501,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/17/befriending-jealousy-l5slry",
+        "name": "Befriending Jealousy",
+        "start": "2026-12-17",
+        "end": "2026-12-17",
+        "category": "Educational",
+        "cost": null,
+        "when": "Thu, Dec 17 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 21,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/17/edge-left-of-the-slash-xvtxca",
+        "name": "EDGE: Left of the Slash",
+        "start": "2026-12-17",
+        "end": "2026-12-17",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Thu, Dec 17 at 6:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 4,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/17/pronouns-and-acronyms-and-concepts-oh-my-7nnjet",
+        "name": "Pronouns and Acronyms and Concepts, Oh My!",
+        "start": "2026-12-17",
+        "end": "2026-12-17",
+        "category": "Educational",
+        "cost": null,
+        "when": "Thu, Dec 17 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 79,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/17/your-roadmap-to-conscious-exploration-bdsm-201-7dzy3p",
+        "name": "Your Roadmap to Conscious Exploration: BDSM 201",
+        "start": "2026-12-17",
+        "end": "2026-12-17",
+        "category": "Educational",
+        "cost": null,
+        "when": "Thu, Dec 17 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 10,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/17/virtual-workshop-kneading-skin-the-art-of-presence-touch-sensuality-bdsm-kink-class-uwr8mj",
+        "name": "Virtual Workshop - \"Kneading Skin: The Art of Presence, Touch & Sensuality\" (BDSM/Kink Class)",
+        "start": "2026-12-17",
+        "end": "2026-12-17",
+        "category": "Educational",
+        "cost": null,
+        "when": "Thu, Dec 17 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 45,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/17/virtual-dominants-meetup-lt1qhe",
+        "name": "Virtual Dominants Meetup",
+        "start": "2026-12-17",
+        "end": "2026-12-17",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Thu, Dec 17 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 6,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/17/david-carlson-on-open-the-legal-status-of-polyam-families-p3egoa",
+        "name": "David Carlson on OPEN & the legal status of Polyam Families",
+        "start": "2026-12-17",
+        "end": "2026-12-17",
+        "category": "Educational",
+        "cost": null,
+        "when": "Thu, Dec 17 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 3,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/17/online-advanced-blowjobs-mastering-techniques-for-ultimate-pleasure-9kug3z",
+        "name": "ONLINE: Advanced Blowjobs: Mastering Techniques for Ultimate Pleasure",
+        "start": "2026-12-17",
+        "end": "2026-12-17",
+        "category": "Educational",
+        "cost": null,
+        "when": "Thu, Dec 17 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 120,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/17/virtual-bliss-briefings-presents-community-unpacked-session-10-ghosted-harmed-or-hurt-now-what-xdwicd",
+        "name": "Virtual Bliss Briefings Presents~ Community Unpacked-Session 10- Ghosted, Harmed, or Hurt: Now What?",
+        "start": "2026-12-17",
+        "end": "2026-12-17",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Thu, Dec 17 at 9:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 5,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/17/virtual-bliss-briefings-presents-community-unpacked-session-12-building-the-community-you-wanted-tk4plg",
+        "name": "Virtual Bliss Briefings Presents~ Community Unpacked-Session 12- Building the Community You Wanted",
+        "start": "2026-12-17",
+        "end": "2026-12-17",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Thu, Dec 17 at 9:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 7,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/12/18/the-matinee-open-play-party-iivzpy",
@@ -13478,7 +22382,8 @@ var EVENTS = [
         "venue": "The Venue",
         "city": "Bethlehem, Pennsylvania, United States",
         "rsvps": 35,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/18/mastcliftonnj-s-cigar-social-location-tbd-izjlkx",
@@ -13491,7 +22396,8 @@ var EVENTS = [
         "venue": "TBD",
         "city": "Clifton, New Jersey, United States",
         "rsvps": 10,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/18/december-18th-western-queens-kinky-social-fqszxn",
@@ -13504,7 +22410,8 @@ var EVENTS = [
         "venue": null,
         "city": "New York City, New York, United States",
         "rsvps": 24,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/18/tng-munch-winter-light-spectacular-sybisf",
@@ -13517,7 +22424,8 @@ var EVENTS = [
         "venue": "Lehigh Valley Zoo",
         "city": "Schnecksville, Pennsylvania, United States",
         "rsvps": 17,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/18/lccne-meeting-and-play-party-s3utzq",
@@ -13530,20 +22438,8 @@ var EVENTS = [
         "venue": "The Church",
         "city": "New Paltz, New York, United States",
         "rsvps": 11,
-        "image": null
-    },
-    {
-        "url": "https://fetlife.com/events/2026/12/18/domme-nation-nyc-the-hit-me-up-loft-femdom-hosts-goddess-claricee-eclipse-persephone-jrcny5",
-        "name": "Domme-Nation NYC @ The Hit Me Up Loft! Femdom Hosts: Goddess Claricee, Eclipse & Persephone!!",
-        "start": "2026-12-18",
-        "end": "2026-12-19",
-        "category": "BDSM Party",
-        "cost": null,
-        "when": "Dec 18 – 19 · Fri 8:00 PM – Sat 11:00 PM",
-        "venue": "Hit Me Up Loft",
-        "city": "New York City, New York, United States",
-        "rsvps": 58,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/18/kneel-tell-madame-lilith-s-femdom-fantasy-roundtable-w4u9ud",
@@ -13556,7 +22452,8 @@ var EVENTS = [
         "venue": "Secret Bar Location",
         "city": "Manhattan, New York, United States",
         "rsvps": 39,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/18/the-yap-12-18-a-neurodivergent-munch-friday-gvrnnp",
@@ -13569,7 +22466,8 @@ var EVENTS = [
         "venue": null,
         "city": "Manhattan, New York, United States",
         "rsvps": 17,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/18/3rd-annual-supreme-embrace-a-special-edition-for-black-women-f0rhzg",
@@ -13582,7 +22480,8 @@ var EVENTS = [
         "venue": "EveryBodyMovesPhilly",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 30,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/18/pocket-sized-pain-g1r1o2",
@@ -13595,7 +22494,8 @@ var EVENTS = [
         "venue": "Less Dead Studio",
         "city": "Poughkeepsie, New York, United States",
         "rsvps": 26,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/18/jingle-bell-ball-pn3pjm",
@@ -13608,7 +22508,8 @@ var EVENTS = [
         "venue": "The Kink Lair",
         "city": "Scranton, Pennsylvania, United States",
         "rsvps": 122,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/18/release-the-bats-queer-rope-jam-krampus-and-winter-folklore-fri-12-18-ahdscm",
@@ -13621,7 +22522,22 @@ var EVENTS = [
         "venue": "Shibari Cafe",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 42,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/18/domme-nation-nyc-the-hit-me-up-loft-femdom-hosts-goddess-claricee-eclipse-persephone-jrcny5",
+        "name": "Domme-Nation NYC @ The Hit Me Up Loft! Femdom Hosts: Goddess Claricee, Eclipse & Persephone!!",
+        "start": "2026-12-18",
+        "end": "2026-12-19",
+        "category": "BDSM Party",
+        "cost": null,
+        "when": "Dec 18 – 19 · Fri 8:00 PM – Sat 11:00 PM",
+        "venue": "Hit Me Up Loft",
+        "city": "New York City, New York, United States",
+        "rsvps": 58,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/18/the-connecticut-lifestyle-social-6ahrxk",
@@ -13634,7 +22550,8 @@ var EVENTS = [
         "venue": "Portside Lounge",
         "city": "Bridgeport, Connecticut, United States",
         "rsvps": 134,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/18/sensation-nyc-an-intimate-bdsm-play-party-for-partners-playmates-snwuwd",
@@ -13647,7 +22564,8 @@ var EVENTS = [
         "venue": "Studio125",
         "city": "Manhattan, New York, United States",
         "rsvps": 19,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/18/rope-speed-scening-12-18-wvhk7h",
@@ -13660,7 +22578,8 @@ var EVENTS = [
         "venue": "Coil & Cord Studio",
         "city": "Brooklyn, New York, United States",
         "rsvps": 13,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/18/new-jersey-trans-tgirl-shemale-crossdresser-transexual-transvestite-transgender-admirer-part-c3jixc",
@@ -13672,8 +22591,9 @@ var EVENTS = [
         "when": "Fri, Dec 18 at 8:00 PM",
         "venue": "Holmdel Sports Bar & Motor Inn",
         "city": "Holmdel, New Jersey, United States",
-        "rsvps": 395,
-        "image": null
+        "rsvps": 396,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/18/slutfest-ho-ho-ho-holiday-party-gay-bi-men-anything-goes-party-12vpp6",
@@ -13686,7 +22606,8 @@ var EVENTS = [
         "venue": null,
         "city": "New York City, New York, United States",
         "rsvps": 22,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/18/bang-kock-s-mistletoe-mischief-bisexual-lgbtq-erotic-holiday-xxx-slutfest-9pm-3am-7we6dk",
@@ -13698,8 +22619,9 @@ var EVENTS = [
         "when": "Fri, Dec 18 at 8:59 PM",
         "venue": "ROLEPLAY CLUB in Philly!",
         "city": "Philadelphia, Pennsylvania, United States",
-        "rsvps": 336,
-        "image": null
+        "rsvps": 337,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/18/the-nyte-life-episode-11-sex-kink-fantasy-naughty-or-nice-xxx-mas-edition-1chwko",
@@ -13712,7 +22634,8 @@ var EVENTS = [
         "venue": "L.I.C.K. Manor HQ",
         "city": "Melville, New York, United States",
         "rsvps": 48,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/18/twin-flame-the-fetish-masquerade-ball-h0qr7f",
@@ -13725,7 +22648,8 @@ var EVENTS = [
         "venue": "To be announced",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 47,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/18/friday-vibes-awcbck",
@@ -13738,7 +22662,8 @@ var EVENTS = [
         "venue": null,
         "city": "Glen Gardner, New Jersey, United States",
         "rsvps": 3,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/18/secret-pleasures-fishnet-friday-party-5hy9q0",
@@ -13751,7 +22676,8 @@ var EVENTS = [
         "venue": "Secret Pleasures is at the Back Door of the Wi Fi Cafe",
         "city": "Emmaus, Pennsylvania, United States",
         "rsvps": 92,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/18/samantha-fox-blow-bang-z4xsrh",
@@ -13764,7 +22690,8 @@ var EVENTS = [
         "venue": "Rainbow Playground",
         "city": "New York City, New York, United States",
         "rsvps": 10,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/18/darkside-a-bdsm-experience-the-hit-me-up-loft-ud2bbq",
@@ -13777,7 +22704,8 @@ var EVENTS = [
         "venue": "Hit Me Up",
         "city": "New York City, New York, United States",
         "rsvps": 76,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/18/medusas-playhouse-presents-fantasy-fridays-open-to-all-couples-and-singles-males-females-9rixbh",
@@ -13790,7 +22718,8 @@ var EVENTS = [
         "venue": "MEDUSAS PLAYHOUSE",
         "city": "West Babylon, New York, United States",
         "rsvps": 20,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/18/one-night-stand-a-sinners-paradise-presentation-rsvp-now-and-be-a-part-free-entry-mc6vfm",
@@ -13803,7 +22732,8 @@ var EVENTS = [
         "venue": "Sinners Paradise Club",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 23,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/18/bisexual-orgy-and-play-party-uqabuh",
@@ -13816,20 +22746,64 @@ var EVENTS = [
         "venue": null,
         "city": "New York City, New York, United States",
         "rsvps": 1,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
-        "url": "https://fetlife.com/events/2026/12/19/she-got-blacked-xxx-daytime-gang-bang-party-3-30pm-8pm-ayycph",
-        "name": "\"SHE GOT BLACKED!\" - XXX DAYTIME Gang Bang Party! 3:30pm-8pm!",
-        "start": "2026-12-19",
-        "end": "2026-12-20",
-        "category": "Sex Party",
+        "url": "https://fetlife.com/events/2026/12/18/ask-a-black-domme-dommenomics-the-economy-of-domination-0lpjsd",
+        "name": "Ask A Black Domme - Dommenomics - The Economy Of Domination",
+        "start": "2026-12-18",
+        "end": "2026-12-18",
+        "category": "Educational",
         "cost": null,
-        "when": "Dec 19 – 20 · Sat 3:30 PM – Sun 8:00 PM",
-        "venue": "Private hotel",
-        "city": "Mount Laurel, New Jersey, United States",
-        "rsvps": 44,
-        "image": null
+        "when": "Fri, Dec 18 at 6:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 129,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/18/online-submissive-forum-what-care-does-your-submission-need-l-submissive-guide-4o8kwx",
+        "name": "ONLINE Submissive Forum - What Care Does Your Submission Need? | Submissive Guide",
+        "start": "2026-12-18",
+        "end": "2026-12-18",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Fri, Dec 18 at 8:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 125,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/18/honoring-our-ancestors-of-love-5k1cat",
+        "name": "Honoring Our Ancestors of Love",
+        "start": "2026-12-18",
+        "end": "2026-12-18",
+        "category": "Educational",
+        "cost": null,
+        "when": "Fri, Dec 18 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 142,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/18/isolation-storytime-afterparty-2026-12-18-l3s1wr",
+        "name": "Isolation Storytime Afterparty - 2026-12-18",
+        "start": "2026-12-18",
+        "end": "2026-12-18",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Fri, Dec 18 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 2,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/12/19/freaks-on-foot-a-weekly-walking-social-iqvuaw",
@@ -13842,7 +22816,8 @@ var EVENTS = [
         "venue": "Kilnes Run Pakr",
         "city": "Wrightsville, Pennsylvania, United States",
         "rsvps": 11,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/19/philadelphia-kinky-speed-dating-mixer-christmas-edition-igyfka",
@@ -13855,7 +22830,8 @@ var EVENTS = [
         "venue": "Urban Village Brewery",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 4,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/19/naked-yoga-new-york-mlmqm8",
@@ -13868,7 +22844,8 @@ var EVENTS = [
         "venue": "Address given in email confirmation. Please contact us if paying at door.",
         "city": "New York City, New York, United States",
         "rsvps": 5,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/19/njtog-december-eating-adventure-12-19-2026-attendance-limited-ceenfn",
@@ -13881,7 +22858,22 @@ var EVENTS = [
         "venue": "TBA",
         "city": "Clifton, New Jersey, United States",
         "rsvps": 4,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/19/she-got-blacked-xxx-daytime-gang-bang-party-3-30pm-8pm-ayycph",
+        "name": "\"SHE GOT BLACKED!\" - XXX DAYTIME Gang Bang Party! 3:30pm-8pm!",
+        "start": "2026-12-19",
+        "end": "2026-12-20",
+        "category": "Sex Party",
+        "cost": null,
+        "when": "Dec 19 – 20 · Sat 3:30 PM – Sun 8:00 PM",
+        "venue": "Private hotel",
+        "city": "Mount Laurel, New Jersey, United States",
+        "rsvps": 44,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/19/nyc-tng-ages-18-35-weekend-munch-december-2026-jyjwbs",
@@ -13894,7 +22886,8 @@ var EVENTS = [
         "venue": "Cellar Dog",
         "city": "Manhattan, New York, United States",
         "rsvps": 25,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/19/swack-cookie-swap-december-19-3-30-5-pm-vhwvyx",
@@ -13907,7 +22900,8 @@ var EVENTS = [
         "venue": null,
         "city": "New Rochelle, New York, United States",
         "rsvps": 24,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/19/shibari-for-suspension-jyatgg",
@@ -13920,7 +22914,8 @@ var EVENTS = [
         "venue": "TBA",
         "city": "Elizabethtown, Pennsylvania, United States",
         "rsvps": 4,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/19/lehigh-valley-skittles-littles-white-elephant-winter-party-gr9z7h",
@@ -13933,7 +22928,8 @@ var EVENTS = [
         "venue": null,
         "city": "Allentown, Pennsylvania, United States",
         "rsvps": 10,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/19/mr-unloved-in-person-at-mcduff-s-tavern-saturday-dec-19th-wng8zc",
@@ -13946,7 +22942,8 @@ var EVENTS = [
         "venue": null,
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 4,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/19/game-on-pants-off-eagles-vs-seahawks-vxluuz",
@@ -13959,7 +22956,8 @@ var EVENTS = [
         "venue": null,
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 27,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/19/swack-winter-wonderland-light-show-at-kensico-dam-dec-19-27-5-30pm-adpmms",
@@ -13972,7 +22970,8 @@ var EVENTS = [
         "venue": "Our Meet-up Location",
         "city": "New Rochelle, New York, United States",
         "rsvps": 9,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/19/latex-leather-dark-desires-a-fetish-wear-social-mcgkqt",
@@ -13985,7 +22984,8 @@ var EVENTS = [
         "venue": "The Venue",
         "city": "Bethlehem, Pennsylvania, United States",
         "rsvps": 34,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/19/fetish-night-smuymk",
@@ -13998,7 +22998,8 @@ var EVENTS = [
         "venue": "12Penny Saloon",
         "city": "Moosic, Pennsylvania, United States",
         "rsvps": 38,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/19/ma-am-s-very-merry-un-birthday-party-again-december-party-65w8jx",
@@ -14011,7 +23012,8 @@ var EVENTS = [
         "venue": null,
         "city": "Wharton, New Jersey, United States",
         "rsvps": 35,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/19/pre-impact-munch-dec-19th-nyc-cxafeu",
@@ -14024,7 +23026,8 @@ var EVENTS = [
         "venue": "Nancy Whiskey Pub",
         "city": "Manhattan, New York, United States",
         "rsvps": 25,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/19/nochill-eros-wild-n-out-ls-game-night-8gbsmm",
@@ -14037,7 +23040,8 @@ var EVENTS = [
         "venue": null,
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 22,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/19/lyrics-and-lust-rnb-meets-50-shades-xygfd0",
@@ -14050,7 +23054,8 @@ var EVENTS = [
         "venue": "Portside Lounge",
         "city": "Bridgeport, Connecticut, United States",
         "rsvps": 72,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/19/holiday-paint-sip-deck-the-halls-paint-it-all-hal68f",
@@ -14063,7 +23068,8 @@ var EVENTS = [
         "venue": "Church",
         "city": "New Paltz, New York, United States",
         "rsvps": 87,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/19/10th-vonn-iversary-party-5th-annual-holiday-social-miss-adah-s-decade-dommiversary-celebration-yldqgq",
@@ -14076,7 +23082,8 @@ var EVENTS = [
         "venue": "Less Dead Studio",
         "city": "Poughkeepsie, New York, United States",
         "rsvps": 19,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/19/queer-rope-social-brooklyn-12-19-5cvvhk",
@@ -14089,7 +23096,8 @@ var EVENTS = [
         "venue": "Coil & Cord Studio",
         "city": "Brooklyn, New York, United States",
         "rsvps": 12,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/19/wild-n-out-game-night-eyeciu",
@@ -14102,7 +23110,8 @@ var EVENTS = [
         "venue": null,
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 5,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/19/navidad-con-sabor-7pzqrq",
@@ -14115,7 +23124,8 @@ var EVENTS = [
         "venue": null,
         "city": "Glen Gardner, New Jersey, United States",
         "rsvps": 2,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/19/krampus-lair-sanctuary-december-play-party-3ijb22",
@@ -14128,7 +23138,8 @@ var EVENTS = [
         "venue": "The Nest (exact location provided upon registration)",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 293,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/19/fugly-26-hhqhby",
@@ -14141,7 +23152,8 @@ var EVENTS = [
         "venue": "Liberation Zone",
         "city": "Harrison, New Jersey, United States",
         "rsvps": 47,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/19/secret-pleasures-naughty-school-girl-party-lcxnyt",
@@ -14154,7 +23166,8 @@ var EVENTS = [
         "venue": "Secret Pleasures is at the Back Door of the Wi Fi Cafe",
         "city": "Emmaus, Pennsylvania, United States",
         "rsvps": 13,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/19/december-debauchery-2026-cum-warm-me-up-0pekhd",
@@ -14167,7 +23180,8 @@ var EVENTS = [
         "venue": null,
         "city": "New York City, New York, United States",
         "rsvps": 20,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/19/latex-leather-dark-desires-the-after-hours-play-affair-4lix1e",
@@ -14180,7 +23194,8 @@ var EVENTS = [
         "venue": "The Venue",
         "city": "Bethlehem, Pennsylvania, United States",
         "rsvps": 35,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/19/swing-in-style-fpvmrg",
@@ -14193,7 +23208,8 @@ var EVENTS = [
         "venue": "HAMPTON INN",
         "city": "Linden, New Jersey, United States",
         "rsvps": 74,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/19/the-pleasure-palace-0co0jc",
@@ -14206,7 +23222,8 @@ var EVENTS = [
         "venue": "(address in email)",
         "city": "Brooklyn, New York, United States",
         "rsvps": 6,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/19/welcome-to-whoville-a-very-naughty-kinkmas-play-party-luq1gq",
@@ -14219,7 +23236,8 @@ var EVENTS = [
         "venue": null,
         "city": "New York City, New York, United States",
         "rsvps": 53,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/19/kinky-christmas-12th-annual-07niz8",
@@ -14232,7 +23250,8 @@ var EVENTS = [
         "venue": "Bar XIII",
         "city": "Wilmington, Delaware, United States",
         "rsvps": 125,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/19/hot-chocolate-nights-qhv1pu",
@@ -14244,8 +23263,9 @@ var EVENTS = [
         "when": "Sat, Dec 19 at 9:30 PM",
         "venue": "TBA",
         "city": "East Hanover, New Jersey, United States",
-        "rsvps": 18,
-        "image": null
+        "rsvps": 21,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/19/free-2027-membership-tonight-new-year-new-members-new-opportunities-be-a-part-of-our-movement-xsfy23",
@@ -14258,7 +23278,8 @@ var EVENTS = [
         "venue": "Sinners Paradise Club",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 127,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/19/medusa-s-playhouse-presents-sexy-santa-party-open-to-couples-and-females-only-shum7u",
@@ -14271,7 +23292,8 @@ var EVENTS = [
         "venue": "MEDUSAS PLAYHOUSE",
         "city": "West Babylon, New York, United States",
         "rsvps": 26,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/19/impact-sat-dec-19th-nyc-s-longest-running-play-party-nhjk2n",
@@ -14284,7 +23306,8 @@ var EVENTS = [
         "venue": "The Diamond Club",
         "city": "Manhattan, New York, United States",
         "rsvps": 162,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/19/queer-friendly-interracial-play-party-jypzm4",
@@ -14297,7 +23320,134 @@ var EVENTS = [
         "venue": null,
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 27,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/19/build-a-sub-through-fitness-domination-with-docdomina-afb0na",
+        "name": "Build-a-Sub Through Fitness Domination with @DocDomina",
+        "start": "2026-12-19",
+        "end": "2026-12-19",
+        "category": "Educational",
+        "cost": null,
+        "when": "Fri, Dec 18 at 6:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 292,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/19/minimizing-your-tools-to-maximise-your-scene-workshop-online-by-birds-ok514n",
+        "name": "Minimizing your tools to maximise your scene workshop (Online) by -Birds-",
+        "start": "2026-12-19",
+        "end": "2026-12-19",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Dec 19 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 37,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/19/educated-desires-smut-book-club-december-virtual-meeting-ebdgvp",
+        "name": "Educated Desires: Smut Book Club December Virtual Meeting",
+        "start": "2026-12-19",
+        "end": "2026-12-19",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Sat, Dec 19 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 6,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/19/online-service-chats-receiving-service-as-an-s-type-bv8xcq",
+        "name": "ONLINE Service Chats - Receiving Service as an s-type",
+        "start": "2026-12-19",
+        "end": "2026-12-19",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sat, Dec 19 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 21,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/19/deconstruction-bible-study-mary-mother-of-god-the-making-of-marian-theology-part-2-rdv0qz",
+        "name": "Deconstruction Bible Study - Mary, Mother of God: The Making of Marian Theology (Part 2)",
+        "start": "2026-12-19",
+        "end": "2026-12-19",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sat, Dec 19 at 3:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 73,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/19/virtual-recorded-spanking-from-soup-to-nuts-with-miss-chris-lilfd6",
+        "name": "Virtual & Recorded| Spanking: From Soup to Nuts with Miss Chris",
+        "start": "2026-12-19",
+        "end": "2026-12-19",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Dec 19 at 5:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 13,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/19/online-eat-men-like-air-domination-101-with-dolly-diatima-cmohsn",
+        "name": "ONLINE: Eat Men Like Air: Domination 101 with Dolly Diatima",
+        "start": "2026-12-19",
+        "end": "2026-12-19",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Dec 19 at 5:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 102,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/19/mistress-cathleen-s-annual-holiday-food-and-toy-drive-in-metro-atl-wzbght",
+        "name": "Mistress Cathleen's Annual Holiday Food and Toy Drive in Metro ATL",
+        "start": "2026-12-19",
+        "end": "2026-12-20",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Dec 19 – 21 · Sat 6:00 PM – Mon 1:00 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 41,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/19/more-naughty-than-nice-v1ar7v",
+        "name": "more naughty than nice",
+        "start": "2026-12-19",
+        "end": "2026-12-19",
+        "category": "Sex Party",
+        "cost": "Free",
+        "when": "Sat, Dec 19 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": null,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/12/20/kinkster-s-craft-club-december-2026-ch9dut",
@@ -14310,7 +23460,8 @@ var EVENTS = [
         "venue": null,
         "city": "Wharton, New Jersey, United States",
         "rsvps": 12,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/20/our-christmas-holiday-tickle-party-gzo9uu",
@@ -14323,7 +23474,8 @@ var EVENTS = [
         "venue": "The Devil’s Lair",
         "city": "Melville, New York, United States",
         "rsvps": 2,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/20/nostalgic-at-the-merchants-house-gmphwm",
@@ -14336,7 +23488,8 @@ var EVENTS = [
         "venue": null,
         "city": "New York City, New York, United States",
         "rsvps": 26,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/20/southjerseynerds-munch-gfu9za",
@@ -14349,7 +23502,8 @@ var EVENTS = [
         "venue": "Top Deck Games",
         "city": "Ashland, New Jersey, United States",
         "rsvps": 33,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/20/hypno-jam-dec-26-qqkrgc",
@@ -14362,7 +23516,8 @@ var EVENTS = [
         "venue": "Less Dead Studio",
         "city": "Poughkeepsie, New York, United States",
         "rsvps": 33,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/20/slipawayandplay-all-male-events-dyowkx",
@@ -14375,7 +23530,8 @@ var EVENTS = [
         "venue": "Info given once your send us your email address!",
         "city": "Morristown, New Jersey, United States",
         "rsvps": 2,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/20/kiki-munch-8idqoa",
@@ -14388,7 +23544,8 @@ var EVENTS = [
         "venue": "Two locals brewery",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 41,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/20/punk-in-drublic-midget-wrestling-edition-50zzq7",
@@ -14401,7 +23558,8 @@ var EVENTS = [
         "venue": "Halftime sports and music",
         "city": "Newark, Delaware, United States",
         "rsvps": 8,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/20/call-the-babysitter-nyc-abdl-littles-playtime-movie-night-yqjce9",
@@ -14414,7 +23572,8 @@ var EVENTS = [
         "venue": "Studio125",
         "city": "Manhattan, New York, United States",
         "rsvps": 17,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/20/dinner-at-hox-dec-2026-open-house-1mh1mw",
@@ -14427,7 +23586,134 @@ var EVENTS = [
         "venue": "HOX ( House of X )",
         "city": "Matamoras, Pennsylvania, United States",
         "rsvps": 4,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/20/bleed-like-me-blood-as-primal-desire-with-ms_kitten_-hpcpoy",
+        "name": "Bleed Like Me: Blood as Primal Desire with @MS_KITTEN_",
+        "start": "2026-12-20",
+        "end": "2026-12-20",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Dec 19 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 231,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/20/green-light-district-consent-in-kink-with-ms_kitten_-mguk5a",
+        "name": "Green Light District: Consent in Kink with @MS_KITTEN_",
+        "start": "2026-12-20",
+        "end": "2026-12-20",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Dec 20 at 11:00 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 274,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/20/online-navigating-your-reputation-in-bdsm-for-success-and-respect-with-princess-rara-tcki23",
+        "name": "ONLINE: Navigating Your Reputation in BDSM for Success and Respect with Princess Rara",
+        "start": "2026-12-20",
+        "end": "2026-12-20",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Dec 20 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 148,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/20/administrative-skills-for-submissives-scheduling-for-you-and-your-dominant-with-princexxchanny-1cbzcw",
+        "name": "Administrative Skills for Submissives: Scheduling for You and Your Dominant with PrinceXxChanny",
+        "start": "2026-12-20",
+        "end": "2026-12-20",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Dec 20 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 27,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/20/virtual-class-pain-domination-with-master-gushy-4lhrn5",
+        "name": "VIRTUAL CLASS - PAIN - DOMINATION WITH MASTER GUSHY",
+        "start": "2026-12-20",
+        "end": "2026-12-20",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Dec 20 at 6:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 4,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/20/pleasure-as-prayer-a-men-s-virtual-tantra-circle-ktribi",
+        "name": "Pleasure as Prayer: A Men’s Virtual Tantra Circle",
+        "start": "2026-12-20",
+        "end": "2026-12-20",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Dec 20 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 51,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/20/one-last-holiday-virtual-munch-lvt3ic",
+        "name": "One last holiday virtual munch!",
+        "start": "2026-12-20",
+        "end": "2026-12-20",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Sun, Dec 20 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 13,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/20/the-munch-for-s-type-men-and-friends-eww3dk",
+        "name": "The Munch for s-type Men And Friends",
+        "start": "2026-12-20",
+        "end": "2026-12-20",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Sun, Dec 20 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 9,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/20/who-s-watching-the-door-vetting-community-accountability-recorded-730q2m",
+        "name": "Who's Watching the Door? Vetting & Community Accountability (Recorded)",
+        "start": "2026-12-20",
+        "end": "2026-12-20",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Dec 20 at 10:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 34,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/12/21/slipawayandplay-all-male-events-eesaqk",
@@ -14440,7 +23726,8 @@ var EVENTS = [
         "venue": "Info given once your send us your email address!",
         "city": "Morristown, New Jersey, United States",
         "rsvps": 5,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/21/open-rope-practice-coil-cord-12-21-yd51de",
@@ -14453,7 +23740,8 @@ var EVENTS = [
         "venue": "Coil & Cord Studio",
         "city": "Brooklyn, New York, United States",
         "rsvps": 7,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/21/embrace-the-lines-a-mindfulness-meditative-rope-experience-bylgce",
@@ -14466,7 +23754,8 @@ var EVENTS = [
         "venue": "TBD",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 84,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/21/howling-wolf-munch-svn3qp",
@@ -14479,7 +23768,8 @@ var EVENTS = [
         "venue": "BJ'S Restaurant and Brewhouse",
         "city": "Toms River, New Jersey, United States",
         "rsvps": 14,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/21/bobinsana-dream-yoga-tea-social-dream-sharing-winter-solstice-edition-vp4k1t",
@@ -14492,7 +23782,8 @@ var EVENTS = [
         "venue": "Address given in email confirmation. Please contact us if paying at door.",
         "city": "New York City, New York, United States",
         "rsvps": 16,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/21/death-cafe-at-prism-1bnoxg",
@@ -14505,7 +23796,78 @@ var EVENTS = [
         "venue": "Prism",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 28,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/21/magick-tickle-munch-for-kinksters-aiv2rv",
+        "name": "Magick Tickle Munch For Kinksters",
+        "start": "2026-12-21",
+        "end": "2026-12-21",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Mon, Dec 21 at 6:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 1,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/21/tes-online-tes-december-board-meeting-zu3af3",
+        "name": "TES ONLINE - TES December Board Meeting",
+        "start": "2026-12-21",
+        "end": "2026-12-21",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Mon, Dec 21 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 7,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/21/sinking-your-teeth-in-erotic-biting-mdpzkt",
+        "name": "Sinking Your Teeth In: Erotic Biting",
+        "start": "2026-12-21",
+        "end": "2026-12-21",
+        "category": "Educational",
+        "cost": null,
+        "when": "Mon, Dec 21 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 9,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/21/online-sex-magick-for-kinksters-with-miriam-batasherah-green-sdrwax",
+        "name": "ONLINE: Sex Magick for Kinksters with Miriam BatAsherah Green",
+        "start": "2026-12-21",
+        "end": "2026-12-21",
+        "category": "Educational",
+        "cost": null,
+        "when": "Mon, Dec 21 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 110,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/21/supporting-your-s-type-for-dummies-a-handy-manual-for-d-types-with-willdelight-s6umng",
+        "name": "Supporting Your s-Type for Dummies: A Handy Manual for D-Types with @WillDelight",
+        "start": "2026-12-21",
+        "end": "2026-12-21",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Dec 20 at 6:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 176,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/12/22/queer-slosh-ndvmlv",
@@ -14518,7 +23880,8 @@ var EVENTS = [
         "venue": null,
         "city": "Shavertown, Pennsylvania, United States",
         "rsvps": 6,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/22/tethered-tuesday-philly-s-weekly-rope-community-lab-zlrvtc",
@@ -14531,7 +23894,8 @@ var EVENTS = [
         "venue": "The Nest",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 13,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/22/society-of-the-sexy-sirens-presents-tacos-tits-bvuflj",
@@ -14544,7 +23908,8 @@ var EVENTS = [
         "venue": "Location given 24 hours prior",
         "city": "Melville, New York, United States",
         "rsvps": 3,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/22/queer-massage-magic-a-tantric-bi-pansexual-experience-kkvwpk",
@@ -14557,7 +23922,8 @@ var EVENTS = [
         "venue": "Address given in email confirmation. Please contact us if paying at door.",
         "city": "New York City, New York, United States",
         "rsvps": 13,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/22/secret-pleasures-tuesday-titties-tushies-party-8pm-to-12am-mohtkb",
@@ -14570,7 +23936,8 @@ var EVENTS = [
         "venue": "Secret Pleasures at the Back Door of the Wi Fi Cafe",
         "city": "Emmaus, Pennsylvania, United States",
         "rsvps": 81,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/22/threshold-the-art-of-the-tickle-jzqh13",
@@ -14583,7 +23950,8 @@ var EVENTS = [
         "venue": null,
         "city": "Brooklyn, New York, United States",
         "rsvps": 28,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/22/the-naughty-list-goddess-worship-striptease-play-party-bronx-nyc-fids5r",
@@ -14596,7 +23964,78 @@ var EVENTS = [
         "venue": null,
         "city": "Bronx, New York, United States",
         "rsvps": 11,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/22/femmes-burning-flowers-seshhh-now-on-tuesdays-xm4xin",
+        "name": "FEMMES Burning Flowers Seshhh -Now on Tuesdays!",
+        "start": "2026-12-22",
+        "end": "2026-12-22",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Tue, Dec 22 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 2,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/22/he-presents-religious-trauma-by-leatherchaplain-free-virtual-pqbgxh",
+        "name": "HE Presents: Religious Trauma by LeatherChaplain (Free & Virtual)",
+        "start": "2026-12-22",
+        "end": "2026-12-22",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Dec 22 at 7:15 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": null,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/22/read-post-vetted-event-power-exchange-together-kootenays-201-301-virtual-discussion-22-dec-26-ein5va",
+        "name": "READ POST!! Vetted Event - Power Exchange Together - Kootenays 201/301 Virtual discussion 22 Dec 26",
+        "start": "2026-12-22",
+        "end": "2026-12-22",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Tue, Dec 22 at 8:20 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 9,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/22/cshs-book-club-tgertt",
+        "name": "CSHS Book Club",
+        "start": "2026-12-22",
+        "end": "2026-12-22",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Dec 22 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 5,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/22/online-writing-spicy-with-sinclair-sexsmith-6nhfm7",
+        "name": "ONLINE: Writing Spicy with Sinclair Sexsmith",
+        "start": "2026-12-22",
+        "end": "2026-12-22",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Dec 22 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 64,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/12/23/breakfast-and-head-play-and-gang-bang-party-10am-3pm-rsvp-now-and-get-10-off-entry-fee-c6k8wz",
@@ -14609,7 +24048,8 @@ var EVENTS = [
         "venue": "Sinners Paradise Club",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 21,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/23/secret-pleasures-lunchtime-play-party-12pm-to-3pm-a1a0kg",
@@ -14622,7 +24062,8 @@ var EVENTS = [
         "venue": "Secret Pleasures is at the Back Door of the Wi Fi Cafe",
         "city": "Emmaus, Pennsylvania, United States",
         "rsvps": 88,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/23/lwp-night-out-on-the-town-koziar-s-christmas-village-5tzuxu",
@@ -14635,7 +24076,8 @@ var EVENTS = [
         "venue": "Koziar's Christmas Village",
         "city": "Bernville, Pennsylvania, United States",
         "rsvps": 42,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/23/simply-social-by-smitten-riz9ej",
@@ -14648,7 +24090,8 @@ var EVENTS = [
         "venue": "Jake’s Saloon",
         "city": "Manhattan, New York, United States",
         "rsvps": 27,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/23/bdsm-skillshare-play-lq1ntx",
@@ -14661,7 +24104,8 @@ var EVENTS = [
         "venue": "The Kink Lair",
         "city": "Scranton, Pennsylvania, United States",
         "rsvps": 78,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/23/the-loom-presents-harness-class-tq42nr",
@@ -14674,7 +24118,8 @@ var EVENTS = [
         "venue": "The Kink Lair",
         "city": "Scranton, Pennsylvania, United States",
         "rsvps": 14,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/23/wed-dec-23-2026-lics-weekly-wednesday-slosh-dbf6a6",
@@ -14687,7 +24132,8 @@ var EVENTS = [
         "venue": "Mr. Beery's",
         "city": "Bethpage, New York, United States",
         "rsvps": 22,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/23/sinners-paradise-presents-blackout-wacky-wednesdays-25-all-night-after-party-included-cule8x",
@@ -14700,7 +24146,50 @@ var EVENTS = [
         "venue": "Sinners Paradise Club",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 21,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/23/apron-day-j8v8mr",
+        "name": "APRON DAY",
+        "start": "2026-12-23",
+        "end": "2026-12-24",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Dec 22 – 23 · Tue 7:00 PM – Wed 7:00 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 24,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/23/the-ultimate-guide-for-teasing-and-orgasm-control-jjcpvn",
+        "name": "The Ultimate Guide for Teasing and Orgasm Control",
+        "start": "2026-12-23",
+        "end": "2026-12-23",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Dec 23 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 11,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/23/the-leather-chronicles-kn2hk3",
+        "name": "The Leather Chronicles",
+        "start": "2026-12-23",
+        "end": "2026-12-23",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Dec 23 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 36,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/12/24/christmas-meet-greet-x-sneaky-link-ew5luq",
@@ -14713,7 +24202,8 @@ var EVENTS = [
         "venue": "gems lounge",
         "city": "Brooklyn, New York, United States",
         "rsvps": 76,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/24/gang-bang-night-in-paradise-a-thursday-night-of-pure-ecstasy-rsvp-now-and-get-10-off-entree-fee-2jqh9b",
@@ -14726,7 +24216,8 @@ var EVENTS = [
         "venue": "Sinners Paradise Club",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 28,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/25/orgiies-r-us-chrismas-party-25th-cllcpi",
@@ -14739,7 +24230,8 @@ var EVENTS = [
         "venue": "Lick Lounge",
         "city": "Melville, New York, United States",
         "rsvps": 1,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/25/medusas-playhouse-presents-fantasy-fridays-open-to-all-couples-and-singles-males-females-qhqtrc",
@@ -14752,7 +24244,78 @@ var EVENTS = [
         "venue": "MEDUSAS PLAYHOUSE",
         "city": "West Babylon, New York, United States",
         "rsvps": 20,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/25/big-beautiful-holiday-gift-exchange-0t3y5h",
+        "name": "Big Beautiful Holiday Gift Exchange",
+        "start": "2026-12-25",
+        "end": "2026-12-25",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Fri, Dec 25 at 5:00 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 77,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/25/coworking-hours-agltw8",
+        "name": "Coworking Hours",
+        "start": "2026-12-25",
+        "end": "2026-12-25",
+        "category": "Social",
+        "cost": null,
+        "when": "Fri, Dec 25 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 4,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/25/international-kink-week-ftqljm",
+        "name": "International Kink Week",
+        "start": "2026-12-25",
+        "end": "2026-12-31",
+        "category": "Conference / Festival",
+        "cost": "Free",
+        "when": "Dec 25, 2026 – Jan 1, 2027 · Fri 3:00 PM – Fri 3:00 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 6,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/25/6th-annual-december-edition-the-comfort-zone-by-lace-s-lair-3p-edt-6ok3gj",
+        "name": "6th Annual DECEMBER Edition \"The Comfort Zone\" by Lace's Lair-3p-??? EDT",
+        "start": "2026-12-25",
+        "end": "2026-12-25",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Fri, Dec 25 at 3:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 20,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/25/isolation-storytime-afterparty-2026-12-25-ubaqfk",
+        "name": "Isolation Storytime Afterparty - 2026-12-25",
+        "start": "2026-12-25",
+        "end": "2026-12-25",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Fri, Dec 25 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 2,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/12/26/new-york-city-kinky-speed-dating-mixer-christmas-edition-uukokq",
@@ -14765,7 +24328,8 @@ var EVENTS = [
         "venue": "The Westbury",
         "city": "Manhattan, New York, United States",
         "rsvps": 5,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/26/naked-yoga-new-york-gifmpv",
@@ -14778,7 +24342,8 @@ var EVENTS = [
         "venue": "Address given in email confirmation. Please contact us if paying at door.",
         "city": "New York City, New York, United States",
         "rsvps": 5,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/26/fuk-n-go-day-orgy-men-male-only-jd7k4l",
@@ -14791,7 +24356,8 @@ var EVENTS = [
         "venue": null,
         "city": "Elizabeth, New Jersey, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/26/mast-clifton-december-2026-meeting-l9uxn9",
@@ -14804,7 +24370,8 @@ var EVENTS = [
         "venue": "IHOP",
         "city": "Clifton, New Jersey, United States",
         "rsvps": 11,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/26/fetish-festivities-nwpgls",
@@ -14816,8 +24383,9 @@ var EVENTS = [
         "when": "Sat, Dec 26 at 3:00 PM",
         "venue": "The Church",
         "city": "New Paltz, New York, United States",
-        "rsvps": 17,
-        "image": null
+        "rsvps": 18,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/26/bdsm-dungeon-101-foundations-safety-etiquette-td6txh",
@@ -14830,7 +24398,8 @@ var EVENTS = [
         "venue": "The Venue",
         "city": "Bethlehem, Pennsylvania, United States",
         "rsvps": 45,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/26/nightmare-after-christmas-play-party-and-white-elephant-exchange-iwrnwd",
@@ -14843,7 +24412,8 @@ var EVENTS = [
         "venue": "The Venue",
         "city": "Bethlehem, Pennsylvania, United States",
         "rsvps": 56,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/26/coed-bondage-rope-kink-night-all-gender-uni-sexual-hlhjrc",
@@ -14856,7 +24426,8 @@ var EVENTS = [
         "venue": null,
         "city": "Elizabeth, New Jersey, United States",
         "rsvps": 4,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/26/temple-night-nyc-ceremonial-tantra-party-4kigcw",
@@ -14869,7 +24440,8 @@ var EVENTS = [
         "venue": "Pagans Paradise",
         "city": "New York City, New York, United States",
         "rsvps": 22,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/26/bbw-hotel-play-party-gbfnzg",
@@ -14881,8 +24453,9 @@ var EVENTS = [
         "when": "Sat, Dec 26 at 8:00 PM",
         "venue": null,
         "city": "Philadelphia, Pennsylvania, United States",
-        "rsvps": 7,
-        "image": null
+        "rsvps": 9,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/26/secret-pleasures-red-nose-reindeer-neon-glow-party-xp1pbd",
@@ -14895,7 +24468,8 @@ var EVENTS = [
         "venue": "Secret Pleasures is at the Back Door of the Wi Fi Cafe",
         "city": "Emmaus, Pennsylvania, United States",
         "rsvps": 109,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/26/medusa-s-playhouse-freaky-bab-bunnies-presents-the-naughty-list-open-to-couples-and-females-only-bipcvx",
@@ -14908,7 +24482,8 @@ var EVENTS = [
         "venue": "MEDUSAS PLAYHOUSE",
         "city": "West Babylon, New York, United States",
         "rsvps": 29,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/26/bdsm-night-in-paradise-touch-rsvp-now-wpue5r",
@@ -14921,7 +24496,8 @@ var EVENTS = [
         "venue": "Sinners Paradise Club",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 27,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/26/the-velvet-house-presents-the-naughty-list-xs5ttg",
@@ -14934,7 +24510,22 @@ var EVENTS = [
         "venue": "The Velvet House",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 3,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/26/destination-wedding-vegas-dungeoness-1wickedalex-50swip",
+        "name": "Destination Wedding Vegas - Dungeoness & 1WickedAlex",
+        "start": "2026-12-26",
+        "end": "2026-12-27",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Dec 26 – 27 · Sat 3:00 PM – Sun 4:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 5,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/12/27/december-placeholder-sunday-brunch-with-the-court-foh7ox",
@@ -14947,7 +24538,8 @@ var EVENTS = [
         "venue": "TBD",
         "city": "Downingtown, Pennsylvania, United States",
         "rsvps": 26,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/27/decemeber-power-exchange-roundtable-eprg8x",
@@ -14960,7 +24552,8 @@ var EVENTS = [
         "venue": "The Outpost (address w registration via google form)",
         "city": "Hammonton, New Jersey, United States",
         "rsvps": 16,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/27/slipawayandplay-all-male-events-y1sr23",
@@ -14973,7 +24566,78 @@ var EVENTS = [
         "venue": "Info given after your email address is supplied.",
         "city": "Asbury Park, New Jersey, United States",
         "rsvps": 4,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/27/swell-for-me-mastering-saline-infusion-with-ms_kitten_-iapqsp",
+        "name": "Swell For Me: Mastering Saline Infusion with @MS_KITTEN_",
+        "start": "2026-12-27",
+        "end": "2026-12-27",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Dec 27 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 199,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/27/m-s-301-tds-welcomes-knight-of-xanadu-the-girl-star-in-a-festive-holiday-m-s-style-bc47g5",
+        "name": "M/s 301-TDS welcomes KNIGHT OF XANADU & the girl star in, \"A FESTIVE HOLIDAY M/s STYLE\"",
+        "start": "2026-12-27",
+        "end": "2026-12-27",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Dec 27 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 278,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/27/december-27th-11-00-pst-ethical-dominance-2-creating-a-care-and-keeping-document-with-nyxienoc-l7jg19",
+        "name": "December 27th, 11:00 PST- Ethical Dominance 2- Creating a Care and Keeping Document with NyxieNoc",
+        "start": "2026-12-27",
+        "end": "2026-12-27",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Dec 27 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 26,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/27/finding-your-kink-a-damsel-in-the-kink-community-8dcqvd",
+        "name": "Finding Your Kink: A Damsel in the Kink Community",
+        "start": "2026-12-27",
+        "end": "2026-12-27",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sun, Dec 27 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 2,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/27/open-q-a-bring-your-questions-sponsorship-event-jryogx",
+        "name": "Open Q&A: bring your questions! (Sponsorship Event)",
+        "start": "2026-12-27",
+        "end": "2026-12-27",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sun, Dec 27 at 10:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 29,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/12/28/slipawayandplay-all-male-events-8pf5ij",
@@ -14986,7 +24650,8 @@ var EVENTS = [
         "venue": "Info given after your email address is supplied.",
         "city": "Asbury Park, New Jersey, United States",
         "rsvps": 6,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/28/open-rope-practice-coil-cord-12-28-hoepwl",
@@ -14999,7 +24664,8 @@ var EVENTS = [
         "venue": "Coil & Cord Studio",
         "city": "Brooklyn, New York, United States",
         "rsvps": 5,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/28/lasc-whip-share-qaaacc",
@@ -15012,7 +24678,8 @@ var EVENTS = [
         "venue": null,
         "city": "Dover Plains, New York, United States",
         "rsvps": 2,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/28/kinky-craft-collective-december-munch-uol6iy",
@@ -15025,7 +24692,8 @@ var EVENTS = [
         "venue": "Town and Country Diner",
         "city": "Bordentown, New Jersey, United States",
         "rsvps": 25,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/28/nj-rope-lab-formerly-nj-rope-bite-an-open-event-n9vmfx",
@@ -15038,7 +24706,8 @@ var EVENTS = [
         "venue": "The Pride Center of NJ",
         "city": "Highland Park, New Jersey, United States",
         "rsvps": 26,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/28/f-like-a-pro-hand-skills-workshop-and-after-hours-5g9jlu",
@@ -15051,7 +24720,8 @@ var EVENTS = [
         "venue": "Address given in email confirmation. Please contact us if paying at door.",
         "city": "New York City, New York, United States",
         "rsvps": 10,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/28/shibari-holiday-party-lnj0xh",
@@ -15064,7 +24734,8 @@ var EVENTS = [
         "venue": "Fantasies",
         "city": "Keyport, New Jersey, United States",
         "rsvps": 7,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/28/she-bari-holiday-party-4ztbuu",
@@ -15077,7 +24748,78 @@ var EVENTS = [
         "venue": null,
         "city": "Keyport, New Jersey, United States",
         "rsvps": 3,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/28/role-playing-or-role-being-identity-mental-health-ifdbqk",
+        "name": "Role-Playing or Role-Being: Identity & Mental Health",
+        "start": "2026-12-28",
+        "end": "2026-12-28",
+        "category": "Educational",
+        "cost": null,
+        "when": "Mon, Dec 28 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 25,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/28/red-rose-socials-virtual-event-12-28-26-862285",
+        "name": "Red Rose Socials Virtual Event 12/28/26",
+        "start": "2026-12-28",
+        "end": "2026-12-28",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Mon, Dec 28 at 6:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 3,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/28/areas-of-control-mapping-authority-transfer-3h45az",
+        "name": "Areas of Control: Mapping Authority Transfer",
+        "start": "2026-12-28",
+        "end": "2026-12-28",
+        "category": "Educational",
+        "cost": null,
+        "when": "Mon, Dec 28 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 148,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/28/monday-virtual-community-gathering-jik1dj",
+        "name": "Monday Virtual Community Gathering",
+        "start": "2026-12-28",
+        "end": "2026-12-28",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Mon, Dec 28 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 29,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/28/online-safe-and-sexy-impact-play-with-blood-with-miss-mackenzee-tpysm1",
+        "name": "ONLINE: Safe and Sexy Impact Play with Blood with Miss Mackenzee",
+        "start": "2026-12-28",
+        "end": "2026-12-28",
+        "category": "Educational",
+        "cost": null,
+        "when": "Mon, Dec 28 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 164,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/12/29/tethered-tuesday-philly-s-weekly-rope-community-lab-z4kpcw",
@@ -15090,7 +24832,8 @@ var EVENTS = [
         "venue": "The Nest",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 11,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/29/queer-kiss-cuddles-a-bi-pansexual-experience-nfdt9h",
@@ -15103,7 +24846,8 @@ var EVENTS = [
         "venue": "Address given in email confirmation. Please contact us if paying at door.",
         "city": "New York City, New York, United States",
         "rsvps": 14,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/29/secret-pleasures-tuesday-titties-tushies-party-8pm-to-12am-vpjnrl",
@@ -15116,7 +24860,8 @@ var EVENTS = [
         "venue": "Secret Pleasures at the Back Door of the Wi Fi Cafe",
         "city": "Emmaus, Pennsylvania, United States",
         "rsvps": 90,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/29/xmas-orgy-ucodq1",
@@ -15129,7 +24874,92 @@ var EVENTS = [
         "venue": "country inn of lancaster",
         "city": "Lancaster, Pennsylvania, United States",
         "rsvps": 17,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/29/solo-self-ties-for-frazzled-nervous-systems-okyv6t",
+        "name": "Solo Self-Ties for Frazzled Nervous Systems",
+        "start": "2026-12-29",
+        "end": "2026-12-29",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Dec 29 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 91,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/29/virtual-events-shibari-for-suspension-series-soft-skills-6-preparing-for-a-real-scene-854osj",
+        "name": "Virtual Events Shibari for Suspension series, soft skills 6: preparing for a \"real\" scene",
+        "start": "2026-12-29",
+        "end": "2026-12-29",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Dec 29 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 5,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/29/femmes-burning-flowers-seshhh-now-on-tuesdays-erhzcj",
+        "name": "FEMMES Burning Flowers Seshhh -Now on Tuesdays!",
+        "start": "2026-12-29",
+        "end": "2026-12-29",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Tue, Dec 29 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 6,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/29/trauma-informed-bottoming-submission-zrxrak",
+        "name": "Trauma-Informed Bottoming & Submission",
+        "start": "2026-12-29",
+        "end": "2026-12-29",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Dec 29 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 193,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/29/online-put-a-sigil-on-it-with-miriam-batasherah-green-exyy5w",
+        "name": "ONLINE: Put a Sigil on It! with Miriam BatAsherah Green",
+        "start": "2026-12-29",
+        "end": "2026-12-29",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Dec 29 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 15,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/29/virtual-rec-get-this-party-started-event-hosting-community-organizing-w-the-lady-v-4mip6j",
+        "name": "VIRTUAL & REC: \"Get This Party Started! - Event Hosting & Community Organizing\" w/ The Lady V",
+        "start": "2026-12-29",
+        "end": "2026-12-29",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Dec 29 at 9:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 22,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/12/30/secret-pleasures-lunchtime-play-party-12pm-to-3pm-n8pi4x",
@@ -15142,7 +24972,8 @@ var EVENTS = [
         "venue": "Secret Pleasures is at the Back Door of the Wi Fi Cafe",
         "city": "Emmaus, Pennsylvania, United States",
         "rsvps": 89,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/30/the-cookout-munch-3wdtsk",
@@ -15155,7 +24986,8 @@ var EVENTS = [
         "venue": "G-Host Bar and Lounge",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 51,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/30/wed-dec-30-2026-long-island-community-munch-49vkwa",
@@ -15168,7 +25000,8 @@ var EVENTS = [
         "venue": "Main Event",
         "city": "East Farmingdale, Farmingdale, New York, United States",
         "rsvps": 16,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/30/d-s-combined-roundtable-recap-trust-expectations-conflict-wlkjdy",
@@ -15181,7 +25014,8 @@ var EVENTS = [
         "venue": "The Venue",
         "city": "Bethlehem, Pennsylvania, United States",
         "rsvps": 6,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/30/wednesday-play-party-zvvh48",
@@ -15194,7 +25028,8 @@ var EVENTS = [
         "venue": "The Kink Lair",
         "city": "Scranton, Pennsylvania, United States",
         "rsvps": 83,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/30/dungeon-101-kmurio",
@@ -15207,7 +25042,8 @@ var EVENTS = [
         "venue": "The Devil’s Lair",
         "city": "Melville, New York, United States",
         "rsvps": 10,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/30/postponed-body-language-a-pride-celebration-of-muses-unofficial-event-page-cqwmfb",
@@ -15220,7 +25056,8 @@ var EVENTS = [
         "venue": "Hit Me Up",
         "city": "Manhattan, New York, United States",
         "rsvps": 25,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/30/thirst-men-male-only-xwd4k8",
@@ -15233,7 +25070,8 @@ var EVENTS = [
         "venue": null,
         "city": "Elizabeth, New Jersey, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/30/wed-dec-30-2026-lics-weekly-wednesday-slosh-qdcl1e",
@@ -15246,7 +25084,36 @@ var EVENTS = [
         "venue": "Mr. Beery's",
         "city": "Bethpage, New York, United States",
         "rsvps": 24,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/30/free-online-shibari-class-the-f2-futomomo-zt7wqr",
+        "name": "[FREE Online Shibari Class] The F2 Futomomo",
+        "start": "2026-12-30",
+        "end": "2026-12-30",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Wed, Dec 30 at 3:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 341,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/30/embracing-duality-mixing-empathy-and-sadism-hp9rwc",
+        "name": "Embracing Duality: Mixing Empathy and Sadism",
+        "start": "2026-12-30",
+        "end": "2026-12-30",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Dec 30 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 13,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2026/12/31/midnight-at-xanadu-didlcc",
@@ -15259,7 +25126,8 @@ var EVENTS = [
         "venue": "On the Ticket",
         "city": "New Jersey, United States",
         "rsvps": 15,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/31/masque-new-year-s-eve-celebration-l1xib3",
@@ -15271,8 +25139,9 @@ var EVENTS = [
         "when": "Thu, Dec 31 at 6:30 PM",
         "venue": "Prism ~ Please reach out if unfamiliar with our location. Arts District",
         "city": "Philadelphia, Pennsylvania, United States",
-        "rsvps": 194,
-        "image": null
+        "rsvps": 195,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/31/new-years-at-hox-2026-27-k9u9os",
@@ -15285,7 +25154,8 @@ var EVENTS = [
         "venue": "HOX ( House of X )",
         "city": "Matamoras, Pennsylvania, United States",
         "rsvps": 14,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/31/the-colosseum-presents-a-new-year-s-eve-kink-celebration-2gr4li",
@@ -15298,7 +25168,8 @@ var EVENTS = [
         "venue": null,
         "city": "Brooklyn, New York, United States",
         "rsvps": 178,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/31/kiss-me-at-midnight-g9os3u",
@@ -15311,7 +25182,8 @@ var EVENTS = [
         "venue": null,
         "city": "Glen Gardner, New Jersey, United States",
         "rsvps": 5,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/31/nye-meet-greet-x-sneaky-link-kdgidb",
@@ -15324,7 +25196,8 @@ var EVENTS = [
         "venue": "gems lounge",
         "city": "Brooklyn, New York, United States",
         "rsvps": 90,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/31/angels-demons-a-new-year-s-eve-party-gieqbd",
@@ -15337,7 +25210,8 @@ var EVENTS = [
         "venue": "Culte: Address with ticket confirmation",
         "city": "Queens, New York, United States",
         "rsvps": 113,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/31/new-year-s-eve-in-the-garden-of-hedon-6qlpzw",
@@ -15350,7 +25224,8 @@ var EVENTS = [
         "venue": "Pagan's Paradise",
         "city": "New York City, New York, United States",
         "rsvps": 23,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/31/new-year-s-eve-in-the-garden-of-hedon-a-tantra-kink-play-party-ztrux3",
@@ -15363,7 +25238,8 @@ var EVENTS = [
         "venue": "Pagans Paradise",
         "city": "New York City, New York, United States",
         "rsvps": 23,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2026/12/31/sexy-vibes-only-2026-last-hot-she-got-blacked-xxx-party-of-2026-w-sexy-lingerie-contest-z4q7mu",
@@ -15376,7 +25252,36 @@ var EVENTS = [
         "venue": "Private Hotel",
         "city": "Edison, New Jersey, United States",
         "rsvps": 23,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/31/coworking-hours-6uthh3",
+        "name": "Coworking Hours",
+        "start": "2026-12-31",
+        "end": "2026-12-31",
+        "category": "Social",
+        "cost": null,
+        "when": "Thu, Dec 31 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 4,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2026/12/31/isolation-storytime-afterparty-2026-12-31-new-year-s-eve-q6adxa",
+        "name": "Isolation Storytime Afterparty - 2026-12-31 - New Year's Eve!",
+        "start": "2026-12-31",
+        "end": "2026-12-31",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Thu, Dec 31 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 1,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2027/01/01/kinky-karibbean-carnival-sex-party-tour-2027-rfxoj3",
@@ -15389,7 +25294,64 @@ var EVENTS = [
         "venue": "7 City Tour",
         "city": "New York City, New York, United States",
         "rsvps": 20,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/01/online-month-of-mindfulness-for-kinksters-launch-day-urds89",
+        "name": "ONLINE: Month of Mindfulness for Kinksters (Launch Day)",
+        "start": "2027-01-01",
+        "end": "2027-01-01",
+        "category": "Educational",
+        "cost": null,
+        "when": "Fri, Jan 1, 2027 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 106,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/01/mina-s-playboy-playmate-quest-pbrjrg",
+        "name": "Mina's Playboy Playmate Quest",
+        "start": "2027-01-01",
+        "end": "2027-01-01",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Fri, Jan 1, 2027 at 6:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 90,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/01/2026-year-end-review-kink-planning-for-2027-j168q0",
+        "name": "2026 Year End Review & Kink Planning for 2027",
+        "start": "2027-01-01",
+        "end": "2027-01-01",
+        "category": "Educational",
+        "cost": null,
+        "when": "Fri, Jan 1, 2027 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 40,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/01/isolation-storytime-afterparty-2027-01-01-paoe3n",
+        "name": "Isolation Storytime Afterparty - 2027-01-01",
+        "start": "2027-01-01",
+        "end": "2027-01-01",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Fri, Jan 1, 2027 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 2,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2027/01/02/freaks-on-foot-a-weekly-walking-social-fwt55d",
@@ -15402,7 +25364,8 @@ var EVENTS = [
         "venue": "Park City Center - Kohl's Entrance",
         "city": "Lancaster, Pennsylvania, United States",
         "rsvps": 13,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/02/shibari-for-suspension-elctup",
@@ -15415,7 +25378,8 @@ var EVENTS = [
         "venue": "TBA",
         "city": "Elizabethtown, Pennsylvania, United States",
         "rsvps": 9,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/02/members-appreciation-night-5zxacq",
@@ -15428,7 +25392,8 @@ var EVENTS = [
         "venue": "The Venue",
         "city": "Bethlehem, Pennsylvania, United States",
         "rsvps": 58,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/02/caged-cucked-bisexual-xxx-meet-and-play-party-9pm-1am-vokhor",
@@ -15441,7 +25406,22 @@ var EVENTS = [
         "venue": null,
         "city": "Cherry Hill, New Jersey, United States",
         "rsvps": 253,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/02/tiny-domination-making-people-bigger-than-you-feel-small-with-birds-online-esnlun",
+        "name": "Tiny domination - Making people bigger than you feel small with -birds- (online)",
+        "start": "2027-01-02",
+        "end": "2027-01-02",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Jan 2, 2027 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 48,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2027/01/03/philadelphia-kinky-speed-dating-mixer-sapphic-edition-v16gvn",
@@ -15454,7 +25434,8 @@ var EVENTS = [
         "venue": "Urban Village Brewing",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 3,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/03/sunday-brunch-swingers-lifestyle-meet-and-greet-first-sunday-of-the-new-year-6lhvig",
@@ -15467,7 +25448,8 @@ var EVENTS = [
         "venue": "LOVE LUST",
         "city": "Paterson, New Jersey, United States",
         "rsvps": 12,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/03/hypno-jam-jan-27-c5gsms",
@@ -15480,7 +25462,8 @@ var EVENTS = [
         "venue": "Less Dead Studio",
         "city": "Poughkeepsie, New York, United States",
         "rsvps": 8,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/03/lasc-monthly-rope-share-pkj2v9",
@@ -15493,7 +25476,8 @@ var EVENTS = [
         "venue": null,
         "city": "Dover Plains, New York, United States",
         "rsvps": 27,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/03/january-south-street-boardgame-munch-n3bj6e",
@@ -15506,7 +25490,36 @@ var EVENTS = [
         "venue": null,
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 24,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/03/ava-s-eros-writing-group-x2jj44",
+        "name": "Ava's Eros Writing Group",
+        "start": "2027-01-03",
+        "end": "2027-01-03",
+        "category": "Social",
+        "cost": null,
+        "when": "Sun, Jan 3, 2027 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 2,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/03/dark-romance-book-club-the-ritual-5z98xw",
+        "name": "Dark Romance Book Club: The Ritual",
+        "start": "2027-01-03",
+        "end": "2027-01-03",
+        "category": "Social",
+        "cost": null,
+        "when": "Sun, Jan 3, 2027 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 2,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2027/01/04/ladies-night-tnc-8rmx7c",
@@ -15519,7 +25532,8 @@ var EVENTS = [
         "venue": null,
         "city": "Poughkeepsie, New York, United States",
         "rsvps": 3,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/04/mtg-non-monogamous-nerds-unite-university-city-isohu0",
@@ -15532,7 +25546,22 @@ var EVENTS = [
         "venue": null,
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 11,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/04/zoom-meeting-pro-domme-society-besloten-n67hpk",
+        "name": "Zoom meeting Pro Domme Society (besloten)",
+        "start": "2027-01-04",
+        "end": "2027-01-04",
+        "category": "Educational",
+        "cost": null,
+        "when": "Mon, Jan 4, 2027 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 5,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2027/01/05/the-nyc-caregivers-littles-munch-formerly-known-as-the-nyc-ddlg-munch-reounv",
@@ -15545,7 +25574,8 @@ var EVENTS = [
         "venue": "Jake’s Saloon",
         "city": "Manhattan, New York, United States",
         "rsvps": 25,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/05/philly-bottoms-munch-january-2027-y56h1z",
@@ -15558,7 +25588,22 @@ var EVENTS = [
         "venue": "Frankford Hall",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 11,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/05/free-online-taxes-for-s-x-workers-and-marginalized-folx-by-aylin-zok7ol",
+        "name": "FREE ONLINE: Taxes for S*x Workers and Marginalized Folx By Aylin",
+        "start": "2027-01-05",
+        "end": "2027-01-05",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Tue, Jan 5, 2027 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 32,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2027/01/06/slipawayandplay-all-male-events-ve4rnr",
@@ -15571,7 +25616,8 @@ var EVENTS = [
         "venue": "Info given after your email address is supplied.",
         "city": "Morristown, New Jersey, United States",
         "rsvps": 1,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/06/lwp-monthly-meet-mingle-an-evening-of-connection-7elizi",
@@ -15584,7 +25630,64 @@ var EVENTS = [
         "venue": "The Bath Exchange",
         "city": "Bath, Pennsylvania, United States",
         "rsvps": 52,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/06/rope-for-sex-hwaiia",
+        "name": "Rope for Sex",
+        "start": "2027-01-06",
+        "end": "2027-01-06",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Jan 6, 2027 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 27,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/06/how-to-be-a-pro-domme-zoom-class-series-wptipx",
+        "name": "How to Be a Pro Domme - zoom class series!",
+        "start": "2027-01-06",
+        "end": "2027-01-06",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Jan 6, 2027 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 9,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/06/xanadu-submissive-virtual-meeting-ntmuso",
+        "name": "Xanadu Submissive Virtual Meeting",
+        "start": "2027-01-06",
+        "end": "2027-01-06",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Wed, Jan 6, 2027 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 6,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/06/kbc-discussion-22ltvz",
+        "name": "KBC Discussion",
+        "start": "2027-01-06",
+        "end": "2027-01-06",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Wed, Jan 6, 2027 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 6,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2027/01/07/slipawayandplay-all-male-events-zg4jpd",
@@ -15597,7 +25700,8 @@ var EVENTS = [
         "venue": "Info given after your email address is supplied.",
         "city": "Morristown, New Jersey, United States",
         "rsvps": 3,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/07/january-gen-x-munch-ages-40-65-age-restricted-event-ys4wwp",
@@ -15610,7 +25714,36 @@ var EVENTS = [
         "venue": null,
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 15,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/07/drugs-doing-it-risk-reduction-for-chemsex-vinrga",
+        "name": "Drugs & Doing It (Risk Reduction for ChemSex)",
+        "start": "2027-01-07",
+        "end": "2027-01-07",
+        "category": "Educational",
+        "cost": null,
+        "when": "Thu, Jan 7, 2027 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 9,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/07/kgs-munch-online-jvwloc",
+        "name": "KGS Munch Online",
+        "start": "2027-01-07",
+        "end": "2027-01-07",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Thu, Jan 7, 2027 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 14,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2027/01/08/the-curious-gentleman-yizsaa",
@@ -15623,7 +25756,8 @@ var EVENTS = [
         "venue": "The Venue",
         "city": "Bethlehem, Pennsylvania, United States",
         "rsvps": 35,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/08/friday-funday-cuddle-grind-edition-fydimp",
@@ -15636,7 +25770,8 @@ var EVENTS = [
         "venue": "Midtown hotel",
         "city": "Manhattan, New York, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/08/karaoke-at-the-playground-nc2ums",
@@ -15649,7 +25784,8 @@ var EVENTS = [
         "venue": "The Venue",
         "city": "Bethlehem, Pennsylvania, United States",
         "rsvps": 53,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/08/trials-of-temptation-an-interactive-kink-experience-jdxlps",
@@ -15662,7 +25798,78 @@ var EVENTS = [
         "venue": "Address given in email confirmation. Please contact us if paying at door.",
         "city": "New York City, New York, United States",
         "rsvps": 29,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/08/reclaim-your-power-cjykcb",
+        "name": "Reclaim Your Power",
+        "start": "2027-01-08",
+        "end": "2027-01-08",
+        "category": "Educational",
+        "cost": null,
+        "when": "Fri, Jan 8, 2027 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 10,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/08/determining-your-blood-play-risk-profile-online-class-cpnkhf",
+        "name": "Determining Your Blood Play Risk Profile [ONLINE CLASS]",
+        "start": "2027-01-08",
+        "end": "2027-01-08",
+        "category": "Educational",
+        "cost": null,
+        "when": "Fri, Jan 8, 2027 at 4:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 131,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/08/ec-iv-concurso-de-relatos-de-invierno-q3ktnz",
+        "name": "[EC] IV CONCURSO DE RELATOS DE INVIERNO",
+        "start": "2027-01-08",
+        "end": "2027-01-15",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Jan 8 – 15, 2027 · Fri 5:59 PM – Fri 5:59 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 78,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/08/power-exchange-together-rva-s0fqts",
+        "name": "Power Exchange Together RVA",
+        "start": "2027-01-08",
+        "end": "2027-01-08",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Fri, Jan 8, 2027 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 53,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/08/isolation-storytime-afterparty-2027-01-08-kq1be0",
+        "name": "Isolation Storytime Afterparty - 2027-01-08",
+        "start": "2027-01-08",
+        "end": "2027-01-08",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Fri, Jan 8, 2027 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 2,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2027/01/09/freaks-on-foot-a-weekly-walking-social-rwf8ul",
@@ -15675,7 +25882,8 @@ var EVENTS = [
         "venue": "Lebanon Valley Mall",
         "city": "Lebanon, Pennsylvania, United States",
         "rsvps": 8,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/09/rainbow-meeple-january-7t1uh2",
@@ -15688,7 +25896,8 @@ var EVENTS = [
         "venue": "Chancery Market",
         "city": "Wilmington, Delaware, United States",
         "rsvps": 1,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/09/resourcery-nude-yoga-psychedelic-breathwork-hed6oe",
@@ -15701,7 +25910,8 @@ var EVENTS = [
         "venue": null,
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 104,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/09/nyc-kinky-speed-dating-mixer-cougar-edition-uppb4m",
@@ -15713,8 +25923,9 @@ var EVENTS = [
         "when": "Sat, Jan 9, 2027 at 12:00 PM",
         "venue": "The Westbury",
         "city": "New York City, New York, United States",
-        "rsvps": 46,
-        "image": null
+        "rsvps": 45,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/09/deepening-dominance-submission-nr6zlw",
@@ -15726,8 +25937,9 @@ var EVENTS = [
         "when": "Sat, Jan 9, 2027 at 1:00 PM",
         "venue": "Less Dead Studio",
         "city": "Poughkeepsie, New York, United States",
-        "rsvps": 33,
-        "image": null
+        "rsvps": 34,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/09/panera-munch-4rmpct",
@@ -15740,7 +25952,8 @@ var EVENTS = [
         "venue": "Panera Bread",
         "city": "Moosic, Pennsylvania, United States",
         "rsvps": 10,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/09/power-exchange-together-of-snj-gkzr2e",
@@ -15753,7 +25966,8 @@ var EVENTS = [
         "venue": null,
         "city": "West Berlin, New Jersey, United States",
         "rsvps": 6,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/09/tool-time-emfafq",
@@ -15766,7 +25980,8 @@ var EVENTS = [
         "venue": null,
         "city": "Dover Plains, New York, United States",
         "rsvps": 26,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/09/lasc-1st-party-of-the-year-lfvbl0",
@@ -15779,7 +25994,8 @@ var EVENTS = [
         "venue": null,
         "city": "Dover Plains, New York, United States",
         "rsvps": 29,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/09/cd-trans-allies-social-ddy8hs",
@@ -15792,7 +26008,8 @@ var EVENTS = [
         "venue": "The Venue",
         "city": "Bethlehem, Pennsylvania, United States",
         "rsvps": 40,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/09/winter-bdsm-spanking-play-party-quywlm",
@@ -15805,7 +26022,8 @@ var EVENTS = [
         "venue": "A Private House in Suffolk County",
         "city": "Ronkonkoma, New York, United States",
         "rsvps": 29,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/09/escape-to-xanadu-glow-party-ii24hu",
@@ -15815,10 +26033,11 @@ var EVENTS = [
         "category": "BDSM Party",
         "cost": null,
         "when": "Sat, Jan 9, 2027 at 7:00 PM",
-        "venue": "Welcome to Xanadu",
+        "venue": "Welcome to Xanadu. Location Revealed on your Forbidden Ticket Receipt",
         "city": "New Jersey, United States",
-        "rsvps": 2,
-        "image": null
+        "rsvps": 3,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/09/safeword-a-kink-burlesque-experience-after-show-play-party-htxxx4",
@@ -15831,7 +26050,8 @@ var EVENTS = [
         "venue": "Prism Arts",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 94,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/09/cd-trans-allies-after-party-subf5q",
@@ -15844,7 +26064,8 @@ var EVENTS = [
         "venue": "The Venue",
         "city": "Bethlehem, Pennsylvania, United States",
         "rsvps": 43,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/09/naughty-extravaganza-part-2-lzyaau",
@@ -15857,7 +26078,78 @@ var EVENTS = [
         "venue": "Hotel",
         "city": "Brooklyn, New York, United States",
         "rsvps": 43,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/09/the-art-of-pegging-for-beginners-2-hr-webinar-ei5iqx",
+        "name": "The Art of Pegging for Beginners - 2 hr Webinar",
+        "start": "2027-01-09",
+        "end": "2027-01-09",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sat, Jan 9, 2027 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 22,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/09/munch-and-learn-skills-class-january-2027-tentative-6wmhjg",
+        "name": "Munch and Learn Skills Class (January 2027 tentative)",
+        "start": "2027-01-09",
+        "end": "2027-01-09",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sat, Jan 9, 2027 at 2:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 7,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/09/online-your-kink-is-not-my-kink-but-is-your-kink-ok-with-sir-panda-ij6af3",
+        "name": "ONLINE: Your Kink Is Not My Kink - But Is Your Kink OK? with Sir Panda",
+        "start": "2027-01-09",
+        "end": "2027-01-09",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Jan 9, 2027 at 5:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 143,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/09/touch-me-like-that-sex-orgasms-pleasure-on-testosterone-for-trans-folks-and-their-lovers-gn3ugc",
+        "name": "Touch Me Like That: Sex, Orgasms & Pleasure on Testosterone for Trans Folks and their Lovers",
+        "start": "2027-01-09",
+        "end": "2027-01-09",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Jan 9, 2027 at 5:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 15,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/09/the-art-of-being-seen-crafting-a-profile-that-attracts-gdudow",
+        "name": "The Art of Being Seen: Crafting a Profile That Attracts",
+        "start": "2027-01-09",
+        "end": "2027-01-09",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Jan 9, 2027 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 7,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2027/01/10/sold-out-the-fire-massage-series-in-person-january-p05vzo",
@@ -15870,7 +26162,8 @@ var EVENTS = [
         "venue": "Ruby Corral",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 66,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/10/the-nourishing-series-launch-jan-27-sruxna",
@@ -15883,7 +26176,8 @@ var EVENTS = [
         "venue": "Less Dead Studio",
         "city": "Poughkeepsie, New York, United States",
         "rsvps": 7,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/10/slipawayandplay-all-male-events-vvfxph",
@@ -15896,7 +26190,8 @@ var EVENTS = [
         "venue": "Info given after your email address is supplied.",
         "city": "Asbury Park, New Jersey, United States",
         "rsvps": 1,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/10/reclaiming-the-bj-htgyqs",
@@ -15909,7 +26204,92 @@ var EVENTS = [
         "venue": "Less Dead Studio",
         "city": "Poughkeepsie, New York, United States",
         "rsvps": 8,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/10/global-online-switch-munch-4-gdvvds",
+        "name": "Global Online Switch Munch #4",
+        "start": "2027-01-10",
+        "end": "2027-01-10",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Sat, Jan 9, 2027 at 5:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 264,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/10/online-class-so-you-fucked-up-now-what-identifying-and-navigating-mistakes-in-bdsm-edge-play-qp4e09",
+        "name": "ONLINE CLASS: So, You Fucked Up, Now What?: Identifying and Navigating Mistakes In BDSM/Edge Play!",
+        "start": "2027-01-10",
+        "end": "2027-01-10",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Jan 9, 2027 at 8:45 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 457,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/10/femdom-submissive-development-mentoring-program-w8n4ir",
+        "name": "Femdom Submissive Development Mentoring Program",
+        "start": "2027-01-10",
+        "end": "2027-01-10",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Jan 10, 2027 at 8:59 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 6,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/10/the-art-of-pegging-equipment-2-hr-webinar-i7hswh",
+        "name": "The Art of Pegging Equipment - 2 hr Webinar",
+        "start": "2027-01-10",
+        "end": "2027-01-10",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sun, Jan 10, 2027 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 22,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/10/the-self-contract-knowing-yourself-mjapy0",
+        "name": "The Self Contract: Knowing Yourself",
+        "start": "2027-01-10",
+        "end": "2027-01-10",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Jan 10, 2027 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 24,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/10/bipoc-utopias-community-mnoyqx",
+        "name": "BIPOC Utopias – Community",
+        "start": "2027-01-10",
+        "end": "2027-01-10",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Jan 10, 2027 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 8,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2027/01/11/slipawayandplay-all-male-events-jluz38",
@@ -15922,7 +26302,8 @@ var EVENTS = [
         "venue": "Info given after your email address is supplied.",
         "city": "Asbury Park, New Jersey, United States",
         "rsvps": 2,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/11/january-central-jersey-poly-kinky-munch-ihe9rm",
@@ -15935,7 +26316,8 @@ var EVENTS = [
         "venue": "Town and Country Diner Bordentown",
         "city": "Bordentown, New Jersey, United States",
         "rsvps": 21,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/11/kpid-members-only-save-the-date-culinary-crawl-stop-1-rising-sun-tzqb9m",
@@ -15948,7 +26330,64 @@ var EVENTS = [
         "venue": null,
         "city": "Palmyra, Pennsylvania, United States",
         "rsvps": 32,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/11/energy-work-for-kinky-people-wizhwz",
+        "name": "Energy Work for Kinky People",
+        "start": "2027-01-11",
+        "end": "2027-01-11",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Mon, Jan 11, 2027 at 2:11 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 28,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/11/council-of-the-free-a-gorean-master-freefolk-virtual-roundtable-ppxeoe",
+        "name": "Council of the Free: A Gorean Master/FreeFolk Virtual Roundtable",
+        "start": "2027-01-11",
+        "end": "2027-01-11",
+        "category": "Social",
+        "cost": null,
+        "when": "Mon, Jan 11, 2027 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 13,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/11/online-feel-the-burn-smoke-ash-power-play-o8zzua",
+        "name": "ONLINE: Feel the Burn: Smoke, Ash, & Power Play",
+        "start": "2027-01-11",
+        "end": "2027-01-11",
+        "category": "Educational",
+        "cost": null,
+        "when": "Mon, Jan 11, 2027 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 199,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/11/new-sacramento-area-kinksters-starter-s-guide-virtual-xmhbdj",
+        "name": "New Sacramento Area Kinksters: Starter's Guide (Virtual)",
+        "start": "2027-01-11",
+        "end": "2027-01-11",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Mon, Jan 11, 2027 at 10:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 3,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2027/01/12/lwp-monthly-rope-share-c5avp0",
@@ -15961,7 +26400,22 @@ var EVENTS = [
         "venue": "The Venue",
         "city": "Bethlehem, Pennsylvania, United States",
         "rsvps": 38,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/12/kink-is-political-gossip-v3gv0m",
+        "name": "Kink is Political – Gossip",
+        "start": "2027-01-12",
+        "end": "2027-01-12",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Jan 12, 2027 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 20,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2027/01/13/sold-out-beginner-rope-rope-1-2-3-a-three-week-shibari-series-for-beginners-with-pa_alpha-ia9tep",
@@ -15974,7 +26428,8 @@ var EVENTS = [
         "venue": "The Nest",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 215,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/13/dominant-round-table-ownership-service-and-responsibility-kavc6z",
@@ -15987,7 +26442,78 @@ var EVENTS = [
         "venue": "The Venue",
         "city": "Bethlehem, Pennsylvania, United States",
         "rsvps": 29,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/13/m-a-d-middle-appreciation-day-2avuul",
+        "name": "M.A.D. Middle Appreciation Day!",
+        "start": "2027-01-13",
+        "end": "2027-01-13",
+        "category": "Other",
+        "cost": null,
+        "when": "Wed, Jan 13, 2027 at 12:00 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 101,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/13/rope-for-sex-3umhmt",
+        "name": "Rope for Sex",
+        "start": "2027-01-13",
+        "end": "2027-01-13",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Jan 13, 2027 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 32,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/13/xchangeonline-macht-reflexion-tzl0vu",
+        "name": "XCHANGEonline: Macht & Reflexion",
+        "start": "2027-01-13",
+        "end": "2027-01-13",
+        "category": "Social",
+        "cost": null,
+        "when": "Wed, Jan 13, 2027 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 19,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/13/online-workshop-psych-bdsm-kink-cnm-relationships-mental-health-comms-neuro-science-7y6am9",
+        "name": "Online Workshop, Psych, BDSM, Kink, CNM, Relationships, Mental Health, Comms, Neuro science +++",
+        "start": "2027-01-13",
+        "end": "2027-01-13",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Wed, Jan 13, 2027 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 521,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/13/mesa-redonda-para-rope-bottoms-xv1o7v",
+        "name": "Mesa Redonda para Rope Bottoms",
+        "start": "2027-01-13",
+        "end": "2027-01-13",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Wed, Jan 13, 2027 at 3:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 1,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2027/01/14/nostalgic-pleasures-munch-qwcvnh",
@@ -16000,7 +26526,8 @@ var EVENTS = [
         "venue": null,
         "city": "Brooklyn, New York, United States",
         "rsvps": 25,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/14/january-s-millennials-munch-ages-28-45-age-restricted-event-shqzwu",
@@ -16013,7 +26540,8 @@ var EVENTS = [
         "venue": null,
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 42,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/14/kink-connection-book-club-jan-27-ipab7f",
@@ -16026,7 +26554,22 @@ var EVENTS = [
         "venue": "Less Dead Studio",
         "city": "Poughkeepsie, New York, United States",
         "rsvps": 5,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/14/self-tied-suspension-harnesses-intro-to-uplines-r6kfkt",
+        "name": "Self Tied Suspension Harnesses & Intro to Uplines",
+        "start": "2027-01-14",
+        "end": "2027-01-14",
+        "category": "Educational",
+        "cost": null,
+        "when": "Thu, Jan 14, 2027 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 19,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2027/01/15/the-matinee-open-play-party-igxppy",
@@ -16039,7 +26582,8 @@ var EVENTS = [
         "venue": "The Venue",
         "city": "Bethlehem, Pennsylvania, United States",
         "rsvps": 41,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/15/forbidden-frostland-2027-af7nio",
@@ -16052,7 +26596,8 @@ var EVENTS = [
         "venue": null,
         "city": "Piscataway, New Jersey, United States",
         "rsvps": 791,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/15/cold-slopes-hot-frisky-nights-winter-get-away-qw2e08",
@@ -16065,7 +26610,8 @@ var EVENTS = [
         "venue": "Poconos Mountains",
         "city": "Lakeville, Pennsylvania, United States",
         "rsvps": 34,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/15/friday-vibes-yepo6i",
@@ -16078,7 +26624,8 @@ var EVENTS = [
         "venue": null,
         "city": "Glen Gardner, New Jersey, United States",
         "rsvps": 6,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/15/the-nyte-life-international-fetish-day-edition-8xkbah",
@@ -16091,7 +26638,8 @@ var EVENTS = [
         "venue": "L.I.C.K. Manor HQ",
         "city": "Melville, New York, United States",
         "rsvps": 48,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/15/snowed-in-the-naighty-games-a4akpo",
@@ -16104,7 +26652,50 @@ var EVENTS = [
         "venue": null,
         "city": "Lakeville, Pennsylvania, United States",
         "rsvps": 5,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/15/international-fetish-day-ysz8vu",
+        "name": "International Fetish Day",
+        "start": "2027-01-15",
+        "end": "2027-01-15",
+        "category": "Other",
+        "cost": null,
+        "when": "Fri, Jan 15, 2027 at 12:00 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 37,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/15/sex-work-101-beginner-s-workshop-klfkrc",
+        "name": "SEX WORK 101 — BEGINNER'S WORKSHOP",
+        "start": "2027-01-15",
+        "end": "2027-01-15",
+        "category": "Educational",
+        "cost": null,
+        "when": "Fri, Jan 15, 2027 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 3,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/15/isolation-storytime-afterparty-2027-01-15-r8l8vq",
+        "name": "Isolation Storytime Afterparty - 2027-01-15",
+        "start": "2027-01-15",
+        "end": "2027-01-15",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Fri, Jan 15, 2027 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 2,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2027/01/16/kink-aware-immersion-clinical-tools-guided-tastings-khc3yd",
@@ -16117,7 +26708,8 @@ var EVENTS = [
         "venue": "Kink Collective",
         "city": "New York City, New York, United States",
         "rsvps": 2,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/16/snow-bunnies-slope-daddies-ciyluc",
@@ -16130,7 +26722,8 @@ var EVENTS = [
         "venue": "big bear moutain",
         "city": "Masthope, Pennsylvania, United States",
         "rsvps": 22,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/16/freaks-on-foot-a-weekly-walking-social-zagnxf",
@@ -16143,7 +26736,8 @@ var EVENTS = [
         "venue": "Berkshire Mall -- Wysomissing",
         "city": "Wyomissing, Pennsylvania, United States",
         "rsvps": 14,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/16/alphabet-soup-choosing-kink-and-consent-frameworks-that-work-for-you-4va6bp",
@@ -16156,7 +26750,8 @@ var EVENTS = [
         "venue": "Less Dead Studio",
         "city": "Poughkeepsie, New York, United States",
         "rsvps": 1,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/16/inner-circle-a-noir-collective-discussion-gzg7ls",
@@ -16169,7 +26764,8 @@ var EVENTS = [
         "venue": "TBA",
         "city": "New York City, New York, United States",
         "rsvps": 13,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/16/the-wild-bunch-presents-new-year-same-naughtiness-sqn0hs",
@@ -16182,7 +26778,8 @@ var EVENTS = [
         "venue": "Secret Hotel",
         "city": "Cherry Hill, New Jersey, United States",
         "rsvps": 153,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/16/winter-pajama-party-jsdfr1",
@@ -16195,7 +26792,8 @@ var EVENTS = [
         "venue": null,
         "city": "North Plainfield, New Jersey, United States",
         "rsvps": 19,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/16/latex-leather-dark-desires-a-fetish-wear-social-amz9vj",
@@ -16208,7 +26806,8 @@ var EVENTS = [
         "venue": "The Venue",
         "city": "Bethlehem, Pennsylvania, United States",
         "rsvps": 33,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/16/merge-new-year-no-resolutions-cthxgy",
@@ -16221,7 +26820,8 @@ var EVENTS = [
         "venue": "Wind Gap, PA",
         "city": "Wind Gap, Pennsylvania, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/16/latex-leather-dark-desires-the-after-hours-play-affair-ahgkab",
@@ -16234,7 +26834,8 @@ var EVENTS = [
         "venue": "The Venue",
         "city": "Bethlehem, Pennsylvania, United States",
         "rsvps": 31,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/16/fantasy-connections-presents-ceo-s-and-office-hoes-zjtoqu",
@@ -16247,7 +26848,8 @@ var EVENTS = [
         "venue": "Medusa's Playhouse",
         "city": "West Babylon, New York, United States",
         "rsvps": 54,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/16/lace-lyrics-lust-lingerie-play-karaoke-night-rzvyyp",
@@ -16260,7 +26862,36 @@ var EVENTS = [
         "venue": null,
         "city": "Lakeville, Pennsylvania, United States",
         "rsvps": 19,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/16/sex-work-101-beginner-s-workshop-fbvmch",
+        "name": "SEX WORK 101 — BEGINNER'S WORKSHOP",
+        "start": "2027-01-16",
+        "end": "2027-01-16",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Jan 16, 2027 at 9:00 AM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 2,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/16/making-an-impact-with-words-with-orionverse-jd77gs",
+        "name": "Making An Impact With Words with @OrionVerse",
+        "start": "2027-01-16",
+        "end": "2027-01-16",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Jan 16, 2027 at 4:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 56,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2027/01/17/show-case-your-kink-f6xrea",
@@ -16273,7 +26904,8 @@ var EVENTS = [
         "venue": "The_Lodge",
         "city": "Dover Plains, New York, United States",
         "rsvps": 5,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/17/bare-necessities-the-heated-pool-affair-xlwhqu",
@@ -16286,7 +26918,8 @@ var EVENTS = [
         "venue": null,
         "city": "Lakeville, Pennsylvania, United States",
         "rsvps": 22,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/17/slipawayandplay-all-male-events-ublamo",
@@ -16299,7 +26932,8 @@ var EVENTS = [
         "venue": "Info given once your send us your email address!",
         "city": "Morristown, New Jersey, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/17/couples-erotic-massage-workshop-xaav5w",
@@ -16311,8 +26945,9 @@ var EVENTS = [
         "when": "Sun, Jan 17, 2027 at 5:00 PM",
         "venue": "Less Dead Studio",
         "city": "Poughkeepsie, New York, United States",
-        "rsvps": 6,
-        "image": null
+        "rsvps": 7,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/17/enm-poly-boardgame-night-yl3uad",
@@ -16325,7 +26960,8 @@ var EVENTS = [
         "venue": null,
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 24,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/17/silk-skin-serenity-massage-night-for-the-ladies-4mvepl",
@@ -16338,7 +26974,36 @@ var EVENTS = [
         "venue": null,
         "city": "Lakeville, Pennsylvania, United States",
         "rsvps": 17,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/17/polyam-parenting-community-group-j1hrg7",
+        "name": "Polyam Parenting Community Group",
+        "start": "2027-01-17",
+        "end": "2027-01-17",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sun, Jan 17, 2027 at 12:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 2,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/17/so-you-want-to-be-a-head-dungeon-monitor-facilitator-v7ynme",
+        "name": "So You Want to Be a Head Dungeon Monitor/Facilitator?",
+        "start": "2027-01-17",
+        "end": "2027-01-17",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Jan 17, 2027 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 119,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2027/01/18/slipawayandplay-all-male-events-mjuvk7",
@@ -16351,7 +27016,22 @@ var EVENTS = [
         "venue": "Info given once your send us your email address!",
         "city": "Morristown, New Jersey, United States",
         "rsvps": 2,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/18/demystifying-parasocial-relationships-with-the_lady_v-rfea0z",
+        "name": "Demystifying Parasocial Relationships with @The_Lady_V",
+        "start": "2027-01-18",
+        "end": "2027-01-18",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Jan 17, 2027 at 3:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 34,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2027/01/19/south-jersey-connections-munch-january-u5dnwh",
@@ -16364,7 +27044,8 @@ var EVENTS = [
         "venue": "Splitz Bar & Grill (attached to Laurel Lanes)",
         "city": "Maple Shade, New Jersey, United States",
         "rsvps": 160,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/19/queer-slosh-nku9co",
@@ -16377,7 +27058,22 @@ var EVENTS = [
         "venue": null,
         "city": "Shavertown, Pennsylvania, United States",
         "rsvps": 5,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/19/nyc-caregivers-littles-virtual-game-night-jackbox-games-qj4vdo",
+        "name": "NYC Caregivers - littles Virtual Game Night (Jackbox games)",
+        "start": "2027-01-19",
+        "end": "2027-01-19",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Tue, Jan 19, 2027 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 8,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2027/01/20/slipawayandplay-all-male-events-srl7z2",
@@ -16390,7 +27086,8 @@ var EVENTS = [
         "venue": "Info given after your email address is supplied.",
         "city": "East Rutherford, New Jersey, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/20/tantra-wisdom-chakra-ecstasy-fjc3bm",
@@ -16403,7 +27100,8 @@ var EVENTS = [
         "venue": "Center City Breathe",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 7,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/20/submissive-round-table-ownership-service-and-responsibility-x33ujv",
@@ -16416,7 +27114,8 @@ var EVENTS = [
         "venue": "The Venue",
         "city": "Bethlehem, Pennsylvania, United States",
         "rsvps": 20,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/20/hotwife-winter-white-rm4hkj",
@@ -16429,7 +27128,50 @@ var EVENTS = [
         "venue": null,
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 64,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/20/primal-play-hunter-hunted-predator-prey-with-passionandsoul-qwzteb",
+        "name": "Primal Play: Hunter, Hunted, Predator, Prey with @PassionAndSoul",
+        "start": "2027-01-20",
+        "end": "2027-01-20",
+        "category": "Educational",
+        "cost": null,
+        "when": "Tue, Jan 19, 2027 at 6:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 127,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/20/rope-for-sex-34lhqx",
+        "name": "Rope for Sex",
+        "start": "2027-01-20",
+        "end": "2027-01-20",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Jan 20, 2027 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 15,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/20/tome-eaters-book-devouring-club-hmmhdl",
+        "name": "Tome Eaters: Book Devouring Club",
+        "start": "2027-01-20",
+        "end": "2027-01-20",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Wed, Jan 20, 2027 at 8:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 3,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2027/01/21/slipawayandplay-all-male-events-s61di0",
@@ -16442,7 +27184,8 @@ var EVENTS = [
         "venue": "Info given after your email address is supplied.",
         "city": "East Rutherford, New Jersey, United States",
         "rsvps": null,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/21/january-gen-z-munch-ages-18-29-age-restricted-event-yoondl",
@@ -16455,7 +27198,8 @@ var EVENTS = [
         "venue": null,
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 15,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/21/intimate-dialogues-jan-27-xtwqjo",
@@ -16468,7 +27212,22 @@ var EVENTS = [
         "venue": "Less Dead Studio",
         "city": "Poughkeepsie, New York, United States",
         "rsvps": 4,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/21/fat-rope-the-fundamentals-pp6ufc",
+        "name": "Fat Rope: The Fundamentals",
+        "start": "2027-01-21",
+        "end": "2027-01-21",
+        "category": "Educational",
+        "cost": null,
+        "when": "Thu, Jan 21, 2027 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 37,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2027/01/22/the-curious-gentleman-jafz3g",
@@ -16481,7 +27240,8 @@ var EVENTS = [
         "venue": "The Venue",
         "city": "Bethlehem, Pennsylvania, United States",
         "rsvps": 26,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/22/lwp-game-night-asyqza",
@@ -16493,8 +27253,9 @@ var EVENTS = [
         "when": "Fri, Jan 22, 2027 at 7:00 PM",
         "venue": "The Venue",
         "city": "Bethlehem, Pennsylvania, United States",
-        "rsvps": 38,
-        "image": null
+        "rsvps": 39,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/22/grimdark-40k-cosplay-party-by64dl",
@@ -16507,7 +27268,36 @@ var EVENTS = [
         "venue": "LiCK Manor",
         "city": "Melville, New York, United States",
         "rsvps": 51,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/22/holy-fire-1xae7b",
+        "name": "Holy Fire",
+        "start": "2027-01-22",
+        "end": "2027-01-24",
+        "category": "Conference / Festival",
+        "cost": null,
+        "when": "Jan 22 – 24, 2027 · Fri 8:00 PM – Sun 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 68,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/22/isolation-storytime-afterparty-2027-01-22-a5k0in",
+        "name": "Isolation Storytime Afterparty - 2027-01-22",
+        "start": "2027-01-22",
+        "end": "2027-01-22",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Fri, Jan 22, 2027 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 2,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2027/01/23/placeholder-f6l9ct",
@@ -16520,7 +27310,8 @@ var EVENTS = [
         "venue": "TBA",
         "city": "Scranton, Pennsylvania, United States",
         "rsvps": 17,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/23/on-all-fours-where-you-belong-fun-with-forced-petplay-jbeexi",
@@ -16532,8 +27323,9 @@ var EVENTS = [
         "when": "Sat, Jan 23, 2027 at 1:00 PM",
         "venue": "Less Dead Studio",
         "city": "Poughkeepsie, New York, United States",
-        "rsvps": 22,
-        "image": null
+        "rsvps": 23,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/23/training-human-pets-1ypzr1",
@@ -16545,8 +27337,9 @@ var EVENTS = [
         "when": "Sat, Jan 23, 2027 at 3:30 PM",
         "venue": "Less Dead Studio",
         "city": "Poughkeepsie, New York, United States",
-        "rsvps": 21,
-        "image": null
+        "rsvps": 22,
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/23/lasc-the_lodge-learns-yfkfob",
@@ -16559,7 +27352,8 @@ var EVENTS = [
         "venue": null,
         "city": "Dover Plains, New York, United States",
         "rsvps": 26,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/23/putting-emotions-into-play-a-connection-workshop-by-raymond-wise-xqwimf",
@@ -16572,7 +27366,8 @@ var EVENTS = [
         "venue": "The Venue",
         "city": "Bethlehem, Pennsylvania, United States",
         "rsvps": 32,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/23/lasc-party-jjhfvg",
@@ -16585,7 +27380,8 @@ var EVENTS = [
         "venue": null,
         "city": "Dover Plains, New York, United States",
         "rsvps": 27,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/23/lwp-s-sexy-pajama-party-fezrsq",
@@ -16598,7 +27394,78 @@ var EVENTS = [
         "venue": "The Venue",
         "city": "Bethlehem, Pennsylvania, United States",
         "rsvps": 41,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/23/never-knew-rope-like-this-before-01ol7a",
+        "name": "Never Knew Rope Like This Before",
+        "start": "2027-01-23",
+        "end": "2027-01-23",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Jan 23, 2027 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 12,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/23/january-23rd-11-00-pst-ethical-dominance-3-candy-store-syndrome-combatting-frenzy-with-nyxienoc-uheeko",
+        "name": "January 23rd, 11:00 PST- Ethical Dominance 3- Candy Store Syndrome: Combatting Frenzy with NyxieNoc",
+        "start": "2027-01-23",
+        "end": "2027-01-23",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Jan 23, 2027 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 19,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/23/the-art-of-advanced-pegging-2-hr-webinar-7yzsl6",
+        "name": "The Art of Advanced Pegging - 2 hr Webinar",
+        "start": "2027-01-23",
+        "end": "2027-01-23",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Sat, Jan 23, 2027 at 2:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 27,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/23/p-thump-a-pussy-torture-discussion-and-presentation-r51w3f",
+        "name": "P-Thump! (A Pussy Torture Discussion and Presentation)",
+        "start": "2027-01-23",
+        "end": "2027-01-23",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Jan 23, 2027 at 3:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 73,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/23/a-play-night-pvpcon",
+        "name": "A Play Night",
+        "start": "2027-01-23",
+        "end": "2027-01-23",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Sat, Jan 23, 2027 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 25,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2027/01/24/bella-s-kink-swap-market-l2ik2s",
@@ -16611,7 +27478,8 @@ var EVENTS = [
         "venue": "Address given in email confirmation. Please contact us if paying at door.",
         "city": "New York City, New York, United States",
         "rsvps": 18,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/24/kink-tea-the-syndicate-9vmyti",
@@ -16624,7 +27492,8 @@ var EVENTS = [
         "venue": "To be shared upon reservation confirmation",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 114,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/24/monthly-social-pool-party-at-innthrall-qanvxa",
@@ -16637,7 +27506,8 @@ var EVENTS = [
         "venue": "InnThrall- Your Kinky B&B",
         "city": "Shillington, Pennsylvania, United States",
         "rsvps": 17,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/24/slipawayandplay-all-male-events-hw0xxc",
@@ -16650,7 +27520,22 @@ var EVENTS = [
         "venue": "Info given after your email address is supplied.",
         "city": "Asbury Park, New Jersey, United States",
         "rsvps": 2,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/24/safety-in-the-shadows-kink-vs-toxicity-in-dark-dynamics-with-vahavta-78nddm",
+        "name": "Safety in the Shadows: Kink vs Toxicity in Dark Dynamics with vahavta",
+        "start": "2027-01-24",
+        "end": "2027-01-24",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sun, Jan 24, 2027 at 4:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 113,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2027/01/25/slipawayandplay-all-male-events-mbru8i",
@@ -16663,7 +27548,8 @@ var EVENTS = [
         "venue": "Info given after your email address is supplied.",
         "city": "Asbury Park, New Jersey, United States",
         "rsvps": 2,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/25/new-jersey-smelly-or-clean-foot-fetish-event-1-25-27-by-footnight-ayard3",
@@ -16676,7 +27562,8 @@ var EVENTS = [
         "venue": "Bare Den Gentlemen's Club",
         "city": "Newton, New Jersey, United States",
         "rsvps": 60,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/25/kinky-craft-collective-january-munch-kr6hpl",
@@ -16689,7 +27576,50 @@ var EVENTS = [
         "venue": "Town and Country Diner",
         "city": "Bordentown, New Jersey, United States",
         "rsvps": 14,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/25/guided-self-tying-session-eewbg9",
+        "name": "Guided Self-Tying Session",
+        "start": "2027-01-25",
+        "end": "2027-01-25",
+        "category": "Educational",
+        "cost": null,
+        "when": "Mon, Jan 25, 2027 at 12:30 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 25,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/27/iaawac-hfabn9",
+        "name": "IAAWAC",
+        "start": "2027-01-27",
+        "end": "2027-01-27",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Wed, Jan 27, 2027 at 6:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 47,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/27/kiki-sloan-on-polycule-housing-and-co-buying-q7triy",
+        "name": "Kiki Sloan on polycule housing and co-buying",
+        "start": "2027-01-27",
+        "end": "2027-01-27",
+        "category": "Educational",
+        "cost": null,
+        "when": "Wed, Jan 27, 2027 at 8:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 4,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2027/01/28/reading-pa-meet-greet-january-28-vhrg3l",
@@ -16702,7 +27632,8 @@ var EVENTS = [
         "venue": "Craft 2700",
         "city": "Hyde Park, Pennsylvania, United States",
         "rsvps": 10,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/28/kat-s-sweater-weather-karaoke-night-checking-for-interest-s0uscu",
@@ -16715,7 +27646,8 @@ var EVENTS = [
         "venue": "TBD",
         "city": "Philadelphia, Pennsylvania, United States",
         "rsvps": 7,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/28/building-tension-ropeshare-jan-27-xme6kh",
@@ -16728,7 +27660,36 @@ var EVENTS = [
         "venue": "Less Dead Studio",
         "city": "Poughkeepsie, New York, United States",
         "rsvps": 8,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/28/fat-rope-suspension-m3teyo",
+        "name": "Fat Rope: Suspension",
+        "start": "2027-01-28",
+        "end": "2027-01-28",
+        "category": "Educational",
+        "cost": null,
+        "when": "Thu, Jan 28, 2027 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 29,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/28/intro-to-rope-bottoming-for-rope-modeling-bylkfs",
+        "name": "Intro to Rope Bottoming for Rope Modeling",
+        "start": "2027-01-28",
+        "end": "2027-01-28",
+        "category": "Educational",
+        "cost": null,
+        "when": "Thu, Jan 28, 2027 at 7:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 66,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2027/01/29/nostalgic-at-disco-sally-s-sbmi8u",
@@ -16741,7 +27702,8 @@ var EVENTS = [
         "venue": null,
         "city": "New York City, New York, United States",
         "rsvps": 50,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/29/nyc-shibari-contact-improv-temple-party-w-monique-peter-skye-james-s8kdtl",
@@ -16754,7 +27716,36 @@ var EVENTS = [
         "venue": "Address provided in confirmation message when you buy your ticket",
         "city": "New York City, New York, United States",
         "rsvps": 2,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/29/kgs-negotiation-consent-members-sponsorship-only-xrxjb2",
+        "name": "(KGS) Negotiation & Consent(Members & Sponsorship Only)",
+        "start": "2027-01-29",
+        "end": "2027-01-29",
+        "category": "Educational",
+        "cost": "Free",
+        "when": "Fri, Jan 29, 2027 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 14,
+        "image": null,
+        "virtual": true
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/29/isolation-storytime-afterparty-2027-01-29-5l68ky",
+        "name": "Isolation Storytime Afterparty - 2027-01-29",
+        "start": "2027-01-29",
+        "end": "2027-01-29",
+        "category": "Social",
+        "cost": "Free",
+        "when": "Fri, Jan 29, 2027 at 9:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 2,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2027/01/30/tantric-massage-for-duos-w-monique-peter-2tsbtg",
@@ -16767,7 +27758,8 @@ var EVENTS = [
         "venue": "Address in Confirmation Message when you buy your ticket",
         "city": "New York City, New York, United States",
         "rsvps": 2,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/30/january-30th-fuck-party-near-cherry-hill-nj-trc4gi",
@@ -16780,7 +27772,8 @@ var EVENTS = [
         "venue": "Cherry Hill Hotel",
         "city": "Cherry Hill, New Jersey, United States",
         "rsvps": 21,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/30/nyc-latihan-tantrictemple-party-with-monique-darling-and-peter-petersen-mldeby",
@@ -16793,7 +27786,22 @@ var EVENTS = [
         "venue": "Address in Confirmation Message when you buy your ticket",
         "city": "New York City, New York, United States",
         "rsvps": 2,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/30/online-the-pentacle-path-six-week-tarot-intensive-for-kinksters-ojttf1",
+        "name": "ONLINE: The Pentacle Path Six-Week Tarot Intensive for Kinksters",
+        "start": "2027-01-30",
+        "end": "2027-01-30",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Jan 30, 2027 at 1:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 80,
+        "image": null,
+        "virtual": true
     },
     {
         "url": "https://fetlife.com/events/2027/01/31/nyc-squish-stretch-smoosh-snuggles-w-monique-peter-aviva-tsicvk",
@@ -16806,7 +27814,8 @@ var EVENTS = [
         "venue": "Address provided in confirmation message when you buy your ticket",
         "city": "New York City, New York, United States",
         "rsvps": 1,
-        "image": null
+        "image": null,
+        "virtual": false
     },
     {
         "url": "https://fetlife.com/events/2027/01/31/reiki-bondage-workshop-jam-ahy6p2",
@@ -16819,20 +27828,35 @@ var EVENTS = [
         "venue": "Less Dead Studio",
         "city": "Poughkeepsie, New York, United States",
         "rsvps": 3,
-        "image": null
+        "image": null,
+        "virtual": false
+    },
+    {
+        "url": "https://fetlife.com/events/2027/01/31/playing-with-the-skeletons-in-our-closet-with-hispurplerose-clifford-s7r4ql",
+        "name": "Playing With The Skeletons in Our Closet with @HisPurpleRose & Clifford",
+        "start": "2027-01-31",
+        "end": "2027-01-31",
+        "category": "Educational",
+        "cost": null,
+        "when": "Sat, Jan 30, 2027 at 5:00 PM",
+        "venue": "Virtual",
+        "city": null,
+        "rsvps": 33,
+        "image": null,
+        "virtual": true
     }
 ];
 var CONFIG = {
     "title": "Events near Washington, NJ",
-    "subtitle": "Within 100 mi of Washington, NJ · Nov 1, 2026 – Jan 31, 2027 · 1293 events",
-    "generated": "November 23, 2026 at 5:36 PM",
+    "subtitle": "Within 100 mi of Washington, NJ · Nov 1, 2026 – Jan 31, 2027 · 1988 events (701 virtual)",
+    "generated": "November 23, 2026 at 6:11 PM",
     "start": "2026-11-01",
     "end": "2027-01-31",
     "colors": {
-        "Conference / Festival": "#5fb3a1",
         "BDSM Party": "#d9534f",
         "Social": "#daa520",
         "Sex Party": "#c98ad6",
+        "Conference / Festival": "#5fb3a1",
         "Educational": "#7fb3d5",
         "Other": "#a3d977"
     }
