@@ -892,6 +892,20 @@ def _near_header(event: Event, header) -> None:
             event.cost = part
 
 
+def _near_card_header(card, h3):
+    """The "day 1 of 3 · BDSM Party · $20" div before a card's title.
+
+    It precedes the ``<h3>`` or one of the wrappers FetLife puts around it.
+    """
+    for node in [h3, *h3.parents]:
+        if node is card:
+            break
+        header = node.find_previous_sibling("div")
+        if header is not None:
+            return header
+    return None
+
+
 def _near_event(href: str, base_url: str, day_key: str) -> Event | None:
     m = _EVENT_DATE_URL_RE.match(href)
     if not m:
@@ -943,7 +957,7 @@ def events_near_from_html(html: str, base_url: str = "") -> tuple[list[Event], s
                 continue
             h3 = card.find("h3")
             event.name = _clean(h3.get("title") or h3.get_text()) if h3 else ""
-            _near_header(event, h3.find_previous_sibling("div") if h3 else None)
+            _near_header(event, _near_card_header(card, h3) if h3 else None)
             clock = _near_icon_row(card, "clock")
             if clock:
                 lines = [_clean(s.get_text()) for s in clock.find_all("span", recursive=False)]

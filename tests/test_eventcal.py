@@ -310,3 +310,16 @@ def test_default_end_spans_three_months():
     assert eventcal.default_end(date(2026, 11, 30)) == date(2027, 2, 28)   # short last month
     assert eventcal.default_end(date(2027, 11, 30)) == date(2028, 2, 29)   # leap year
     assert eventcal.default_end(date(2026, 10, 13), months=1) == date(2026, 11, 12)
+
+
+def test_events_near_reads_the_header_when_the_title_is_wrapped():
+    # FetLife wraps the <h3> (and the rows after it) in divs, so the header is
+    # the preceding sibling of a wrapper, not of the <h3> itself.
+    card = _card("/events/2026/11/22/party-p1", "Party", CAT.format("BDSM Party") + '<span> · </span>$15',
+                 " Sun, Nov 22 at 8:00 PM ", "Dungeon", "Edgewood, Maryland")
+    card = card.replace("<h3 ", "<div><div><h3 ").replace("      </div></a>", "      </div></div></div></a>")
+    events, _ = parsers.events_near_from_html(_day("2026-11-22", cards=card),
+                                              base_url="https://fetlife.com")
+    (party,) = events
+    assert (party.name, party.category, party.cost) == ("Party", "BDSM Party", "$15")
+    assert party.when == "Sun, Nov 22 at 8:00 PM"
