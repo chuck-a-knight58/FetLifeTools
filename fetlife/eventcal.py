@@ -12,11 +12,12 @@ from __future__ import annotations
 import base64
 import calendar
 import json
+import re
 from dataclasses import dataclass, field
 from datetime import date, datetime, timedelta
 from typing import Callable, Iterable, Optional
 
-from .exceptions import RateLimitedError
+from .exceptions import NotFoundError, RateLimitedError
 from .models import Event
 
 METERS_PER_UNIT = {"mi": 1609.344, "km": 1000.0}
@@ -123,6 +124,53 @@ def merge_results(*results: Result) -> Result:
             merged.through = result.through
     merged.events = sorted(found.values(), key=lambda e: e.start or "")
     return merged
+
+
+# The id that ends every event URL. The words before it follow the event's
+# name, so they change when the host renames it; the id doesn't.
+_URL_ID_RE = re.compile(r"-([0-9a-z]{6})$")
+
+
+def _event_key(url: str | None) -> str:
+    m = _URL_ID_RE.search(url or "")
+    return m.group(1) if m else (url or "")
+
+
+def add_hosted_events(fl, result: Result, hosted: Iterable[Event], start: date, end: date) -> int:
+    """Add to *result* each of *hosted* (events from
+    :meth:`~fetlife.client.FetLifeClient.get_events_organizing`) that runs on
+    any day from *start* to *end* and isn't already there, however far away
+    it is. Returns how many were added.
+
+    A member's profile gives little more than a name and a date, so each event
+    added has its card read from its own page (one request; events the search
+    already found cost none). One whose page can't be read is added as the
+    profile listed it, as is every one left once FetLife starts rate limiting.
+    """
+    lo, hi = _iso(start), _iso(end)
+    have = {_event_key(e.url) for e in result.events}
+    added = 0
+    for listed in hosted:
+        key = _event_key(listed.url)
+        if key in have or (listed.start or "") > hi:
+            continue
+        have.add(key)
+        card = None
+        if not result.rate_limited:
+            try:
+                card = fl.get_event_card(listed.url)
+            except NotFoundError:
+                pass
+            except RateLimitedError:
+                result.rate_limited = True
+        event = card or listed
+        # Only the card knows the last day of an event that began before *start*.
+        if (event.start or "") > hi or (event.end or event.start or "") < lo:
+            continue
+        result.events.append(event)
+        added += 1
+    result.events.sort(key=lambda e: e.start or "")
+    return added
 
 
 def _gather(

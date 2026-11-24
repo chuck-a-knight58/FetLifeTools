@@ -483,6 +483,7 @@ Save every event within a distance of a place, running on any day between two da
 fetlife events-calendar                                         # 100 mi of Washington, NJ; this month and the next two
 fetlife events-calendar --center "Easton, PA" --radius 30 --start 2026-11-01 --end 2026-12-31
 fetlife events-calendar --center "40.69,-75.21" --radius 40 --units km --out lehigh/community_calendar.js --title "Lehigh Valley"
+fetlife events-calendar --host Xanadu_Kink                      # plus all of Xanadu_Kink's own events, however far away
 ```
 ```
 center 'Easton, PA' -> 40.691,-75.209 | radius 30mi | 2026-11-01 to 2026-12-31
@@ -497,6 +498,7 @@ page 2 · events 41 · through 2027-01-02 · requests 3
 | `--start` / `--end` | the 1st of this month / three months later | First and last day, `YYYY-MM-DD`, both included. By default that's three whole months (run in October: Oct 1 – Dec 31). Without `--end` the span is three months from `--start`: it ends the day before the same date three months on (`--start 2026-10-13` → Jan 12), or on the last day of a month too short for that date (Nov 30 → Feb 28). |
 | `--out` | `community_calendar.js` | Data file to write (`-` for stdout). Each run replaces it. The page always loads `community_calendar.js` from its own folder, so write it next to your copy of `community_calendar.html`. |
 | `--title` | `Events near CENTER` | The page heading. |
+| `--host` | _(none)_ | Also include every event in the dates that this member organizes or co-organizes, wherever it is (`--radius` and `--no-virtual` don't apply). Takes a nickname, not a user id. Repeat it or separate nicknames with commas. An unknown nickname stops the command before it searches. |
 | `--images` | _(off)_ | Include the event pictures, embedded in the data file (a much bigger file, and one picture download per event). |
 
 The page, styled after the Xanadu Reserve events page (black and goldenrod):
@@ -514,7 +516,7 @@ The page, styled after the Xanadu Reserve events page (black and goldenrod):
 
 A multi-day event appears on each of its days in the calendar, and in the list under its first day in range. One that started before `--start` and is still running is included too.
 
-**How it works.** It runs the same search as the site's Events tab (`/events/near`, by latitude/longitude and range in meters, from `--start`) and follows that search's pages until one lists a day past `--end`. If the search runs out before `--end` (FetLife only lists so far ahead at once), it starts again from the day after the last one listed. Each page holds about two to three weeks of events, so this is only a few requests. With `--images`, the pictures are then **embedded in the page**. They have to be: FetLife's picture CDN refuses requests that don't come from FetLife ("Not Allowed: Hot Linking"), and its links expire within days anyway. Downloading them takes one request per event, sent straight to the picture CDN (not paced like the page requests). If FetLife starts throttling, the events read so far are still written, and the command exits with code 75 (like `discover`). Rerun it later for a complete page.
+**How it works.** It runs the same search as the site's Events tab (`/events/near`, by latitude/longitude and range in meters, from `--start`) and follows that search's pages until one lists a day past `--end`. If the search runs out before `--end` (FetLife only lists so far ahead at once), it starts again from the day after the last one listed. Each page holds about two to three weeks of events, so this is only a few requests. With `--host`, it reads the *Events Organizing* list on each member's profile (one request each), which holds only current and upcoming events the logged-in account can see, and adds the ones the search didn't list, reading each one's details from its own page (one request each). With `--images`, the pictures are then **embedded in the page**. They have to be: FetLife's picture CDN refuses requests that don't come from FetLife ("Not Allowed: Hot Linking"), and its links expire within days anyway. Downloading them takes one request per event, sent straight to the picture CDN (not paced like the page requests). If FetLife starts throttling, the events read so far are still written, and the command exits with code 75 (like `discover`). Rerun it later for a complete page.
 
 ### `search` (experimental)
 

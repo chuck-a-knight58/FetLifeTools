@@ -24,7 +24,7 @@ from . import (__version__, crawl, engagement, eventcal, eventinvite, eventpost,
                groups, messaging, writing)
 from .client import FetLifeClient
 from .config import Config
-from .exceptions import FetLifeError, RateLimitedError
+from .exceptions import FetLifeError, NotFoundError, RateLimitedError
 
 console = Console()
 err_console = Console(stderr=True, style="bold red")
@@ -938,14 +938,19 @@ def event(ctx: click.Context, event_id: str, json_local: bool) -> None:
 @click.option("--virtual/--no-virtual", default=True, show_default=True,
               help="Also include every virtual event in the dates (FetLife's Virtual tab, "
                    "worldwide; not limited by --radius).")
+@click.option("--host", "hosts", multiple=True, metavar="NICKNAME",
+              help="Also include every event in the dates that this member organizes or "
+                   "co-organizes, however far away (or virtual); repeat it, or separate "
+                   "nicknames with commas.")
 @click.pass_context
-def events_calendar(ctx, center, radius, units, start, end, out_path, title, images, virtual):
+def events_calendar(ctx, center, radius, units, start, end, out_path, title, images, virtual, hosts):
     """Save the events within --radius of --center as data for the HTML calendar.
 
     Covers every event running on any day from --start to --end (inclusive),
     including multi-day events that began earlier; by default three
     months, starting on the 1st of this month. Unless --no-virtual is given,
-    every virtual event in those dates is added too, wherever it's hosted. The page has a calendar (Overview,
+    every virtual event in those dates is added too, wherever it's hosted.
+    --host adds a member's own events wherever they are. The page has a calendar (Overview,
     Month, Week and Day layouts; clicking a date opens that day's list in a
     new tab) and a list view, a category legend that doubles as a filter,
     and a text filter. This writes only the data, community_calendar.js; the
@@ -972,7 +977,21 @@ def events_calendar(ctx, center, radius, units, start, end, out_path, title, ima
 
     fl = _client(ctx)
     fl.on_retry = _report_retry
+    nicknames = list(dict.fromkeys(
+        n.strip().lstrip("@") for raw in hosts for n in raw.split(",") if n.strip().lstrip("@")))
     with fl:
+        # First, so a mistyped nickname fails before the long search.
+        hosted = []
+        for nickname in nicknames:
+            try:
+                listed = fl.get_events_organizing(nickname)
+            except NotFoundError:
+                raise FetLifeError(f"--host: there's no FetLife member {nickname!r}, or this "
+                                   "account can't see them (use a nickname, not a user id).")
+            status_console.print(f"[dim]{nickname} organizes {len(listed)} "
+                                 f"event{'s' if len(listed) != 1 else ''}[/dim]")
+            hosted += listed
+
         def on_progress(p: eventcal.Progress) -> None:
             status_console.print(
                 f"[dim]page {p.pages} · events {p.events} · through {p.through or '-'} "
@@ -988,6 +1007,10 @@ def events_calendar(ctx, center, radius, units, start, end, out_path, title, ima
             online = eventcal.gather_virtual_events(fl, start, end, on_progress=on_progress)
             status_console.print()  # end the progress line
             result = eventcal.merge_results(result, online)
+        if hosted:
+            added = eventcal.add_hosted_events(fl, result, hosted, start, end)
+            status_console.print(f"[dim]added {added} hosted "
+                                 f"event{'s' if added != 1 else ''} the search didn't list[/dim]")
         if images:
             embedded = eventcal.embed_images(
                 fl.session, result.events, referer=config.base_url + "/",

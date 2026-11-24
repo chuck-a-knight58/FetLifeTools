@@ -5,8 +5,11 @@ import re
 from datetime import date, datetime
 from pathlib import Path
 
-from fetlife import eventcal, parsers
-from fetlife.exceptions import RateLimitedError
+import pytest
+from click.testing import CliRunner
+
+from fetlife import cli, eventcal, parsers
+from fetlife.exceptions import FetLifeError, NotFoundError, ParseError, RateLimitedError
 from fetlife.models import Event
 
 
@@ -351,3 +354,145 @@ def test_events_near_reads_the_header_when_the_title_is_wrapped():
     (party,) = events
     assert (party.name, party.category, party.cost) == ("Party", "BDSM Party", "$15")
     assert party.when == "Sun, Nov 22 at 8:00 PM"
+
+
+# --------------------------------------------------------------------------- #
+# --host: a member's own events
+# --------------------------------------------------------------------------- #
+def _panel(*sections):
+    """A profile's events panel; each section is (heading, [(href, name, when)])."""
+    body = "".join(
+        f"<h4><span>{heading}</span></h4><h2><span>{heading}</span></h2><div><ul>"
+        + "".join(f'<li><a href="{href}">{name} <div>{when}</div></a></li>' for href, name, when in rows)
+        + "</ul></div>" for heading, rows in sections)
+    return (f'<html><body><a href="/events/near">Events</a><turbo-frame id="profile-events">'
+            f"<div data-profile-events>{body}</div></turbo-frame></body></html>")
+
+
+def test_organizing_reads_only_the_organizing_section():
+    going = ("Events Going to", [("/events/2026/12/03/conference-cccccc", "Conference", "Dec 3, 2026 11:00 AM")])
+    html = _panel(("Events Organizing", [
+        ("/events/2026/12/05/story-time-vr0ldi", "Story &amp; Time", "Dec 5, 2026 11:00 PM")]), going)
+    (event,) = parsers.organizing_from_html(html, base_url="https://fetlife.com")
+    assert (event.name, event.start, event.when) == ("Story & Time", "2026-12-05", "Dec 5, 2026 11:00 PM")
+    assert event.url == "https://fetlife.com/events/2026/12/05/story-time-vr0ldi"
+    # Someone who organizes nothing has no such section.
+    assert parsers.organizing_from_html(_panel(going)) == []
+    with pytest.raises(ParseError):
+        parsers.organizing_from_html("<html><body>something else</body></html>")
+
+
+@pytest.mark.parametrize("when, start, end", [
+    ("Sat, Dec 5 at 11:00 PM", "2026-12-05", "2026-12-05"),
+    ("Sat, Jan 2, 2027 at 2:00 PM", "2027-01-02", "2027-01-02"),
+    ("Dec 3 – 6", "2026-12-03", "2026-12-06"),
+    ("Dec 3 – 6 · Thu 11:00 AM – Sun 2:00 PM", "2026-12-03", "2026-12-06"),
+    ("Dec 3 – 6 · Thu 11:00 AM – Sun 6:00 AM", "2026-12-03", "2026-12-05"),
+    ("Dec 3 – 6 · Thu 11:00 AM – Sun 7:00 AM", "2026-12-03", "2026-12-06"),
+    ("Nov 30 – Dec 6", "2026-11-30", "2026-12-06"),
+    ("Jan 15 – 18, 2027", "2027-01-15", "2027-01-18"),
+    ("Dec 25, 2026 – Jan 1, 2027", "2026-12-25", "2027-01-01"),
+])
+def test_event_card_takes_the_end_from_its_time_line(when, start, end):
+    href = f"/events/{start.replace('-', '/')}/fest-abc123"
+    html = _card("/events/2026/12/01/other-zzzzzz", "Other", "", "Tue, Dec 1 at 1:00 PM", "X", "Y") + _card(
+        href, "Fest", CAT.format("Social") + '<span> · </span>Free', when, "Hotel", "Gettysburg, Pennsylvania",
+        rsvps=8).replace("</div>", '<turbo-frame id="story_event_rsvp_bar_99"></turbo-frame></div>', 1)
+    event = parsers.event_card_from_html(html, "https://fetlife.com" + href, base_url="https://fetlife.com")
+    assert (event.name, event.start, event.end, event.when) == ("Fest", start, end, when)
+    assert (event.category, event.cost, event.location, event.address, event.going_count, event.id) == (
+        "Social", "Free", "Hotel", "Gettysburg, Pennsylvania", 8, "99")
+    assert not event.meta.get("virtual")
+    crumbs = '<nav aria-label="Breadcrumbs"><a href="/events/virtual">Virtual Events</a></nav>'
+    assert parsers.event_card_from_html(crumbs + html, "https://fetlife.com" + href).meta["virtual"]
+    assert parsers.event_card_from_html("<html></html>", "https://fetlife.com" + href) is None
+
+
+class HostClient:
+    """Serves event cards by name; an exception is raised."""
+
+    def __init__(self, cards):
+        self.cards, self.read = cards, []
+
+    def get_event_card(self, url):
+        name = url.rsplit("/", 1)[1]
+        self.read.append(name)
+        card = self.cards.get(name)
+        if isinstance(card, Exception):
+            raise card
+        return card
+
+
+def _listed(start, name):
+    return Event(name=name, start=start, end=start,
+                 url=f"https://fetlife.com/events/{start.replace('-', '/')}/{name}")
+
+
+def test_add_hosted_events_adds_what_the_search_missed():
+    found = _ev("2026-12-06", "old-name-aaaaaa")
+    far = _ev("2026-12-05", "far-bbbbbb")
+    running = _ev("2026-11-28", "running-cccccc", end="2026-12-02")
+    fl = HostClient({"far-bbbbbb": far, "running-cccccc": running,
+                     "over-dddddd": _ev("2026-11-28", "over-dddddd"),
+                     "gone-eeeeee": NotFoundError("404")})
+    result = eventcal.Result(events=[found])
+    hosted = [_listed("2026-12-06", "new-name-aaaaaa"),  # renamed, but already found
+              _listed("2026-12-05", "far-bbbbbb"), _listed("2026-12-05", "far-bbbbbb"),  # two co-hosts
+              _listed("2026-11-28", "running-cccccc"), _listed("2026-11-28", "over-dddddd"),
+              _listed("2026-12-09", "gone-eeeeee"), _listed("2027-03-01", "later-ffffff")]
+    assert eventcal.add_hosted_events(fl, result, hosted, date(2026, 12, 1), date(2026, 12, 31)) == 3
+    assert [e.name for e in result.events] == ["running-cccccc", "far-bbbbbb", "old-name-aaaaaa", "gone-eeeeee"]
+    assert fl.read == ["far-bbbbbb", "running-cccccc", "over-dddddd", "gone-eeeeee"]  # one read each
+
+
+def test_add_hosted_events_keeps_the_listing_once_rate_limited():
+    fl = HostClient({"one-aaaaaa": RateLimitedError("429")})
+    result = eventcal.Result()
+    hosted = [_listed("2026-12-05", "one-aaaaaa"), _listed("2026-12-06", "two-bbbbbb")]
+    assert eventcal.add_hosted_events(fl, result, hosted, date(2026, 12, 1), date(2026, 12, 31)) == 2
+    assert result.events == hosted and result.rate_limited and fl.read == ["one-aaaaaa"]
+
+
+class CliClient(StubClient, HostClient):
+    requests = 0
+
+    def __init__(self):
+        StubClient.__init__(self, {"2026-12-01": [[_ev("2026-12-01", "munch")], [_ev("2027-02-01", "x")]]})
+        HostClient.__init__(self, {"far-bbbbbb": _ev("2026-12-05", "far-bbbbbb")})
+        self.hosts = []
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc):
+        return False
+
+    def get_events_organizing(self, nickname):
+        self.hosts.append(nickname)
+        if nickname == "Nobody":
+            raise NotFoundError("404")
+        return [_listed("2026-12-05", "far-bbbbbb")]
+
+
+def _run_calendar(monkeypatch, tmp_path, *args):
+    fl, out = CliClient(), tmp_path / "community_calendar.js"
+    monkeypatch.setattr(cli, "_client", lambda ctx: fl)
+    run = CliRunner().invoke(cli.cli, ["events-calendar", "--center", "40.7,-75.0", "--start", "2026-12-01",
+                                       "--end", "2026-12-31", "--out", str(out), *args], obj={})
+    return fl, out, run
+
+
+def test_events_calendar_host_option(monkeypatch, tmp_path):
+    fl, out, run = _run_calendar(monkeypatch, tmp_path, "--host", "Xanadu_Kink, @Other", "--host", "Xanadu_Kink")
+    assert run.exit_code == 0, run.output
+    assert fl.hosts == ["Xanadu_Kink", "Other"]
+    assert [e["name"] for e in _page_data(out.read_text())[0]] == ["munch", "far-bbbbbb"]
+    # Without it, nothing changes.
+    fl, out, run = _run_calendar(monkeypatch, tmp_path)
+    assert fl.hosts == [] and [e["name"] for e in _page_data(out.read_text())[0]] == ["munch"]
+
+
+def test_events_calendar_unknown_host_stops_before_searching(monkeypatch, tmp_path):
+    fl, out, run = _run_calendar(monkeypatch, tmp_path, "--host", "Nobody")
+    assert isinstance(run.exception, FetLifeError) and "no FetLife member 'Nobody'" in str(run.exception)
+    assert fl.calls == [] and not out.exists()

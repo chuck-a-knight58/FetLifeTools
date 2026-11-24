@@ -866,6 +866,23 @@ class FetLifeClient:
         self._ensure_auth()
         yield from self._iter_event_days("/events/virtual", {"from_date": from_date})
 
+    def get_events_organizing(self, nickname: str) -> list[Event]:
+        """The current and upcoming events a member organizes or co-organizes,
+        as their profile lists them: name, start and time line only (see
+        :meth:`get_event_card` for the rest). FetLife answers this page for
+        nicknames only, not user ids.
+        """
+        self._ensure_auth()
+        resp = self.get(f"/{quote_plus(nickname)}/profile/events")
+        return parsers.organizing_from_html(resp.text, base_url=self.config.base_url)
+
+    def get_event_card(self, event_url: str) -> Event | None:
+        """An event's card, as the event search would show it, read from the
+        event's own page; None if that page carries no card."""
+        self._ensure_auth()
+        resp = self.get(urlsplit(event_url).path)
+        return parsers.event_card_from_html(resp.text, resp.url, base_url=self.config.base_url)
+
     def _iter_event_days(self, path: str, params: dict) -> Iterator[list[Event]]:
         """Follow a day-by-day event search's lazy pagination frame to the end."""
         resp = self.get(path, params=params)
