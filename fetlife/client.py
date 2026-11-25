@@ -774,8 +774,12 @@ class FetLifeClient:
         return resp.json().get("features") or []
 
     def create_event(self, fields: list[tuple[str, str]], cover_image: str | Path | None = None,
-                     cover_type: str | None = None) -> str:
+                     cover_type: str | None = None, draft: bool = False) -> str:
         """Submit the New Event form; return the new event's URL.
+
+        With *draft*, submit it the way its "Save as Draft" button does and
+        return where FetLife lands, the draft or a list of them. A landing page
+        that doesn't say it's a draft raises, since the event may be live.
 
         *fields* are the form's name/value pairs, authenticity token included
         (see :mod:`fetlife.eventpost`); *cover_image* is uploaded as the cover
@@ -785,7 +789,7 @@ class FetLifeClient:
         self._ensure_auth()
         form = CurlMime()
         try:
-            for name, value in fields:
+            for name, value in [*fields, *([("save_as_draft", "1")] if draft else [])]:
                 form.addpart(name=name, data=value.encode("utf-8"))
             if cover_image:
                 form.addpart(name="event[cover_image]", content_type=cover_type,
@@ -798,13 +802,25 @@ class FetLifeClient:
             form.close()
         # FetLife lands on the new event (or a page under it): /events/<id>, or
         # nowadays /events/<yyyy>/<mm>/<dd>/<slug>.
-        event = _EVENT_PATH_RE.match(urlsplit(resp.url).path)
-        if event:
+        path = urlsplit(resp.url).path
+        event = _EVENT_PATH_RE.match(path)
+        if event and not draft:
             return self._url(event.group())
         errors = parsers.form_errors_from_html(resp.text)
         flash = parsers.flash_from_html(resp.text)
+        if draft and resp.status_code < 400 and not errors and "/events/new" not in path:
+            # The event's own words ("draft beer") prove nothing on its page.
+            own_words = any("draft" in value.lower() for _, value in fields)
+            if ("draft" in path.lower() and not event) or "draft" in urlsplit(resp.url).query.lower() \
+                    or "draft" in (flash or "").lower() \
+                    or (event and not own_words and parsers.says_draft(resp.text)):
+                return self._url(event.group()) if event else resp.url
+            if event:
+                raise FetLifeError(f"FetLife took the event but its page doesn't say it's a draft: "
+                                   f"{self._url(event.group())} may be live. Check it now, and "
+                                   "don't submit it again.")
         raise FetLifeError(
-            "FetLife did not create the event"
+            ("FetLife did not confirm saving the draft" if draft else "FetLife did not create the event")
             + (": " + "; ".join(errors) if errors else f": {flash}" if flash
                else f" (HTTP {resp.status_code}, landed on {resp.url}).")
         )

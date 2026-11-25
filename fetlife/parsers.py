@@ -638,8 +638,9 @@ def writing_form_from_html(html: str) -> dict | None:
 
 
 def event_form_from_html(html: str) -> dict | None:
-    """The New Event form (``/events/new``): its token and the choices it
-    offers right now, or None when the page carries no such form.
+    """The New Event form (``/events/new``): its token, the choices it offers
+    right now and whether it can save a draft, or None when the page carries
+    no such form.
 
     ``categories`` and ``timezones`` are ``{value: label}``; ``types``,
     ``cost_types`` and ``privacy_levels`` are the values the form accepts
@@ -668,6 +669,8 @@ def event_form_from_html(html: str) -> dict | None:
         "types": list(menu("event[type]")),
         "cost_types": listbox("event[cost_type]"),
         "privacy_levels": listbox("event[privacy]"),
+        # Whether it has a "Save as Draft" button.
+        "can_draft": form.find("button", attrs={"name": "save_as_draft"}) is not None,
         # The page's key for the Mapbox lookups its location fields make.
         "mapbox_token": (re.search(r'"mapboxToken"\s*:\s*"([^"]+)"', html) or [None, None])[1],
     }
@@ -707,6 +710,15 @@ def flash_from_html(html: str) -> str | None:
         if text and 3 < len(text) < 300:
             return text
     return None
+
+
+def says_draft(html: str) -> bool:
+    """Whether a page's visible content mentions a draft."""
+    soup = _soup(html)
+    main = soup.find(id="main-content") or soup
+    for hidden in main.find_all(["script", "style", "template"]):
+        hidden.decompose()
+    return re.search(r"\bdrafts?\b", main.get_text(" "), re.I) is not None
 
 
 def _base_from_url(url: str | None) -> str:

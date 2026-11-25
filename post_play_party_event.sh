@@ -6,6 +6,7 @@ cp -f "$ENV_FILE" .env
 fetlife login
 fetlife whoami
 fetlife --env-file "$ENV_FILE" post-event \
-  --event-id ETX120526 \
+  --draft \
+  --event-id XR021927 \
   --events-file ~/github-projects/Xanadu/events-data.js
 

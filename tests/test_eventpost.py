@@ -48,6 +48,8 @@ NEW_EVENT = """<html><head><meta name="csrf-token" content="page-tok"></head><bo
     <input type="hidden" name="event[privacy]" id="event_privacy" value="">
     <ul><li role="option" data-id="public"></li><li role="option" data-id="private"></li></ul>
   </div>
+  <button name="button" type="submit">Create your Event</button>
+  <button name="save_as_draft" type="submit" value="1" formnovalidate>Save as Draft</button>
 </form></body></html>"""
 
 
@@ -59,6 +61,8 @@ def test_event_form_reads_the_token_and_the_live_choices():
     assert form["types"] == ["physical", "virtual"]
     assert form["cost_types"] == ["free", "paid"]
     assert form["privacy_levels"] == ["public", "private"]
+    assert form["can_draft"] is True
+    assert not parsers.event_form_from_html(NEW_EVENT.replace("save_as_draft", "other"))["can_draft"]
     assert parsers.event_form_from_html("<html><form action='/posts'></form></html>") is None
 
 
@@ -297,6 +301,90 @@ def test_create_event_posts_multipart_and_returns_the_event(tmp_path, monkeypatc
         fl.create_event([("event[name]", "N")])
 
 
+def test_create_event_as_a_draft(tmp_path, monkeypatch):
+    fl = _authed(tmp_path)
+    parts = []
+
+    class FakeMime:
+        def addpart(self, name, data=None, **kw): parts.append((name, data))
+        def close(self): pass
+
+    monkeypatch.setattr("fetlife.client.CurlMime", FakeMime)
+    slug = "https://fetlife.com/events/2026/11/07/rope-jam-abc123"
+
+    def save(url, html="", status=200, draft=True, name="N"):
+        parts.clear()
+        monkeypatch.setattr(fl, "request", lambda *a, **k: _Resp(status, html, url))
+        return fl.create_event([("event[name]", name)], draft=draft)
+
+    # A list of drafts, or the draft's own page saying it's one.
+    listing = "https://fetlife.com/events/rsvps?filter=drafts"
+    assert save(listing) == listing
+    assert ("save_as_draft", b"1") in parts
+    page = '<script>var draft</script><div id="main-content"><b>This event is a draft.</b></div>'
+    assert save(slug, page) == slug
+    assert save(slug, "<div class='flash'>Your draft was saved</div>") == slug
+
+    # Without that, the event may be live: say so rather than "saved".
+    for name, html in [("N", "<script>var draft</script><div id='main-content'>Rope Jam</div>"),
+                       ("Draft Beer Munch", "<div id='main-content'>Draft Beer Munch</div>")]:
+        with pytest.raises(FetLifeError, match="rope-jam-abc123 may be live"):
+            save(slug, html, name=name)
+    with pytest.raises(FetLifeError, match="did not confirm saving the draft: Name can't be blank"):
+        save("https://fetlife.com/events", "<div id='error_explanation'><ul><li>Name can't be blank</li></ul></div>", 422)
+    with pytest.raises(FetLifeError, match="did not confirm saving the draft .HTTP 200, landed on"):
+        save("https://fetlife.com/home")
+
+    # A published event never carries the button's field.
+    assert save(slug, draft=False) == slug and "save_as_draft" not in dict(parts)
+
+
+def test_cli_saves_a_draft_without_asking_or_touching_the_file(tmp_path, monkeypatch):
+    import json
+
+    from click.testing import CliRunner
+
+    from fetlife import cli
+    from fetlife.models import Member
+
+    path = tmp_path / "events-data.js"
+    path.write_text(EVENTS_JS)
+    (tmp_path / "assets").mkdir()
+    (tmp_path / "assets" / "VDM.png").write_bytes(b"\x89PNG fake")
+    posted, page = [], [NEW_EVENT]
+
+    class FakeClient:
+        on_retry = None
+        def __enter__(self): return self
+        def __exit__(self, *exc): return False
+        def whoami(self): return Member(nickname="Knight_of_Xanadu", id="1")
+        def get_event_form(self): return parsers.event_form_from_html(page[0])
+        def find_co_host(self, name): return None
+        def create_event(self, fields, cover, cover_type, draft=False):
+            posted.append(draft)
+            return "https://fetlife.com/events/999"
+
+    monkeypatch.setattr(cli, "_client", lambda ctx: FakeClient())
+
+    def run(*extra):
+        return CliRunner().invoke(cli.cli, ["--env-file", str(tmp_path / "none.env"), "post-event",
+                                            "--events-file", str(path), "--event-id", "VDM102226", *extra])
+
+    result = run("--draft")
+    assert result.exit_code == 0, result.output
+    assert "Draft event as Knight_of_Xanadu" in result.output and "Draft saved: https://" in result.output
+    assert posted == [True] and path.read_text() == EVENTS_JS
+    asjson = run("--draft", "--json")
+    assert json.loads(asjson.stdout.strip().splitlines()[-1]) == {
+        "url": "https://fetlife.com/events/999", "event_id": "VDM102226", "draft": True}
+    assert run("--draft", "--dry-run").exit_code == 0 and len(posted) == 2
+    # Publishing still asks.
+    assert run().exit_code != 0 and len(posted) == 2
+    # If the form has no such button, nothing is submitted.
+    page[0] = NEW_EVENT.replace("save_as_draft", "other")
+    assert "doesn't offer to save a draft" in str(run("--draft").exception) and len(posted) == 2
+
+
 def test_find_co_host_matches_the_nickname_exactly(tmp_path, monkeypatch):
     fl = _authed(tmp_path)
     html = ("<div data-form-typeahead-multi-select-option data-label='Grr_Bear' data-value='11'></div>"
@@ -334,7 +422,7 @@ def test_cli_posts_the_file_entry_and_saves_the_url_back(tmp_path, monkeypatch):
         def get_event_form(self): return parsers.event_form_from_html(NEW_EVENT)
         def find_co_host(self, name):
             return {"name": "DimpledSadist", "id": "42"} if name == "DimpledSadist" else None
-        def create_event(self, fields, cover, cover_type):
+        def create_event(self, fields, cover, cover_type, draft=False):
             posted.update(fields=fields, cover=cover, cover_type=cover_type)
             return "https://fetlife.com/events/999"
 
@@ -478,7 +566,7 @@ def _in_person_client(posted, streets):
         def geocode(self, token, query, types, proximity=None, limit=5):
             posted.setdefault("lookups", []).append((query, types, proximity))
             return [CITY] if "place" in types else streets
-        def create_event(self, fields, cover, cover_type):
+        def create_event(self, fields, cover, cover_type, draft=False):
             posted.update(fields=fields)
             return "https://fetlife.com/events/1000"
     return FakeClient()

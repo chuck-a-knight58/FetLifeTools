@@ -1184,6 +1184,9 @@ def post_writing(ctx, title, body, category, tags, collections, image, image_con
 @click.option("--request-only/--not-request-only", default=None,
               help="Members have to request to attend, and you approve or deny each request.  "
                    "[file: requestOnly]")
+@click.option("--draft", is_flag=True, default=False,
+              help="Save it as a draft (the form's Save as Draft button) instead of publishing. "
+                   "Its URL isn't saved to --events-file.")
 @click.option("--repost", is_flag=True, default=False,
               help="Post even though the --events-file entry already has a Url.")
 @click.option("--dry-run", is_flag=True, default=False,
@@ -1194,7 +1197,7 @@ def post_writing(ctx, title, body, category, tags, collections, image, image_con
 def post_event(ctx, events_file, event_id, title, cover_image, tagline, description, description_file,
                keep_file_description, co_hosts, no_co_hosts, category, dress_code, wheelchair_accessible, cost, cost_details,
                ticket_url, start, end, tz_name, event_type, location, address, city, privacy,
-               request_only, repost, dry_run, yes, json_local):
+               request_only, draft, repost, dry_run, yes, json_local):
     """Create a FetLife event from the logged-in account.
 
     Give every detail as an option, or take the event from a site data file
@@ -1203,7 +1206,8 @@ def post_event(ctx, events_file, event_id, title, cover_image, tagline, descript
     URL fill in the options marked [file: …], and any option given still
     wins. Once the event is created its URL is written back into that entry
     as `Url`. It shows the event and asks before creating it (--yes skips
-    that; --dry-run stops there).
+    that; --dry-run stops there). With --draft it's saved as a draft, without
+    asking, and the entry is left alone.
     """
     if bool(events_file) != bool(event_id):
         raise FetLifeError("--events-file and --event-id go together.")
@@ -1277,6 +1281,8 @@ def post_event(ctx, events_file, event_id, title, cover_image, tagline, descript
         me = fl.whoami()
         account = me.nickname or f"user {me.id}"
         form = fl.get_event_form()
+        if draft and not form["can_draft"]:
+            raise FetLifeError("FetLife's New Event page doesn't offer to save a draft right now.")
         category = eventpost.category_value(category, form["categories"] or None)
         tz = eventpost.timezone_value(tz_name, form["timezones"]) if form["timezones"] else tz_name
         for what, value, offered in [("event type", eventpost.EVENT_TYPES[event_type], form["types"]),
@@ -1348,7 +1354,7 @@ def post_event(ctx, events_file, event_id, title, cover_image, tagline, descript
                     else "organizers_and_attendees")]
 
         out = status_console if _as_json(ctx, json_local) else console
-        out.print(f"[bold]Event as {account}:[/bold] {title}")
+        out.print(f"[bold]{'Draft event' if draft else 'Event'} as {account}:[/bold] {title}")
         if tagline:
             out.print(f"  {tagline}", markup=False, highlight=False)
         label = re.split(r" \(", form["categories"].get(category, category))[0]
@@ -1381,14 +1387,16 @@ def post_event(ctx, events_file, event_id, title, cover_image, tagline, descript
         if dry_run:
             out.print("[dim]Dry run: nothing was created.[/dim]")
             return
-        if not yes:
+        if not yes and not draft:
             click.confirm(f"Create this event as {account}?", abort=True, err=True)
 
-        url = fl.create_event(fields, cover_image, cover_type)
-    if events_file:
+        url = fl.create_event(fields, cover_image, cover_type, draft=draft)
+    if events_file and not draft:
         eventpost.set_event_field(events_file, event_id, "Url", url)
     if _as_json(ctx, json_local):
-        click.echo(json.dumps({"url": url, "event_id": event_id}))
+        click.echo(json.dumps({"url": url, "event_id": event_id, **({"draft": True} if draft else {})}))
+    elif draft:
+        console.print(f"[green]Draft saved:[/green] {url}")
     else:
         console.print(f"[green]Created:[/green] {url}")
         if events_file:
