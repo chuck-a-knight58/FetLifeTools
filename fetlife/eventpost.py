@@ -391,9 +391,8 @@ def defaults_from_entry(entry: dict, assets_dir: Path) -> dict:
 
     name → title, subtitle → tagline, cohosts → co-hosts, date + time →
     start/end, coverImage or else image → cover image, descriptionFile →
-    --description-file (all three found by :func:`find_asset`), an "Online"
-    audience →
-    a virtual event, cost → cost (without one, a ticket URL means paid),
+    a file whose text follows the description (all three found by
+    :func:`find_asset`), an "Online" audience → a virtual event, cost → cost (without one, a ticket URL means paid),
     and dressCode, costDetails, location, address and cityStateCountry → the
     options of those names, and wheelchairAccessible and requestOnly →
     --wheelchair-accessible and --request-only. Only what the entry

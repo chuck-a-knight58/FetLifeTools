@@ -1228,20 +1228,27 @@ def post_event(ctx, events_file, event_id, title, cover_image, tagline, descript
             entry, Path(events_file).resolve().parent / "assets")
         if given.get("cover_image") and not os.path.isfile(given["cover_image"]):
             raise FetLifeError(f"{event_id}'s image isn't there: {given['cover_image']} (check ASSETS_PATH)")
-        if description is None and given.get("description_file"):
-            try:
-                description = Path(given["description_file"]).read_text(encoding="utf-8")
-            except OSError as e:
-                raise FetLifeError(f"{event_id}'s descriptionFile can't be read: {e} (check ASSETS_PATH)") from e
+
+    def paragraphs(*parts):
+        return "\n\n".join(part.strip("\n") for part in parts if part and part.strip())
+
+    # The entry's description: its `description`, then its descriptionFile's
+    # text (shown after it, as on the site). Given text replaces it, unless
+    # --keep-file-description puts it after.
+    entry_description = given.get("description") or ""
+    if given.get("description_file") and (description is None or keep_file_description):
+        try:
+            entry_description = paragraphs(
+                entry_description, Path(given["description_file"]).read_text(encoding="utf-8"))
+        except OSError as e:
+            raise FetLifeError(f"{event_id}'s descriptionFile can't be read: {e} (check ASSETS_PATH)") from e
 
     title = " ".join((title or given.get("title") or "").split())
     tagline = " ".join((tagline or given.get("tagline") or "").split())
     if description is None:
-        description = given.get("description") or ""
+        description = entry_description
     elif keep_file_description:
-        # The file's description, then a new paragraph with the given text.
-        description = "\n\n".join(part.strip("\n") for part in (given.get("description"), description)
-                                  if part and part.strip())
+        description = paragraphs(entry_description, description)
     cover_image = cover_image or given.get("cover_image")
     cover_type = writing.image_type(cover_image) if cover_image else None
     names = [] if no_co_hosts else (eventpost.split_names(",".join(co_hosts)) if co_hosts

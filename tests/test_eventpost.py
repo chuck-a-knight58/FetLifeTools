@@ -499,10 +499,15 @@ def test_cli_takes_the_description_from_the_entrys_description_file(tmp_path, mo
         assert result.exit_code == 0, result.output
         return result.output
 
-    assert "Every first Wednesday." in preview() and "Tonight" not in preview()
-    kept = preview("--keep-file-description")
-    assert kept.index("Tonight: contracts.") < kept.index("Every first Wednesday.")
-    assert "By hand." in preview("-d", "By hand.") and "Every first" not in preview("-d", "By hand.")
+    # The entry's description, then its file's, as the site shows them.
+    both = preview()
+    assert both.index("Tonight: contracts.") < both.index("Every first Wednesday.")
+    assert preview("--keep-file-description") == both
+    # Given text replaces both, or with --keep-file-description comes after them.
+    by_hand = preview("-d", "By hand.")
+    assert "By hand." in by_hand and "Every first" not in by_hand and "Tonight" not in by_hand
+    kept = preview("-d", "By hand.", "--keep-file-description")
+    assert kept.index("Tonight") < kept.index("Every first") < kept.index("By hand.")
 
     (tmp_path / "series.txt").unlink()
     missing = CliRunner().invoke(cli.cli, ["--env-file", str(tmp_path / "none.env"), "post-event",

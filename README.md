@@ -409,8 +409,8 @@ fetlife post-event -t "Rope Jam" --tagline "Bring a partner" --description-file 
 | `--title` / `-t` | `name` | The event's name. |
 | `--cover-image FILE` | `coverImage`, else `image` | The cover picture: jpg, png, heic, tiff or gif, at least 1200×630. FetLife shows it at 1.91:1. |
 | `--tagline` | `subtitle` | One-line tagline. |
-| `--description` / `-d`, `--description-file FILE` | `description`; `descriptionFile` acts as `--description-file` | The description, as text or from a text file. A blank line starts a new paragraph. |
-| `--keep-file-description` | | Put the data file's description first, then a blank line and the `--description`, `--description-file` or `descriptionFile` text, instead of replacing it. |
+| `--description` / `-d`, `--description-file FILE` | `description`, then the text of `descriptionFile` | The description, as text or from a text file. A blank line starts a new paragraph. An entry with both uses both, its `description` first and then a blank line and the file's text, as the site shows them. Either option replaces the entry's description. |
+| `--keep-file-description` | | Put the entry's description (its `description` and `descriptionFile` text) first, then a blank line and the `--description` or `--description-file` text, instead of replacing it. |
 | `--co-host NICKNAME` | `cohosts` (split on `and`, `,`, `&` or spaces) | A co-host; repeat it or separate names with commas or spaces. FetLife only lets you pick the account's **friends**. Anyone else (and the account itself) is left off, with a warning in the preview. `--no-co-hosts` ignores the file's cohosts. |
 | `--category` / `-c` | `category`, if it's one of FetLife's | `Educational`, `Social`, `Sex Party`, `BDSM Party` or `Conference` (any prefix, any case). |
 | `--dress-code TEXT` | `dressCode` | The dress code. |
